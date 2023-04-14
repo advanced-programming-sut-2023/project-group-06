@@ -41,30 +41,30 @@ assignees: Arman17Babaei
   <div  dir="ltr" align='right'>
   
   1. [ ] شروع نشده
-  2. [x] در حال انجام
-  3. [ ] تمام شده
+  2. [ ] در حال انجام
+  3. [x] تمام شده
      </div>
 </details>
 
 ## تسک‌های نفر اول
 
-  **نام و نام خانوادگی:**
+  **نام و نام خانوادگی: امیرمحمد بندری ماسوله**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>تغییر فایل README</summary>
 
   <div dir="ltr" align='right'>
 
   1. [ ] شروع نشده
   2. [ ] در حال انجام
-  3. [ ] تمام شده
+  3. [x] تمام شده
   </div>
 </details>
 
 ## تسک‌های نفر دوم
 
-  **نام و نام خانوادگی:**
+  **نام و نام خانوادگی: سینا عزیزالدین**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>تغییر فایل README</summary>
 
   <div dir="ltr" align='right'>
 
@@ -76,9 +76,9 @@ assignees: Arman17Babaei
 
 ## تسک‌های نفر سوم
 
-  **نام و نام خانوادگی:**
+  **نام و نام خانوادگی: سید مبین رضوی**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>تغییر فایل README</summary>
 
   <div dir="ltr" align='right'>
 
