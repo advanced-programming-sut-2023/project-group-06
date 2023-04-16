@@ -41,8 +41,11 @@ public class SignUpController {
         }
         if (Data.getUserByEmail(email) != null) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
-        if (isSloganRandom) SignUpMenu.randomSlogan(slogan);
-        if (isPasswordRandom && !SignUpMenu.randomPassword(password,scanner)) return Response.PASSWORD_CONFIRMATION;
+        if (isSloganRandom) slogan = SignUpMenu.randomSlogan();
+        if (isPasswordRandom) {
+            password = SignUpMenu.randomPassword(scanner);
+            if (password == null) return Response.PASSWORD_CONFIRMATION;
+        }
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }

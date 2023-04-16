@@ -89,14 +89,6 @@ public class User {
         this.highScore = highScore;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getRank() {
         return Data.getUserRank(this);
     }

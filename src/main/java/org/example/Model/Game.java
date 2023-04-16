@@ -9,22 +9,23 @@ public class Game {
     private ArrayList<User> players;
     private ArrayList<Kingdom> kingdoms;
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
-
-    Tile[][] map = new Tile[mapWidth][mapHeight];
+    Tile[][] map;
 
     public Tile getTileByCoordinates(int y, int x) {
         return map[y][x];
     }
 
-    public Game(int mapWidth, int mapHeight, ArrayList<User> players) {
-        this.mapWidth = mapWidth;
-        this.mapHeight = mapHeight;
+    public Game(ArrayList<User> players) {
         this.players = players;
         this.numberOfPlayers = players.size();
         kingdoms = new ArrayList<>();
         for(User user : this.players){
-            kingdoms.add(new Kingdom(0, 1000, 8, user));
+            kingdoms.add(new Kingdom(user));
         }
+    }
+
+    public void initializeMap(int width, int height){
+        map = new Tile[width][height];
     }
 
     public int getMapWidth() {
@@ -34,6 +35,10 @@ public class Game {
     public int getMapHeight() {
         return mapHeight;
     }
+
+    public void setMapWidth(int width) { mapWidth = width; }
+
+    public void setMapHeight(int height) { mapHeight = height; }
 
     public int getNumberOfPlayers() {
         return numberOfPlayers;

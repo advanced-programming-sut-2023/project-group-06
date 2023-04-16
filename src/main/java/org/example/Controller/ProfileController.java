@@ -40,7 +40,7 @@ public class ProfileController {
 
     public static Response confirmReEnteredPassword(String oldPassword, String newPassword, String reEnteredPassword) {
         if (!newPassword.equals(reEnteredPassword)) return Response.PASSWORD_CONFIRMATION;
-        Data.getCurrentUser().changePassword(newPassword,oldPassword);
+        if (!Data.getCurrentUser().changePassword(newPassword,oldPassword)) return Response.INCORRECT_OLD_PASSWORD;
         return Response.PASSWORD_CHANGE;
     }
 
@@ -81,9 +81,10 @@ public class ProfileController {
 
     public static String showInfo(){
         return "username: " + Data.getCurrentUser().getUsername() + '\n' +
-                "password: " + Data.getCurrentUser().getPassword() + '\n' +
                 "nickname: " + Data.getCurrentUser().getNickname() + '\n' +
                 "email: " + Data.getCurrentUser().getEmail() + '\n' +
-                "slogan: " + Data.getCurrentUser().getSlogan();
+                "slogan: " + Data.getCurrentUser().getSlogan() + '\n' +
+                "highscore: " + Data.getCurrentUser().getHighScore() + '\n' +
+                "rank: " + Data.getCurrentUser().getRank();
     }
 }
