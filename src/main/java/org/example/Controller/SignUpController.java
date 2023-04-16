@@ -48,10 +48,10 @@ public class SignUpController {
     }
     public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
-        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));
+        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));//////make entry valid????
         if ((questionIndex < 1) || (questionIndex > 3)) return Response.INVALID_QUESTION_NUMBER;
-        String answer = matcher.group("answer");
-        String answerConfirmation = matcher.group("answerConfirmation");
+        String answer = Controller.makeEntryValid(matcher.group("answer"));
+        String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
@@ -86,5 +86,4 @@ public class SignUpController {
         return null;
         //todo
     }
-
 }

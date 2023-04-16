@@ -10,8 +10,8 @@ public class LoginController {
     public static Response loginUser(Matcher matcher){
         matcher.find();
         boolean stayLoggedIn = false;
-        String username = matcher.group("username");
-        String password = matcher.group("password");
+        String username = Controller.makeEntryValid(matcher.group("username"));
+        String password = Controller.makeEntryValid(matcher.group("password"));
         if (matcher.group("stayLoggedIn") != null) stayLoggedIn = true;
         if (Data.getUserByName(username) == null) return Response.USERNAME_DOES_NOT_EXIST;
         if (!Data.getUserByName(username).isPasswordCorrect(password)) return Response.WRONG_PASSWORD;
@@ -21,7 +21,7 @@ public class LoginController {
     }
     public static Response forgotPassword(Matcher matcher, String answer) {
         matcher.find();
-        String username = matcher.group("username");
+        String username = Controller.makeEntryValid(matcher.group("username"));
         if (!Data.getUserByName(username).isAnswerToQuestionCorrect(answer)) return Response.WRONG_SECURITY_ANSWER;
         return Response.PASSWORD_CHANGE;
     }

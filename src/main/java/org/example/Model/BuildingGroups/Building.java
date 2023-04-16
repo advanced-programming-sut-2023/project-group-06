@@ -4,20 +4,23 @@ import org.example.Model.Kingdom;
 import org.example.Model.Resources;
 
 public class Building {
+    private int xCoordinate;
+    private int yCoordinate;
     private int delay = 0;
     private int hitPoint;
-    private int goldPrice;
     private Kingdom owner;
     private Resources resourcesPrice;
-    private int workerPrice;
-    private int engineerPrice;
     private int happinessIncrease;
     private BuildingType buildingType;
     private int direction;
 
-    public Building(Kingdom owner, BuildingType buildingType){
+    public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
         this.owner = owner;
         this.buildingType = buildingType;
+        this.owner.addEngineers(-1 * buildingType.engineerPrice);
+        this.owner.addPopulation(buildingType.workerPrice);
     }
 
     public int getDelay() {
@@ -40,10 +43,6 @@ public class Building {
         this.hitPoint += hitPoint;
     }
 
-    public int getGoldPrice() {
-        return goldPrice;
-    }
-
     public Kingdom getOwner() {
         return owner;
     }
@@ -54,14 +53,6 @@ public class Building {
 
     public Resources getResourcesPrice() {
         return resourcesPrice;
-    }
-
-    public int getWorkerPrice() {
-        return workerPrice;
-    }
-
-    public int getEngineerPrice() {
-        return engineerPrice;
     }
 
     public int getHappinessIncrease() {
