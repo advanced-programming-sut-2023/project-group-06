@@ -41,17 +41,20 @@ public class SignUpController {
         }
         if (Data.getUserByEmail(email) != null) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
-        if (isSloganRandom) SignUpMenu.randomSlogan(slogan);
-        if (isPasswordRandom && !SignUpMenu.randomPassword(password,scanner)) return Response.PASSWORD_CONFIRMATION;
+        if (isSloganRandom) slogan = SignUpMenu.randomSlogan();
+        if (isPasswordRandom) {
+            password = SignUpMenu.randomPassword(scanner);
+            if (password == null) return Response.PASSWORD_CONFIRMATION;
+        }
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
     public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
-        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));//////make entry valid????
+        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));
         if ((questionIndex < 1) || (questionIndex > 3)) return Response.INVALID_QUESTION_NUMBER;
-        String answer = Controller.makeEntryValid(matcher.group("answer"));
-        String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
+        String answer = matcher.group("answer");
+        String answerConfirmation = matcher.group("answerConfirmation");
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
@@ -86,4 +89,5 @@ public class SignUpController {
         return null;
         //todo
     }
+
 }

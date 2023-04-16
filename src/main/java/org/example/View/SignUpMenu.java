@@ -43,19 +43,22 @@ public class SignUpMenu extends Menu{
 
                     }
                 }
+            } else {
+                System.out.println(Response.INVALID_COMMAND.message);
             }
         }
     }
-    public static void randomSlogan(String slogan) {
-        slogan = allRandomSlogans[(int)(Math.random() * 16)];
+    public static String randomSlogan() {
+        String slogan = allRandomSlogans[(int)(Math.random() * 16)];
         System.out.println("Your slogan is " + slogan);
+        return slogan;
     }
-    public static boolean randomPassword(String password, Scanner scanner) {
-        password = SignUpController.passwordGenerator();
+    public static String randomPassword(Scanner scanner) {
+        String password = SignUpController.passwordGenerator();
         System.out.println("Your random password is: " + password + '\n' +
                 "Please re-enter your password here: ");
         String enteredPassword = scanner.nextLine();
-        if (!password.equals(enteredPassword)) return false;
-        return true;
+        if (!password.equals(enteredPassword)) return null;
+        return password;
     }
 }
