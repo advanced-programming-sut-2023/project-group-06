@@ -1,6 +1,13 @@
 package org.example.View;
 
 public enum Response {
+    INVALID_GROUND("The ground is not proper for this building!"),
+    BUILDING_ALREADY_EXIST("A building already exist in this cell!"),
+    DROP_BUILDING_SUCCESSFUL("Drop building successful!"),
+    POPULATION_EXCEEDED("Population exceeded!"),
+    NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
+    GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
+    USER_NOT_FOUND("User not found!"),
     INVALID_COMMAND("Invalid command!"),
     EMPTY_EMAIL("Email field can't be empty!"),
     EMPTY_USERNAME("Username field can't be empty!"),
@@ -47,8 +54,18 @@ public enum Response {
     RE_ENTER_PASSWORD("Please re-enter your password!"),
     SLOGAN_REMOVE("Slogan removed successfully!"),
     SLOGAN_ALREADY_NULL("This user has no slogan!"),
-    SLOGAN_IS_EMPTY("Slogan is empty!")
+    SLOGAN_IS_EMPTY("Slogan is empty!"),
+    ENTER_PROFILE_MENU("Entered profile menu successfully!"),
+    FOOD_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_FOOD_RATE_SUCCESSFUL("Food rate is set successfully!"),
+    TAX_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_TAX_RATE_SUCCESSFUL("Tax rate is set successfully!"),
+    OUT_OF_FOOD("You're out of food , you can't set food rate!"),
+    OUT_OF_MONEY("You have no money , you can't set tax rate!"),
+    FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
 
+    ;
     public final String message;
 
     private Response(String message) {
