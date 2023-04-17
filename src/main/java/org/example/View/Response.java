@@ -6,6 +6,7 @@ public enum Response {
     DROP_BUILDING_SUCCESSFUL("Drop building successful!"),
     POPULATION_EXCEEDED("Population exceeded!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
+    CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
     USER_NOT_FOUND("User not found!"),
     INVALID_COMMAND("Invalid command!"),

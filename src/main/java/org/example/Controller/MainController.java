@@ -32,6 +32,8 @@ public class MainController {
                 addGamePlayer(users, username7) != null ||
                 addGamePlayer(users, username8) != null)
             return Response.USER_NOT_FOUND;
+        if(users.size() == 1)
+            return Response.CANT_PLAY_ALONE;
         Game game = new Game(users);
         return Response.GAME_STARTED_SUCCESSFULLY;
     }
