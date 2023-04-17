@@ -13,13 +13,13 @@ import java.util.regex.Matcher;
 
 public class MainController {
     public static Response startGame(Matcher matcher){
-        String username2 = matcher.group("username2");
-        String username3 = matcher.group("username3");
-        String username4 = matcher.group("username4");
-        String username5 = matcher.group("username5");
-        String username6 = matcher.group("username6");
-        String username7 = matcher.group("username7");
-        String username8 = matcher.group("username8");
+        String username2 = Controller.makeEntryValid(matcher.group("username2"));
+        String username3 = Controller.makeEntryValid(matcher.group("username3"));
+        String username4 = Controller.makeEntryValid(matcher.group("username4"));
+        String username5 = Controller.makeEntryValid(matcher.group("username5"));
+        String username6 = Controller.makeEntryValid(matcher.group("username6"));
+        String username7 = Controller.makeEntryValid(matcher.group("username7"));
+        String username8 = Controller.makeEntryValid(matcher.group("username8"));
         //check format
         ArrayList<User> users = new ArrayList<>();
         users.add(Controller.currentUser);
@@ -79,15 +79,5 @@ public class MainController {
         return null;
         //todo
         //after start game
-    }
-
-    public static Response enterProfileMenu(){
-        return null;
-        //todo
-    }
-
-    public static Response logout(){
-        return null;
-        //todo
     }
 }

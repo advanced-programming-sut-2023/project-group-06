@@ -54,7 +54,16 @@ public enum Response {
     RE_ENTER_PASSWORD("Please re-enter your password!"),
     SLOGAN_REMOVE("Slogan removed successfully!"),
     SLOGAN_ALREADY_NULL("This user has no slogan!"),
-    SLOGAN_IS_EMPTY("Slogan is empty!");
+    SLOGAN_IS_EMPTY("Slogan is empty!"),
+    ENTER_PROFILE_MENU("Entered profile menu successfully!"),
+    FOOD_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_FOOD_RATE_SUCCESSFUL("Food rate is set successfully!"),
+    TAX_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_TAX_RATE_SUCCESSFUL("Tax rate is set successfully!"),
+    OUT_OF_FOOD("You're out of food , you can't set food rate!"),
+    OUT_OF_MONEY("You have no money , you can't set tax rate!"),
+    FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
+    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!");
     public final String message;
 
     private Response(String message) {

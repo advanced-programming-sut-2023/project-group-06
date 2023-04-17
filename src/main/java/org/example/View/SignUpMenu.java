@@ -43,6 +43,8 @@ public class SignUpMenu extends Menu{
 
                     }
                 }
+            } else if (Commands.getMatcher(command,Commands.BACK).find()) {
+                return MenuType.START_MENU;
             } else {
                 System.out.println(Response.INVALID_COMMAND.message);
             }
@@ -50,7 +52,7 @@ public class SignUpMenu extends Menu{
     }
     public static String randomSlogan() {
         String slogan = allRandomSlogans[(int)(Math.random() * 16)];
-        System.out.println("Your slogan is " + slogan);
+        System.out.println("Your slogan is: " + slogan);
         return slogan;
     }
     public static String randomPassword(Scanner scanner) {

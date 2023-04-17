@@ -10,7 +10,8 @@ import java.util.regex.Matcher;
 public class ProfileController {
 
     public static Response changeUsername(Matcher matcher){
-        String username = matcher.group("username");
+        matcher.find();
+        String username = Controller.makeEntryValid(matcher.group("username"));
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getCurrentUser().getUsername().equals(username)) return Response.SAME_USERNAME;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
@@ -19,15 +20,17 @@ public class ProfileController {
     }
 
     public static Response changeNickname(Matcher matcher){
-        String nickname = matcher.group("nickname");
+        matcher.find();
+        String nickname = Controller.makeEntryValid(matcher.group("nickname"));
         if (Data.getCurrentUser().getNickname().equals(nickname)) return Response.SAME_NICKNAME;
         Data.getCurrentUser().setNickname(nickname);
         return Response.NICKNAME_CHANGE;
     }
 
     public static Response changePassword(Matcher matcher){
-        String newPassword = matcher.group("newPassword");
-        String oldPassword = matcher.group("oldPassword");
+        matcher.find();
+        String newPassword = Controller.makeEntryValid(matcher.group("newPassword"));
+        String oldPassword = Controller.makeEntryValid(matcher.group("oldPassword"));
         if (!Data.getCurrentUser().changePassword(newPassword,oldPassword)) return Response.INCORRECT_OLD_PASSWORD;
         if (oldPassword.equals(newPassword)) return Response.SAME_PASSWORD;
         if (!Controller.isLongPassword(newPassword)) return Response.SHORT_PASSWORD;
@@ -45,7 +48,8 @@ public class ProfileController {
     }
 
     public static Response changeEmail(Matcher matcher){
-        String email = matcher.group("email").toLowerCase();
+        matcher.find();
+        String email = Controller.makeEntryValid(matcher.group("email").toLowerCase());
         if (Data.getCurrentUser().getEmail().equals(email)) return Response.SAME_EMAIL;
         if ((Data.getUserByEmail(email) != null)) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
@@ -54,7 +58,8 @@ public class ProfileController {
     }
 
     public static Response changeSlogan(Matcher matcher){
-        String slogan = matcher.group("slogan");
+        matcher.find();
+        String slogan = Controller.makeEntryValid(matcher.group("slogan"));
         if ((Data.getCurrentUser().getSlogan() != null) && Data.getCurrentUser().getSlogan().equals(slogan)) return Response.SAME_SLOGAN;
         Data.getCurrentUser().setSlogan(slogan);
         return Response.SLOGAN_CHANGE;

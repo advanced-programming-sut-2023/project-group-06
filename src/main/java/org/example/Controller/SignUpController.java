@@ -25,7 +25,7 @@ public class SignUpController {
         String passwordConfirmation = Controller.makeEntryValid(matcher.group("passwordConfirmation"));
         String email = Controller.makeEntryValid(matcher.group("email")).toLowerCase();
         String nickname = Controller.makeEntryValid(matcher.group("nickname"));
-        String slogan = matcher.group("slogan");
+        String slogan = Controller.makeEntryValid(matcher.group("slogan"));
         if (slogan != null) slogan = Controller.makeEntryValid(slogan);
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
@@ -51,7 +51,7 @@ public class SignUpController {
     }
     public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
-        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));
+        int questionIndex = Integer.parseInt(Controller.makeEntryValid(matcher.group("questionNumber")));
         if ((questionIndex < 1) || (questionIndex > 3)) return Response.INVALID_QUESTION_NUMBER;
         String answer = matcher.group("answer");
         String answerConfirmation = matcher.group("answerConfirmation");
@@ -81,7 +81,10 @@ public class SignUpController {
         for (int i = 0; i < numberOfNumbers; i++) passwordLetters.add(numbers[(int)(Math.random() * 10)]);
         for (int i = 0; i < numberOfLowercaseLetters; i++) passwordLetters.add(lowercaseLetters[(int)(Math.random() * 26)]);
         Collections.shuffle(passwordLetters);
-        String randomPassword = passwordLetters.toString();
+        String randomPassword = "";
+        for (int i = 0; i < passwordLetters.size(); i++) {
+            randomPassword += passwordLetters.get(i);
+        }
         return randomPassword;
     }
 
