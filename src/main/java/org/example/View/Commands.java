@@ -51,7 +51,7 @@ public enum Commands {
     DROP_BUILDING("dropbuilding -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
     //Map Menu Commands
     SHOW_MAP("show map -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
-    MOVE_MAP(""),////////////////////////////////////////////////////////////////////
+    MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))+"),
     SHOW_DETAILS("show details -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
     ;
 

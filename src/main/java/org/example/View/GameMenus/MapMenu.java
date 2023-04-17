@@ -16,10 +16,8 @@ public class MapMenu extends Menu {
         while(true){
             String command = scanner.nextLine();
             Matcher matcher;
-            if((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find())
-                System.out.println(MapController.showMap(matcher).message);
-            else if((matcher = Commands.getMatcher(command, Commands.MOVE_MAP)).find())
-                MapController.moveMap(matcher);
+            if(Commands.getMatcher(command, Commands.MOVE_MAP).find())
+                MapController.moveMap(command);
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_DETAILS)).find())
                 System.out.println(MapController.showDetails(matcher));
             else if(Commands.getMatcher(command, Commands.EXIT).find())
