@@ -54,4 +54,7 @@ public enum BuildingType {
         return goldPrice;
     }
 
+    public Resources getResourcesPrice() {
+        return resourcesPrice;
+    }
 }

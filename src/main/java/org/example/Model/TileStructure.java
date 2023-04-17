@@ -27,4 +27,9 @@ public enum TileStructure {
     private TileStructure(boolean isBlue) {
         this.isBlue = isBlue;
     }
+
+    public static TileStructure getTileStructureByString(String type){
+        return null;
+        //todo
+    }
 }

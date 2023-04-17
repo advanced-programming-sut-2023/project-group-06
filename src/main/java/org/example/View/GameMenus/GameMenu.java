@@ -11,6 +11,7 @@ import java.util.Scanner;
 public class GameMenu extends Menu {
     GameController gameController;
 
+    //some commands will return null if they are successful
     public MenuType run(Scanner scanner){
         while(true){
             String command = scanner.nextLine();

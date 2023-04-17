@@ -20,7 +20,7 @@ public class Kingdom {
     /////// adding food storages
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
-    private ArrayList<Resources> resources = new ArrayList<>();
+    private ArrayList<Resources> resources = new ArrayList<>(); //will this be of any help?
     private User owner;
     private Soldier king;
 

@@ -9,7 +9,6 @@ public class Building {
     private int delay = 0;
     private int hitPoint;
     private Kingdom owner;
-    private Resources resourcesPrice;
     private int happinessIncrease;
     private BuildingType buildingType;
     private int direction;
@@ -21,6 +20,7 @@ public class Building {
         this.buildingType = buildingType;
         this.owner.addEngineers(-1 * buildingType.engineerPrice);
         this.owner.addPopulation(buildingType.workerPrice);
+        //resource price
     }
 
     public int getDelay() {
@@ -49,10 +49,6 @@ public class Building {
 
     public void setOwner(Kingdom owner) {
         this.owner = owner;
-    }
-
-    public Resources getResourcesPrice() {
-        return resourcesPrice;
     }
 
     public int getHappinessIncrease() {

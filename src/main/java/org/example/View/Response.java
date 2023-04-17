@@ -68,7 +68,11 @@ public enum Response {
     OUT_OF_FOOD("You're out of food , you can't set food rate!"),
     OUT_OF_MONEY("You have no money , you can't set tax rate!"),
     FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
-    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),;
+    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
+    SET_TEXTURE_UNDER_BUILDING("You can't change the ground under a building!"),
+    INVALID_TYPE("Invalid type!"),
+    INVALID_COORDINATES("Invalid coordinates!"),
+    ;
     public final String message;
 
     private Response(String message) {

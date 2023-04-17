@@ -27,6 +27,8 @@ public class Game {
 
     public void initializeMap(int width, int height){
         map = new Tile[width][height];
+        mapHeight = height;
+        mapWidth = width;
     }
 
     public int getMapWidth() {
@@ -71,7 +73,6 @@ public class Game {
                 return tradeRequest;
         }
         return null;
-        //todo
     }
 
     public Tile[][] getMap() {
