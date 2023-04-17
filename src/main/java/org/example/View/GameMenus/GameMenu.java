@@ -7,12 +7,14 @@ import org.example.View.MenuType;
 import org.example.View.Response;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class GameMenu extends Menu {
     GameController gameController;
 
     //some commands will return null if they are successful
     public MenuType run(Scanner scanner){
+        Matcher matcher;
         while(true){
             String command = scanner.nextLine();
             if(Commands.getMatcher(command, Commands.START_THE_GAME).find()) {
@@ -20,6 +22,8 @@ public class GameMenu extends Menu {
                 break;
                 //todo
             }
+            else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
+                System.out.println(GameController.dropBuilding(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         while(true){
@@ -40,6 +44,8 @@ public class GameMenu extends Menu {
                 System.out.println(Response.ENTER_TRADE_MENU.message);
                 return MenuType.TRADE_MENU;
             }
+            else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
+                System.out.println(GameController.dropBuilding(matcher).message);
             //todo
             else System.out.println(Response.INVALID_COMMAND.message);
         }

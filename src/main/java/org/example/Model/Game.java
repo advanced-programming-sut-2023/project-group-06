@@ -78,4 +78,13 @@ public class Game {
     public Tile[][] getMap() {
         return map;
     }
+
+    public void nextTurn(){
+        //it can shift the members of kingdoms
+        //todo
+    }
+
+    public Kingdom currentPlayer(){
+        return kingdoms.get(0);
+    }
 }

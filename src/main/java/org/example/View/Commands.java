@@ -48,6 +48,11 @@ public enum Commands {
     ENTER_TRADE_MENU("^enter trade menu$"),
     ENTER_MAP_MENU("^enter map menu$"),
     ENTER_SHOP_MENU("^enter shop menu$"),
+    DROP_BUILDING("dropbuilding -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
+    //Map Menu Commands
+    SHOW_MAP("show map -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
+    MOVE_MAP(""),////////////////////////////////////////////////////////////////////
+    SHOW_DETAILS("show details -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
     ;
 
     private String regex;
