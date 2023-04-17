@@ -29,6 +29,11 @@ public class Game {
         map = new Tile[width][height];
         mapHeight = height;
         mapWidth = width;
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                map[i][j] = new Tile(TileStructure.EARTH, i, j);
+            }
+        }
     }
 
     public int getMapWidth() {
