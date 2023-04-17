@@ -72,13 +72,35 @@ assignees: Arman17Babaei
 
   **نام و نام خانوادگی: سینا عزیزالدین**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>کامل کردن منوی ثبت نام</summary>
 
   <div dir="ltr" align='right'>
 
   1. [ ] شروع نشده
   2. [ ] در حال انجام
-  3. [ ] تمام شده
+  3. [x] تمام شده
+  </div>
+</details>
+  
+<details>
+  <summary>کامل کردن منوی لاگین </summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [x] تمام شده
+  </div>
+</details>
+  
+<details>
+  <summary>کامل کردن منوی پروفایل </summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [x] تمام شده
   </div>
 </details>
 
