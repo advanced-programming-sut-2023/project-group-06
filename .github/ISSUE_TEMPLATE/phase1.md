@@ -86,12 +86,22 @@ assignees: Arman17Babaei
 
   **نام و نام خانوادگی: سید مبین رضوی**
 <details>
-  <summary>تسک مربوطه</summary>
+  <summary>کامل کردن منوی نقشه و منوی اصلی </summary>
 
   <div dir="ltr" align='right'>
 
-  1. [ ] شروع نشده
-  2. [ ] در حال انجام
+  1. [X] شروع نشده
+  2. [X] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+<details>
+  <summary>اضافه کردن برخی جزییات منوی حکومت و منوی بازی</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [x] در حال انجام
   3. [ ] تمام شده
   </div>
 </details>
