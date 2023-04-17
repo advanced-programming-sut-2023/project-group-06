@@ -22,7 +22,7 @@ public class MainController {
         String username8 = Controller.makeEntryValid(matcher.group("username8"));
         //check format
         ArrayList<User> users = new ArrayList<>();
-        users.add(Controller.currentUser);
+        users.add(Data.getCurrentUser());
         if(addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username3) != null ||
@@ -43,7 +43,6 @@ public class MainController {
             return "failed";
         players.add(Data.getUserByName(username));
         return null;
-        //todo
     }
 
     public static Response setTextureOneTile(Matcher matcher){

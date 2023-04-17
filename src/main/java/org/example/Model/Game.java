@@ -21,7 +21,7 @@ public class Game {
         this.numberOfPlayers = players.size();
         kingdoms = new ArrayList<>();
         for(User user : this.players){
-            kingdoms.add(new Kingdom(0, 1000, 8, user));
+            kingdoms.add(new Kingdom(user));
         }
     }
 

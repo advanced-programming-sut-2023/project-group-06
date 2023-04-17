@@ -8,6 +8,7 @@ import org.example.View.Response;
 
 public enum BuildingType {
     ;
+    int size;
     int direction;
     int hitPoint;
     int goldPrice;
