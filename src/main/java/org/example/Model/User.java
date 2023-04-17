@@ -59,6 +59,10 @@ public class User {
         return answerToQuestion.equals(this.answerToQuestion);
     }
 
+    public String getAnswerToQuestion() {
+        return answerToQuestion;
+    }
+
     public int getQuestionIndex() {
         return questionIndex;
     }

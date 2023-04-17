@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.*;
 
@@ -13,6 +14,7 @@ public class Controller {
     public static MenuType currentMenu;
 
     public static void run(Scanner scanner){
+        Data.loadData("src/main/java/org/example/Model/data.json");
         currentMenu = MenuType.START_MENU;
         while (true) {
             currentMenu = currentMenu.menu.run(scanner);

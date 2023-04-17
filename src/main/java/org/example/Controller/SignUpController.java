@@ -1,5 +1,7 @@
 package org.example.Controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.Response;
@@ -82,9 +84,6 @@ public class SignUpController {
         return randomPassword;
     }
 
-    public static Response saveData(){
-        return null;
-        //todo
-    }
+
 
 }

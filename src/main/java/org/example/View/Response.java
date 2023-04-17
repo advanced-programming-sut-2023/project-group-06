@@ -48,7 +48,7 @@ public enum Response {
     SLOGAN_REMOVE("Slogan removed successfully!"),
     SLOGAN_ALREADY_NULL("This user has no slogan!"),
     SLOGAN_IS_EMPTY("Slogan is empty!")
-
+    ;
     public final String message;
 
     private Response(String message) {
