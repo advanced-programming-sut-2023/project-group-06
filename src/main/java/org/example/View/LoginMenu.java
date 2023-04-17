@@ -15,7 +15,7 @@ public class LoginMenu extends Menu{
         while (true) {
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.LOGIN_USER).find()) {
-                System.out.println(LoginController.loginUser(Commands.getMatcher(command,Commands.LOGIN_USER)));
+                System.out.println(LoginController.loginUser(Commands.getMatcher(command,Commands.LOGIN_USER)).message);
                 return MenuType.MAIN_MENU;
             } else if (Commands.getMatcher(command, Commands.FORGOT_PASSWORD).find()) {
                 Matcher matcher = Commands.getMatcher(command, Commands.FORGOT_PASSWORD);
@@ -30,7 +30,10 @@ public class LoginMenu extends Menu{
                     System.out.println("Please re-enter your password:");
                     String newPasswordConfirmation = scanner.nextLine();
                     System.out.println(LoginController.changePasswordSuccessful(newPassword,newPasswordConfirmation).message);
-                } else System.out.println(response.message);
+                }
+                System.out.println(response.message);
+            } else if (Commands.getMatcher(command,Commands.BACK).find()) {
+                return MenuType.START_MENU;
             } else {
                 System.out.println(Response.INVALID_COMMAND.message);
             }

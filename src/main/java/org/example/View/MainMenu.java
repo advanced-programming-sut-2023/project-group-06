@@ -20,7 +20,7 @@ public class MainMenu extends Menu{
                 return MenuType.PROFILE_MENU;
             }
             else if(Commands.getMatcher(command, Commands.LOGOUT).find()){
-                System.out.println(Response.LOGOUT_SUCCESSFUL);
+                System.out.println(Response.LOGOUT_SUCCESSFUL.message);
                 return MenuType.LOGIN_MENU;
             }
             else System.out.println(Response.INVALID_COMMAND.message);

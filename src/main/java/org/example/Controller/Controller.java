@@ -24,6 +24,7 @@ public class Controller {
         //todo
     }
     protected static String makeEntryValid(String entry) {
+        if (entry == null) return null;
         if (entry.charAt(0)=='"') return entry.substring(1, entry.length() - 1);
         else return entry;
     }
