@@ -27,7 +27,6 @@ public class Data {
 
     public static void addUser(User user) {
         users.add(user);
-        saveData("src/main/java/org/example/Model/data.json");
     }
 
     public static boolean isStayLoggedIn() {
@@ -78,8 +77,8 @@ public class Data {
             userObject.addProperty("email", user.getEmail());
             userObject.addProperty("slogan", user.getSlogan());
             userObject.addProperty("questionIndex", user.getQuestionIndex());
-            userObject.addProperty("highScore", user.getHighScore());
             userObject.addProperty("answerToQuestion", user.getAnswerToQuestion());
+            userObject.addProperty("highScore", user.getHighScore());
             usersObject.add(userObject);
         }
         root.add("users", usersObject);

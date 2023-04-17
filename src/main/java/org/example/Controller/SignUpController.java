@@ -46,6 +46,7 @@ public class SignUpController {
         if (isSloganRandom) SignUpMenu.randomSlogan(slogan);
         if (isPasswordRandom && !SignUpMenu.randomPassword(password,scanner)) return Response.PASSWORD_CONFIRMATION;
         User newUser = new User(username, password, nickname, email, slogan);
+        Data.saveData("src/main/java/org/example/Model/data.json");
         return Response.PICK_SECURITY_QUESTION;
     }
     public static Response securityQuestion(Matcher matcher, String username) {
