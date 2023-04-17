@@ -21,7 +21,7 @@ public class MainMenu extends Menu{
             }
             else if(Commands.getMatcher(command, Commands.LOGOUT).find()){
                 System.out.println(Response.LOGOUT_SUCCESSFUL);
-                return MenuType.SIGN_UP_MENU;
+                return MenuType.LOGIN_MENU;
             }
             else System.out.println(Response.INVALID_COMMAND.message);
         }
