@@ -15,9 +15,20 @@ public class LoginMenu extends Menu{
         while (true) {
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.LOGIN_USER).find()) {
-                Response response = LoginController.loginUser(Commands.getMatcher(command,Commands.LOGIN_USER));
-                System.out.println(response.message);
-                if (response == Response.LOGIN_SUCCESSFUL) return MenuType.MAIN_MENU;
+                Matcher matcher = Commands.getMatcher(command,Commands.LOGIN_USER); matcher.find();
+                String username = matcher.group("username");
+                if (LoginController.setLastLoginAttempt(username, (System.currentTimeMillis() / 1000L))) {
+                    Response response = LoginController.loginUser(Commands.getMatcher(command, Commands.LOGIN_USER));
+                    System.out.println(response.message);
+                    if (response == Response.LOGIN_SUCCESSFUL) {
+                        LoginController.resetLoginAttempts(username);
+                        return MenuType.MAIN_MENU;
+                    }
+                } else {
+                    long lastLoginAttempt = LoginController.getLastLoginAttempt(username);
+                    long currentTime = System.currentTimeMillis() / 1000L;
+                    System.out.printf(Response.TRY_AGAIN_LATER.message,lastLoginAttempt + LoginController.getNumberOfLoginAttempts(username) * 5 - currentTime);
+                }
             } else if (Commands.getMatcher(command, Commands.FORGOT_PASSWORD).find()) {
                 Matcher matcher = Commands.getMatcher(command, Commands.FORGOT_PASSWORD);
                 matcher.find();

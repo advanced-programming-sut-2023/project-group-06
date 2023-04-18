@@ -46,4 +46,24 @@ public class LoginController {
         Data.getUserByName(username).changePasswordBySecurityQuestion(answer,password);
         return Response.PASSWORD_CHANGE;
     }
+
+    public static void resetLoginAttempts (String username) {
+        Data.getUserByName(username).setNumberOfLoginAttempts(0);
+    }
+    public static int getNumberOfLoginAttempts(String username) {
+        return Data.getUserByName(username).getNumberOfLoginAttempts();
+    }
+    public static long getLastLoginAttempt (String username) {
+        return Data.getUserByName(username).getLastLoginAttemptTime();
+    }
+    public static boolean setLastLoginAttempt (String username, long currentTime) {
+        if ((currentTime - Data.getUserByName(username).getLastLoginAttemptTime())
+                < (Data.getUserByName(username).getNumberOfLoginAttempts() * 5)) {
+            return false;
+        }
+        Data.getUserByName(username).setLastLoginAttemptTime(currentTime);
+        int loginAttempts = Data.getUserByName(username).getNumberOfLoginAttempts();
+        Data.getUserByName(username).setNumberOfLoginAttempts(loginAttempts + 1);
+        return true;
+    }
 }

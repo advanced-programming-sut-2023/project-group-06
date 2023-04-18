@@ -9,6 +9,8 @@ public class User {
     private int questionIndex = -1;
     private String slogan;
     private int highScore;
+    private int numberOfLoginAttempts = 0;
+    private long lastLoginAttemptTime;
 
     public User(String username, String password, String nickname, String email, String slogan) {
         this.username = username;
@@ -87,6 +89,22 @@ public class User {
 
     public void setSlogan(String slogan) {
         this.slogan = slogan;
+    }
+
+    public int getNumberOfLoginAttempts() {
+        return numberOfLoginAttempts;
+    }
+
+    public void setNumberOfLoginAttempts(int numberOfLoginAttempts) {
+        this.numberOfLoginAttempts = numberOfLoginAttempts;
+    }
+
+    public long getLastLoginAttemptTime() {
+        return lastLoginAttemptTime;
+    }
+
+    public void setLastLoginAttemptTime(long lastLoginAttemptTime) {
+        this.lastLoginAttemptTime = lastLoginAttemptTime;
     }
 
     public int getHighScore() {

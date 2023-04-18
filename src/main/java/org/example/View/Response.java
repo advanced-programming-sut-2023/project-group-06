@@ -67,7 +67,8 @@ public enum Response {
     OUT_OF_MONEY("You have no money , you can't set tax rate!"),
     FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
     SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
-    CREATION_INTERRUPTION("User creation interrupted!");
+    CREATION_INTERRUPTION("User creation interrupted!"),
+    TRY_AGAIN_LATER("Try again later in %d seconds!");
     public final String message;
 
     private Response(String message) {
