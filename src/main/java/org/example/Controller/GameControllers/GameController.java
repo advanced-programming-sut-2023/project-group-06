@@ -104,7 +104,7 @@ public class GameController {
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() < buildingtype.getWorkerPrice())
-            return Response.POPULATION_EXCEEDED;/////////////////////I need to recheck this
+            return Response.POPULATION_EXCEEDED;
         if(currentPlayer.getEngineers() < buildingtype.getEngineerPrice())
             return Response.NOT_ENOUGH_ENGINEERS;
         if(currentPlayer.getWealth() < buildingtype.getGoldPrice())

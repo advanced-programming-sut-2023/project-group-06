@@ -16,7 +16,7 @@ public class Kingdom {
     private int maxPopulation;
     private int fear = 0;
     private int horseNumber;
-    private int engineers;
+    private int availableEngineers;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Resources> resources = new ArrayList<>();
@@ -34,7 +34,7 @@ public class Kingdom {
     }
 
     public int getEngineers() {
-        return engineers;
+        return availableEngineers;
     }
 
     public int getHappiness() {
@@ -83,7 +83,7 @@ public class Kingdom {
         return soldiers;
     }
 
-    public void addEngineers(int number) { engineers += number; }
+    public void addEngineers(int number) { availableEngineers += number; }
 
     public ArrayList<Building> getBuildings() {
         return buildings;
