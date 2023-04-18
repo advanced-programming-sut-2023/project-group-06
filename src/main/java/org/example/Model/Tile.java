@@ -10,7 +10,6 @@ public class Tile {
     private int xCoordinate;
     private int yCoordinate;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
-    //
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;

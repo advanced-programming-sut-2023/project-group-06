@@ -1,5 +1,9 @@
 package org.example.Model;
 
-enum FoodType {
-
+public enum FoodType {
+    MEAT,
+    APPLES,
+    CHEESE,
+    BREAD,
+    ;
 }

@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.Data;
 import org.example.Model.Game;
 import org.example.Model.Kingdom;
@@ -22,7 +23,7 @@ public class MainController {
         String username8 = Controller.makeEntryValid(matcher.group("username8"));
         //check format
         ArrayList<User> users = new ArrayList<>();
-        users.add(Controller.currentUser);
+        users.add(Data.getCurrentUser());
         if(addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username3) != null ||
@@ -32,7 +33,11 @@ public class MainController {
                 addGamePlayer(users, username7) != null ||
                 addGamePlayer(users, username8) != null)
             return Response.USER_NOT_FOUND;
+        if(users.size() == 1)
+            return Response.CANT_PLAY_ALONE;
         Game game = new Game(users);
+        GameController.currentGame = game;
+        GameController.currentPlayer = game.currentPlayer();
         return Response.GAME_STARTED_SUCCESSFULLY;
     }
 

@@ -1,6 +1,7 @@
 package org.example.Model;
 
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.Storage;
 
 import java.util.ArrayList;
 
@@ -15,11 +16,12 @@ public class Kingdom {
     private int maxPopulation;
     private int fear = 0;
     private int horseNumber;
-    private int engineers;
-    /////// adding food storages
+    private int availableEngineers;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Resources> resources = new ArrayList<>();
+    private ArrayList<Food> foods = new ArrayList<>();
+    private ArrayList<Weapon> weapons = new ArrayList<>();
     private User owner;
     private Soldier king;
 
@@ -29,6 +31,10 @@ public class Kingdom {
         this.maxPopulation = 100;
         this.owner = owner;
         //todo
+    }
+
+    public int getEngineers() {
+        return availableEngineers;
     }
 
     public int getHappiness() {
@@ -77,7 +83,7 @@ public class Kingdom {
         return soldiers;
     }
 
-    public void addEngineers(int number) { engineers += number; }
+    public void addEngineers(int number) { availableEngineers += number; }
 
     public ArrayList<Building> getBuildings() {
         return buildings;
@@ -125,5 +131,35 @@ public class Kingdom {
 
     public void addResources(Resources resource) {
         this.resources.add(resource);
+    }
+
+    public void payResource(Resources resource){
+        int amount = resource.getAmount();
+        for(Resources resources1 : this.resources){
+            if(resources1.getType() == resource.getType()){
+                int cost = Math.min(amount, resources1.getAmount());
+                resources1.addToAmount(-1 * cost);
+                amount -= cost;
+            }
+            if(amount == 0) break;
+        }
+    }
+
+    public int getResourceAmountByType(ResourcesType resourcesType){
+        int amount = 0;
+        for(Resources resources1 : this.resources){
+            if(resources1.getType() == resourcesType)
+                amount += resources1.getAmount();
+        }
+        return amount;
+    }
+
+    public int getFoodAmountByType(FoodType foodType){
+        int amount = 0;
+        for(Food food : this.foods){
+            if(food.getType() == foodType)
+                amount += food.getAmount();
+        }
+        return amount;
     }
 }

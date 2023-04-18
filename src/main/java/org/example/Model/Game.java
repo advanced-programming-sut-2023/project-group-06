@@ -9,6 +9,8 @@ public class Game {
     private ArrayList<User> players;
     private ArrayList<Kingdom> kingdoms;
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
+    private int whoseTurn = 0;
+
     Tile[][] map;
 
     public Tile getTileByCoordinates(int y, int x) {
@@ -26,6 +28,13 @@ public class Game {
 
     public void initializeMap(int width, int height){
         map = new Tile[width][height];
+        mapHeight = height;
+        mapWidth = width;
+        for(int i = 0; i < width; i++){
+            for(int j = 0; j < height; j++){
+                map[i][j] = new Tile(TileStructure.EARTH, i, j);
+            }
+        }
     }
 
     public int getMapWidth() {
@@ -65,11 +74,23 @@ public class Game {
     }
 
     public TradeRequest getTradeRequestById(int id){
+        for(TradeRequest tradeRequest : tradeRequests){
+            if(tradeRequest.id == id)
+                return tradeRequest;
+        }
         return null;
-        //todo
     }
 
     public Tile[][] getMap() {
         return map;
+    }
+
+    public void nextTurn(){
+        //it can shift the members of kingdoms // increase the turn index instead
+        //todo
+    }
+
+    public Kingdom currentPlayer(){
+        return kingdoms.get(whoseTurn);
     }
 }

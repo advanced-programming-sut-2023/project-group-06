@@ -21,17 +21,17 @@ public enum Commands {
     CHANGE_PASSWORD("(?=.* -n )(?=.* -o )^profile change(( -o (?<oldPassword>(((\\\"[^\\\"]*\\\")|\\S*))))" +
             "|( -n (?<newPassword>(((\\\"[^\\\"]*\\\")|\\S*))))){2}$"),
     CHANGE_EMAIL("^profile change -e (?<email>(((\\\"[^\\\"]*\\\")|\\S*)))$"),
-    CHANGE_SLOGAN("^profile change slogan -s (?<slogan>(((\\\"[^\\\"]*\\\")|\\S*)))$"),
+    CHANGE_SLOGAN("^profile change -s (?<slogan>(((\\\"[^\\\"]*\\\")|\\S*)))$"),
     REMOVE_SLOGAN("^profile remove slogan$"),
     SHOW_HIGH_SCORE("^profile display highscore$"),
     SHOW_RANK("^profile display rank$"),
     SHOW_SLOGAN("^profile display slogan$"),
     SHOW_ALL_PROFILE("^profile display$"),
     //Main Menu Commands
-    START_GAME("^start game with( (?<username2>(((\"[^\"]*\")|\\S*))))?( (?<username3>(((\\\"[^\\\"]*\\\")|\\S*))))?" +
-            "( (?<username4>(((\\\"[^\\\"]*\\\")|\\S*))))?( (?<username5>(((\\\"[^\\\"]*\\\")|\\S*))))?" +
-            "( (?<username6>(((\\\"[^\\\"]*\\\")|\\S*))))?( (?<username7>(((\\\"[^\\\"]*\\\")|\\S*))))?" +
-            "( (?<username8>(((\\\"[^\\\"]*\\\")|\\S*))))?$"),
+    START_GAME("^start game with( (?<username2>(((\"[^\"]*\")|\\S*))))?( (?<username3>(((\"[^\"]*\")|\\S*))))?" +
+            "( (?<username4>(((\"[^\"]*\")|\\S*))))?( (?<username5>(((\"[^\"]*\")|\\S*))))?" +
+            "( (?<username6>(((\"[^\"]*\")|\\S*))))?( (?<username7>(((\"[^\"]*\")|\\S*))))?" +
+            "( (?<username8>(((\"[^\"]*\")|\\S*))))?$"),
     ENTER_PROFILE_MENU("^enter profile menu$"),
     //Kingdom Menu Commands
     SHOW_POPULARITY_FACTORS("^show popularity factors$"),
@@ -48,7 +48,13 @@ public enum Commands {
     ENTER_KINGDOM_MENU("^enter kingdom menu$"),
     ENTER_TRADE_MENU("^enter trade menu$"),
     ENTER_MAP_MENU("^enter map menu$"),
-    ENTER_SHOP_MENU("^enter shop menu$");
+    ENTER_SHOP_MENU("^enter shop menu$"),
+    DROP_BUILDING("dropbuilding -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
+    //Map Menu Commands
+    SHOW_MAP("show map -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
+    MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))+"),
+    SHOW_DETAILS("show details -x (?<x>(\\-)\\d+) -y (?<y>(\\-)\\d+)"),
+    ;
 
     private String regex;
 
