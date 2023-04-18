@@ -103,8 +103,10 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() < buildingtype.getEngineerPrice() + buildingtype.getWorkerPrice())
+        if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() < buildingtype.getWorkerPrice())
             return Response.POPULATION_EXCEEDED;/////////////////////I need to recheck this
+        if(currentPlayer.getEngineers() < buildingtype.getEngineerPrice())
+            return Response.NOT_ENOUGH_ENGINEERS;
         if(currentPlayer.getWealth() < buildingtype.getGoldPrice())
             return Response.NOT_ENOUGH_MONEY;
         if(currentPlayer.getResourceAmountByType(buildingtype.getResourcesPrice().getType()) < buildingtype.getResourcesPrice().getAmount())
@@ -128,75 +130,9 @@ public class GameController {
         //todo
     }
 
-    public static Response moveUnit(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
-    }
-
-    public static Response patrolUnit(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
-    }
-
-    public static Response throwLadder(){
-        return null;
-        //todo
-        //after select unit
-    }
-
-    public static Response digDitch(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
-    }
-
-    public static Response setUnitPosition(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
-    }
-
     public static Response selectPerson(Matcher matcher){
         return null;
         //todo
-    }
-
-    public static Response fireAtEnemy(Matcher matcher){
-        return null;
-        //todo
-        //after select person
-    }
-
-    public static Response attack(Matcher matcher){
-        return null;
-        //todo
-        //after select person
-    }
-
-    public static Response pourOil(Matcher matcher){
-        return null;
-        //todo
-        //after select person
-    }
-
-    public static Response digTunnel(Matcher matcher){
-        return null;
-        //todo
-        //after select person
-    }
-
-    public static Response buildEquipment(Matcher matcher){
-        return null;
-        //todo
-        //after select person
-    }
-
-    public static Response disband(){
-        return null;
-        //todo
-        //after select persson
     }
 
     public static Response nextTurn(){
@@ -208,7 +144,7 @@ public class GameController {
         //computeFears
         //computeTaxes     //check if you lost all money , taxRate must be set on 0
         //autoProducing
-        //computePopulation
+        //computePopulation  //soldiers and engineers
 
         //changeTurn
         //initialize some fields

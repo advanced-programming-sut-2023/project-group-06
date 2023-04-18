@@ -73,6 +73,7 @@ public enum Response {
     INVALID_TYPE("Invalid type!"),
     INVALID_COORDINATES("Invalid coordinates!"),
     NOT_ENOUGH_RESOURCES("You don't have enough resource to build this building!"),
+    NOT_ENOUGH_ENGINEERS("You don't have enough engineers to build this building!"),
     ;
     public final String message;
 

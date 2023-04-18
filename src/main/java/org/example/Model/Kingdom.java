@@ -33,6 +33,10 @@ public class Kingdom {
         //todo
     }
 
+    public int getEngineers() {
+        return engineers;
+    }
+
     public int getHappiness() {
         return happiness;
     }
