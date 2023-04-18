@@ -78,6 +78,17 @@ assignees: Arman17Babaei
   3. [x] تمام شده
   </div>
 </details>
+  
+<details>
+  <summary>ذخیره کردن نقشه</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
 
 ## تسک‌های نفر دوم
 
@@ -114,6 +125,17 @@ assignees: Arman17Babaei
   3. [x] تمام شده
   </div>
 </details>
+  
+<details>
+  <summary>کامل کردن مدل</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [ ] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
 
 ## تسک‌های نفر سوم
 
@@ -128,6 +150,7 @@ assignees: Arman17Babaei
   3. [ ] تمام شده
   </div>
 </details>
+  
 <details>
   <summary>اضافه کردن برخی جزییات منوی حکومت و منوی بازی</summary>
 
@@ -135,6 +158,17 @@ assignees: Arman17Babaei
 
   1. [x] شروع نشده
   2. [x] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
+  
+<details>
+  <summary>ساختن نقشه هنگام شروع بازی</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [ ] شروع نشده
+  2. [ ] در حال انجام
   3. [ ] تمام شده
   </div>
 </details>
