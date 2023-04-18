@@ -27,7 +27,9 @@ public class LoginMenu extends Menu{
                 } else {
                     long lastLoginAttempt = LoginController.getLastLoginAttempt(username);
                     long currentTime = System.currentTimeMillis() / 1000L;
-                    System.out.printf(Response.TRY_AGAIN_LATER.message,lastLoginAttempt + LoginController.getNumberOfLoginAttempts(username) * 5 - currentTime);
+                    System.out.printf(Response.TRY_AGAIN_LATER.message,
+                            lastLoginAttempt + LoginController.getNumberOfLoginAttempts(username) * 5 - currentTime);
+                    System.out.println();
                 }
             } else if (Commands.getMatcher(command, Commands.FORGOT_PASSWORD).find()) {
                 Matcher matcher = Commands.getMatcher(command, Commands.FORGOT_PASSWORD);
