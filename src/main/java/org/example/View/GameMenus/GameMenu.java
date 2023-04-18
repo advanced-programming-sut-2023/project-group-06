@@ -24,8 +24,6 @@ public class GameMenu extends Menu {
                 break;
                 //todo
             }
-            else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
-                System.out.println(GameController.dropBuilding(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find()) {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));
