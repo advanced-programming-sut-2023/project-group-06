@@ -91,17 +91,22 @@ public class MapController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
-            return "Invalid coordinates";
+            return "Invalid coordinates\n";
         String result = "";
-        result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString() + "\n";///////I hope toString works
+        result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
         //show resources
         for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
             //show soldiers
         }
         String buildingString = "empty\n";
-        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
-            buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString() + "\n";//////// I hope toString works
+        boolean tree = false;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
+            if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE)
+                buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString().toLowerCase() + "\n";
+            else tree = true;
+        }
         result += "buildings: " + buildingString;
+        if(tree) result += "there is a tree here!\n";
         return result;
     }
 }

@@ -16,9 +16,6 @@ public class Tile {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
     }
-    public int numberOfSoldiers(){
-        return soldiers.size();
-    }//////////////////////
 
     public TileStructure getType() {
         return type;

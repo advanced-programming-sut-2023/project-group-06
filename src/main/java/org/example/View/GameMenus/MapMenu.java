@@ -19,7 +19,7 @@ public class MapMenu extends Menu {
             if(Commands.getMatcher(command, Commands.MOVE_MAP).find())
                 MapController.moveMap(command);
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_DETAILS)).find())
-                System.out.println(MapController.showDetails(matcher));
+                System.out.print(MapController.showDetails(matcher));
             else if(Commands.getMatcher(command, Commands.EXIT).find())
                 return null;
             else System.out.println(Response.INVALID_COMMAND.message);

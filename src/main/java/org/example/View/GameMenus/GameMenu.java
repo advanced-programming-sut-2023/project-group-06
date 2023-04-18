@@ -43,7 +43,7 @@ public class GameMenu extends Menu {
                     System.out.println("set map width and height");
                     command = scanner.nextLine();
                     if((matcher = Commands.getMatcher(command, Commands.SET_MAP_WIDTH_HEIGHT)).find()){
-                        GameController.initializeMap(matcher);//I hope currentGame isn't needed here
+                        GameController.initializeMap(matcher);
                         break;
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);
@@ -98,8 +98,11 @@ public class GameMenu extends Menu {
                 if(x < 7 || x > GameController.currentGame.getMapWidth() - 8 || y < 2 || y > GameController.currentGame.getMapHeight() - 3)
                     System.out.println("Can't show the map near boundary points");
                 else{
+                    MapController.currentX = x;
+                    MapController.currentY = y;
+                    MapController.currentGame = GameController.currentGame;
                     MapController.showMap(x, y);
-                    return MenuType.MAP_MENU;
+                    MenuType.MAP_MENU.menu.run(scanner);
                 }
             }
             else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
