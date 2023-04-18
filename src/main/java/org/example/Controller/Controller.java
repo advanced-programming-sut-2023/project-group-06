@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.*;
 
@@ -13,15 +14,106 @@ public class Controller {
     public static MenuType currentMenu;
 
     public static void run(Scanner scanner){
+        Data.loadData("src/main/java/org/example/Model/data.json");
         currentMenu = MenuType.START_MENU;
         while (true) {
             currentMenu = currentMenu.menu.run(scanner);
             if(currentMenu == null) break;
         }
     }
-    public static String captchaGenerator(){
-        return null;
-        //todo
+    public static String captchaGenerator(String input){
+        String[][] digits = { {"⡀⡀⣄⣤⣶⣿⣶⣤⡀⡀⡀⡀",
+                               "⡀⡀⣾⣿⠳⡀⠉⣿⣷⡀⡀⡀",
+                               "⡀⢀⣿⡇⡀⡀⠈⢺⣿⡀⡀⡀",
+                               "⡀⢸⣿⡀⣴⣿⣆⠘⣿⡏⡀⡀",
+                               "⡀⢸⣿⡄⠈⠛⠁⢸⣿⠇⡀⡀",
+                               "⡀⡀⣿⣧⡀⡀⡀⣼⣿⡀⡀⡀",
+                               "⡀⡀⠽⣿⣷⣶⣾⣿⠧⡀⡀⡀",
+                               "⡀⡀⡀⡀⠈⠉⠉⡀⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⣀⣤⣤⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⣿⠿⢻⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⢀⠁⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠤⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⢰⣤⣤⣼⣿⣤⣤⣴⡀⡀",
+                                "⡀⡀⠈⠉⠉⠉⠉⠉⠉⠉⡀⡀"},
+                               {"⡀⡀⡀⣠⣴⣶⣶⣤⡀⡀⡀⡀",
+                                "⡀⡀⢿⡿⠉⠁⠉⢿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣾⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢀⣾⡿⠁⡀⡀⡀",
+                                "⡀⡀⡀⢀⣴⣿⠋⡀⡀⡀⡀⡀",
+                                "⡀⡀⣿⣿⣿⣶⣶⣶⣶⣶⡀⡀",
+                                "⡀⡀⠉⠉⠉⠉⠉⠉⠉⠉⡀⡀"},
+                               {"⡀⡀⡀⣀⣤⣤⣤⣤⡀⡀⡀⡀",
+                                "⡀⡀⢿⡿⠛⠉⠙⢿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣸⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⣤⣴⣾⠛⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠉⠉⠛⣿⣷⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠈⣿⡇⡀⡀",
+                                "⡀⡀⣦⣤⣀⣀⣤⣿⣿⡀⡀⡀",
+                                "⡀⡀⠉⠛⠛⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⡀⡀⡀⣀⣀⡀⡀⡀",
+                                "⡀⡀⡀⣿⣿⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⢀⣿⡇⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⣸⣿⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⢀⣿⣿⣿⣿⣿⣿⣿⣾⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣾⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠿⠿⡀⡀⡀"},
+                               {"⡀⡀⢠⣤⣤⣤⣤⣤⣴⡀⡀⡀",
+                                "⡀⡀⢸⣿⠍⠉⠉⠉⠉⡀⡀⡀",
+                                "⡀⡀⢸⣿⡀⡀⡀⡀⡀⡀⡀⡀",
+                                "⡀⡀⢸⣿⡿⠿⢿⣿⣶⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠈⣿⡇⡀⡀",
+                                "⡀⡀⣤⡆⡀⡀⡀⡀⣿⡏⡀⡀",
+                                "⡀⡀⢿⣿⣦⣤⣤⣿⣿⡀⡀⡀",
+                                "⡀⡀⡀⠈⠙⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⡀⡀⣀⣤⣤⡀⡀⡀",
+                                "⡀⡀⡀⣠⣾⣿⠿⠛⠛⡀⡀⡀",
+                                "⡀⡀⢠⣿⠏⡀⡀⡀⡀⡀⡀⡀",
+                                "⡀⡀⣿⣿⣠⣾⣿⣿⣦⡀⡀⡀",
+                                "⡀⡀⣿⣷⠁⡀⡀⠈⣿⣧⡀⡀",
+                                "⡀⡀⣿⣧⡀⡀⡀⡀⣿⣿⡀⡀",
+                                "⡀⡀⢻⣿⣦⣀⣠⣾⣿⠃⡀⡀",
+                                "⡀⡀⡀⠈⠛⠛⠛⠋⡀⡀⡀⡀"},
+                               {"⡀⢠⣤⣤⣤⣤⣤⣤⣤⣤⡀⡀",
+                                "⡀⢸⣿⠛⠛⠛⠛⢛⣿⡏⡀⡀",
+                                "⡀⢸⣿⡀⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⢰⣿⠇⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⣿⡿⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⣼⣿⠁⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⢀⣿⡟⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠚⠛⡀⡀⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⣠⣴⣶⣶⣤⡀⡀⡀⡀",
+                                "⡀⡀⣾⣿⠋⠉⠉⢿⣿⡀⡀⡀",
+                                "⡀⡀⢿⣿⡀⡀⡀⢸⣿⠁⡀⡀",
+                                "⡀⡀⡀⠙⣻⣷⣿⡛⠁⡀⡀⡀",
+                                "⡀⡀⣼⣿⠉⡀⠉⠻⣿⡄⡀⡀",
+                                "⡀⡀⣿⡇⡀⡀⡀⡀⣿⣷⡀⡀",
+                                "⡀⡀⢿⣿⣦⣤⣤⣾⣿⠃⡀⡀",
+                                "⡀⡀⡀⠈⠙⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⢀⣤⣤⣤⣤⡀⡀⡀⡀",
+                                "⡀⡀⣰⣿⠟⠉⠙⠻⣿⡆⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⡀⣿⣿⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⣠⣿⣿⡀⡀",
+                                "⡀⡀⠈⠿⣿⣿⡿⠃⣿⡿⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣼⣿⠁⡀⡀",
+                                "⡀⡀⡀⣤⣤⣶⣿⠿⠁⡀⡀⡀",
+                                "⡀⡀⡀⠛⠋⠉⡀⡀⡀⡀⡀⡀"}};
+        StringBuilder output = new StringBuilder();
+        for(int i = 0; i < 8; i++){
+            for(Character c : input.toCharArray()) output.append(digits[c.charValue() - '0'][i]);
+            output.append("\n");
+        }
+        makeNoise(output);
+        return output.toString();
+    }
+    private static void makeNoise(StringBuilder str){
+        for(int i = 0; i < str.length(); i++)
+            if (str.charAt(i) != '\n' && Math.random() < 0.05)
+                str.replace(i,i+1,"⣦");
     }
     protected static String makeEntryValid(String entry) {
         if (entry == null) return null;

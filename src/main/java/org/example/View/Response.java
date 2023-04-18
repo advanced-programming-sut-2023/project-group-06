@@ -68,7 +68,8 @@ public enum Response {
     FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
     SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
     CREATION_INTERRUPTION("User creation interrupted!"),
-    TRY_AGAIN_LATER("Try again later in %d seconds!");
+    TRY_AGAIN_LATER("Try again later in %d seconds!"),
+    ;
     public final String message;
 
     private Response(String message) {

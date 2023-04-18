@@ -1,5 +1,7 @@
 package org.example.Controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.Response;
@@ -47,6 +49,7 @@ public class SignUpController {
             if (password == null) return Response.PASSWORD_CONFIRMATION;
         }
         User newUser = new User(username, password, nickname, email, slogan);
+        Data.saveData("src/main/java/org/example/Model/data.json");
         return Response.PICK_SECURITY_QUESTION;
     }
     public static Response securityQuestion(Matcher matcher, String username) {
@@ -91,9 +94,6 @@ public class SignUpController {
         return randomPassword;
     }
 
-    public static Response saveData(){
-        return null;
-        //todo
-    }
+
 
 }
