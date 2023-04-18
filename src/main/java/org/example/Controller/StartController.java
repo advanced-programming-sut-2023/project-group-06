@@ -15,7 +15,6 @@ public class StartController{
         return false;
     }
     public static Response chooseMenuToEnter(String command) {
-        //todo import isStayLoggedIn
         if (command.equals("y")) return Response.ENTER_LOGIN_MENU;
         if (command.equals("n")) return Response.ENTER_SIGN_UP_MENU;
         return null;

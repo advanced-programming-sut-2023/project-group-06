@@ -25,13 +25,15 @@ public class Controller {
     }
     protected static String makeEntryValid(String entry) {
         if (entry == null) return null;
+        if (entry.isEmpty()) return entry;
         if (entry.charAt(0)=='"') return entry.substring(1, entry.length() - 1);
         else return entry;
     }
 
     protected static String nullGroup(Matcher matcher, String[] groupNames) {
         for (int i = 0; i < groupNames.length; i++) {
-            if (matcher.group(groupNames[i]) == null) return groupNames[i];
+            if (matcher.group(groupNames[i]) == null) continue;
+            if (makeEntryValid(matcher.group(groupNames[i])).isEmpty()) return groupNames[i];
         }
         return null;
     }

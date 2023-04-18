@@ -14,12 +14,14 @@ import java.util.regex.Pattern;
 public class SignUpController {
     public static Response createUser(Matcher matcher, Scanner scanner){
         matcher.find();
-        String[] groupNames = {"username","nickname","password","email"};
+        String[] groupNames = {"username","nickname","password","email","slogan"};
         boolean isSloganRandom = false; boolean isPasswordRandom = false;
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
-        if ((matcher.group("passwordConfirmation") == null) && !matcher.group("password").equals("random")) return Response.INVALID_COMMAND;
-        if ((matcher.group("slogan") == null) && (matcher.group("sloganSign") != null)) return Response.EMPTY_SLOGAN;
+        if ((matcher.group("passwordConfirmation") == null) && !matcher.group("password").equals("random"))
+            return Response.INVALID_COMMAND;
+        if ((matcher.group("slogan")!= null) && matcher.group("slogan").equals("random")) isSloganRandom = true;
+        if (matcher.group("password").equals("random")) isPasswordRandom = true;
         String username = Controller.makeEntryValid(matcher.group("username"));
         String password = Controller.makeEntryValid(matcher.group("password"));
         String passwordConfirmation = Controller.makeEntryValid(matcher.group("passwordConfirmation"));
@@ -29,9 +31,7 @@ public class SignUpController {
         if (slogan != null) slogan = Controller.makeEntryValid(slogan);
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
-        if ((slogan!= null) && slogan.equals("random")) isSloganRandom = true;
-        if (password.equals("random")) isPasswordRandom = true;
-        else {
+        if (!isPasswordRandom) {
             if (!Controller.isLongPassword(password)) return Response.SHORT_PASSWORD;
             if (!Controller.containCapitalLetter(password)) return Response.PASSWORD_CAPITAL;
             if (!Controller.containLowercaseLetter(password)) return Response.PASSWORD_LOWER;
@@ -51,10 +51,13 @@ public class SignUpController {
     }
     public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
+        String[] groupNames = {"questionNumber","answer","answerConfirmation"};
+        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         int questionIndex = Integer.parseInt(Controller.makeEntryValid(matcher.group("questionNumber")));
         if ((questionIndex < 1) || (questionIndex > 3)) return Response.INVALID_QUESTION_NUMBER;
-        String answer = matcher.group("answer");
-        String answerConfirmation = matcher.group("answerConfirmation");
+        String answer = Controller.makeEntryValid(matcher.group("answer"));
+        String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);

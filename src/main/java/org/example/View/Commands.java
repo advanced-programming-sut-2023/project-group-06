@@ -5,10 +5,11 @@ import java.util.regex.Pattern;
 
 public enum Commands {
     // word : (((\"[^\"]*\")|\S*))
-    CREATE_USER("(?=.* -p )(?=.* -u )(?=.* -email )(?=.* -n )^create user(( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))|" +
+    // number : ((-?\d*)|(\"-?\d*\"))
+    CREATE_USER("(?=.* -p )(?=.* -u )(?=.* -email )(?=.* -n )^user create(( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))|" +
             "( -p (?<password>(((\\\"[^\\\"]*\\\")|\\S*)))( (?<passwordConfirmation>(((\\\"[^\\\"]*\\\")|\\S*))))?)|" +
             "( -email (?<email>(((\\\"[^\\\"]*\\\")|\\S*))))|( (?<sloganSign>-s) (?<slogan>(((\\\"[^\\\"]*\\\")|\\S*))))|( -n (?<nickname>(((\\\"[^\\\"]*\\\")|\\S*))))){4,5}$"),
-    QUESTION_PICK("(?=.* -q )(?=.* -a )(?=.* -c )^question pick(( -q (?<questionNumber>-?\\d+))|" +
+    QUESTION_PICK("(?=.* -q )(?=.* -a )(?=.* -c )^question pick(( -q (?<questionNumber>((-?\\d*)|(\\\"-?\\d*\\\"))))|" +
             "( -a (?<answer>(((\\\"[^\\\"]*\\\")|\\S*))))|( -c (?<answerConfirmation>(((\\\"[^\\\"]*\\\")|\\S*))))){3}$"),
     BACK("^back$"),
     LOGIN_USER("(?=.* -p )(?=.* -u )^user login(( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))|" +

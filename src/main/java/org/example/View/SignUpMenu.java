@@ -36,6 +36,7 @@ public class SignUpMenu extends Menu{
                             }
                         } else if (Commands.getMatcher(command,Commands.BACK).find()) {
                             SignUpController.back(Commands.getMatcher(command,Commands.BACK),username);
+                            System.out.println(Response.CREATION_INTERRUPTION);
                             break;
                         } else {
                             System.out.println(Response.INVALID_COMMAND.message);

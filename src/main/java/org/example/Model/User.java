@@ -39,6 +39,14 @@ public class User {
         return false;
     }
 
+    public boolean changePasswordBySecurityQuestion(String answer, String newPassword) {
+        if (answerToQuestion.equals(answer)) {
+            this.password = newPassword;
+            return true;
+        }
+        return false;
+    }
+
     public String getNickname() {
         return nickname;
     }

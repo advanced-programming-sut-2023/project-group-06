@@ -14,6 +14,9 @@ public enum Response {
     EMPTY_PASSWORD("Password field can't be empty!"),
     EMPTY_NICKNAME("nickname field can't be empty"),
     EMPTY_SLOGAN("Slogan field can't be empty!"),
+    EMPTY_QUESTION_NUMBER("Question number field can't be empty!"),
+    EMPTY_ANSWER("Answer field can't be empty!"),
+    EMPTY_CONFIRMATION("Confirmation field can't be empty!"),
     INVALID_USERNAME_FORMAT("Invalid username format!"),
     USERNAME_EXISTS("An account with this username already exists!"),
     SHORT_PASSWORD("Password is short!"),
@@ -63,7 +66,8 @@ public enum Response {
     OUT_OF_FOOD("You're out of food , you can't set food rate!"),
     OUT_OF_MONEY("You have no money , you can't set tax rate!"),
     FEAR_RATE_NUMBER_INVALID("Rate number is invalid!"),
-    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!");
+    SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
+    CREATION_INTERRUPTION("User creation interrupted!");
     public final String message;
 
     private Response(String message) {
@@ -75,6 +79,9 @@ public enum Response {
         if (name.equals("password")) return EMPTY_PASSWORD;
         if (name.equals("nickname")) return EMPTY_NICKNAME;
         if (name.equals("slogan")) return EMPTY_SLOGAN;
+        if (name.equals("questionNumber")) return EMPTY_QUESTION_NUMBER;
+        if (name.equals("answer")) return EMPTY_ANSWER;
+        if (name.equals("answerConfirmation")) return EMPTY_CONFIRMATION;
         return null;
     }
 }
