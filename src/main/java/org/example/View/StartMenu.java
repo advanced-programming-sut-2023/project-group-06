@@ -11,7 +11,6 @@ public class StartMenu extends Menu{
     @Override
     public MenuType run(Scanner scanner) {
         while (true) {
-            if (StartController.isStayLoggedIn()) return MenuType.MAIN_MENU;
             System.out.println("Already have an account?");
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.EXIT).find()) return null;

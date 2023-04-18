@@ -31,6 +31,7 @@ public class SignUpController {
         String nickname = Controller.makeEntryValid(matcher.group("nickname"));
         String slogan = Controller.makeEntryValid(matcher.group("slogan"));
         if (slogan != null) slogan = Controller.makeEntryValid(slogan);
+        else slogan = "";
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
         if (!isPasswordRandom) {
@@ -49,10 +50,9 @@ public class SignUpController {
             if (password == null) return Response.PASSWORD_CONFIRMATION;
         }
         User newUser = new User(username, password, nickname, email, slogan);
-        Data.saveData("src/main/java/org/example/Model/data.json");
         return Response.PICK_SECURITY_QUESTION;
     }
-    public static Response securityQuestion(Matcher matcher, String username) {
+    public static Response securityQuestion(Scanner scanner, Matcher matcher, String username) {
         matcher.find();
         String[] groupNames = {"questionNumber","answer","answerConfirmation"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -64,6 +64,12 @@ public class SignUpController {
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
+        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
+        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
+            Data.removeUser(Data.getUserByName(username));
+            return Response.CAPTCHA_WRONG;
+        }
+        Data.saveData("src/main/java/org/example/Model/data.json");
         return Response.USER_CREATED;
     }
 

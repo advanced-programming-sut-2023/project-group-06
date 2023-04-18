@@ -69,6 +69,7 @@ public enum Response {
     SET_FEAR_RATE_SUCCESSFUL("Fear rate is set successfully!"),
     CREATION_INTERRUPTION("User creation interrupted!"),
     TRY_AGAIN_LATER("Try again later in %d seconds!"),
+    CAPTCHA_WRONG("Captcha is wrong!"),
     ;
     public final String message;
 

@@ -29,14 +29,15 @@ public class SignUpMenu extends Menu{
                     while (true) {
                         command = scanner.nextLine();
                         if (Commands.getMatcher(command,Commands.QUESTION_PICK).find()){
-                            response = SignUpController.securityQuestion(Commands.getMatcher(command,Commands.QUESTION_PICK),username);
+                            response = SignUpController.securityQuestion(scanner, Commands.getMatcher(command,Commands.QUESTION_PICK),username);
                             System.out.println(response.message);
                             if (response.equals(Response.USER_CREATED)) {
                                 return MenuType.LOGIN_MENU;
                             }
+                            else break;
                         } else if (Commands.getMatcher(command,Commands.BACK).find()) {
                             SignUpController.back(Commands.getMatcher(command,Commands.BACK),username);
-                            System.out.println(Response.CREATION_INTERRUPTION);
+                            System.out.println(Response.CREATION_INTERRUPTION.message);
                             break;
                         } else {
                             System.out.println(Response.INVALID_COMMAND.message);
@@ -63,5 +64,11 @@ public class SignUpMenu extends Menu{
         String enteredPassword = scanner.nextLine();
         if (!password.equals(enteredPassword)) return null;
         return password;
+    }
+
+    public static String getCaptcha(Scanner scanner, String captcha){
+        System.out.println(captcha);
+        String input = scanner.nextLine();
+        return input;
     }
 }

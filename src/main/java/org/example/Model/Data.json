@@ -1,16 +1,1 @@
-{
-  "stayLoggedIn": false,
-  "currentUsername": "the null user",
-  "users": [
-    {
-      "username": "amirMohammad",
-      "password": "aa11AA_#@*",
-      "nickname": "doctor",
-      "email": "ambandarim@gmail.com",
-      "slogan": "hoora horra jakarta",
-      "questionIndex": -1,
-      "answerToQuestion": "Mahdi",
-      "highScore": 0
-    }
-  ]
-}
+{"stayLoggedIn":false,"currentUsername":"the null user","users":[{"username":"uu","password":"045626281a94cf13cb66a0105bd4bc98d942697bbdfae02f60bb58e5e2f6806b","nickname":"n","email":"uamir.kjfd@gmail.com","slogan":"","questionIndex":0,"answerToQuestion":"d6a804981ea7ce374acc21c9a8bf82f50b684b0ea4bdf8b26a7a775291aaf7a6","highScore":0},{"username":"uuu","password":"853e2f6df343ef3b86bde9de346946378ee85f44da622cdbb2c9e6f5a591fd1f","nickname":"n","email":"s@s.s","slogan":"","questionIndex":0,"answerToQuestion":"ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb","highScore":0}]}

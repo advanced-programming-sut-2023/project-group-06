@@ -120,7 +120,8 @@ public class Data {
                 int questionIndex = userElement.getAsJsonObject().get("questionIndex").getAsInt();
                 int highScore = userElement.getAsJsonObject().get("highScore").getAsInt();
                 String answerToQuestion = userElement.getAsJsonObject().get("answerToQuestion").getAsString();
-                User user = new User(username, password, nickname, email, slogan);
+                User user = new User(username, "", nickname, email, slogan);
+                user.setHashedPassword(password);
                 user.setQuestionIndex(questionIndex);
                 user.setHighScore(highScore);
                 user.setAnswerToQuestion(answerToQuestion);

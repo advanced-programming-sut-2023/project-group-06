@@ -75,14 +75,14 @@ public class ProfileController {
         String nullGroup = Controller.nullGroup(matcher,groupNames);
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String slogan = Controller.makeEntryValid(matcher.group("slogan"));
-        if ((Data.getCurrentUser().getSlogan() != null) && Data.getCurrentUser().getSlogan().equals(slogan)) return Response.SAME_SLOGAN;
+        if ((!Data.getCurrentUser().getSlogan().equals("")) && Data.getCurrentUser().getSlogan().equals(slogan)) return Response.SAME_SLOGAN;
         Data.getCurrentUser().setSlogan(slogan);
         return Response.SLOGAN_CHANGE;
     }
 
     public static Response removeSlogan() {
-        if (Data.getCurrentUser().getSlogan() == null) return Response.SLOGAN_ALREADY_NULL;
-        Data.getCurrentUser().setSlogan(null);
+        if (Data.getCurrentUser().getSlogan().equals("")) return Response.SLOGAN_ALREADY_NULL;
+        Data.getCurrentUser().setSlogan("");
         return Response.SLOGAN_REMOVE;
     }
 
@@ -95,7 +95,7 @@ public class ProfileController {
     }
 
     public static String showSlogan() {
-        if (Data.getCurrentUser().getSlogan() == null) return Response.SLOGAN_IS_EMPTY.message;
+        if (Data.getCurrentUser().getSlogan().equals("")) return Response.SLOGAN_IS_EMPTY.message;
         return Data.getCurrentUser().getSlogan();
     }
 

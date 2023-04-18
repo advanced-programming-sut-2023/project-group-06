@@ -3,13 +3,13 @@ package org.example.Model;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class User implements Comparable<User> {
-    private String username;
-    private String hashedPassword;
-    private String nickname;
-    private String email;
-    private String hashedAnswerToQuestion;
+    private String username = "";
+    private String hashedPassword = "";
+    private String nickname = "";
+    private String email = "";
+    private String hashedAnswerToQuestion = "";
     private int questionIndex = -1;
-    private String slogan;
+    private String slogan = "";
     private int highScore;
     private int numberOfLoginAttempts = 0;
     private long lastLoginAttemptTime;
@@ -25,6 +25,10 @@ public class User implements Comparable<User> {
 
     public String getHashedPassword() {
         return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
     public String getUsername() {
@@ -84,7 +88,7 @@ public class User implements Comparable<User> {
     }
 
     public void setAnswerToQuestion(String answerToQuestion) {
-        if (this.hashedAnswerToQuestion != null) return;
+        if (!this.hashedAnswerToQuestion.equals("")) return;
         this.hashedAnswerToQuestion = DigestUtils.sha256Hex(answerToQuestion);
     }
 
