@@ -68,6 +68,17 @@ assignees: Arman17Babaei
   </div>
 </details>
 
+<details>
+  <summary>افزودن هش</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [x] در حال انجام
+  3. [x] تمام شده
+  </div>
+</details>
+
 ## تسک‌های نفر دوم
 
   **نام و نام خانوادگی: سینا عزیزالدین**
