@@ -52,9 +52,10 @@ public enum Commands {
     DROP_BUILDING("dropbuilding -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
     SET_MAP_WIDTH_HEIGHT("width: (?<width>\\d+) height: (?<height>\\d+)"),
     CHOOSE_DEFAULT_MAP("default map number: (?<mapNumber>\\d+)"),
+    DROP_TREE("droptree -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
     //Map Menu Commands
     SHOW_MAP("show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
-    MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))+"),
+    MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*"),
     SHOW_DETAILS("show details -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     ;
 

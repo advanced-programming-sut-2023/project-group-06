@@ -21,7 +21,7 @@ public class MapMenu extends Menu {
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_DETAILS)).find())
                 System.out.println(MapController.showDetails(matcher));
             else if(Commands.getMatcher(command, Commands.EXIT).find())
-                return MenuType.GAME_MENU;
+                return null;
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

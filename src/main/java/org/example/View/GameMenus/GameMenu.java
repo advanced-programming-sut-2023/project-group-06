@@ -58,7 +58,10 @@ public class GameMenu extends Menu {
                 System.out.println("game started");
                 break;
                 //todo
-            } else if ((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find()) {
+            }
+            else if((matcher = Commands.getMatcher(command, Commands.DROP_TREE)).find())
+                System.out.println(GameController.dropTree(matcher).message);
+            else if ((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find()) {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));
                 if (x < 7 || x > GameController.currentGame.getMapWidth() - 8 || y < 2 || y > GameController.currentGame.getMapHeight() - 3)
@@ -68,7 +71,7 @@ public class GameMenu extends Menu {
                     MapController.currentY = y;
                     MapController.currentGame = GameController.currentGame;
                     MapController.showMap(x, y);
-                    return MenuType.MAP_MENU;
+                    MenuType.MAP_MENU.menu.run(scanner);
                 }
             } else System.out.println(Response.INVALID_COMMAND.message);
         }
@@ -87,6 +90,8 @@ public class GameMenu extends Menu {
                 System.out.println(Response.ENTER_TRADE_MENU.message);
                 return MenuType.TRADE_MENU;
             }
+            else if((matcher = Commands.getMatcher(command, Commands.DROP_TREE)).find())
+                System.out.println(GameController.dropTree(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find()) {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));

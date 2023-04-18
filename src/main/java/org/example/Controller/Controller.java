@@ -140,7 +140,7 @@ public class Controller {
                 str.replace(i,i+1,"⣦");
     }
 
-    protected static String makeEntryValid(String entry) {
+    public static String makeEntryValid(String entry) {//it was protected before
         if (entry == null) return null;
         if (entry.isEmpty()) return entry;
         if (entry.charAt(0)=='"') return entry.substring(1, entry.length() - 1);

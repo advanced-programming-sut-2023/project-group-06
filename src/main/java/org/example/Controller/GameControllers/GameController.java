@@ -4,6 +4,8 @@ import org.example.Controller.Controller;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.BuildingGroups.Tree;
+import org.example.Model.BuildingGroups.TreeType;
 import org.example.View.Response;
 
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.regex.Matcher;
 public class GameController {
     public static Game currentGame;
     public static Kingdom currentPlayer;
+    //use make entry valid everywhere
 
     public static Response initializeMap(Matcher matcher){
         String widthString = matcher.group("width");
@@ -42,17 +45,34 @@ public class GameController {
     }
 
     public static Response dropTree(Matcher matcher){
-        return null;
-        //todo
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String typeString = matcher.group("type");
+        String treeType = Controller.makeEntryValid(typeString);
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        TreeType type = TreeType.getTreeTypeByString(treeType);
+        if(type == null)
+            return Response.INVALID_TYPE;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!BuildingType.checkGround(BuildingType.TREE, currentGame.getTileByCoordinates(y, x).getType()))
+            return Response.INVALID_GROUND;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
+            return Response.BUILDING_ALREADY_EXIST;
+        Tree tree = new Tree(currentPlayer, BuildingType.TREE, x, y, type);
+        currentGame.getTileByCoordinates(y, x).setBuilding(tree);
+        return Response.DROP_TREE_SUCCESSFUL;
     }
 
     public static Response setTextureOneTile(Matcher matcher){
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
+        String tileType = Controller.makeEntryValid(typeString);
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
-        TileStructure type = TileStructure.getTileStructureByString(typeString);
+        TileStructure type = TileStructure.getTileStructureByString(tileType);
         if(type == null)
             return Response.INVALID_TYPE;
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
@@ -70,11 +90,12 @@ public class GameController {
         String y1String = matcher.group("y1");
         String y2String = matcher.group("y2");
         String typeString = matcher.group("type");
+        String tileType = Controller.makeEntryValid(typeString);
         int x1 = Integer.parseInt(x1String);
         int x2 = Integer.parseInt(x2String);
         int y1 = Integer.parseInt(y1String);
         int y2 = Integer.parseInt(y2String);
-        TileStructure type = TileStructure.getTileStructureByString(typeString);
+        TileStructure type = TileStructure.getTileStructureByString(tileType);
         if(type == null)
             return Response.INVALID_TYPE;
         if(x1 > x2 || y1 > y2 || x1 < 0 || y1 < 0 || x2 >= currentGame.getMapWidth() || y2 >= currentGame.getMapHeight())
@@ -92,17 +113,23 @@ public class GameController {
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
+        String type = Controller.makeEntryValid(typeString);
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
-        BuildingType buildingtype = BuildingType.getBuildingTypeByString(typeString);
+        BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
+        int size = (buildingtype.getSize() - 1) / 2;
         if(buildingtype == null)
             return Response.INVALID_TYPE;
-        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+        if(x - size< 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(y, x).getType()))
-            return Response.INVALID_GROUND;
-        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
-            return Response.BUILDING_ALREADY_EXIST;
+        for(int i = x - size; i <= x + size; i++){
+            for(int j = y - size; j <= y + size; j++){
+                if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType()))
+                    return Response.INVALID_GROUND;
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
+                    return Response.BUILDING_ALREADY_EXIST;
+            }
+        }
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() < buildingtype.getWorkerPrice())
             return Response.POPULATION_EXCEEDED;
         if(currentPlayer.getEngineers() < buildingtype.getEngineerPrice())
@@ -113,7 +140,11 @@ public class GameController {
             return Response.NOT_ENOUGH_RESOURCES;
         Building building = new Building(currentPlayer, buildingtype, x, y);
         currentPlayer.payResource(buildingtype.getResourcesPrice());
-        currentGame.getTileByCoordinates(y, x).setBuilding(building);
+        for(int i = x - size; i <= x + size; i++){
+            for(int j = y - size; j <= y + size; j++){
+                currentGame.getTileByCoordinates(j, i).setBuilding(building);
+            }
+        }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addEngineers(-1 * buildingtype.getEngineerPrice());
         currentPlayer.addPopulation(buildingtype.getWorkerPrice());

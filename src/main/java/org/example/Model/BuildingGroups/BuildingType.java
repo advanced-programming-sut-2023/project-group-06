@@ -7,29 +7,31 @@ import org.example.Model.TileStructure;
 import org.example.View.Response;
 
 public enum BuildingType {
+    TREE(100, 0, 1, null, 0, 0, 0, 0, false, "tree"),
     ;
     int size;
-    int direction;
+    int direction;/////////////////////////////////////////not all the buildings have direction
     int hitPoint;
     int goldPrice;
-    Kingdom owner;
     Resources resourcesPrice;
     int workerPrice;
     int engineerPrice;
     int happinessIncrease;
+    boolean canYouEnterIt;
     String name;
 
-    BuildingType(int direction, int hitPoint, int goldPrice, Kingdom owner, int size,
-                 ResourcesType resourcesPriceType, int resourcePriceAmount, int workerPrice, int engineerPrice, int happinessIncrease) {
-        this.direction = direction;
+    BuildingType(int hitPoint, int goldPrice, int size,
+                 ResourcesType resourcesPriceType, int resourcePriceAmount, int workerPrice,
+                 int engineerPrice, int happinessIncrease, boolean canYouEnterIt, String name) {
         this.hitPoint = hitPoint;
         this.goldPrice = goldPrice;
-        this.owner = owner;
         this.resourcesPrice =  new Resources(resourcePriceAmount, resourcesPriceType);
         this.workerPrice = workerPrice;
         this.engineerPrice = engineerPrice;
         this.happinessIncrease = happinessIncrease;
         this.size = size;
+        this.canYouEnterIt = canYouEnterIt;
+        this.name = name;
     }
 
     public static BuildingType getBuildingTypeByString(String type){
@@ -58,5 +60,9 @@ public enum BuildingType {
 
     public Resources getResourcesPrice() {
         return resourcesPrice;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

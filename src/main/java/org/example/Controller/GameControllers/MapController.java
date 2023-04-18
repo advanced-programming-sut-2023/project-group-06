@@ -1,5 +1,6 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.Game;
 import org.example.Model.Soldier;
 import org.example.Model.TileStructure;
@@ -19,15 +20,19 @@ public class MapController {
         for(int i = 0; i < 15; i++){
             if(currentGame.getTileByCoordinates(y, x - 7 + i).getSoldiers().size() > 0)
                 System.out.print("| S ");
-            else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null)
-                System.out.print("| B ");//instance of wall
-            //else if there is tree
+            else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
+                if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE)
+                    System.out.print("| B ");//instance of wall
+                else System.out.print("| T ");
+            }
             else System.out.print("|" + currentGame.getTileByCoordinates(y, x - 7 + i).getType().toString().substring(0, 2) + " ");
         }
         System.out.println("|");
     }
 
     public static void showMap(int x, int y){
+        currentX = x;
+        currentY = y;
         showMapRow(x, y - 2);
         showMapRow(x, y - 1);
         showMapRow(x, y);
@@ -35,6 +40,7 @@ public class MapController {
         showMapRow(x, y + 2);
         for(int i = 0; i < 60; i++)
             System.out.print("-");
+        System.out.println("-");
     }
 
     public static void moveMap(String input){
@@ -87,14 +93,14 @@ public class MapController {
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return "Invalid coordinates";
         String result = "";
-        result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString();///////I hope toString works
+        result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString() + "\n";///////I hope toString works
         //show resources
         for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
             //show soldiers
         }
-        String buildingString = "empty";
+        String buildingString = "empty\n";
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
-            buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString();//////// I hope toString works
+            buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString() + "\n";//////// I hope toString works
         result += "buildings: " + buildingString;
         return result;
     }
