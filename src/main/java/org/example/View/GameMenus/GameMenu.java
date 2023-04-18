@@ -1,6 +1,7 @@
 package org.example.View.GameMenus;
 
 import org.example.Controller.GameControllers.GameController;
+import org.example.Controller.GameControllers.KingdomController;
 import org.example.Controller.GameControllers.MapController;
 import org.example.View.Commands;
 import org.example.View.Menu;
@@ -32,6 +33,9 @@ public class GameMenu extends Menu {
                     System.out.println("Can't show the map near boundary points");
                 else{
                     MapController.showMap(x, y);
+                    MapController.currentX = x;
+                    MapController.currentY = y;
+                    MapController.currentGame = GameController.currentGame;
                     return MenuType.MAP_MENU;
                 }
             }
@@ -41,6 +45,7 @@ public class GameMenu extends Menu {
             String command = scanner.nextLine();
             if(Commands.getMatcher(command, Commands.ENTER_KINGDOM_MENU).find()) {
                 System.out.println(Response.ENTER_KINGDOM_MENU.message);
+                KingdomController.currentKingdom = GameController.currentPlayer;
                 return MenuType.KINGDOM_MENU;
             }
             else if(Commands.getMatcher(command, Commands.ENTER_SHOP_MENU).find()) {

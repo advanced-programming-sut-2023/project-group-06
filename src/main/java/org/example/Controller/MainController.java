@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.Data;
 import org.example.Model.Game;
 import org.example.Model.Kingdom;
@@ -35,6 +36,8 @@ public class MainController {
         if(users.size() == 1)
             return Response.CANT_PLAY_ALONE;
         Game game = new Game(users);
+        GameController.currentGame = game;
+        GameController.currentPlayer = game.currentPlayer();
         return Response.GAME_STARTED_SUCCESSFULLY;
     }
 

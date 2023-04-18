@@ -17,6 +17,7 @@ public enum BuildingType {
     int workerPrice;
     int engineerPrice;
     int happinessIncrease;
+    String name;
 
     BuildingType(int direction, int hitPoint, int goldPrice, Kingdom owner, int size,
                  ResourcesType resourcesPriceType, int resourcePriceAmount, int workerPrice, int engineerPrice, int happinessIncrease) {
@@ -31,9 +32,10 @@ public enum BuildingType {
         this.size = size;
     }
 
-    public static BuildingType getBuildingTypeByString(String name){
-        return null;
-        //todo
+    public static BuildingType getBuildingTypeByString(String type){
+        BuildingType buildingType = null;
+        for(BuildingType ts : BuildingType.values()) if (ts.name.equals(type)) buildingType = ts;
+        return buildingType;
     }
 
     public static boolean checkGround(BuildingType buildingType, TileStructure tileStructure){

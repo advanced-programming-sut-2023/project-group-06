@@ -1,42 +1,38 @@
 package org.example.Model;
 
 public enum TileStructure {
-    EARTH(false, "EA"),
-    PEBBLE(false, "PE"),
-    ROCK(false, "RO"),
-    STONE(false, "ST"),
-    IRON(false, "IR"),
-    GRASS(false, "GR"),
-    MEADOW(false, "ME"),
-    DENSE_MEADOW(false, "DM"),
-    OIL(true, "BL"),
-    PLAIN(true, "BL"),
-    RIVER(true, "BL"),
-    SMALL_LAKE(true, "BL"),
-    BIG_LAKE(true, "BL"),
-    BEACH(true, "BL"),
-    SEA(true, "BL")
+    EARTH(false, "earth"),
+    PEBBLE(false, "pebble"),
+    ROCK(false, "rock"),
+    STONE(false, "stone"),
+    IRON(false, "iron"),
+    GRASS(false, "grass"),
+    MEADOW(false, "meadow"),
+    DENSE_MEADOW(false, "denseMeadow"),
+    OIL(true, "oil"),
+    PLAIN(true, "plain"),
+    RIVER(true, "river"),
+    SMALL_LAKE(true, "smallLake"),
+    BIG_LAKE(true, "bigLake"),
+    BEACH(true, "beach"),
+    SEA(true, "sea")
     ;
 
     private boolean isBlue;
-    private String abbreviation;
+    private String name;
 
     public boolean isBlue() {
         return isBlue;
     }
 
-    public String getAbbreviation() {
-        return abbreviation;
-    }
-
-    private TileStructure(boolean isBlue, String abbreviation) {
+    private TileStructure(boolean isBlue, String name) {
         this.isBlue = isBlue;
-        this.abbreviation = abbreviation;
+        this.name = name;
     }
 
     public static TileStructure getTileStructureByString(String type){
-        return null;
-        //todo
-        //is there any better idea than 15 if statements?
+        TileStructure tileStructure = null;
+        for(TileStructure ts : TileStructure.values()) if (ts.name.equals(type)) tileStructure = ts;
+        return tileStructure;
     }
 }

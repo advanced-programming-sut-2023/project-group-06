@@ -72,6 +72,7 @@ public enum Response {
     SET_TEXTURE_UNDER_BUILDING("You can't change the ground under a building!"),
     INVALID_TYPE("Invalid type!"),
     INVALID_COORDINATES("Invalid coordinates!"),
+    NOT_ENOUGH_RESOURCES("You don't have enough resource to build this building!"),
     ;
     public final String message;
 

@@ -55,7 +55,6 @@ public class GameController {
         TileStructure type = TileStructure.getTileStructureByString(typeString);
         if(type == null)
             return Response.INVALID_TYPE;
-        //check if coordinates are valid
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         //check for troops or other things on the tile
@@ -108,10 +107,14 @@ public class GameController {
             return Response.POPULATION_EXCEEDED;/////////////////////I need to recheck this
         if(currentPlayer.getWealth() < buildingtype.getGoldPrice())
             return Response.NOT_ENOUGH_MONEY;
-        ////////////////////////check for resource price of the building
+        if(currentPlayer.getResourceAmountByType(buildingtype.getResourcesPrice().getType()) < buildingtype.getResourcesPrice().getAmount())
+            return Response.NOT_ENOUGH_RESOURCES;
         Building building = new Building(currentPlayer, buildingtype, x, y);
+        currentPlayer.payResource(buildingtype.getResourcesPrice());
         currentGame.getTileByCoordinates(y, x).setBuilding(building);
         currentPlayer.getBuildings().add(building);
+        currentPlayer.addEngineers(-1 * buildingtype.getEngineerPrice());
+        currentPlayer.addPopulation(buildingtype.getWorkerPrice());
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 
@@ -203,11 +206,12 @@ public class GameController {
         //computeDamages
         //computeFoods     //check if food is out , foodRate must be set on -2
         //computeFears
-        //computeTaxes     //check if you lost all money
+        //computeTaxes     //check if you lost all money , taxRate must be set on 0
         //autoProducing
         //computePopulation
 
         //changeTurn
+        //initialize some fields
     }
 
     private static Response computeHappiness(){
@@ -248,5 +252,6 @@ public class GameController {
     private static Response endGame(){
         return null;
         //todo
+        //set all static fields inside controllers equal to zero
     }
 }

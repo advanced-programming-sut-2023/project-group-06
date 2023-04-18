@@ -17,10 +17,11 @@ public class Kingdom {
     private int fear = 0;
     private int horseNumber;
     private int engineers;
-    /////// adding food storages
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
-    private ArrayList<Resources> resources = new ArrayList<>(); //will this be of any help?
+    private ArrayList<Resources> resources = new ArrayList<>();
+    private ArrayList<Food> foods = new ArrayList<>();
+    private ArrayList<Weapon> weapons = new ArrayList<>();
     private User owner;
     private Soldier king;
 
@@ -126,5 +127,35 @@ public class Kingdom {
 
     public void addResources(Resources resource) {
         this.resources.add(resource);
+    }
+
+    public void payResource(Resources resource){
+        int amount = resource.getAmount();
+        for(Resources resources1 : this.resources){
+            if(resources1.getType() == resource.getType()){
+                int cost = Math.min(amount, resources1.getAmount());
+                resources1.addToAmount(-1 * cost);
+                amount -= cost;
+            }
+            if(amount == 0) break;
+        }
+    }
+
+    public int getResourceAmountByType(ResourcesType resourcesType){
+        int amount = 0;
+        for(Resources resources1 : this.resources){
+            if(resources1.getType() == resourcesType)
+                amount += resources1.getAmount();
+        }
+        return amount;
+    }
+
+    public int getFoodAmountByType(FoodType foodType){
+        int amount = 0;
+        for(Food food : this.foods){
+            if(food.getType() == foodType)
+                amount += food.getAmount();
+        }
+        return amount;
     }
 }

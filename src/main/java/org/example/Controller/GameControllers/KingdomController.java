@@ -1,5 +1,6 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.FoodType;
 import org.example.Model.Kingdom;
 import org.example.View.MainMenu;
 import org.example.View.Response;
@@ -17,9 +18,13 @@ public class KingdomController {
         return currentKingdom.getHappiness();
     }
 
-    public static Response showFoodList(){
-        return null;
-        //todo
+    public static String showFoodList(){
+        String result = "";
+        result += "meat: " + currentKingdom.getFoodAmountByType(FoodType.MEAT);
+        result += "apples: " + currentKingdom.getFoodAmountByType(FoodType.APPLES);
+        result += "cheese: " + currentKingdom.getFoodAmountByType(FoodType.CHEESE);
+        result += "bread: " + currentKingdom.getFoodAmountByType(FoodType.BREAD);
+        return result;
     }
 
     public static Response setFoodRate(Matcher matcher){
@@ -27,7 +32,11 @@ public class KingdomController {
         int foodRate = Integer.parseInt(foodRateString);
         if(foodRate > 2 || foodRate < -2)
             return Response.FOOD_RATE_NUMBER_INVALID;
-        //if he is out of food it must give errors
+        if(currentKingdom.getFoodAmountByType(FoodType.APPLES) +
+                currentKingdom.getFoodAmountByType(FoodType.MEAT) +
+                currentKingdom.getFoodAmountByType(FoodType.CHEESE) +
+                currentKingdom.getFoodAmountByType(FoodType.BREAD) == 0)
+            return Response.OUT_OF_FOOD;
         currentKingdom.setFoodRate(foodRate);
         return Response.SET_FOOD_RATE_SUCCESSFUL;
     }
@@ -56,7 +65,7 @@ public class KingdomController {
         int fearRate = Integer.parseInt(fearRateString);
         if(fearRate < -5 || fearRate > 5)
             return Response.FEAR_RATE_NUMBER_INVALID;
-        currentKingdom.setTax(fearRate);
+        currentKingdom.setFear(fearRate);
         return Response.SET_FEAR_RATE_SUCCESSFUL;
     }
 }

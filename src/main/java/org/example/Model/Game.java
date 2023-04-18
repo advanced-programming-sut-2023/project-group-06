@@ -9,6 +9,7 @@ public class Game {
     private ArrayList<User> players;
     private ArrayList<Kingdom> kingdoms;
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
+    private int whoseTurn = 0;
 
     Tile[][] map;
 
@@ -85,11 +86,11 @@ public class Game {
     }
 
     public void nextTurn(){
-        //it can shift the members of kingdoms
+        //it can shift the members of kingdoms // increase the turn index instead
         //todo
     }
 
     public Kingdom currentPlayer(){
-        return kingdoms.get(0);
+        return kingdoms.get(whoseTurn);
     }
 }

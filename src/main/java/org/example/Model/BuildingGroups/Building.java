@@ -18,9 +18,6 @@ public class Building {
         this.yCoordinate = yCoordinate;
         this.owner = owner;
         this.buildingType = buildingType;
-        this.owner.addEngineers(-1 * buildingType.engineerPrice);
-        this.owner.addPopulation(buildingType.workerPrice);
-        //resource price
     }
 
     public int getDelay() {

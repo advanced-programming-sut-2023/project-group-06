@@ -22,7 +22,7 @@ public class MapController {
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null)
                 System.out.print("| B ");//instance of wall
             //else if there is tree
-            else System.out.print("|" + currentGame.getTileByCoordinates(y, x - 7 + i).getType().getAbbreviation() + " ");
+            else System.out.print("|" + currentGame.getTileByCoordinates(y, x - 7 + i).getType().toString().substring(0, 2) + " ");
         }
         System.out.println("|");
     }
