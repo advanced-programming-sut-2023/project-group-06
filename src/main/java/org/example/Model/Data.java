@@ -77,12 +77,12 @@ public class Data {
         for (User user : users) {
             JsonObject userObject = new JsonObject();
             userObject.addProperty("username", user.getUsername());
-            userObject.addProperty("password", user.getPassword());
+            userObject.addProperty("password", user.getHashedPassword());
             userObject.addProperty("nickname", user.getNickname());
             userObject.addProperty("email", user.getEmail());
             userObject.addProperty("slogan", user.getSlogan());
             userObject.addProperty("questionIndex", user.getQuestionIndex());
-            userObject.addProperty("answerToQuestion", user.getAnswerToQuestion());
+            userObject.addProperty("answerToQuestion", user.getHashedAnswerToQuestion());
             userObject.addProperty("highScore", user.getHighScore());
             usersObject.add(userObject);
         }
