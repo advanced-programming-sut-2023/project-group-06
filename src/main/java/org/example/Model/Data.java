@@ -5,6 +5,7 @@ import org.example.View.Response;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Data {
     private static ArrayList<User> users = new ArrayList<>();
@@ -45,18 +46,22 @@ public class Data {
         Data.currentUser = currentUser;
     }
 
-    public static void sortUsersByHighScore() {
-        //todo
-    }
+
 
     public static void removeUser(User user) {
         users.remove(user);
     }
 
+    public static void sortUsersByHighScore() {
+        Collections.sort(users);
+    }
+
     public static int getUserRank(User user) {
         sortUsersByHighScore();
-        return 0;
-        //todo
+        for (int i = 1; i <= users.size(); i++) {
+            if (users.get(users.size() - i) == user) return i;
+        }
+        return -1;
     }
 
     /* saveDate:
