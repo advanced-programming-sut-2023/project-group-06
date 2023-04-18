@@ -1,9 +1,11 @@
 package org.example.Controller;
 
+import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.*;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,26 +13,144 @@ import java.util.regex.Pattern;
 public class Controller {
     public static User currentUser;
     public static MenuType currentMenu;
-
     public static void run(Scanner scanner){
-        currentMenu = MenuType.START_MENU;
+        Data.loadData("src/main/java/org/example/Model/data.json");
+        if (Data.isStayLoggedIn()) currentMenu = MenuType.MAIN_MENU;
+        else currentMenu = MenuType.START_MENU;
         while (true) {
             currentMenu = currentMenu.menu.run(scanner);
             if(currentMenu == null) break;
         }
     }
-    public static String captchaGenerator(){
-        return null;
-        //todo
+
+    private static String theLastCaptcha;
+    public static String getCaptcha(){
+        theLastCaptcha = generator();
+        return captchaGenerator(theLastCaptcha);
     }
+    public static boolean isCaptchaCorrect(String captcha){
+        return captcha.equals(theLastCaptcha);
+    }
+    private static String generator(){
+        Random random = new Random(10);
+        Random rand = new Random();
+        int min = 4;
+        int max = 8;
+        int length = rand.nextInt(max-min) + min;
+        String chars = "0123465789";
+        StringBuilder captcha = new StringBuilder();
+        while(length-- > 0){
+            int index = (int)(Math.random()*10);
+            captcha.append(chars.charAt(index));
+        }
+        return captcha.toString();
+    }
+    private static String captchaGenerator(String input){
+        String[][] digits = { {"⡀⡀⣄⣤⣶⣿⣶⣤⡀⡀⡀⡀",
+                               "⡀⡀⣾⣿⠳⡀⠉⣿⣷⡀⡀⡀",
+                               "⡀⢀⣿⡇⡀⡀⠈⢺⣿⡀⡀⡀",
+                               "⡀⢸⣿⡀⣴⣿⣆⠘⣿⡏⡀⡀",
+                               "⡀⢸⣿⡄⠈⠛⠁⢸⣿⠇⡀⡀",
+                               "⡀⡀⣿⣧⡀⡀⡀⣼⣿⡀⡀⡀",
+                               "⡀⡀⠽⣿⣷⣶⣾⣿⠧⡀⡀⡀",
+                               "⡀⡀⡀⡀⠈⠉⠉⡀⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⣀⣤⣤⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⣿⠿⢻⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⢀⠁⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠤⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀⡀⡀",
+                                "⡀⡀⢰⣤⣤⣼⣿⣤⣤⣴⡀⡀",
+                                "⡀⡀⠈⠉⠉⠉⠉⠉⠉⠉⡀⡀"},
+                               {"⡀⡀⡀⣠⣴⣶⣶⣤⡀⡀⡀⡀",
+                                "⡀⡀⢿⡿⠉⠁⠉⢿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⢸⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣾⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⢀⣾⡿⠁⡀⡀⡀",
+                                "⡀⡀⡀⢀⣴⣿⠋⡀⡀⡀⡀⡀",
+                                "⡀⡀⣿⣿⣿⣶⣶⣶⣶⣶⡀⡀",
+                                "⡀⡀⠉⠉⠉⠉⠉⠉⠉⠉⡀⡀"},
+                               {"⡀⡀⡀⣀⣤⣤⣤⣤⡀⡀⡀⡀",
+                                "⡀⡀⢿⡿⠛⠉⠙⢿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣸⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⣤⣴⣾⠛⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠉⠉⠛⣿⣷⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠈⣿⡇⡀⡀",
+                                "⡀⡀⣦⣤⣀⣀⣤⣿⣿⡀⡀⡀",
+                                "⡀⡀⠉⠛⠛⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⡀⡀⡀⣀⣀⡀⡀⡀",
+                                "⡀⡀⡀⣿⣿⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⢀⣿⡇⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⣸⣿⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⢀⣿⣿⣿⣿⣿⣿⣿⣾⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣾⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠿⠿⡀⡀⡀"},
+                               {"⡀⡀⢠⣤⣤⣤⣤⣤⣴⡀⡀⡀",
+                                "⡀⡀⢸⣿⠍⠉⠉⠉⠉⡀⡀⡀",
+                                "⡀⡀⢸⣿⡀⡀⡀⡀⡀⡀⡀⡀",
+                                "⡀⡀⢸⣿⡿⠿⢿⣿⣶⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⠈⣿⡇⡀⡀",
+                                "⡀⡀⣤⡆⡀⡀⡀⡀⣿⡏⡀⡀",
+                                "⡀⡀⢿⣿⣦⣤⣤⣿⣿⡀⡀⡀",
+                                "⡀⡀⡀⠈⠙⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⡀⡀⡀⣀⣤⣤⡀⡀⡀",
+                                "⡀⡀⡀⣠⣾⣿⠿⠛⠛⡀⡀⡀",
+                                "⡀⡀⢠⣿⠏⡀⡀⡀⡀⡀⡀⡀",
+                                "⡀⡀⣿⣿⣠⣾⣿⣿⣦⡀⡀⡀",
+                                "⡀⡀⣿⣷⠁⡀⡀⠈⣿⣧⡀⡀",
+                                "⡀⡀⣿⣧⡀⡀⡀⡀⣿⣿⡀⡀",
+                                "⡀⡀⢻⣿⣦⣀⣠⣾⣿⠃⡀⡀",
+                                "⡀⡀⡀⠈⠛⠛⠛⠋⡀⡀⡀⡀"},
+                               {"⡀⢠⣤⣤⣤⣤⣤⣤⣤⣤⡀⡀",
+                                "⡀⢸⣿⠛⠛⠛⠛⢛⣿⡏⡀⡀",
+                                "⡀⢸⣿⡀⡀⡀⡀⣿⣿⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⢰⣿⠇⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⣿⡿⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⡀⣼⣿⠁⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⢀⣿⡟⡀⡀⡀⡀⡀",
+                                "⡀⡀⡀⡀⠚⠛⡀⡀⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⣠⣴⣶⣶⣤⡀⡀⡀⡀",
+                                "⡀⡀⣾⣿⠋⠉⠉⢿⣿⡀⡀⡀",
+                                "⡀⡀⢿⣿⡀⡀⡀⢸⣿⠁⡀⡀",
+                                "⡀⡀⡀⠙⣻⣷⣿⡛⠁⡀⡀⡀",
+                                "⡀⡀⣼⣿⠉⡀⠉⠻⣿⡄⡀⡀",
+                                "⡀⡀⣿⡇⡀⡀⡀⡀⣿⣷⡀⡀",
+                                "⡀⡀⢿⣿⣦⣤⣤⣾⣿⠃⡀⡀",
+                                "⡀⡀⡀⠈⠙⠛⠛⠉⡀⡀⡀⡀"},
+                               {"⡀⡀⡀⢀⣤⣤⣤⣤⡀⡀⡀⡀",
+                                "⡀⡀⣰⣿⠟⠉⠙⠻⣿⡆⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⡀⣿⣿⡀⡀",
+                                "⡀⡀⣿⣿⡀⡀⡀⣠⣿⣿⡀⡀",
+                                "⡀⡀⠈⠿⣿⣿⡿⠃⣿⡿⡀⡀",
+                                "⡀⡀⡀⡀⡀⡀⡀⣼⣿⠁⡀⡀",
+                                "⡀⡀⡀⣤⣤⣶⣿⠿⠁⡀⡀⡀",
+                                "⡀⡀⡀⠛⠋⠉⡀⡀⡀⡀⡀⡀"}};
+        StringBuilder output = new StringBuilder();
+        for(int i = 0; i < 8; i++){
+            for(Character c : input.toCharArray()) output.append(digits[c.charValue() - '0'][i]);
+            if(i < 7) output.append("\n");
+        }
+        makeNoise(output);
+        return output.toString();
+    }
+    private static void makeNoise(StringBuilder str){
+        for(int i = 0; i < str.length(); i++)
+            if (str.charAt(i) != '\n' && Math.random() < 0.05)
+                str.replace(i,i+1,"⣦");
+    }
+
     protected static String makeEntryValid(String entry) {
+        if (entry == null) return null;
+        if (entry.isEmpty()) return entry;
         if (entry.charAt(0)=='"') return entry.substring(1, entry.length() - 1);
         else return entry;
     }
 
     protected static String nullGroup(Matcher matcher, String[] groupNames) {
         for (int i = 0; i < groupNames.length; i++) {
-            if (matcher.group(groupNames[i]) == null) return groupNames[i];
+            if (matcher.group(groupNames[i]) == null) continue;
+            if (makeEntryValid(matcher.group(groupNames[i])).isEmpty()) return groupNames[i];
         }
         return null;
     }

@@ -13,7 +13,7 @@ public class Producers extends Building{
     boolean isClickable;
     MenuType menuType = null;
 
-    public Producers(Kingdom owner, BuildingType buildingType) {
-        super(owner, buildingType);
+    public Producers(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate) {
+        super(owner, buildingType, xCoordinate, yCoordinate);
     }
 }

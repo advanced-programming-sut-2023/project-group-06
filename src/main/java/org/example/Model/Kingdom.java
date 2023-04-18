@@ -14,17 +14,19 @@ public class Kingdom {
     private int population = 0;
     private int maxPopulation;
     private int fear = 0;
-    private int horseNumber = 0;
-    private ArrayList<Person> people = new ArrayList<>();
+    private int horseNumber;
+    private int engineers;
+    /////// adding food storages
+    private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Resources> resources = new ArrayList<>();
     private User owner;
     private Soldier king;
 
-    public Kingdom(int tax, int wealth, int maxPopulation, User owner) {
-        this.tax = tax;
-        this.wealth = wealth;
-        this.maxPopulation = maxPopulation;
+    public Kingdom(User owner) {
+        this.tax = 0;
+        this.wealth = 1000;
+        this.maxPopulation = 100;
         this.owner = owner;
         //todo
     }
@@ -61,6 +63,8 @@ public class Kingdom {
         return population;
     }
 
+    public void addPopulation(int number) { population += number; }
+
     public int getMaxPopulation() {
         return maxPopulation;
     }
@@ -69,9 +73,11 @@ public class Kingdom {
         return fear;
     }
 
-    public ArrayList<Person> getPeople() {
-        return people;
+    public ArrayList<Soldier> getSoldiers() {
+        return soldiers;
     }
+
+    public void addEngineers(int number) { engineers += number; }
 
     public ArrayList<Building> getBuildings() {
         return buildings;

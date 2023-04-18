@@ -1,5 +1,7 @@
 package org.example.Controller;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.Response;
@@ -14,24 +16,25 @@ import java.util.regex.Pattern;
 public class SignUpController {
     public static Response createUser(Matcher matcher, Scanner scanner){
         matcher.find();
-        String[] groupNames = {"username","nickname","password","email"};
+        String[] groupNames = {"username","nickname","password","email","slogan"};
         boolean isSloganRandom = false; boolean isPasswordRandom = false;
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
-        if ((matcher.group("passwordConfirmation") == null) && !matcher.group("password").equals("random")) return Response.INVALID_COMMAND;
-        if ((matcher.group("slogan") == null) && (matcher.group("sloganSign") != null)) return Response.EMPTY_SLOGAN;
+        if ((matcher.group("passwordConfirmation") == null) && !matcher.group("password").equals("random"))
+            return Response.INVALID_COMMAND;
+        if ((matcher.group("slogan")!= null) && matcher.group("slogan").equals("random")) isSloganRandom = true;
+        if (matcher.group("password").equals("random")) isPasswordRandom = true;
         String username = Controller.makeEntryValid(matcher.group("username"));
         String password = Controller.makeEntryValid(matcher.group("password"));
         String passwordConfirmation = Controller.makeEntryValid(matcher.group("passwordConfirmation"));
         String email = Controller.makeEntryValid(matcher.group("email")).toLowerCase();
         String nickname = Controller.makeEntryValid(matcher.group("nickname"));
-        String slogan = matcher.group("slogan");
+        String slogan = Controller.makeEntryValid(matcher.group("slogan"));
         if (slogan != null) slogan = Controller.makeEntryValid(slogan);
+        else slogan = "";
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
-        if ((slogan!= null) && slogan.equals("random")) isSloganRandom = true;
-        if (password.equals("random")) isPasswordRandom = true;
-        else {
+        if (!isPasswordRandom) {
             if (!Controller.isLongPassword(password)) return Response.SHORT_PASSWORD;
             if (!Controller.containCapitalLetter(password)) return Response.PASSWORD_CAPITAL;
             if (!Controller.containLowercaseLetter(password)) return Response.PASSWORD_LOWER;
@@ -41,20 +44,32 @@ public class SignUpController {
         }
         if (Data.getUserByEmail(email) != null) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
-        if (isSloganRandom) SignUpMenu.randomSlogan(slogan);
-        if (isPasswordRandom && !SignUpMenu.randomPassword(password,scanner)) return Response.PASSWORD_CONFIRMATION;
+        if (isSloganRandom) slogan = SignUpMenu.randomSlogan();
+        if (isPasswordRandom) {
+            password = SignUpMenu.randomPassword(scanner);
+            if (password == null) return Response.PASSWORD_CONFIRMATION;
+        }
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
-    public static Response securityQuestion(Matcher matcher, String username) {
+    public static Response securityQuestion(Scanner scanner, Matcher matcher, String username) {
         matcher.find();
-        int questionIndex = Integer.parseInt(matcher.group("questionNumber"));
+        String[] groupNames = {"questionNumber","answer","answerConfirmation"};
+        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
+        int questionIndex = Integer.parseInt(Controller.makeEntryValid(matcher.group("questionNumber")));
         if ((questionIndex < 1) || (questionIndex > 3)) return Response.INVALID_QUESTION_NUMBER;
-        String answer = matcher.group("answer");
-        String answerConfirmation = matcher.group("answerConfirmation");
+        String answer = Controller.makeEntryValid(matcher.group("answer"));
+        String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
+        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
+        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
+            Data.removeUser(Data.getUserByName(username));
+            return Response.CAPTCHA_WRONG;
+        }
+        Data.saveData("src/main/java/org/example/Model/data.json");
         return Response.USER_CREATED;
     }
 
@@ -78,13 +93,13 @@ public class SignUpController {
         for (int i = 0; i < numberOfNumbers; i++) passwordLetters.add(numbers[(int)(Math.random() * 10)]);
         for (int i = 0; i < numberOfLowercaseLetters; i++) passwordLetters.add(lowercaseLetters[(int)(Math.random() * 26)]);
         Collections.shuffle(passwordLetters);
-        String randomPassword = passwordLetters.toString();
+        String randomPassword = "";
+        for (int i = 0; i < passwordLetters.size(); i++) {
+            randomPassword += passwordLetters.get(i);
+        }
         return randomPassword;
     }
 
-    public static Response saveData(){
-        return null;
-        //todo
-    }
+
 
 }

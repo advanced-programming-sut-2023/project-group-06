@@ -1,5 +1,6 @@
 package org.example.View;
 
+import org.example.View.GameMenus.GameMenu;
 import org.example.View.GameMenus.ShopMenu;
 
 public enum MenuType {
@@ -7,7 +8,9 @@ public enum MenuType {
     LOGIN_MENU(new LoginMenu()),
     SIGN_UP_MENU(new SignUpMenu()),
     START_MENU(new StartMenu()),
-    MAIN_MENU(new MainMenu());
+    MAIN_MENU(new MainMenu()),
+    PROFILE_MENU(new ProfileMenu()),
+    GAME_MENU(new GameMenu());
 
     public Menu menu;
     MenuType(Menu menu){

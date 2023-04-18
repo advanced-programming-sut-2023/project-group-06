@@ -1,22 +1,34 @@
 package org.example.Model;
 
-public class User {
-    private String username;
-    private String password;
-    private String nickname;
-    private String email;
-    private String answerToQuestion;
+import org.apache.commons.codec.digest.DigestUtils;
+
+public class User implements Comparable<User> {
+    private String username = "";
+    private String hashedPassword = "";
+    private String nickname = "";
+    private String email = "";
+    private String hashedAnswerToQuestion = "";
     private int questionIndex = -1;
-    private String slogan;
+    private String slogan = "";
     private int highScore;
+    private int numberOfLoginAttempts = 0;
+    private long lastLoginAttemptTime;
 
     public User(String username, String password, String nickname, String email, String slogan) {
         this.username = username;
-        this.password = password;
+        this.hashedPassword = DigestUtils.sha256Hex(password);
         this.nickname = nickname;
         this.email = email;
         this.slogan = slogan;
         Data.addUser(this);
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
     public String getUsername() {
@@ -28,12 +40,20 @@ public class User {
     }
 
     public boolean isPasswordCorrect(String password) {
-        return (this.password.equals(password));
+        return (hashedPassword.equals(DigestUtils.sha256Hex(password)));
     }
 
     public boolean changePassword(String newPassword, String oldPassword) {
-        if (oldPassword.equals(this.password)) {
-            this.password = newPassword;
+        if (isPasswordCorrect(oldPassword)) {
+            hashedPassword = DigestUtils.sha256Hex(newPassword);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean changePasswordBySecurityQuestion(String answer, String newPassword) {
+        if (hashedAnswerToQuestion.equals(DigestUtils.sha256Hex(answer))) {
+            hashedPassword = DigestUtils.sha256Hex(newPassword);
             return true;
         }
         return false;
@@ -56,7 +76,11 @@ public class User {
     }
 
     public boolean isAnswerToQuestionCorrect(String answerToQuestion) {
-        return answerToQuestion.equals(this.answerToQuestion);
+        return hashedAnswerToQuestion.equals(DigestUtils.sha256Hex(answerToQuestion));
+    }
+
+    public String getHashedAnswerToQuestion() {
+        return hashedAnswerToQuestion;
     }
 
     public int getQuestionIndex() {
@@ -64,8 +88,8 @@ public class User {
     }
 
     public void setAnswerToQuestion(String answerToQuestion) {
-        if (this.answerToQuestion != null) return;
-        this.answerToQuestion = answerToQuestion;
+        if (!this.hashedAnswerToQuestion.equals("")) return;
+        this.hashedAnswerToQuestion = DigestUtils.sha256Hex(answerToQuestion);
     }
 
     public void setQuestionIndex(int questionIndex) {
@@ -81,6 +105,22 @@ public class User {
         this.slogan = slogan;
     }
 
+    public int getNumberOfLoginAttempts() {
+        return numberOfLoginAttempts;
+    }
+
+    public void setNumberOfLoginAttempts(int numberOfLoginAttempts) {
+        this.numberOfLoginAttempts = numberOfLoginAttempts;
+    }
+
+    public long getLastLoginAttemptTime() {
+        return lastLoginAttemptTime;
+    }
+
+    public void setLastLoginAttemptTime(long lastLoginAttemptTime) {
+        this.lastLoginAttemptTime = lastLoginAttemptTime;
+    }
+
     public int getHighScore() {
         return highScore;
     }
@@ -89,15 +129,11 @@ public class User {
         this.highScore = highScore;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public int getRank() {
         return Data.getUserRank(this);
+    }
+
+    public int compareTo(User user) {
+        return this.highScore - user.highScore;
     }
 }

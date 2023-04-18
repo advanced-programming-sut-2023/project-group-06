@@ -15,8 +15,22 @@ public class LoginMenu extends Menu{
         while (true) {
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.LOGIN_USER).find()) {
-                System.out.println(LoginController.loginUser(Commands.getMatcher(command,Commands.LOGIN_USER)));
-                return MenuType.MAIN_MENU;
+                Matcher matcher = Commands.getMatcher(command,Commands.LOGIN_USER); matcher.find();
+                String username = matcher.group("username");
+                if (LoginController.setLastLoginAttempt(username, (System.currentTimeMillis() / 1000L))) {
+                    Response response = LoginController.loginUser(Commands.getMatcher(command, Commands.LOGIN_USER));
+                    System.out.println(response.message);
+                    if (response == Response.LOGIN_SUCCESSFUL) {
+                        LoginController.resetLoginAttempts(username);
+                        return MenuType.MAIN_MENU;
+                    }
+                } else {
+                    long lastLoginAttempt = LoginController.getLastLoginAttempt(username);
+                    long currentTime = System.currentTimeMillis() / 1000L;
+                    System.out.printf(Response.TRY_AGAIN_LATER.message,
+                            lastLoginAttempt + LoginController.getNumberOfLoginAttempts(username) * 5 - currentTime);
+                    System.out.println();
+                }
             } else if (Commands.getMatcher(command, Commands.FORGOT_PASSWORD).find()) {
                 Matcher matcher = Commands.getMatcher(command, Commands.FORGOT_PASSWORD);
                 matcher.find();
@@ -27,10 +41,17 @@ public class LoginMenu extends Menu{
                 if (response.equals(Response.PASSWORD_CHANGE)) {
                     System.out.println("Please enter your password:");
                     String newPassword = scanner.nextLine();
+                    Response response1 = LoginController.isPasswordStrong(newPassword);
+                    if (response1 != null) {
+                        System.out.println(response1.message);
+                        continue;
+                    }
                     System.out.println("Please re-enter your password:");
                     String newPasswordConfirmation = scanner.nextLine();
-                    System.out.println(LoginController.changePasswordSuccessful(newPassword,newPasswordConfirmation).message);
+                    System.out.println(LoginController.changePasswordSuccessful(username,questionAnswer,newPassword,newPasswordConfirmation).message);
                 } else System.out.println(response.message);
+            } else if (Commands.getMatcher(command,Commands.BACK).find()) {
+                return MenuType.START_MENU;
             } else {
                 System.out.println(Response.INVALID_COMMAND.message);
             }

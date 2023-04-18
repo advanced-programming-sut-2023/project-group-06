@@ -8,7 +8,7 @@ public class Towers extends Building{
     boolean isGate;
     int height;
 
-    public Towers(Kingdom owner, BuildingType buildingType) {
-        super(owner, buildingType);
+    public Towers(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate) {
+        super(owner, buildingType, xCoordinate, yCoordinate);
     }
 }

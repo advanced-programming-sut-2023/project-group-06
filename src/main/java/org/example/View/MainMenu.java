@@ -9,7 +9,21 @@ public class MainMenu extends Menu{
 
     @Override
     public MenuType run(Scanner scanner) {
-        return null;
-        //todo
+        while(true){
+            String command  = scanner.nextLine();
+            if(Commands.getMatcher(command, Commands.START_GAME).find()) {
+                System.out.println(MainController.startGame(Commands.getMatcher(command, Commands.START_GAME)).message);
+                return MenuType.GAME_MENU;
+            }
+            else if(Commands.getMatcher(command, Commands.ENTER_PROFILE_MENU).find()) {
+                System.out.println(Response.ENTER_PROFILE_MENU.message);
+                return MenuType.PROFILE_MENU;
+            }
+            else if(Commands.getMatcher(command, Commands.LOGOUT).find()){
+                System.out.println(Response.LOGOUT_SUCCESSFUL.message);
+                return MenuType.LOGIN_MENU;
+            }
+            else System.out.println(Response.INVALID_COMMAND.message);
+        }
     }
 }

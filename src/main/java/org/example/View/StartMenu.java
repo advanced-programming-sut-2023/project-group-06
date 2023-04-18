@@ -13,6 +13,7 @@ public class StartMenu extends Menu{
         while (true) {
             System.out.println("Already have an account?");
             String command = scanner.nextLine();
+            if (Commands.getMatcher(command,Commands.EXIT).find()) return null;
             Response response = StartController.chooseMenuToEnter(command);
             if (response == null) continue;
             System.out.println(response.message);
