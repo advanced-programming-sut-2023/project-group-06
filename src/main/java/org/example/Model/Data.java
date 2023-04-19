@@ -1,6 +1,8 @@
 package org.example.Model;
 
 import com.google.gson.*;
+import org.example.Model.BuildingGroups.Tree;
+import org.example.Model.BuildingGroups.TreeType;
 import org.example.View.Response;
 
 import java.io.*;
@@ -47,7 +49,6 @@ public class Data {
     }
 
 
-
     public static void removeUser(User user) {
         users.remove(user);
     }
@@ -71,7 +72,7 @@ public class Data {
     public static boolean saveData(String address) {
         JsonObject root = new JsonObject();
         root.addProperty("stayLoggedIn", stayLoggedIn);
-        if(stayLoggedIn) root.addProperty("currentUsername", currentUser.getUsername());
+        if (stayLoggedIn) root.addProperty("currentUsername", currentUser.getUsername());
         else root.addProperty("currentUsername", "the null user");
         JsonArray usersObject = new JsonArray();
         for (User user : users) {
@@ -111,7 +112,7 @@ public class Data {
             JsonObject rootObject = root.getAsJsonObject();
             stayLoggedIn = rootObject.get("stayLoggedIn").getAsBoolean();
             JsonArray usersObject = rootObject.get("users").getAsJsonArray();
-            for(JsonElement userElement : usersObject){
+            for (JsonElement userElement : usersObject) {
                 String username = userElement.getAsJsonObject().get("username").getAsString();
                 String password = userElement.getAsJsonObject().get("password").getAsString();
                 String nickname = userElement.getAsJsonObject().get("nickname").getAsString();
@@ -126,7 +127,7 @@ public class Data {
                 user.setHighScore(highScore);
                 user.setAnswerToQuestion(answerToQuestion);
             }
-            if(stayLoggedIn){
+            if (stayLoggedIn) {
                 String currentUsername = rootObject.get("currentUsername").getAsString();
                 currentUser = getUserByName(currentUsername);
             }
@@ -136,4 +137,61 @@ public class Data {
             return false;
         }
     }
+
+    /* saveMap
+    true: everything is ok
+    false: error
+    map will be saved in "src/main/java/org/example/Model/Maps/[fileName].bin" */
+    public static boolean saveMap(String fileName, Tile[][] map) {
+        int height = map.length;
+        int width = map[0].length;
+        try {
+            FileOutputStream fileOutputStream = new FileOutputStream("src/main/java/org/example/Model/Maps/" + fileName + ".bin");
+            fileOutputStream.write(height / 256);
+            fileOutputStream.write(height % 256);
+            fileOutputStream.write(width / 256);
+            fileOutputStream.write(width % 256);
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    int b = 0;
+                    if (map[i][j].getBuilding() != null && map[i][j].getBuilding() instanceof Tree)
+                        b = 1 + ((Tree) map[i][j].getBuilding()).getTreeType().ordinal();
+                    fileOutputStream.write(b * 16 + map[i][j].getType().ordinal());
+                }
+            }
+            fileOutputStream.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /* loadMap
+    null: error
+    map will be loaded from "src/main/java/org/example/Model/Maps/[fileName].bin" */
+    public static Tile[][] loadMap(String fileName) {
+        try {
+            FileInputStream fileInputStream = new FileInputStream("src/main/java/org/example/Model/Maps/" + fileName + ".bin");
+            int height = fileInputStream.read() * 256 + fileInputStream.read();
+            int width = fileInputStream.read() * 256 + fileInputStream.read();
+            Tile[][] map = new Tile[height][width];
+            for (int i = 0; i < height; i++) {
+                for (int j = 0; j < width; j++) {
+                    int b = fileInputStream.read();
+                    int building = b / 16;
+                    int type = b % 16;
+                    map[i][j] = new Tile(TileStructure.values()[type], j, i);
+                    if (building > 0)
+                        map[i][j].setBuilding(new Tree(null, null, j, i, TreeType.values()[building - 1]));
+                }
+            }
+            fileInputStream.close();
+            return map;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
