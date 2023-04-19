@@ -55,6 +55,8 @@ public enum Commands {
     DROP_TREE("droptree -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
     SET_TEXTURE_ONE_TILE("settexture -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))"),
     SET_TEXTURE_MULTIPLE_TILES("settexture -x1 (?<x1>(\\-)?\\d+) -y1 (?<y1>(\\-)?\\d+) -x2 (?<x2>(\\-)?\\d+) -y2 (?<y2>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))"),
+    PUT_MAIN_CASTLE("put main castle -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -color (?<color>(((\"[^\"]*\")|\\S*)))"),
+    NEXT_TURN("next turn"),
     //Map Menu Commands
     SHOW_MAP("show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*"),

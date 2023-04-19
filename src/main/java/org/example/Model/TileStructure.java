@@ -5,7 +5,7 @@ public enum TileStructure {
     PEBBLE(false, "pebble", "100;30", true),
     ROCK(false, "rock", "47;30", true),///////
     STONE(false, "stone", "48;2;64;64;64", false),
-    IRON(false, "iron", "43;30", true),
+    IRON(false, "iron", "44;30", true),
     GRASS(false, "grass", "48;2;0;130;0", true),
     MEADOW(false, "meadow", "43;30", true),
     DENSE_MEADOW(false, "denseMeadow", "48;2;255;165;0;30", true),

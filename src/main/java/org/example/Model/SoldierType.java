@@ -2,7 +2,6 @@ package org.example.Model;
 
 public enum SoldierType {
     ;
-
     int attackPower;
     int defensePower;
     int speed;

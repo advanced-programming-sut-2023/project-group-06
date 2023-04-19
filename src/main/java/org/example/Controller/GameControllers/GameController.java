@@ -22,8 +22,7 @@ public class GameController {
         int width = Integer.parseInt(widthString);
         int height = Integer.parseInt(heightString);
         currentGame.initializeMap(width, height);
-        return null;
-        //todo
+        return Response.INITIALIZE_MAP_SUCCESSFUL;
     }
 
     public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
@@ -35,9 +34,16 @@ public class GameController {
         String yString = matcher.group("y");
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
-        //should I destroy buildings?
-        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null){
-            //remove the building from all the tiles under it
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE){
+            int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
+            int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
+            int size = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize();
+            for(int i = xCenter - size; i <= xCenter + size; i++){
+                for(int j = yCenter - size; j <= yCenter + size; j++){
+                    currentGame.getTileByCoordinates(j, i).setBuilding(null);
+                }
+            }
             currentPlayer.removeBuilding(currentGame.getTileByCoordinates(y, x).getBuilding());
         }
         for(Person person : currentGame.getTileByCoordinates(y, x).getPeople()){
@@ -46,6 +52,11 @@ public class GameController {
                 //remove those people from the kingdom
             }
         }
+    }
+
+    public static Response dropUnit(Matcher matcher){
+        return null;
+        //todo
     }
 
     public static Response dropRuck(Matcher matcher){
@@ -129,7 +140,7 @@ public class GameController {
         int size = (buildingtype.getSize() - 1) / 2;
         if(buildingtype == null || buildingtype == BuildingType.TREE)
             return Response.INVALID_TYPE;
-        if(x - size< 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
+        if(x - size < 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
@@ -160,6 +171,16 @@ public class GameController {
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 
+    public static Response putMainCastle(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String color = Controller.makeEntryValid(matcher.group("color"));
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        //todo
+        return null;
+    }
+
     public static Response selectBuilding(Matcher matcher){
         return null;
         //todo
@@ -176,8 +197,6 @@ public class GameController {
     }
 
     public static Response nextTurn(){
-        return null;
-        //todo
         //computeHappiness
         //computeDamages
         //computeFoods     //check if food is out , foodRate must be set on -2
@@ -185,14 +204,19 @@ public class GameController {
         //computeTaxes     //check if you lost all money , taxRate must be set on 0
         //autoProducing
         //computePopulation  //soldiers and engineers
+        //check if a king died
 
         //changeTurn
+        currentGame.nextTurn();
         //initialize some fields
+        return null;
+        //todo
     }
 
     private static Response computeHappiness(){
         return null;
         //todo
+        //religious buildings
     }
 
     private static Response computeDamages(){
@@ -200,9 +224,12 @@ public class GameController {
         //todo
     }
 
-    private static Response computeFoods(){
-        return null;
-        //todo
+    private static void computeFoods(){
+        float rate = 1 + (currentPlayer.getFoodRate() / 2);
+        int totalFoodUsage = (int)(rate * currentPlayer.getPopulation());
+        currentPlayer.eatFoods(totalFoodUsage);
+        currentPlayer.addToHappiness(currentPlayer.getFoodDiversity() - 1);
+        currentPlayer.addToHappiness(currentPlayer.getFoodRate() * 4);
     }
 
     private static Response computeFears(){
@@ -210,14 +237,27 @@ public class GameController {
         //todo
     }
 
-    private static Response computeTaxes(){
-        return null;
-        //todo
+    private static void computeTaxes(){
+        int tax = currentPlayer.getTax();
+        double addToWealth = 0;
+        int addToHappiness = 0;
+        if(tax > 3)
+            addToHappiness = -4 * tax + 8;
+        else if(tax > 0)
+            addToHappiness = -2 * tax;
+        else addToHappiness = -2 * tax + 1;
+        if(tax > 0)
+            addToWealth = 0.2 * tax + 0.4;
+        else if(tax < 0)
+            addToWealth = -0.2 * tax + 0.4;
+        currentPlayer.addToWealth((int)(addToWealth * currentPlayer.getPopulation()));
+        currentPlayer.addToHappiness(addToHappiness * currentPlayer.getPopulation());
     }
 
     private static Response computePopulations(){
         return null;
         //todo
+        //not sure if this s necessary
     }
 
     private static Response autoProducing(){

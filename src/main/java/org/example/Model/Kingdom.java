@@ -24,6 +24,8 @@ public class Kingdom {
     private ArrayList<Weapon> weapons = new ArrayList<>();
     private User owner;
     private Soldier king;
+    private Building mainCastle;
+    private int color;
 
     public Kingdom(User owner) {
         this.tax = 0;
@@ -71,6 +73,10 @@ public class Kingdom {
 
     public void addPopulation(int number) { population += number; }
 
+    public void addToHappiness(int number){
+        this.happiness += number;
+    }
+
     public int getMaxPopulation() {
         return maxPopulation;
     }
@@ -99,6 +105,14 @@ public class Kingdom {
 
     public Soldier getKing() {
         return king;
+    }
+
+    public Building getMainCastle() {
+        return mainCastle;
+    }
+
+    public void setMainCastle(Building mainCastle) {
+        this.mainCastle = mainCastle;
     }
 
     public void setFoodDiversity(int foodDiversity) {
@@ -135,6 +149,20 @@ public class Kingdom {
 
     public void addResources(Resources resource) {
         this.resources.add(resource);
+    }
+
+    public ArrayList<Food> getFoods() {
+        return foods;
+    }
+
+    public void eatFoods(int amount){
+        totalFoodAmount -= amount;
+        for(Food food : foods){
+            int cost = Math.min(totalFoodAmount, food.getAmount());
+            food.addToAmount(-1 * cost);
+            totalFoodAmount -= cost;
+            if(totalFoodAmount == 0) break;
+        }
     }
 
     public void payResource(Resources resource){

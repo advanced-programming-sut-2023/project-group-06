@@ -63,4 +63,12 @@ public class Building {
     public int getDirection() {
         return direction;
     }
+
+    public int getXCoordinate() {
+        return xCoordinate;
+    }
+
+    public int getYCoordinate() {
+        return yCoordinate;
+    }
 }

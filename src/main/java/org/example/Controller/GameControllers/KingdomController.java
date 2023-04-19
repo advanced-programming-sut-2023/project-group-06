@@ -20,10 +20,10 @@ public class KingdomController {
 
     public static String showFoodList(){
         String result = "";
-        result += "meat: " + currentKingdom.getFoodAmountByType(FoodType.MEAT);
-        result += "apples: " + currentKingdom.getFoodAmountByType(FoodType.APPLES);
-        result += "cheese: " + currentKingdom.getFoodAmountByType(FoodType.CHEESE);
-        result += "bread: " + currentKingdom.getFoodAmountByType(FoodType.BREAD);
+        result += "meat: " + currentKingdom.getFoodAmountByType(FoodType.MEAT) + "\n";
+        result += "apples: " + currentKingdom.getFoodAmountByType(FoodType.APPLES) + "\n";
+        result += "cheese: " + currentKingdom.getFoodAmountByType(FoodType.CHEESE) + "\n";
+        result += "bread: " + currentKingdom.getFoodAmountByType(FoodType.BREAD) + "\n";
         return result;
     }
 

@@ -19,7 +19,7 @@ public class KingdomMenu extends Menu {
             else if(Commands.getMatcher(command, Commands.SHOW_POPULARITY).find())
                 System.out.println(KingdomController.showPopularity());
             else if(Commands.getMatcher(command, Commands.SHOW_FOOD_LIST).find())
-                System.out.println(KingdomController.showFoodList());
+                System.out.print(KingdomController.showFoodList());
             else if(Commands.getMatcher(command, Commands.SHOW_FOOD_RATE).find())
                 System.out.println(KingdomController.showFoodRate());
             else if(Commands.getMatcher(command, Commands.SHOW_TAX_RATE).find())

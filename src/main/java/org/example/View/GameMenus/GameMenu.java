@@ -45,7 +45,7 @@ public class GameMenu extends Menu {
                     System.out.println("set map width and height");
                     command = scanner.nextLine();
                     if((matcher = Commands.getMatcher(command, Commands.SET_MAP_WIDTH_HEIGHT)).find()){
-                        GameController.initializeMap(matcher);
+                        System.out.println(GameController.initializeMap(matcher));
                         break;
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);
@@ -67,7 +67,7 @@ public class GameMenu extends Menu {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));
                 if (x < 7 || x > GameController.currentGame.getMapWidth() - 8 || y < 2 || y > GameController.currentGame.getMapHeight() - 3)
-                    System.out.println("Can't show the map near boundary points");
+                    System.out.println("Can't show the map outside the boundaries");
                 else {
                     MapController.currentX = x;
                     MapController.currentY = y;
@@ -85,6 +85,19 @@ public class GameMenu extends Menu {
                 System.out.println(response.message);
             }
             else System.out.println(Response.INVALID_COMMAND.message);
+        }
+        while(true){
+            System.out.println("choose a color and put your main castle");
+            String command = scanner.nextLine();
+            if((matcher = Commands.getMatcher(command, Commands.PUT_MAIN_CASTLE)).find())
+                System.out.println(GameController.putMainCastle(matcher).message);
+            else if(GameController.currentPlayer.getMainCastle() != null && Commands.getMatcher(command, Commands.NEXT_TURN).find())
+                System.out.println(GameController.nextTurn().message);
+            else if(GameController.currentPlayer.getMainCastle() == null && Commands.getMatcher(command, Commands.NEXT_TURN).find())
+                System.out.println(Response.PUT_MAIN_CASTLE.message);
+            else System.out.println(Response.INVALID_COMMAND.message);
+            if(GameController.currentGame.getTurnIndex() == 0)
+                break;
         }
         while(true){
             String command = scanner.nextLine();
@@ -107,7 +120,7 @@ public class GameMenu extends Menu {
                 int x = Integer.parseInt(matcher.group("x"));
                 int y = Integer.parseInt(matcher.group("y"));
                 if(x < 7 || x > GameController.currentGame.getMapWidth() - 8 || y < 2 || y > GameController.currentGame.getMapHeight() - 3)
-                    System.out.println("Can't show the map near boundary points");
+                    System.out.println("Can't show the map outside the boundaries");
                 else{
                     MapController.currentX = x;
                     MapController.currentY = y;
