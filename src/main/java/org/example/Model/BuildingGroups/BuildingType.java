@@ -8,6 +8,9 @@ import org.example.View.Response;
 
 public enum BuildingType {
     TREE(100, 0, 1, null, 0, 0, 0, 0, false, "tree"),
+    // STAIR and WALL are temporary and need to be fixed !!! todo
+    STAIR(100, 0, 1, null, 0, 0, 0, 0, false, "stair"),
+    WALL(100, 0, 1, null, 0, 0, 0, 0, false, "wall"),
     ;
     int size;
     int direction;/////////////////////////////////////////not all the buildings have direction
