@@ -18,14 +18,15 @@ public class MapController {
             System.out.print("-");
         System.out.println("-");
         for(int i = 0; i < 15; i++){
+            String tileColor = currentGame.getTileByCoordinates(y, x - 7 + i).getType().getColorNumber();
             if(currentGame.getTileByCoordinates(y, x - 7 + i).getSoldiers().size() > 0)
-                System.out.print("| S ");
+                System.out.print("|" + "\u001B[" + tileColor + "m" + " S " + "\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
                 if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE)
-                    System.out.print("| B ");//instance of wall
-                else System.out.print("| T ");
+                    System.out.print("|" + "\u001B[" + tileColor + "m" + " B " + "\u001B[0m");//instance of wall
+                else System.out.print("|" + "\u001B[" + tileColor + "m" + " T " + "\u001B[0m");
             }
-            else System.out.print("|" + currentGame.getTileByCoordinates(y, x - 7 + i).getType().toString().substring(0, 2) + " ");
+            else System.out.print("|" + "\u001B[" + tileColor + "m" + "   " + "\u001B[0m");
         }
         System.out.println("|");
     }

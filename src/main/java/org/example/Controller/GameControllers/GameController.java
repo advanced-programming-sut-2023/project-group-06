@@ -118,7 +118,7 @@ public class GameController {
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
         int size = (buildingtype.getSize() - 1) / 2;
-        if(buildingtype == null)
+        if(buildingtype == null || buildingtype == BuildingType.TREE)
             return Response.INVALID_TYPE;
         if(x - size< 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
