@@ -4,6 +4,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.GameControllers.GameController;
 import org.example.Controller.GameControllers.KingdomController;
 import org.example.Controller.GameControllers.MapController;
+import org.example.Model.Data;
 import org.example.View.Commands;
 import org.example.View.Menu;
 import org.example.View.MenuType;
@@ -24,12 +25,12 @@ public class GameMenu extends Menu {
             System.out.println("do you want a default map?(y,n)");
             String command = scanner.nextLine();
             if(Objects.equals(command, "y")){
-                int mapNumber = 0;
+                String mapName;
                 while(true){
-                    System.out.println("choose a default map from 1 to 10");
+                    System.out.println("enter the map name: ");
                     command = scanner.nextLine();
                     if((matcher = Commands.getMatcher(command, Commands.CHOOSE_DEFAULT_MAP)).find()) {
-                        mapNumber = Integer.parseInt(matcher.group("mapNumber"));
+                        mapName = matcher.group("mapName");
                         break;
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);
