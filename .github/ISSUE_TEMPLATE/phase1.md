@@ -147,7 +147,7 @@ assignees: Arman17Babaei
 
   1. [X] شروع نشده
   2. [X] در حال انجام
-  3. [ ] تمام شده
+  3. [x] تمام شده
   </div>
 </details>
   
@@ -167,9 +167,9 @@ assignees: Arman17Babaei
 
   <div dir="ltr" align='right'>
 
-  1. [ ] شروع نشده
-  2. [ ] در حال انجام
-  3. [ ] تمام شده
+  1. [x] شروع نشده
+  2. [x] در حال انجام
+  3. [x] تمام شده
   </div>
 </details>
 </div>
