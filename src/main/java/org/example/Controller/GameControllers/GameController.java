@@ -79,9 +79,9 @@ public class GameController {
             return Response.INVALID_COORDINATES;
         //check for troops or other things on the tile
         if(currentGame.getMap()[x][y].getBuilding() != null)
-            return Response.SET_TEXTURE_UNDER_BUILDING;
-        currentGame.getMap()[x][y] = new Tile(type, x, y);
-        return null;//there shouldn't be any massage here
+            return Response.SET_TEXTURE_UNDER_BUILDING;////what if there is a tree here?
+        currentGame.getTileByCoordinates(y, x).setType(type);
+        return Response.SET_TEXTURE_SUCCESSFUL;
     }
 
     public static Response setTextureMultipleTiles(Matcher matcher){
@@ -103,10 +103,10 @@ public class GameController {
         //check for troops or other things on the tiles
         for(int i = x1; i <= x2; i++){
             for(int j = y1; j <= y2; j++){
-                currentGame.getMap()[i][j] = new Tile(type, i, j);
+                currentGame.getTileByCoordinates(j, i).setType(type);
             }
         }
-        return null;//there shouldn't be any massage here
+        return Response.SET_TEXTURE_SUCCESSFUL;
     }
 
     public static Response dropBuilding(Matcher matcher){

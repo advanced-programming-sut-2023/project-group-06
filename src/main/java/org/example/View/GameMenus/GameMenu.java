@@ -73,7 +73,12 @@ public class GameMenu extends Menu {
                     MapController.showMap(x, y);
                     MenuType.MAP_MENU.menu.run(scanner);
                 }
-            } else if ((matcher = Commands.getMatcher(command, Commands.SAVE_MAP)).find()) {
+            }
+            else if((matcher = Commands.getMatcher(command, Commands.SET_TEXTURE_ONE_TILE)).find())
+                System.out.println(GameController.setTextureOneTile(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_TEXTURE_MULTIPLE_TILES)).find())
+                System.out.println(GameController.setTextureMultipleTiles(matcher).message);
+            else if ((matcher = Commands.getMatcher(command, Commands.SAVE_MAP)).find()) {
                 Response response = MapController.saveMap(matcher.group("name"));
                 System.out.println(response.message);
             }
@@ -109,6 +114,10 @@ public class GameMenu extends Menu {
                     MenuType.MAP_MENU.menu.run(scanner);
                 }
             }
+            else if((matcher = Commands.getMatcher(command, Commands.SET_TEXTURE_ONE_TILE)).find())
+                System.out.println(GameController.setTextureOneTile(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_TEXTURE_MULTIPLE_TILES)).find())
+                System.out.println(GameController.setTextureMultipleTiles(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
                 System.out.println(GameController.dropBuilding(matcher).message);
 

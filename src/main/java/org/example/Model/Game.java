@@ -53,6 +53,10 @@ public class Game {
         return numberOfPlayers;
     }
 
+    public void setNewTile(int x, int y, TileStructure type){
+        map[x][y] = new Tile(type, x, y);
+    }
+
     public ArrayList<User> getPlayers() {
         return players;
     }
