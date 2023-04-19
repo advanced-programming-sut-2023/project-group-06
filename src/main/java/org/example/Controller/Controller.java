@@ -135,9 +135,14 @@ public class Controller {
         return output.toString();
     }
     private static void makeNoise(StringBuilder str){
-        for(int i = 0; i < str.length(); i++)
-            if (str.charAt(i) != '\n' && Math.random() < 0.05)
-                str.replace(i,i+1,"⣦");
+        for(int i = 0; i < str.length(); i++){
+            if (str.charAt(i) == '\n') continue;
+            int r = 0;
+            for(int j = 0; j < 8; j++){
+                if(Math.random() < 0.1) r |= 1 << j;
+            }
+            str.setCharAt(i, (char) (((str.charAt(i) - 10240) ^ r) + 10240));
+        }
     }
 
     public static String makeEntryValid(String entry) {//it was protected before
