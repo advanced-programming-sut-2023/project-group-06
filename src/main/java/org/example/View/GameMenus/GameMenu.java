@@ -73,7 +73,11 @@ public class GameMenu extends Menu {
                     MapController.showMap(x, y);
                     MenuType.MAP_MENU.menu.run(scanner);
                 }
-            } else System.out.println(Response.INVALID_COMMAND.message);
+            } else if ((matcher = Commands.getMatcher(command, Commands.SAVE_MAP)).find()) {
+                Response response = MapController.saveMap(matcher.group("name"));
+                System.out.println(response.message);
+            }
+            else System.out.println(Response.INVALID_COMMAND.message);
         }
         while(true){
             String command = scanner.nextLine();

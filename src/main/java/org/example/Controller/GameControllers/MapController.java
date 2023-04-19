@@ -1,6 +1,7 @@
 package org.example.Controller.GameControllers;
 
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.Data;
 import org.example.Model.Game;
 import org.example.Model.Soldier;
 import org.example.Model.TileStructure;
@@ -103,5 +104,14 @@ public class MapController {
             buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString() + "\n";//////// I hope toString works
         result += "buildings: " + buildingString;
         return result;
+    }
+
+    public static Response saveMap(String name) {
+        currentGame = GameController.currentGame;
+        System.out.println(name);
+        // if (name == null) return Response.EMPTY_MAP_NAME;
+        System.out.println(currentGame.getMap() == null);
+        Data.saveMap(name, currentGame.getMap());
+        return Response.SAVE_MAP_SUCCESSFUL;
     }
 }

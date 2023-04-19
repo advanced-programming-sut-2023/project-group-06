@@ -9,4 +9,8 @@ public class Tree extends Building{
         super(owner, buildingType, xCoordinate, yCoordinate);
         this.treeType = treeType;
     }
+
+    public TreeType getTreeType() {
+        return treeType;
+    }
 }

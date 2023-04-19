@@ -81,6 +81,8 @@ public enum Response {
     CREATION_INTERRUPTION("User creation interrupted!"),
     TRY_AGAIN_LATER("Try again later in %d seconds!"),
     CAPTCHA_WRONG("Captcha is wrong!"),
+    EMPTY_MAP_NAME("Map name can't be empty!"),
+    SAVE_MAP_SUCCESSFUL("Map saved successfully!"),
     ;
     public final String message;
 
