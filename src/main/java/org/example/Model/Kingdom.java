@@ -17,7 +17,7 @@ public class Kingdom {
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
-    private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people ????
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Resources> resources = new ArrayList<>();
     private ArrayList<Food> foods = new ArrayList<>();
@@ -87,6 +87,10 @@ public class Kingdom {
 
     public ArrayList<Building> getBuildings() {
         return buildings;
+    }
+
+    public void removeBuilding(Building building){
+        this.buildings.remove(building);
     }
 
     public User getOwner() {

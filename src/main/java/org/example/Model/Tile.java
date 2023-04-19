@@ -10,6 +10,7 @@ public class Tile {
     private int xCoordinate;
     private int yCoordinate;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Person> people = new ArrayList<>();//Person or Worker???
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -33,6 +34,10 @@ public class Tile {
         return yCoordinate;
     }
 
+    public ArrayList<Person> getPeople() {
+        return people;
+    }
+
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
     }
@@ -47,6 +52,14 @@ public class Tile {
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+    }
+
+    public void addPerson(Person person){
+        this.people.add(person);
+    }
+
+    public void removePerson(Person person){
+        this.people.remove(person);
     }
 
     public void removeSoldier(Soldier soldier) {

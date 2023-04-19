@@ -183,7 +183,7 @@ public class Data {
                     int type = b % 16;
                     map[i][j] = new Tile(TileStructure.values()[type], j, i);
                     if (building > 0)
-                        map[i][j].setBuilding(new Tree(null, null, j, i, TreeType.values()[building - 1]));
+                        map[i][j].setBuilding(new Tree(j, i, TreeType.values()[building - 1]));
                 }
             }
             fileInputStream.close();

@@ -27,16 +27,25 @@ public class GameController {
     }
 
     public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
-        for(int i = 0; i < defaultMapWidth; i++){
-            for(int j = 0; j < defaultMapHeight; j++){
-                currentGame.getMap()[i][j] = defaultMap[i][j];
-            }
-        }
+        currentGame.setMap(defaultMap, defaultMapWidth, defaultMapHeight);
     }
 
-    public static Response clearBlock(Matcher matcher){
-        return null;
-        //todo
+    public static void clearBlock(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        //should I destroy buildings?
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null){
+            //remove the building from all the tiles under it
+            currentPlayer.removeBuilding(currentGame.getTileByCoordinates(y, x).getBuilding());
+        }
+        for(Person person : currentGame.getTileByCoordinates(y, x).getPeople()){
+            if(person.getOwner() == currentPlayer) {
+                currentGame.getTileByCoordinates(y, x).removePerson(person);
+                //remove those people from the kingdom
+            }
+        }
     }
 
     public static Response dropRuck(Matcher matcher){
@@ -60,7 +69,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        Tree tree = new Tree(currentPlayer, BuildingType.TREE, x, y, type);
+        Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
         return Response.DROP_TREE_SUCCESSFUL;
     }

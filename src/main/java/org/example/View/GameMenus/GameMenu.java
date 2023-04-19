@@ -35,6 +35,7 @@ public class GameMenu extends Menu {
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);
                 }
+                GameController.setDefaultMap(Data.loadMap(mapName), Objects.requireNonNull(Data.loadMap(mapName)).length, Objects.requireNonNull(Data.loadMap(mapName))[0].length);
                 //setDefaultMap(mapNumber, mapNumber.height, mapNumber.width)
                 defaultMap = true;
                 break;

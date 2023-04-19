@@ -49,40 +49,4 @@ public class MainController {
         players.add(Data.getUserByName(username));
         return null;
     }
-
-    public static Response setTextureOneTile(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response setTextureMultipleTiles(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response setMapSize(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response clearBlock(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response dropRuck(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response dropTree(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
 }

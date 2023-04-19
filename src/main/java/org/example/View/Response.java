@@ -1,7 +1,7 @@
 package org.example.View;
 
 public enum Response {
-    INVALID_GROUND("The ground is not proper for this building!"),
+    INVALID_GROUND("The ground is not proper!"),
     BUILDING_ALREADY_EXIST("A building already exist in this cell!"),
     DROP_BUILDING_SUCCESSFUL("Drop building successful!"),
     DROP_TREE_SUCCESSFUL("Drop tree successful!"),

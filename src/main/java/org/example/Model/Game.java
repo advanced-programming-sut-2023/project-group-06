@@ -37,6 +37,12 @@ public class Game {
         }
     }
 
+    public void setMap(Tile[][] map, int mapWidth, int mapHeight) {
+        this.map = map;
+        this.mapHeight = mapHeight;
+        this.mapWidth = mapWidth;
+    }
+
     public int getMapWidth() {
         return mapWidth;
     }
