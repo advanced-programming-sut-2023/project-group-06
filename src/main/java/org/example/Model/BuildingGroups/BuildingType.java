@@ -51,8 +51,12 @@ public enum BuildingType {
     BAKERY(300,0,3,ResourcesType.WOOD,10,1,0,false,"bakery", Producers.class),
     BREWER(300,0,3,ResourcesType.WOOD,10,1,0,false,"brewer", Producers.class), //abjo sazi
     GRANARY(500,0,3,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
-    MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class);
-
+    MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
+    // STAIR and WALL are temporary and need to be fixed !!! todo
+    STAIR(100, 0, 1, null, 0, 0, 0, false, "stair", null),
+    WALL(100, 0, 1, null, 0, 0, 0, false, "wall", null),
+    ;
+    int happinessIncrease;
     private int size;
     private int direction;//////not all the buildings have direction
     private int height;
