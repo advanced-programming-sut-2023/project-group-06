@@ -88,6 +88,23 @@ public enum Response {
     EMPTY_MAP_NAME("Map name can't be empty!"),
     SAVE_MAP_SUCCESSFUL("Map saved successfully!"),
     NEXT_TURN("next person is now playing"),
+    EMPTY_TYPE("type field can't be empty!"),
+    EMPTY_COUNT("count field can't be empty!"),
+    INVALID_SOLDIER_TYPE("Invalid soldier type!"),
+    INVALID_COUNT("Invalid count!"),
+    NOT_ENOUGH_GOLD_UNIT("You don't have enough gold to create this unit!"),
+    NOT_ENOUGH_RESOURCE_UNIT("You don't have enough resources to create this unit!"),
+    NOT_ENOUGH_WEAPON_UNIT("You don't have enough weapon to create this unit!"),
+    NOT_ENOUGH_PEASANT("You don't have enough peasants!"),
+    CANT_CREATE_UNIT_IN_BUILDING("This unit can't be created in this building!"),
+    UNIT_CREATED_SUCCESSFULLY("Unit created successfully!"),
+    CANT_CREATE_ANY_UNIT_IN_BUILDING("You can't create any unit in this building!"),
+    EXIST_ENEMY_NEAR_TILE("There is an enemy on or near this building, you can't repair it"),
+    NOT_REPAIRABLE("You can't repair this building!"),
+    FULL_HIT_POINT("Hit point is already full!"),
+    REPAIRED("Building repaired successfully!"),
+    CLOSE_BUILDING_MENU("Closed building menu!"),
+
     ;
     public final String message;
 
@@ -103,6 +120,8 @@ public enum Response {
         if (name.equals("questionNumber")) return EMPTY_QUESTION_NUMBER;
         if (name.equals("answer")) return EMPTY_ANSWER;
         if (name.equals("answerConfirmation")) return EMPTY_CONFIRMATION;
+        if (name.equals("type")) return EMPTY_TYPE;
+        if (name.equals("count")) return EMPTY_COUNT;
         return null;
     }
 }

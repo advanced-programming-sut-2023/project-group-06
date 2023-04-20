@@ -66,6 +66,7 @@ public enum BuildingType {
     private int workerPrice;
     private int engineerPrice;
     private boolean canYouEnterIt;
+
     private String name;
     private Class<?> BuildingClass;
     BuildingType(int hitPoint, int goldPrice, int size,
@@ -113,6 +114,26 @@ public enum BuildingType {
 
     public int getSize() {
         return size;
+    }
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getHitPoint() {
+        return hitPoint;
+    }
+
+    public boolean isCanYouEnterIt() {
+        return canYouEnterIt;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public Class<?> getBuildingClass() {

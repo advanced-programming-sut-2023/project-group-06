@@ -1,8 +1,6 @@
 package org.example.Model;
 
-import java.util.regex.Matcher;
-
-public class Soldier extends Person{
+public class Soldier extends Unit {
     int attackPower;
     double defensePower;
     double speed;
@@ -16,10 +14,11 @@ public class Soldier extends Person{
     boolean canThrowLadders;
     boolean canDigDitch;
     boolean visibility;
-    SoldierType soldierType;
+    UnitType unitType;
 
-    public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, SoldierType soldierType) {
+    public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner);
-        this.soldierType = soldierType;
+        this.unitType = unitType;
+        owner.addSoldier(this);
     }
 }

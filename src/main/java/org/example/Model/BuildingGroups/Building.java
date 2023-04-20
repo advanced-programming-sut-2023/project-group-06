@@ -71,4 +71,8 @@ public class Building {
     public int getYCoordinate() {
         return yCoordinate;
     }
+
+    public void setHitPoint(int hitPoint) {
+        this.hitPoint = hitPoint;
+    }
 }

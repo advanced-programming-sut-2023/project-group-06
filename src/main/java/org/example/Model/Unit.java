@@ -1,11 +1,11 @@
 package org.example.Model;
 
-public class Person {
+public class Unit {
     int XCoordinate;
     int YCoordinate;
     private Kingdom owner;
 
-    public Person(int XCoordinate, int YCoordinate, Kingdom owner) {
+    public Unit(int XCoordinate, int YCoordinate, Kingdom owner) {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;

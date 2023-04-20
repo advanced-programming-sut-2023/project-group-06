@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 public enum Commands {
     // word : (((\"[^\"]*\")|\S*))
     // number : ((-?\d*)|(\"-?\d*\"))
-    CREATE_USER("(?=.* -p )(?=.* -u )(?=.* -email )(?=.* -n )^user create(( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))|" +
+    CREATE_USER("(?!.* -p .* -p .*)(?!.* -u .* -u .*)(?!.* -email .* -email .*)(?!.* -n .* -n .*)" +
+            "(?=.* -p )(?=.* -u )(?=.* -email )(?=.* -n )^user create(( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))|" +
             "( -p (?<password>(((\\\"[^\\\"]*\\\")|\\S*)))( (?<passwordConfirmation>(((\\\"[^\\\"]*\\\")|\\S*))))?)|" +
             "( -email (?<email>(((\\\"[^\\\"]*\\\")|\\S*))))|( (?<sloganSign>-s) (?<slogan>(((\\\"[^\\\"]*\\\")|\\S*))))|( -n (?<nickname>(((\\\"[^\\\"]*\\\")|\\S*))))){4,5}$"),
     QUESTION_PICK("(?=.* -q )(?=.* -a )(?=.* -c )^question pick(( -q (?<questionNumber>((-?\\d*)|(\\\"-?\\d*\\\"))))|" +
@@ -66,6 +67,8 @@ public enum Commands {
     MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*"),
     SHOW_DETAILS("show details -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     SAVE_MAP("save map -name (?<name>(((\"[^\"]*\")|\\S*)))"),
+    CREATE_UNIT("(?!.* -t .* -t .*)(?=.* -t )^create unit( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
+    REPAIR("^repair$"),
     ;
 
     private String regex;

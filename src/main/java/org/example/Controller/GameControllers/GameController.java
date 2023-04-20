@@ -8,7 +8,6 @@ import org.example.Model.BuildingGroups.Tree;
 import org.example.Model.BuildingGroups.TreeType;
 import org.example.View.Response;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -46,9 +45,9 @@ public class GameController {
             }
             currentPlayer.removeBuilding(currentGame.getTileByCoordinates(y, x).getBuilding());
         }
-        for(Person person : currentGame.getTileByCoordinates(y, x).getPeople()){
-            if(person.getOwner() == currentPlayer) {
-                currentGame.getTileByCoordinates(y, x).removePerson(person);
+        for(Unit unit : currentGame.getTileByCoordinates(y, x).getPeople()){
+            if(unit.getOwner() == currentPlayer) {
+                currentGame.getTileByCoordinates(y, x).removePerson(unit);
                 //remove those people from the kingdom
                 //if person instanceof soldier remove from soldiers as well
             }
@@ -211,7 +210,7 @@ public class GameController {
             }
         }
         currentPlayer.getBuildings().add(mainCastle);
-        Soldier king = new Soldier(x, y, currentPlayer, SoldierType.KING);
+        Soldier king = new Soldier(x, y, currentPlayer, UnitType.KING);
         currentPlayer.setKing(king);
         return Response.DROP_MAIN_CASTLE_SUCCESSFUL;
     }
@@ -219,11 +218,13 @@ public class GameController {
     public static Response selectBuilding(Matcher matcher){
         return null;
         //todo
+        // if successful set buildingController's building
     }
 
     public static Response selectUnit(Matcher matcher){
         return null;
         //todo
+        // if successful set soldierController's soldier
     }
 
     public static Response nextTurn(){

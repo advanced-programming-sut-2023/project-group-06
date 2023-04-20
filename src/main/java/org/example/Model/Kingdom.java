@@ -168,6 +168,26 @@ public class Kingdom {
         return foods;
     }
 
+    public int getHorseNumber() {
+        return horseNumber;
+    }
+
+    public int getAvailableEngineers() {
+        return availableEngineers;
+    }
+
+    public ArrayList<Weapon> getWeapons() {
+        return weapons;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void addSoldier(Soldier soldier) {
+        this.soldiers.add(soldier);
+    }
+
     public void eatFoods(int amount){
         for(Food food : foods){
             int cost = Math.min(amount, food.getAmount());
@@ -191,6 +211,19 @@ public class Kingdom {
         }
     }
 
+    public void useWeaponToCreateUnit(Weapon weapon) {
+        int amount = weapon.getAmount();
+        for (int i = weapons.size() - 1; i >= 0; i--) {
+            if (weapons.get(i).getType() == weapon.getType()) {
+                int cost = Math.min(amount, weapons.get(i).getAmount());
+                weapons.get(i).addToAmount(-1 * cost);
+                if (weapons.get(i).getAmount() == 0) weapons.remove(i);
+                amount -= cost;
+            }
+            if (amount == 0) break;
+        }
+    }
+
     public int getResourceAmountByType(ResourcesType resourcesType){
         int amount = 0;
         for(Resources resources1 : this.resources){
@@ -205,6 +238,15 @@ public class Kingdom {
         for(Food food : this.foods){
             if(food.getType() == foodType)
                 amount += food.getAmount();
+        }
+        return amount;
+    }
+
+    public int getWeaponAmountByType(WeaponType weaponType) {
+        int amount = 0;
+        for(Weapon weapon : this.weapons){
+            if(weapon.getType() == weaponType)
+                amount += weapon.getAmount();
         }
         return amount;
     }
