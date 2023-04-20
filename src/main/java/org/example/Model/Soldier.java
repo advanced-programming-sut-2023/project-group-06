@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 
 public class Soldier extends Person{
     int attackPower;
-    int defensePower;
-    int speed;
+    double defensePower;
+    double speed;
     int range;
     int secondRange = 0;
     int cost;
