@@ -2,10 +2,7 @@ package org.example.Controller.GameControllers;
 
 import org.example.Controller.Controller;
 import org.example.Model.*;
-import org.example.Model.BuildingGroups.Building;
-import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.BuildingGroups.Tree;
-import org.example.Model.BuildingGroups.TreeType;
+import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.ArrayList;
@@ -34,11 +31,16 @@ public class GameController {
         String yString = matcher.group("y");
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
-        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
-                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE){
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        else if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() == currentPlayer){
+            if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.MAIN_CASTLE)
+                return Response.CLEAR_MAIN_CASTLE;
             int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
             int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
-            int size = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize();
+            int size = (currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize() - 1) / 2;
             for(int i = xCenter - size; i <= xCenter + size; i++){
                 for(int j = yCenter - size; j <= yCenter + size; j++){
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
@@ -53,8 +55,8 @@ public class GameController {
                 //if person instanceof soldier remove from soldiers as well
             }
         }
-        return null;
         //todo
+        return Response.CLEAR_SUCCESSFUL;
     }
 
     public static Response dropUnit(Matcher matcher){
@@ -183,6 +185,9 @@ public class GameController {
         if(buildingtype == BuildingType.CATHEDRAL)
             currentPlayer.addToHappinessIncrease(4);
         //if(building type == INN) ...
+        //if(building type == oil smelter) ...
+        //if(building type == ...) ...
+        //wish places
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 
@@ -230,18 +235,17 @@ public class GameController {
         //computeHappiness
         currentPlayer.addToHappiness(currentPlayer.getHappinessIncrease());
         //computeDamages
-        //computeFoods     //check if food is out , foodRate must be set on -2
         computeFoods();
         if(currentPlayer.getTotalFoodAmount() == 0)
             currentPlayer.setFoodRate(-2);
         //computeFears
-        //computeTaxes     //check if you lost all money , taxRate must be set on 0
         computeTaxes();
         if(currentPlayer.getWealth() == 0)
             currentPlayer.setTax(0);
         //autoProducing
         //computePopulation  //soldiers and engineers
         //check if a king died
+        //check for wishPlaces
 
         //changeTurn
         currentGame.nextTurn();
@@ -298,9 +302,16 @@ public class GameController {
         //not sure if this is necessary
     }
 
-    private static Response autoProducing(){
-        return null;
-        //todo
+    private static void autoProducing(){
+        for(Building building : currentPlayer.getBuildings()){
+            if(building.getBuildingType().getBuildingClass() == Producers.class){
+                ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
+                int InputAmount = ((Producers) building).getResourcesInput().getAmount();
+                Asset output1 = ((Producers) building).getAssetOutput();
+                Asset output2 = ((Producers) building).getAssetOutput2();
+
+            }
+        }
     }
 
     private static Response endGame(){

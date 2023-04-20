@@ -13,6 +13,8 @@ public enum Response {
     PUT_MAIN_CASTLE("Put your main castle first!"),
     DROP_MAIN_CASTLE_SUCCESSFUL("Main castle put successfully!"),
     GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
+    CLEAR_SUCCESSFUL("Clear block successful!"),
+    CLEAR_MAIN_CASTLE("You can't remove your main castle!"),
     USER_NOT_FOUND("User not found!"),
     INVALID_COMMAND("Invalid command!"),
     EMPTY_EMAIL("Email field can't be empty!"),
