@@ -26,6 +26,7 @@ public class Kingdom {
     private Soldier king;
     private Building mainCastle;
     private int color;
+    private int happinessIncrease;
 
     public Kingdom(User owner) {
         this.tax = 0;
@@ -33,6 +34,14 @@ public class Kingdom {
         this.maxPopulation = 100;
         this.owner = owner;
         //todo
+    }
+
+    public void addToHappinessIncrease(int amount){
+        this.happinessIncrease += amount;
+    }
+
+    public int getHappinessIncrease() {
+        return happinessIncrease;
     }
 
     public int getEngineers() {
@@ -107,6 +116,10 @@ public class Kingdom {
         return king;
     }
 
+    public void setKing(Soldier king) {
+        this.king = king;
+    }
+
     public Building getMainCastle() {
         return mainCastle;
     }
@@ -156,13 +169,14 @@ public class Kingdom {
     }
 
     public void eatFoods(int amount){
-        totalFoodAmount -= amount;
         for(Food food : foods){
-            int cost = Math.min(totalFoodAmount, food.getAmount());
+            int cost = Math.min(amount, food.getAmount());
             food.addToAmount(-1 * cost);
-            totalFoodAmount -= cost;
-            if(totalFoodAmount == 0) break;
+            amount -= cost;
+            if(amount == 0) break;
         }
+        int totalCost = Math.min(amount, this.totalFoodAmount);
+        this.totalFoodAmount -= totalCost;
     }
 
     public void payResource(Resources resource){

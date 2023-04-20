@@ -32,10 +32,7 @@ public class KingdomController {
         int foodRate = Integer.parseInt(foodRateString);
         if(foodRate > 2 || foodRate < -2)
             return Response.FOOD_RATE_NUMBER_INVALID;
-        if(currentKingdom.getFoodAmountByType(FoodType.APPLES) +
-                currentKingdom.getFoodAmountByType(FoodType.MEAT) +
-                currentKingdom.getFoodAmountByType(FoodType.CHEESE) +
-                currentKingdom.getFoodAmountByType(FoodType.BREAD) == 0)
+        if(currentKingdom.getTotalFoodAmount() == 0)
             return Response.OUT_OF_FOOD;
         currentKingdom.setFoodRate(foodRate);
         return Response.SET_FOOD_RATE_SUCCESSFUL;

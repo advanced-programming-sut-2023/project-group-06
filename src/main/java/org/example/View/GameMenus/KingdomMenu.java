@@ -7,12 +7,14 @@ import org.example.View.MenuType;
 import org.example.View.Response;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
 
 public class KingdomMenu extends Menu {
     KingdomController kingdomController;
 
     public MenuType run(Scanner scanner){
         while(true){
+            Matcher matcher;
             String command = scanner.nextLine();
             if(Commands.getMatcher(command, Commands.SHOW_POPULARITY_FACTORS).find())
                 System.out.println(KingdomController.showPopularityFactors());
@@ -24,15 +26,15 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.showFoodRate());
             else if(Commands.getMatcher(command, Commands.SHOW_TAX_RATE).find())
                 System.out.println(KingdomController.showTaxRate());
-            else if(Commands.getMatcher(command, Commands.SET_FOOD_RATE).find())
-                System.out.println(KingdomController.setFoodRate(Commands.getMatcher(command, Commands.SET_FOOD_RATE)).message);
-            else if(Commands.getMatcher(command, Commands.SET_TAX_RATE).find())
-                System.out.println(KingdomController.setTaxRate(Commands.getMatcher(command, Commands.SET_TAX_RATE)).message);
-            else if(Commands.getMatcher(command, Commands.SET_FEAR_RATE).find())
-                System.out.println(KingdomController.setFearRate(Commands.getMatcher(command, Commands.SET_FEAR_RATE)).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_FOOD_RATE)).find())
+                System.out.println(KingdomController.setFoodRate(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_TAX_RATE)).find())
+                System.out.println(KingdomController.setTaxRate(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_FEAR_RATE)).find())
+                System.out.println(KingdomController.setFearRate(matcher).message);
             else if(Commands.getMatcher(command, Commands.EXIT).find())
-                return MenuType.GAME_MENU;
-            else System.out.println(Response.INVALID_COMMAND);
+                return null;
+            else System.out.println(Response.INVALID_COMMAND.message);
         }
     }
 }

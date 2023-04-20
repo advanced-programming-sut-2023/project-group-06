@@ -1,6 +1,8 @@
 package org.example.Model;
 
 public enum SoldierType {
+    //king must be checked
+    KING(12121, 13131, 1211, 13123, 13131, 123, 0, 123, 0, null, false, false, false),
     ;
     int hitPoint;
     int attackPower;

@@ -25,7 +25,6 @@ public class MainController {
         ArrayList<User> users = new ArrayList<>();
         users.add(Data.getCurrentUser());
         if(addGamePlayer(users, username2) != null ||
-                addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username3) != null ||
                 addGamePlayer(users, username4) != null ||
                 addGamePlayer(users, username5) != null ||

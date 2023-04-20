@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.println((new Menu()).getClass().getName());
+        //System.out.println((new Menu()).getClass().getName());
         Controller.run(scanner);
     }
 }
