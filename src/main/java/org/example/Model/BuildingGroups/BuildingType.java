@@ -33,7 +33,7 @@ public enum BuildingType {
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,2,false,"church",Building.class), //kelisa
-    CATHEDRAL(1200,1000,5,null,0,0,0,0,false,"cathedral", Producers.class), //kelisaye jame
+    CATHEDRAL(1200,1000,5,null,0,0,0,4,false,"cathedral", Producers.class), //kelisaye jame
     ARMORER(300,100,3,ResourcesType.WOOD,20,1,0,0,false,"armorer", Producers.class), //zereh sazi
     BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,0,false,"blacksmith", Producers.class), //sakhteman ahangari
     FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,0,false,"fletcher", Producers.class), //kaman sazi
