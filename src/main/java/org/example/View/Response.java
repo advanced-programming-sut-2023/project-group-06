@@ -1,14 +1,17 @@
 package org.example.View;
 
 public enum Response {
-    INVALID_GROUND("The ground is not proper for this building!"),
-    BUILDING_ALREADY_EXIST("A building already exist in this cell!"),
+    INVALID_GROUND("The ground is not proper!"),
+    BUILDING_ALREADY_EXIST("A building already exist here!"),
     DROP_BUILDING_SUCCESSFUL("Drop building successful!"),
     DROP_TREE_SUCCESSFUL("Drop tree successful!"),
+    INITIALIZE_MAP_SUCCESSFUL("Map initialized successfully!"),
     SET_TEXTURE_SUCCESSFUL("Set texture successful!"),
     POPULATION_EXCEEDED("Population exceeded!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
+    PUT_MAIN_CASTLE("Put your main castle first!"),
+    DROP_MAIN_CASTLE_SUCCESSFUL("Main castle put successfully!"),
     GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
     USER_NOT_FOUND("User not found!"),
     INVALID_COMMAND("Invalid command!"),
@@ -84,6 +87,7 @@ public enum Response {
     CAPTCHA_WRONG("Captcha is wrong!"),
     EMPTY_MAP_NAME("Map name can't be empty!"),
     SAVE_MAP_SUCCESSFUL("Map saved successfully!"),
+    NEXT_TURN("next person is now playing"),
     ;
     public final String message;
 

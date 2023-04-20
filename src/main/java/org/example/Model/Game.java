@@ -9,7 +9,7 @@ public class Game {
     private ArrayList<User> players;
     private ArrayList<Kingdom> kingdoms;
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
-    private int whoseTurn = 0;
+    private int turnIndex = 0;
 
     Tile[][] map;
 
@@ -35,6 +35,12 @@ public class Game {
                 map[i][j] = new Tile(TileStructure.EARTH, i, j);
             }
         }
+    }
+
+    public void setMap(Tile[][] map, int mapWidth, int mapHeight) {
+        this.map = map;
+        this.mapHeight = mapHeight;
+        this.mapWidth = mapWidth;
     }
 
     public int getMapWidth() {
@@ -90,11 +96,17 @@ public class Game {
     }
 
     public void nextTurn(){
+        this.turnIndex++;
+        this.turnIndex %= numberOfPlayers;
         //it can shift the members of kingdoms // increase the turn index instead
         //todo
     }
 
     public Kingdom currentPlayer(){
-        return kingdoms.get(whoseTurn);
+        return kingdoms.get(turnIndex);
+    }
+
+    public int getTurnIndex() {
+        return turnIndex;
     }
 }

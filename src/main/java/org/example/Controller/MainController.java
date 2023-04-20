@@ -25,7 +25,6 @@ public class MainController {
         ArrayList<User> users = new ArrayList<>();
         users.add(Data.getCurrentUser());
         if(addGamePlayer(users, username2) != null ||
-                addGamePlayer(users, username2) != null ||
                 addGamePlayer(users, username3) != null ||
                 addGamePlayer(users, username4) != null ||
                 addGamePlayer(users, username5) != null ||
@@ -48,41 +47,5 @@ public class MainController {
             return "failed";
         players.add(Data.getUserByName(username));
         return null;
-    }
-
-    public static Response setTextureOneTile(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response setTextureMultipleTiles(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response setMapSize(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response clearBlock(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response dropRuck(Matcher matcher){
-        return null;
-        //todo
-        //after start game
-    }
-
-    public static Response dropTree(Matcher matcher){
-        return null;
-        //todo
-        //after start game
     }
 }

@@ -79,7 +79,7 @@ public class MapController {
         int newX = currentX + right - left;
         int newY = currentY + down - up;
         if(newX < 7 || newX > GameController.currentGame.getMapWidth() - 8 || newY < 2 || newY > GameController.currentGame.getMapHeight() - 3)
-            System.out.println("Can't show the map near boundary points");
+            System.out.println("Can't show the map outside the boundaries");
         else{
             currentX = newX;
             currentY = newY;

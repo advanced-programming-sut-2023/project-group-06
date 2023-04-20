@@ -22,19 +22,42 @@ public class GameController {
         int width = Integer.parseInt(widthString);
         int height = Integer.parseInt(heightString);
         currentGame.initializeMap(width, height);
+        return Response.INITIALIZE_MAP_SUCCESSFUL;
+    }
+
+    public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
+        currentGame.setMap(defaultMap, defaultMapWidth, defaultMapHeight);
+    }
+
+    public static Response clearBlock(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE){
+            int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
+            int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
+            int size = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize();
+            for(int i = xCenter - size; i <= xCenter + size; i++){
+                for(int j = yCenter - size; j <= yCenter + size; j++){
+                    currentGame.getTileByCoordinates(j, i).setBuilding(null);
+                }
+            }
+            currentPlayer.removeBuilding(currentGame.getTileByCoordinates(y, x).getBuilding());
+        }
+        for(Person person : currentGame.getTileByCoordinates(y, x).getPeople()){
+            if(person.getOwner() == currentPlayer) {
+                currentGame.getTileByCoordinates(y, x).removePerson(person);
+                //remove those people from the kingdom
+                //if person instanceof soldier remove from soldiers as well
+            }
+        }
         return null;
         //todo
     }
 
-    public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
-        for(int i = 0; i < defaultMapWidth; i++){
-            for(int j = 0; j < defaultMapHeight; j++){
-                currentGame.getMap()[i][j] = defaultMap[i][j];
-            }
-        }
-    }
-
-    public static Response clearBlock(Matcher matcher){
+    public static Response dropUnit(Matcher matcher){
         return null;
         //todo
     }
@@ -60,7 +83,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        Tree tree = new Tree(currentPlayer, BuildingType.TREE, x, y, type);
+        Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
         return Response.DROP_TREE_SUCCESSFUL;
     }
@@ -78,7 +101,7 @@ public class GameController {
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         //check for troops or other things on the tile
-        if(currentGame.getMap()[x][y].getBuilding() != null)
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.SET_TEXTURE_UNDER_BUILDING;////what if there is a tree here?
         currentGame.getTileByCoordinates(y, x).setType(type);
         return Response.SET_TEXTURE_SUCCESSFUL;
@@ -103,6 +126,12 @@ public class GameController {
         //check for troops or other things on the tiles
         for(int i = x1; i <= x2; i++){
             for(int j = y1; j <= y2; j++){
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
+                    return Response.SET_TEXTURE_UNDER_BUILDING;////what if there is a tree here?
+            }
+        }
+        for(int i = x1; i <= x2; i++){
+            for(int j = y1; j <= y2; j++){
                 currentGame.getTileByCoordinates(j, i).setType(type);
             }
         }
@@ -117,10 +146,11 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        int size = (buildingtype.getSize() - 1) / 2;
+        //check for troops
         if(buildingtype == null || buildingtype == BuildingType.TREE)
             return Response.INVALID_TYPE;
-        if(x - size< 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
+        int size = (buildingtype.getSize() - 1) / 2;
+        if(x - size < 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
@@ -148,7 +178,42 @@ public class GameController {
         currentPlayer.getBuildings().add(building);
         currentPlayer.addEngineers(-1 * buildingtype.getEngineerPrice());
         currentPlayer.addPopulation(buildingtype.getWorkerPrice());
+        if(buildingtype == BuildingType.CHURCH)
+            currentPlayer.addToHappinessIncrease(2);
+        if(buildingtype == BuildingType.CATHEDRAL)
+            currentPlayer.addToHappinessIncrease(4);
+        //if(building type == INN) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
+    }
+
+    public static Response putMainCastle(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String color = Controller.makeEntryValid(matcher.group("color"));
+        //check the colors
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        if(x - 1 < 0 || x + 1 >= currentGame.getMapWidth() || y - 1 < 0 || y + 1 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        for(int i = x - 1; i <= x + 1; i++){
+            for(int j = y - 1; j <= y + 1; j++){
+                if(!BuildingType.checkGround(BuildingType.MAIN_CASTLE, currentGame.getTileByCoordinates(j, i).getType()))
+                    return Response.INVALID_GROUND;
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
+                    return Response.BUILDING_ALREADY_EXIST;
+            }
+        }
+        Building mainCastle = new Building(currentPlayer, BuildingType.MAIN_CASTLE, x, y);
+        currentPlayer.setMainCastle(mainCastle);
+        for(int i = x - 1; i <= x + 1; i++){
+            for(int j = y - 1; j <= y + 1; j++){
+                currentGame.getTileByCoordinates(j, i).setBuilding(mainCastle);
+            }
+        }
+        currentPlayer.getBuildings().add(mainCastle);
+        Soldier king = new Soldier(x, y, currentPlayer, SoldierType.KING);
+        currentPlayer.setKing(king);
+        return Response.DROP_MAIN_CASTLE_SUCCESSFUL;
     }
 
     public static Response selectBuilding(Matcher matcher){
@@ -161,29 +226,35 @@ public class GameController {
         //todo
     }
 
-    public static Response selectPerson(Matcher matcher){
-        return null;
-        //todo
-    }
-
     public static Response nextTurn(){
-        return null;
-        //todo
         //computeHappiness
+        currentPlayer.addToHappiness(currentPlayer.getHappinessIncrease());
         //computeDamages
         //computeFoods     //check if food is out , foodRate must be set on -2
+        computeFoods();
+        if(currentPlayer.getTotalFoodAmount() == 0)
+            currentPlayer.setFoodRate(-2);
         //computeFears
         //computeTaxes     //check if you lost all money , taxRate must be set on 0
+        computeTaxes();
+        if(currentPlayer.getWealth() == 0)
+            currentPlayer.setTax(0);
         //autoProducing
         //computePopulation  //soldiers and engineers
+        //check if a king died
 
         //changeTurn
+        currentGame.nextTurn();
+        currentPlayer = currentGame.currentPlayer();
         //initialize some fields
+        return Response.NEXT_TURN;
+        //todo
     }
 
-    private static Response computeHappiness(){
-        return null;
+    private static void computeHappiness(){
+
         //todo
+        //religious buildings
     }
 
     private static Response computeDamages(){
@@ -191,9 +262,12 @@ public class GameController {
         //todo
     }
 
-    private static Response computeFoods(){
-        return null;
-        //todo
+    private static void computeFoods(){
+        float rate = 1 + (currentPlayer.getFoodRate() / 2);
+        int totalFoodUsage = (int)(rate * currentPlayer.getPopulation());
+        currentPlayer.eatFoods(totalFoodUsage);
+        currentPlayer.addToHappiness(currentPlayer.getFoodDiversity() - 1);
+        currentPlayer.addToHappiness(currentPlayer.getFoodRate() * 4);
     }
 
     private static Response computeFears(){
@@ -201,14 +275,27 @@ public class GameController {
         //todo
     }
 
-    private static Response computeTaxes(){
-        return null;
-        //todo
+    private static void computeTaxes(){
+        int tax = currentPlayer.getTax();
+        double addToWealth = 0;
+        int addToHappiness;
+        if(tax > 3)
+            addToHappiness = -4 * tax + 8;
+        else if(tax > 0)
+            addToHappiness = -2 * tax;
+        else addToHappiness = -2 * tax + 1;
+        if(tax > 0)
+            addToWealth = 0.2 * tax + 0.4;
+        else if(tax < 0)
+            addToWealth = -0.2 * tax + 0.4;
+        currentPlayer.addToWealth((int)(addToWealth * currentPlayer.getPopulation()));
+        currentPlayer.addToHappiness(addToHappiness * currentPlayer.getPopulation());
     }
 
     private static Response computePopulations(){
         return null;
         //todo
+        //not sure if this is necessary
     }
 
     private static Response autoProducing(){
@@ -220,5 +307,10 @@ public class GameController {
         return null;
         //todo
         //set all static fields inside controllers equal to zero
+    }
+
+    public static Response terminateTheGame(){
+        return null;
+        //todo
     }
 }

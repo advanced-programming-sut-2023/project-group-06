@@ -1,6 +1,8 @@
 package org.example.Model;
 
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.BuildingGroups.Towers;
 
 import java.util.ArrayList;
 
@@ -9,12 +11,16 @@ public class Tile {
     private Building building;
     private int xCoordinate;
     private int yCoordinate;
+    private int height;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Person> people = new ArrayList<>();//Person or Worker???
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        if (type.isBlue()) height = -2;
+        else height = 0;
     }
 
     public TileStructure getType() {
@@ -33,8 +39,24 @@ public class Tile {
         return yCoordinate;
     }
 
+    public ArrayList<Person> getPeople() {
+        return people;
+    }
+
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getX() {
+        return xCoordinate;
+    }
+
+    public int getY() {
+        return yCoordinate;
     }
 
     public void setType(TileStructure type) {
@@ -43,10 +65,22 @@ public class Tile {
 
     public void setBuilding(Building building) {
         this.building = building;
+        if (building instanceof Towers) height = 3;
+        else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
+        else if (building.getBuildingType() == BuildingType.WALL) height = 2;
+        else height = -2;
     }
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+    }
+
+    public void addPerson(Person person) {
+        this.people.add(person);
+    }
+
+    public void removePerson(Person person) {
+        this.people.remove(person);
     }
 
     public void removeSoldier(Soldier soldier) {

@@ -17,13 +17,16 @@ public class Kingdom {
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
-    private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people ????
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Resources> resources = new ArrayList<>();
     private ArrayList<Food> foods = new ArrayList<>();
     private ArrayList<Weapon> weapons = new ArrayList<>();
     private User owner;
     private Soldier king;
+    private Building mainCastle;
+    private int color;
+    private int happinessIncrease;
 
     public Kingdom(User owner) {
         this.tax = 0;
@@ -31,6 +34,14 @@ public class Kingdom {
         this.maxPopulation = 100;
         this.owner = owner;
         //todo
+    }
+
+    public void addToHappinessIncrease(int amount){
+        this.happinessIncrease += amount;
+    }
+
+    public int getHappinessIncrease() {
+        return happinessIncrease;
     }
 
     public int getEngineers() {
@@ -71,6 +82,10 @@ public class Kingdom {
 
     public void addPopulation(int number) { population += number; }
 
+    public void addToHappiness(int number){
+        this.happiness += number;
+    }
+
     public int getMaxPopulation() {
         return maxPopulation;
     }
@@ -89,12 +104,28 @@ public class Kingdom {
         return buildings;
     }
 
+    public void removeBuilding(Building building){
+        this.buildings.remove(building);
+    }
+
     public User getOwner() {
         return owner;
     }
 
     public Soldier getKing() {
         return king;
+    }
+
+    public void setKing(Soldier king) {
+        this.king = king;
+    }
+
+    public Building getMainCastle() {
+        return mainCastle;
+    }
+
+    public void setMainCastle(Building mainCastle) {
+        this.mainCastle = mainCastle;
     }
 
     public void setFoodDiversity(int foodDiversity) {
@@ -131,6 +162,21 @@ public class Kingdom {
 
     public void addResources(Resources resource) {
         this.resources.add(resource);
+    }
+
+    public ArrayList<Food> getFoods() {
+        return foods;
+    }
+
+    public void eatFoods(int amount){
+        for(Food food : foods){
+            int cost = Math.min(amount, food.getAmount());
+            food.addToAmount(-1 * cost);
+            amount -= cost;
+            if(amount == 0) break;
+        }
+        int totalCost = Math.min(amount, this.totalFoodAmount);
+        this.totalFoodAmount -= totalCost;
     }
 
     public void payResource(Resources resource){
