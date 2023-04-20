@@ -194,4 +194,15 @@ assignees: Arman17Babaei
   3. [ ] تمام شده
   </div>
 </details>
+  <details>
+  <summary>هندل کردن ساختمان های انبار و تولید کننده </summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [] در حال انجام
+  3. [] تمام شده
+  </div>
+</details>
+  
 </div>
