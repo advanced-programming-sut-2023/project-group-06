@@ -17,10 +17,10 @@ public enum BuildingType {
     DEFENSE_TURRET(1200,0,3,ResourcesType.STONE,15,0,0,true,"defense turret", Towers.class), //borjak defaei
     SQUARE_TOWER(1600,0,3,ResourcesType.STONE,35,0,0,true,"square tower", Towers.class), // borj moarabei
     ROUND_TOWER(2000,0,3,ResourcesType.STONE,40,0,0,true,"round tower", Towers.class), // borj dayerei
-    ARMORY(500,0,3,ResourcesType.WOOD,5,0,0,false,"armory", Producers.class), //aslahekhane
-    BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,false,"barracks", Producers.class), // sarbaz khane
-    MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,false,"mercenary post", Producers.class), //sarbaz khane mozdooran
-    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,false,"engineers guild", Producers.class), // senf mohandesan
+    ARMORY(500,0,3,ResourcesType.WOOD,5,0,0,false,"armory", Storage.class), //aslahekhane
+    BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,false,"barracks", Building.class), // sarbaz khane
+    MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,false,"mercenary post", Building.class), //sarbaz khane mozdooran
+    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,false,"engineers guild", Building.class), // senf mohandesan
     KILLING_PIT(0,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
     INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
@@ -33,20 +33,20 @@ public enum BuildingType {
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
-    CATHEDRAL(1200,1000,5,null,0,0,0,false,"cathedral", Producers.class), //kelisaye jame
+    CATHEDRAL(1200,1000,5,null,0,0,0,false,"cathedral", Building.class), //kelisaye jame
     ARMORER(300,100,3,ResourcesType.WOOD,20,1,0,false,"armorer", Producers.class), //zereh sazi
-    BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,false,"blacksmith", Producers.class), //sakhteman ahangari
+    BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,false,"blacksmith", Building.class), //sakhteman ahangari
     FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Producers.class), //kaman sazi
     POLETURNER(300,100,3,ResourcesType.WOOD,10,1,0,false,"poleturner", Producers.class), //neyze sazi
     OIL_SMELTER(300,100,3,ResourcesType.IRON,10,0,1,false,"oil smelter", Producers.class), //karkhane zob
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Trap.class),
     SIEGE_TENT(100,0,1,null,0,0,1,false,"siege tent", Building.class), //chador mohasere
-    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Producers.class),
+    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Building.class),
     APPLE_ORCHARD(100,0,3,ResourcesType.WOOD,5,1,0,false,"apple orchard", Producers.class), //bagh sib
     DIARY_FARMER(100,0,3,ResourcesType.WOOD,10,1,0,false,"diary farmer", Producers.class), //labani
     HOPS_FARMER(100,0,3,ResourcesType.WOOD,15,1,0,false,"hops farmer", Producers.class), //mazrae jo
-    HUNTERS_POST(300,0,3,ResourcesType.WOOD,5,1,0,false,"hops farmer", Producers.class),
+    HUNTERS_POST(300,0,3,ResourcesType.WOOD,5,1,0,false,"hunter post", Producers.class),
     WHEAT_FARMER(300,0,3,ResourcesType.WOOD,15,1,0,false,"wheat farmer" , Producers.class),
     BAKERY(300,0,3,ResourcesType.WOOD,10,1,0,false,"bakery", Producers.class),
     BREWER(300,0,3,ResourcesType.WOOD,10,1,0,false,"brewer", Producers.class), //abjo sazi
