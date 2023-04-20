@@ -132,7 +132,7 @@ assignees: Arman17Babaei
   <div dir="ltr" align='right'>
 
   1. [x] شروع نشده
-  2. [ ] در حال انجام
+  2. [ط] در حال انجام
   3. [ ] تمام شده
   </div>
 </details>
