@@ -11,7 +11,7 @@ public class StartMenu extends Menu{
     @Override
     public MenuType run(Scanner scanner) {
         while (true) {
-            System.out.println("Already have an account?");
+            System.out.println("Already have an account?(y/n)");
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.EXIT).find()) return null;
             Response response = StartController.chooseMenuToEnter(command);

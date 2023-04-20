@@ -2,22 +2,23 @@ package org.example.Model;
 
 public enum SoldierType {
     ;
-
+    int hitPoint;
     int attackPower;
-    int defensePower;
-    int speed;
+    double defensePower;
+    double speed;
     int range;
     int secondRange;
     int cost;
-    int precision;
+    double precision;
     int delay;
-    boolean isCapableOfClimbing;
+    WeaponType weapon;
+    boolean canClimb;
     boolean canThrowLadders;
     boolean canDigDitch;
 
-    SoldierType(int attackPower, int defensePower, int speed, int range, int secondRange,
-                int cost, int precision, int delay, boolean isCapableOfClimbing,
-                boolean canThrowLadders, boolean canDigDitch) {
+    SoldierType(int hitPoint, int attackPower, double defensePower, double speed, int range, int secondRange, int cost,
+                double precision, int delay, WeaponType weapon, boolean canClimb, boolean canThrowLadders, boolean canDigDitch) {
+        this.hitPoint = hitPoint;
         this.attackPower = attackPower;
         this.defensePower = defensePower;
         this.speed = speed;
@@ -26,7 +27,8 @@ public enum SoldierType {
         this.cost = cost;
         this.precision = precision;
         this.delay = delay;
-        this.isCapableOfClimbing = isCapableOfClimbing;
+        this.weapon = weapon;
+        this.canClimb = canClimb;
         this.canThrowLadders = canThrowLadders;
         this.canDigDitch = canDigDitch;
     }

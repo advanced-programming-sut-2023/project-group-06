@@ -4,6 +4,5 @@ public enum FoodType {
     MEAT,
     APPLES,
     CHEESE,
-    BREAD,
-    ;
+    BREAD;
 }
