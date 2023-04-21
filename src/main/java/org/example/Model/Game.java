@@ -7,9 +7,10 @@ public class Game {
     private int mapHeight;
     private int numberOfPlayers;
     private ArrayList<User> players;
-    private ArrayList<Kingdom> kingdoms;
+    private ArrayList<Kingdom> kingdoms = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
     private int turnIndex = 0;
+    private int woodCuttersNumber = 0;
 
     Tile[][] map;
 
@@ -20,7 +21,6 @@ public class Game {
     public Game(ArrayList<User> players) {
         this.players = players;
         this.numberOfPlayers = players.size();
-        kingdoms = new ArrayList<>();
         for(User user : this.players){
             kingdoms.add(new Kingdom(user));
         }
@@ -41,6 +41,10 @@ public class Game {
         this.map = map;
         this.mapHeight = mapHeight;
         this.mapWidth = mapWidth;
+    }
+
+    public void addToWoodCutters(int amount){
+        this.woodCuttersNumber += amount;
     }
 
     public int getMapWidth() {
@@ -98,8 +102,6 @@ public class Game {
     public void nextTurn(){
         this.turnIndex++;
         this.turnIndex %= numberOfPlayers;
-        //it can shift the members of kingdoms // increase the turn index instead
-        //todo
     }
 
     public Kingdom currentPlayer(){

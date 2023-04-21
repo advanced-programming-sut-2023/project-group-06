@@ -1,10 +1,12 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.Soldier;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
 
 public class SoldierController {
+    public static Soldier soldier;
 
     public static Response moveUnit(Matcher matcher){
         return null;
@@ -71,5 +73,4 @@ public class SoldierController {
         //todo
         //after select persson
     }
-
 }

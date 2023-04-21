@@ -50,7 +50,7 @@ public enum Commands {
     ENTER_TRADE_MENU("^enter trade menu$"),
     ENTER_MAP_MENU("^enter map menu$"),
     ENTER_SHOP_MENU("^enter shop menu$"),
-    DROP_BUILDING("dropbuilding -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
+    DROP_BUILDING("dropbuilding -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))( -d (?<direction>[nswer]))?"),
     SET_MAP_WIDTH_HEIGHT("width: (?<width>\\d+) height: (?<height>\\d+)"),
     CHOOSE_DEFAULT_MAP("map name: (?<mapName>(((\\\"[^\\\"]*\\\")|\\S*)))"),
     DROP_TREE("droptree -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),

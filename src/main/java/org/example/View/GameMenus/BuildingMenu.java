@@ -2,12 +2,13 @@ package org.example.View.GameMenus;
 
 import org.example.Controller.GameControllers.BuildingController;
 import org.example.View.Commands;
+import org.example.View.Menu;
 import org.example.View.MenuType;
 import org.example.View.Response;
 
 import java.util.Scanner;
 
-public class BuildingMenu {
+public class BuildingMenu extends Menu {
     public MenuType run(Scanner scanner) {
         System.out.println("building hit point: " + BuildingController.showBuildingHp());
         while (true) {

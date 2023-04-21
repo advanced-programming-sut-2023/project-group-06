@@ -9,15 +9,15 @@ public class Kingdom {
     private int happiness = 0;
     private int foodDiversity = 0;
     private int totalFoodAmount = 0;
-    private int foodRate;
-    private int tax;
+    private int foodRate = 0;
+    private int tax = 0;
     private int wealth;
-    private int population = 0;
-    private int maxPopulation;
+    private int population = 100;
+    private int maxPopulation = 200;
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
-    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people ????
+    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people or units????
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
@@ -25,13 +25,10 @@ public class Kingdom {
     private User owner;
     private Soldier king;
     private Building mainCastle;
-    private int color;
     private int happinessIncrease;
 
     public Kingdom(User owner) {
-        this.tax = 0;
-        this.wealth = 1000;
-        this.maxPopulation = 100;
+        this.wealth = 50;
         this.owner = owner;
         //todo
     }
@@ -141,7 +138,7 @@ public class Kingdom {
     }
 
     public void addToWealth(int wealth) {
-        this.wealth = wealth;
+        this.wealth += wealth;
     }
 
     public void addToPopulation(int population) {
@@ -174,10 +171,6 @@ public class Kingdom {
 
     public ArrayList<Storage> getWeapons() {
         return weapons;
-    }
-
-    public int getColor() {
-        return color;
     }
 
     public void addSoldier(Soldier soldier) {

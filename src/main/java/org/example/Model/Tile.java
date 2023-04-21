@@ -65,6 +65,7 @@ public class Tile {
 
     public void setBuilding(Building building) {
         this.building = building;
+        if(building == null) return;
         if (building instanceof Towers) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;

@@ -1,6 +1,10 @@
 package org.example.View;
 
 public enum Response {
+    INVALID_INPUT("Invalid input!"),
+    THERE_IS_NO_BUILDING_HERE("There is no building here!"),
+    YOU_CANT_SELECT_THIS_BUILDING("You can't select this building!"),
+    SELECT_BUILDING_SUCCESSFUL("Select building successful!"),
     INVALID_GROUND("The ground is not proper!"),
     BUILDING_ALREADY_EXIST("A building already exist here!"),
     DROP_BUILDING_SUCCESSFUL("Drop building successful!"),
@@ -11,7 +15,10 @@ public enum Response {
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     PUT_MAIN_CASTLE("Put your main castle first!"),
-    ENTER_DIRECTION("Enter castle's direction!"),
+    ENTER_DIRECTION("Enter building's direction!"),
+    CANT_PUT_STOCKPILE("There is nowhere to put your stockpile near the main castle!"),
+    NO_DIRECTION("This building doesn't have a direction!"),
+    ADJACENT_STORAGES("You must put storage, adjacent to other storages!"),
     DROP_MAIN_CASTLE_SUCCESSFUL("Main castle put successfully!"),
     GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
     CLEAR_SUCCESSFUL("Clear block successful!"),

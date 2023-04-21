@@ -1,6 +1,7 @@
 package org.example.View.GameMenus;
 
 import org.example.Controller.Controller;
+import org.example.Controller.GameControllers.BuildingController;
 import org.example.Controller.GameControllers.GameController;
 import org.example.Controller.GameControllers.KingdomController;
 import org.example.Controller.GameControllers.MapController;
@@ -160,8 +161,12 @@ public class GameMenu extends Menu {
                 System.out.println(GameController.clearBlock(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_ROCK)).find())
                 System.out.println(GameController.dropRuck(matcher).message);
-            else if((matcher = Commands.getMatcher(command, Commands.SELECT_BUILDING)).find())
-                System.out.println(GameController.selectBuilding(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SELECT_BUILDING)).find()) {
+                String result = GameController.selectBuilding(matcher).message;
+                System.out.println(result);
+                if(Objects.equals(result, "Select building successful!"))
+                    MenuType.BUILDING_MENU.menu.run(scanner);
+            }
             else if((matcher = Commands.getMatcher(command, Commands.SELECT_UNIT)).find())
                 System.out.println(GameController.selectUnit(matcher).message);
             //todo

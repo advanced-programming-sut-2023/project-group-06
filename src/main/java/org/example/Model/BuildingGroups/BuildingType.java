@@ -89,9 +89,28 @@ public enum BuildingType {
     }
 
     public static boolean checkGround(BuildingType buildingType, TileStructure tileStructure){
-        if(tileStructure.isBlue())
+        if(buildingType == QUARRY)
+            return tileStructure == TileStructure.STONE;
+        else if(buildingType == PITCH_RIG)
+            return tileStructure == TileStructure.PLAIN;
+        else if(buildingType == IRON_MINE)
+            return tileStructure == TileStructure.IRON;
+        else if(buildingType == OIL_SMELTER)
+            return tileStructure == TileStructure.OIL;
+        else if(tileStructure.isBlue())
             return false;
-        return true;
+        else if(tileStructure == TileStructure.EARTH || tileStructure == TileStructure.GRASS ||
+                tileStructure == TileStructure.MEADOW)
+            return true;
+        else if(buildingType == APPLE_ORCHARD || buildingType == HOPS_FARMER ||
+                buildingType == WHEAT_FARMER || buildingType == MILL)
+            return false;
+        else if(buildingType == TREE)
+            return tileStructure == TileStructure.DENSE_MEADOW;
+        else if(buildingType.getBuildingClass() == Towers.class)
+            return tileStructure != TileStructure.ROCK;
+        else return tileStructure == TileStructure.PEBBLE || tileStructure == TileStructure.STONE ||
+                    tileStructure == TileStructure.DENSE_MEADOW;
     }
 
     public int getWorkerPrice() {
