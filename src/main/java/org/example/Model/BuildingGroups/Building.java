@@ -20,6 +20,14 @@ public class Building {
         this.buildingType = buildingType;
     }
 
+    public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){
+        this.xCoordinate = xCoordinate;
+        this.yCoordinate = yCoordinate;
+        this.owner = owner;
+        this.buildingType = buildingType;
+        this.direction = direction;
+    }
+
     public int getDelay() {
         return delay;
     }

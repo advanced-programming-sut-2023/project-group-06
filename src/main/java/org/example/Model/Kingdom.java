@@ -19,9 +19,9 @@ public class Kingdom {
     private int availableEngineers;
     private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people ????
     private ArrayList<Building> buildings = new ArrayList<>();
-    private ArrayList<Resources> resources = new ArrayList<>();
-    private ArrayList<Food> foods = new ArrayList<>();
-    private ArrayList<Weapon> weapons = new ArrayList<>();
+    private ArrayList<Storage> resources = new ArrayList<>();
+    private ArrayList<Storage> foods = new ArrayList<>();
+    private ArrayList<Storage> weapons = new ArrayList<>();
     private User owner;
     private Soldier king;
     private Building mainCastle;
@@ -156,15 +156,11 @@ public class Kingdom {
         this.fear = fear;
     }
 
-    public ArrayList<Resources> getResources() {
+    public ArrayList<Storage> getResources() {
         return resources;
     }
 
-    public void addResources(Resources resource) {
-        this.resources.add(resource);
-    }
-
-    public ArrayList<Food> getFoods() {
+    public ArrayList<Storage> getFoods() {
         return foods;
     }
 
@@ -176,7 +172,7 @@ public class Kingdom {
         return availableEngineers;
     }
 
-    public ArrayList<Weapon> getWeapons() {
+    public ArrayList<Storage> getWeapons() {
         return weapons;
     }
 
@@ -188,65 +184,99 @@ public class Kingdom {
         this.soldiers.add(soldier);
     }
 
-    public void eatFoods(int amount){
-        for(Food food : foods){
-            int cost = Math.min(amount, food.getAmount());
-            food.addToAmount(-1 * cost);
-            amount -= cost;
-            if(amount == 0) break;
+    public Food getFoodByTypeFromStorage(Storage storage, FoodType type){
+        for(Asset asset : storage.getAssets()){
+            if(((Food)asset).getType() == type)
+                return (Food) asset;
         }
-        int totalCost = Math.min(amount, this.totalFoodAmount);
-        this.totalFoodAmount -= totalCost;
+        return null;
+    }
+
+    public Weapon getWeaponByTypeFromStorage(Storage storage, WeaponType type){
+        for(Asset asset : storage.getAssets()){
+            if(((Weapon)asset).getType() == type)
+                return (Weapon) asset;
+        }
+        return null;
+    }
+
+    public Resources getResourcesByTypeFromStorage(Storage storage, ResourcesType type){
+        for(Asset asset : storage.getAssets()){
+            if(((Resources)asset).getType() == type)
+                return (Resources) asset;
+        }
+        return null;
+    }
+
+    public void eatFoods(int amount){
+        int totalFood = amount;
+        for(Storage storage : foods){
+            for(Asset asset : storage.getAssets()){
+                int cost = Math.min(totalFood, asset.getAmount());
+                asset.addToAmount(-1 * cost);
+                totalFood -= cost;
+                if(totalFood == 0) return;
+            }
+        }
     }
 
     public void payResource(Resources resource){
         int amount = resource.getAmount();
-        for(Resources resources1 : this.resources){
-            if(resources1.getType() == resource.getType()){
-                int cost = Math.min(amount, resources1.getAmount());
-                resources1.addToAmount(-1 * cost);
-                amount -= cost;
+        for(Storage storage : resources){
+            for(Asset asset : storage.getAssets()){
+                if(((Resources)asset).getType() == resource.getType()){
+                    int cost = Math.min(amount, asset.getAmount());
+                    asset.addToAmount(-1 * cost);
+                    amount -= cost;
+                    if(amount == 0) return;
+                }
             }
-            if(amount == 0) break;
         }
     }
 
-    public void useWeaponToCreateUnit(Weapon weapon) {
+    public void useWeaponToCreateUnit(Weapon weapon){
         int amount = weapon.getAmount();
-        for (int i = weapons.size() - 1; i >= 0; i--) {
-            if (weapons.get(i).getType() == weapon.getType()) {
-                int cost = Math.min(amount, weapons.get(i).getAmount());
-                weapons.get(i).addToAmount(-1 * cost);
-                if (weapons.get(i).getAmount() == 0) weapons.remove(i);
-                amount -= cost;
+        for(Storage storage : weapons){
+            for(Asset asset : storage.getAssets()){
+                if(((Weapon)asset).getType() == weapon.getType()){
+                    int cost = Math.min(amount, asset.getAmount());
+                    asset.addToAmount(-1 * cost);
+                    amount -= cost;
+                    if(amount == 0) return;
+                }
             }
-            if (amount == 0) break;
         }
     }
 
     public int getResourceAmountByType(ResourcesType resourcesType){
         int amount = 0;
-        for(Resources resources1 : this.resources){
-            if(resources1.getType() == resourcesType)
-                amount += resources1.getAmount();
+        for(Storage storage : resources){
+            for(Asset asset : storage.getAssets()){
+                if(((Resources)asset).getType() == resourcesType)
+                    amount += asset.getAmount();
+            }
         }
         return amount;
     }
 
     public int getFoodAmountByType(FoodType foodType){
         int amount = 0;
-        for(Food food : this.foods){
-            if(food.getType() == foodType)
-                amount += food.getAmount();
+        for(Storage storage : foods){
+            for(Asset asset : storage.getAssets()){
+                if(((Food)asset).getType() == foodType)
+                    amount += asset.getAmount();
+            }
         }
         return amount;
     }
 
     public int getWeaponAmountByType(WeaponType weaponType) {
         int amount = 0;
-        for(Weapon weapon : this.weapons){
-            if(weapon.getType() == weaponType)
-                amount += weapon.getAmount();
+        for(Storage storage : weapons){
+            for(Asset asset : storage.getAssets()){
+                if(((Weapon)asset).getType() == weaponType)
+                    amount += asset.getAmount();
+            }
         }
         return amount;
     }
