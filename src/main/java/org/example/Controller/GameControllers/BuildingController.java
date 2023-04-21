@@ -27,17 +27,11 @@ public class BuildingController {
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         if (numberOfWeaponsNeeded < numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
-        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
-            return Response.NOT_ENOUGH_PEASANT;
         Response response;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
-        else return Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
-        if (response == Response.UNIT_CREATED_SUCCESSFULLY) {
-            building.getOwner().addToWealth(-1 * type.getCost() * count);
-            if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
-        }
+        else response = Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
         return response;
     }
 
@@ -68,10 +62,16 @@ public class BuildingController {
     }
 
     private static Response createUnitBarracks(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+            return Response.NOT_ENOUGH_PEASANT;
         if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
         }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
@@ -80,16 +80,31 @@ public class BuildingController {
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
         }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
     private static Response createUnitEngineerGuild(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+            return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         building.getOwner().addEngineers(count);
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
     public static int showBuildingHp() {
         return building.getHitPoint();
+    }
+
+    public static boolean isCastleType() {
+        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE
+                && !building.getBuildingType().getName().equals("small stone gatehouse")) return false;
+        return true;
     }
 }

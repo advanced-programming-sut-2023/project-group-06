@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class BuildingMenu {
     public MenuType run(Scanner scanner) {
-        System.out.println("building hit point: " + BuildingController.showBuildingHp());
+        if (BuildingController.isCastleType()) System.out.println("building hit point: " + BuildingController.showBuildingHp());
         while (true) {
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.CREATE_UNIT).find()) {

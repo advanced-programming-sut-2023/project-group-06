@@ -75,4 +75,6 @@ public class Building {
     public void setHitPoint(int hitPoint) {
         this.hitPoint = hitPoint;
     }
+
+
 }
