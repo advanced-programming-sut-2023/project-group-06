@@ -19,6 +19,8 @@ public class BuildingMenu {
             } else if (Commands.getMatcher(command,Commands.BACK).find()) {
                 System.out.println(Response.CLOSE_BUILDING_MENU.message);
                 break;
+            } else if (Commands.getMatcher(command,Commands.CREATE_WEAPON).find()) {
+                System.out.println(BuildingController.createWeapon(Commands.getMatcher(command,Commands.CREATE_WEAPON)).message);
             } else {
                 System.out.println(Response.INVALID_COMMAND.message);
             }

@@ -69,6 +69,7 @@ public enum Commands {
     SAVE_MAP("save map -name (?<name>(((\"[^\"]*\")|\\S*)))"),
     CREATE_UNIT("(?!.* -t .* -t .*)(?=.* -t )^create unit( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
     REPAIR("^repair$"),
+    CREATE_WEAPON("(?!.* -t .* -t .*)(?=.* -t )^create weapon( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count((-?\\d*)|(\\\"-?\\d*\\\"))){1,2}$)")
     ;
 
     private String regex;
