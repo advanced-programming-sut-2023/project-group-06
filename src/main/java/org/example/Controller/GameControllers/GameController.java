@@ -204,7 +204,7 @@ public class GameController {
             building = new Towers(currentPlayer, buildingtype, x, y);
         else if(Trap.class.equals(buildingtype.getBuildingClass()))
             building = new Trap(currentPlayer, buildingtype, x, y);
-        //else .......................
+        else building  = new Building(currentPlayer, buildingtype, x, y);
         currentPlayer.payResource(buildingtype.getResourcesPrice());
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
