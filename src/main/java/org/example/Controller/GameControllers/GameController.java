@@ -5,6 +5,7 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -186,6 +187,7 @@ public class GameController {
         //if(building type == INN) ...
         //if(building type == oil smelter) ...
         //if(building type == ...) ...
+        //if(building type == Storage) check that the building be adjacent to another storage
         //wish places
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
@@ -194,6 +196,10 @@ public class GameController {
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String color = Controller.makeEntryValid(matcher.group("color"));
+        String directionString = Controller.makeEntryValid(matcher.group("direction"));
+        if(directionString == null)
+            return Response.ENTER_DIRECTION;
+        int direction = getDirection(directionString);
         //check the colors
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
@@ -207,7 +213,7 @@ public class GameController {
                     return Response.BUILDING_ALREADY_EXIST;
             }
         }
-        Building mainCastle = new Building(currentPlayer, BuildingType.MAIN_CASTLE, x, y);
+        Building mainCastle = new Building(currentPlayer, BuildingType.MAIN_CASTLE, x, y, direction);
         currentPlayer.setMainCastle(mainCastle);
         for(int i = x - 1; i <= x + 1; i++){
             for(int j = y - 1; j <= y + 1; j++){
@@ -217,7 +223,63 @@ public class GameController {
         currentPlayer.getBuildings().add(mainCastle);
         Soldier king = new Soldier(x, y, currentPlayer, UnitType.KING);
         currentPlayer.setKing(king);
+        int newDirection = (direction + 1) % 4;
+        while(checkDirection(x, y, newDirection) == null)
+            newDirection = (newDirection + 1) % 4;
+        int newX = checkDirection(x, y, newDirection).get(0);
+        int newY = checkDirection(x, y, newDirection).get(1);
+        Storage stockPile = new Storage(currentPlayer, BuildingType.STOCKPILE, newX, newY);
+        stockPile.getAssets().add(new Resources(15, ResourcesType.WOOD));
+        stockPile.getAssets().add(new Resources(10, ResourcesType.STONE));
+        currentGame.getTileByCoordinates(newY, newX).setBuilding(stockPile);
+        currentPlayer.getBuildings().add(stockPile);
+        currentPlayer.getResources().add(stockPile);
         return Response.DROP_MAIN_CASTLE_SUCCESSFUL;
+    }
+
+    private static ArrayList<Integer> checkDirection(int x, int y, int direction){
+        switch (direction){
+            case 0:
+                y -= 2;
+                break;
+            case 1:
+                x += 2;
+                break;
+            case 2:
+                y += 12;
+                break;
+            case 3:
+                x -= 2;
+                break;
+        }
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight() ||
+                currentGame.getTileByCoordinates(y, x).getBuilding() != null)
+            return null;
+        else{
+            ArrayList<Integer> arrayList = new ArrayList<>();
+            arrayList.add(x);
+            arrayList.add(y);
+            return arrayList;
+        }
+    }
+
+    private static int getDirection(String directionString){
+        int direction = 0;
+        switch (directionString){
+            case "w":
+                direction = 1;
+                break;
+            case "s":
+                direction = 2;
+                break;
+            case "e":
+                direction = 3;
+                break;
+            case "r":
+                direction = (int)(Math.random() * 10) % 4;
+                break;
+        }
+        return direction;
     }
 
     public static Response selectBuilding(Matcher matcher){

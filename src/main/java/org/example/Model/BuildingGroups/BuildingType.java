@@ -29,7 +29,7 @@ public enum BuildingType {
     OX_TETHER(100,0,1,ResourcesType.WOOD,5,1,0,false,"ox tether", Storage.class), //afsar gav
     PITCH_RIG(100,0,3,ResourcesType.WOOD,20,1,0,false,"pitch rig", Producers.class), //dakal ghir
     QUARRY(300,0,3,ResourcesType.WOOD,20,3,0,false,"quarry", Producers.class), //maadan sang
-    STOCKPILE(500,0,3,null,0,0,0,false,"stockpile", Storage.class), //anbar
+    STOCKPILE(500,0,1,null,0,0,0,false,"stockpile", Storage.class), //anbar
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
@@ -50,15 +50,13 @@ public enum BuildingType {
     WHEAT_FARMER(300,0,3,ResourcesType.WOOD,15,1,0,false,"wheat farmer" , Producers.class),
     BAKERY(300,0,3,ResourcesType.WOOD,10,1,0,false,"bakery", Producers.class),
     BREWER(300,0,3,ResourcesType.WOOD,10,1,0,false,"brewer", Producers.class), //abjo sazi
-    GRANARY(500,0,3,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
+    GRANARY(500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
     MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
     STAIR(100, 0, 1, null, 0, 0, 0, false, "stair", null),
     WALL(100, 0, 1, null, 0, 0, 0, false, "wall", null),
     ;
-    int happinessIncrease;
     private int size;
-    private int direction;//////not all the buildings have direction
     private int height;
     private int hitPoint;
     private int goldPrice;
@@ -114,10 +112,6 @@ public enum BuildingType {
 
     public int getSize() {
         return size;
-    }
-
-    public int getDirection() {
-        return direction;
     }
 
     public int getHeight() {

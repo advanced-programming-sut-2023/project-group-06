@@ -56,10 +56,10 @@ public enum Commands {
     DROP_TREE("droptree -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))"),
     SET_TEXTURE_ONE_TILE("settexture -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))"),
     SET_TEXTURE_MULTIPLE_TILES("settexture -x1 (?<x1>(\\-)?\\d+) -y1 (?<y1>(\\-)?\\d+) -x2 (?<x2>(\\-)?\\d+) -y2 (?<y2>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))"),
-    PUT_MAIN_CASTLE("main castle -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -color (?<color>(((\"[^\"]*\")|\\S*)))"),
+    PUT_MAIN_CASTLE("main castle -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -color (?<color>(((\"[^\"]*\")|\\S*))) -d (?<direction>[nswer])"),
     NEXT_TURN("next turn"),
     CLEAR_BLOCK("clear -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
-    DROP_ROCK("droprock -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d [nswer]"),
+    DROP_ROCK("droprock -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])"),
     SELECT_BUILDING("select building -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     SELECT_UNIT("select unit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     //Map Menu Commands

@@ -11,6 +11,7 @@ public enum Response {
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     PUT_MAIN_CASTLE("Put your main castle first!"),
+    ENTER_DIRECTION("Enter castle's direction!"),
     DROP_MAIN_CASTLE_SUCCESSFUL("Main castle put successfully!"),
     GAME_STARTED_SUCCESSFULLY("Game started successfully!"),
     CLEAR_SUCCESSFUL("Clear block successful!"),
