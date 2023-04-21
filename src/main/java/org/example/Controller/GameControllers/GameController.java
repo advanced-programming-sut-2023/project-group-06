@@ -231,6 +231,7 @@ public class GameController {
         Storage stockPile = new Storage(currentPlayer, BuildingType.STOCKPILE, newX, newY);
         stockPile.getAssets().add(new Resources(15, ResourcesType.WOOD));
         stockPile.getAssets().add(new Resources(10, ResourcesType.STONE));
+        stockPile.addToStored(25);
         currentGame.getTileByCoordinates(newY, newX).setBuilding(stockPile);
         currentPlayer.getBuildings().add(stockPile);
         currentPlayer.getResources().add(stockPile);
@@ -306,6 +307,7 @@ public class GameController {
         if(currentPlayer.getWealth() == 0)
             currentPlayer.setTax(0);
         //autoProducing
+        autoProducing();
         //computePopulation  //soldiers and engineers
         //check if a king died
         //check for wishPlaces
@@ -372,7 +374,18 @@ public class GameController {
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
                 Asset output2 = ((Producers) building).getAssetOutput2();
-
+                //if(building.getBuildingType() == BuildingType.INN)
+                //if(building.getBuildingType() == BuildingType.OIL_SMELTER)
+                //if(building.getBuildingType() == BuildingType.QUARRY)
+                //if(building.getBuildingType() == BuildingType....)
+                if(InputAmount != 0){
+                    if(currentPlayer.getResourceAmountByType(InputType) < InputAmount)
+                        return;
+                    currentPlayer.payResource(((Producers) building).getResourcesInput());
+                }
+                currentPlayer.addAsset(output1);
+                if(output2 != null)
+                    currentPlayer.addAsset(output2);
             }
         }
     }

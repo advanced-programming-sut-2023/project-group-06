@@ -43,7 +43,7 @@ public class Producers extends Building{
                 resourcesInput = new Resources(0, null);
                 assetOutput = new Resources(10, ResourcesType.STONE);
                 isClickable = false;
-                capacity = 40;
+                capacity = 60;
                 break;
             case IRON_MINE:
                 resourcesInput = new Resources(0, null);

@@ -280,4 +280,62 @@ public class Kingdom {
         }
         return amount;
     }
+
+    public void addAsset(Asset asset){
+        int amount = asset.getAmount();
+        if(asset instanceof Food){
+            for(Storage storage : foods){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Food)asset1).getType() == ((Food) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Food newFood = new Food(cost, ((Food)asset).getType());
+                    storage.getAssets().add(newFood);
+                }
+                storage.addToStored(cost);
+            }
+        }
+        else if(asset instanceof Weapon){
+            for(Storage storage : weapons){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Weapon)asset1).getType() == ((Weapon) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Weapon newWeapon = new Weapon(cost, ((Weapon)asset).getType());
+                    storage.getAssets().add(newWeapon);
+                }
+                storage.addToStored(cost);
+            }
+        }
+        else if(asset instanceof Resources){
+            for(Storage storage : resources){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Resources)asset1).getType() == ((Resources) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Resources newResource = new Resources(cost, ((Resources)asset).getType());
+                    storage.getAssets().add(newResource);
+                }
+                storage.addToStored(cost);
+            }
+        }
+    }
 }
