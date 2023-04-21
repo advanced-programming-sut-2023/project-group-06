@@ -147,6 +147,17 @@ assignees: Arman17Babaei
   3. [ ] تمام شده
   </div>
 </details>
+  
+<details>
+  <summary>هندل کردن اسلحه ها</summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [x] در حال انجام
+  3. [ ] تمام شده
+  </div>
+</details>
 
 ## تسک‌های نفر سوم
 
