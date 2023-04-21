@@ -12,8 +12,8 @@ public class Kingdom {
     private int foodRate = 0;
     private int tax = 0;
     private int wealth;
-    private int population = 100;
-    private int maxPopulation = 200;
+    private int population = 1;
+    private int maxPopulation = 9;
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
@@ -28,9 +28,8 @@ public class Kingdom {
     private int happinessIncrease;
 
     public Kingdom(User owner) {
-        this.wealth = 50;
+        this.wealth = 500;
         this.owner = owner;
-        //todo
     }
 
     public void addToHappinessIncrease(int amount){
