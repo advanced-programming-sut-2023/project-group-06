@@ -76,7 +76,7 @@ public class Kingdom {
         return population;
     }
 
-    public void addPopulation(int number) { population += number; }
+    public void addToPopulation(int number) { population += number; }
 
     public void addToHappiness(int number){
         this.happiness += number;
@@ -142,10 +142,6 @@ public class Kingdom {
 
     public void addToWealth(int wealth) {
         this.wealth += wealth;
-    }
-
-    public void addToMaxPopulation(int population) {
-        this.maxPopulation += population;
     }
 
     public void setMaxPopulation(int maxPopulation) {

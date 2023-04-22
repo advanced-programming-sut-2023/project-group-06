@@ -214,7 +214,7 @@ public class GameController {
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
         currentPlayer.addAvailableEngineers(-1 * buildingtype.getEngineerPrice());
-        currentPlayer.addPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
+        currentPlayer.addToPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
         if(buildingtype == BuildingType.CATHEDRAL)
