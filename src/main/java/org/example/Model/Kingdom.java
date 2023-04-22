@@ -167,6 +167,7 @@ public class Kingdom {
     public int getAvailableEngineers() {
         return availableEngineers;
     }
+
     public void addAvailableEngineers(int amount) {
         this.availableEngineers += amount;
     }
