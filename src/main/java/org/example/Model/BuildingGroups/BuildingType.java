@@ -17,7 +17,7 @@ public enum BuildingType {
     DEFENSE_TURRET(1200,0,3,ResourcesType.STONE,15,0,0,true,"defense turret", Towers.class), //borjak defaei
     SQUARE_TOWER(1600,0,3,ResourcesType.STONE,35,0,0,true,"square tower", Towers.class), // borj moarabei
     ROUND_TOWER(2000,0,3,ResourcesType.STONE,40,0,0,true,"round tower", Towers.class), // borj dayerei
-    ARMORY(500,0,3,ResourcesType.WOOD,5,0,0,false,"armory", Storage.class), //aslahekhane
+    ARMORY(500,0,1,ResourcesType.WOOD,5,0,0,false,"armory", Storage.class), //aslahekhane
     BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,false,"barracks", Building.class), // sarbaz khane
     MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,false,"mercenary post", Building.class), //sarbaz khane mozdooran
     ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,false,"engineers guild", Building.class), // senf mohandesan

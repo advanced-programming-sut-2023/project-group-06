@@ -114,6 +114,9 @@ public enum Response {
     FULL_HIT_POINT("Hit point is already full!"),
     REPAIRED("Building repaired successfully!"),
     CLOSE_BUILDING_MENU("Closed building menu!"),
+    INVALID_WEAPON_TYPE("Invalid weapon type!"),
+    NOT_ENOUGH_RESOURCES_WEAPON("You don't have enough resources to create this amount of weapons!"),
+    CANT_CREATE_ANY_WEAPON_BUILDING("You can't create any weapon in this building!"),
 
     ;
     public final String message;

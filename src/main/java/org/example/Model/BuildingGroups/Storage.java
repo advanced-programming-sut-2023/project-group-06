@@ -6,9 +6,9 @@ import org.example.Model.Kingdom;
 import java.util.ArrayList;
 
 public class Storage extends Building{
-    int capacity;
-    int stored;
-    ArrayList<Asset> assets = new ArrayList<>();
+    private int capacity;
+    private int stored = 0;
+    private ArrayList<Asset> assets = new ArrayList<>();
 
     public ArrayList<Asset> getAssets() {
         return assets;

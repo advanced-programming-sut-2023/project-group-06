@@ -167,6 +167,9 @@ public class Kingdom {
     public int getAvailableEngineers() {
         return availableEngineers;
     }
+    public void addAvailableEngineers(int amount) {
+        this.availableEngineers += amount;
+    }
 
     public ArrayList<Storage> getWeapons() {
         return weapons;
@@ -207,6 +210,7 @@ public class Kingdom {
                 int cost = Math.min(totalFood, asset.getAmount());
                 asset.addToAmount(-1 * cost);
                 totalFood -= cost;
+                storage.addToStored(-1 * cost);
                 if(totalFood == 0) return;
             }
         }
@@ -220,6 +224,7 @@ public class Kingdom {
                     int cost = Math.min(amount, asset.getAmount());
                     asset.addToAmount(-1 * cost);
                     amount -= cost;
+                    storage.addToStored(-1 * cost);
                     if(amount == 0) return;
                 }
             }
@@ -234,6 +239,7 @@ public class Kingdom {
                     int cost = Math.min(amount, asset.getAmount());
                     asset.addToAmount(-1 * cost);
                     amount -= cost;
+                    storage.addToStored(-1 * cost);
                     if(amount == 0) return;
                 }
             }
@@ -290,6 +296,7 @@ public class Kingdom {
                     Food newFood = new Food(cost, ((Food)asset).getType());
                     storage.getAssets().add(newFood);
                 }
+                amount -= cost;
                 storage.addToStored(cost);
             }
         }
@@ -308,6 +315,7 @@ public class Kingdom {
                     Weapon newWeapon = new Weapon(cost, ((Weapon)asset).getType());
                     storage.getAssets().add(newWeapon);
                 }
+                amount -= cost;
                 storage.addToStored(cost);
             }
         }
@@ -326,6 +334,7 @@ public class Kingdom {
                     Resources newResource = new Resources(cost, ((Resources)asset).getType());
                     storage.getAssets().add(newResource);
                 }
+                amount -= cost;
                 storage.addToStored(cost);
             }
         }

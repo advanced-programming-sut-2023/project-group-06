@@ -34,6 +34,10 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.setFearRate(matcher).message);
             else if(Commands.getMatcher(command, Commands.EXIT).find())
                 return null;
+            else if(Commands.getMatcher(command,Commands.SHOW_RESOURCES).find())
+                System.out.println(KingdomController.showResources());
+            else if (Commands.getMatcher(command,Commands.SHOW_WEAPONS).find())
+                System.out.println(KingdomController.showWeapons());
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

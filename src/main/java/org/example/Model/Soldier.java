@@ -22,5 +22,6 @@ public class Soldier extends Unit {
         super(XCoordinate, YCoordinate, owner);
         this.unitType = unitType;
         owner.addSoldier(this);
+        owner.addToPopulation(1);
     }
 }

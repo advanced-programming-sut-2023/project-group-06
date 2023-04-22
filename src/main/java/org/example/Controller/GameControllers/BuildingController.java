@@ -14,6 +14,7 @@ public class BuildingController {
     public static Building building;
 
     public static Response createUnit(Matcher matcher){
+        matcher.find();
         String[] groupNames = {"type","count"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
@@ -23,21 +24,15 @@ public class BuildingController {
         UnitType type = UnitType.getSoldierTypeByString(Controller.makeEntryValid(matcher.group("type")));
         if (type == null) return Response.INVALID_SOLDIER_TYPE;
         if (count <= 0) return Response.INVALID_COUNT;
+        Response response;
         if (type.getCost() * count > GameController.currentPlayer.getWealth()) return Response.NOT_ENOUGH_GOLD_UNIT;
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (numberOfWeaponsNeeded < numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
-        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
-            return Response.NOT_ENOUGH_PEASANT;
-        Response response;
+        if (numberOfWeaponsNeeded > numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
-        else return Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
-        if (response == Response.UNIT_CREATED_SUCCESSFULLY) {
-            building.getOwner().addToWealth(-1 * type.getCost() * count);
-            if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
-        }
+        else response = Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
         return response;
     }
 
@@ -52,6 +47,28 @@ public class BuildingController {
         return Response.REPAIRED;
     }
 
+    public static Response createWeapon(Matcher matcher) {
+        String[] groupNames = {"type","count"};
+        String nullGroupName = Controller.nullGroup(matcher,groupNames);
+        if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
+        int count;
+        if (matcher.group("count") == null) count = 1;
+        else count = Integer.parseInt(Controller.makeEntryValid(matcher.group("count")));
+        WeaponType type = WeaponType.getWeaponTypeByString(Controller.makeEntryValid(matcher.group("type")));
+        if (type == null) return Response.INVALID_WEAPON_TYPE;
+        if (count <= 0) return Response.INVALID_COUNT;
+        if (type.getResourcePrice() != null) {
+            if (building.getOwner().getResourceAmountByType(type.getResourcesPriceType()) < count * type.getResourcePriceAmount())
+                return Response.NOT_ENOUGH_RESOURCES_WEAPON;
+            else {
+                if (type.getBuildingType() == BuildingType.FLETCHER) return createWeaponFletcher(type,count);
+                if (type.getBuildingType() == BuildingType.BLACKSMITH) return createWeaponBlacksmith(type,count);
+                if (type.getBuildingType() == BuildingType.POLETURNER) return createWeaponPoleturner(type,count);
+                if (type.getBuildingType() == BuildingType.ARMORER) return createWeaponArmorer(type,count);
+            }
+        } else if (type.getBuildingType() == BuildingType.DIARY_FARMER) return createWeaponDiaryFarmer(type,count);
+        return Response.CANT_CREATE_ANY_WEAPON_BUILDING;
+    }
     private static boolean existEnemyNearTile(int y, int x) {
         for (int yy = y - 4; yy <= y + 4; y++) {
             for (int xx = x - 4; xx <= x + 4; xx++) {
@@ -68,10 +85,17 @@ public class BuildingController {
     }
 
     private static Response createUnitBarracks(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+            return Response.NOT_ENOUGH_PEASANT;
         if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
@@ -79,17 +103,58 @@ public class BuildingController {
         if (!type.isArab()) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
     private static Response createUnitEngineerGuild(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
+            return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
-        building.getOwner().addEngineers(count);
+        building.getOwner().addAvailableEngineers(count);
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
+    }
+
+    private static Response createWeaponFletcher(WeaponType type, int count) {
+        return null;
+        //todo
+    }
+
+    private static Response createWeaponPoleturner(WeaponType type, int count) {
+        return null;
+        //todo
+    }
+
+    private static Response createWeaponBlacksmith(WeaponType type, int count) {
+        return null;
+        //todo
+    }
+
+    private static Response createWeaponArmorer(WeaponType type, int count) {
+        return null;
+        //todo
+    }
+
+    private static Response createWeaponDiaryFarmer(WeaponType type, int count) {
+        return null;
+        //todo
     }
 
     public static int showBuildingHp() {
         return building.getHitPoint();
+    }
+
+    public static boolean isCastleType() {
+        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE
+                && !building.getBuildingType().getName().equals("small stone gatehouse")) return false;
+        return true;
     }
 }
