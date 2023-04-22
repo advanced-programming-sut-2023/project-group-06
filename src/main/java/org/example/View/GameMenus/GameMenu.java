@@ -38,6 +38,7 @@ public class GameMenu extends Menu {
                     else System.out.println(Response.INVALID_COMMAND.message);
                 }
                 GameController.setDefaultMap(Data.loadMap(mapName), Objects.requireNonNull(Data.loadMap(mapName)).length, Objects.requireNonNull(Data.loadMap(mapName))[0].length);
+                System.out.println("map is set");
                 break;
             }
             else if(Objects.equals(command, "n")){
@@ -87,6 +88,7 @@ public class GameMenu extends Menu {
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         int turnIndex = 0;
+        System.out.printf("turn 1 : %s is now playing\n", GameController.currentPlayer.getOwner().getUsername());
         System.out.println("choose a color and put your main castle");
         while(true) {
             String command = scanner.nextLine();
@@ -95,7 +97,8 @@ public class GameMenu extends Menu {
             else if (Commands.getMatcher(command, Commands.PUT_MAIN_CASTLE).find())
                 System.out.println("you have already put your main castle!");
             else if (GameController.currentPlayer.getMainCastle() != null && Commands.getMatcher(command, Commands.NEXT_TURN).find()){
-                System.out.println(GameController.nextTurn().message);
+                System.out.printf(GameController.nextTurn().message, GameController.currentGame.getNumberOfTurns(),
+                        GameController.currentPlayer.getOwner().getUsername());
                 turnIndex++;
                 if(turnIndex < GameController.currentGame.getNumberOfPlayers())
                     System.out.println("choose a color and put your main castle");
@@ -126,10 +129,10 @@ public class GameMenu extends Menu {
                 KingdomController.currentKingdom = GameController.currentPlayer;
                 MenuType.KINGDOM_MENU.menu.run(scanner);
             }
-            else if(Commands.getMatcher(command, Commands.ENTER_SHOP_MENU).find()) {
+            /*else if(Commands.getMatcher(command, Commands.ENTER_SHOP_MENU).find()) {
                 System.out.println(Response.ENTER_SHOP_MENU.message);
                 MenuType.SHOP_MENU.menu.run(scanner);
-            }
+            }*/
             else if(Commands.getMatcher(command, Commands.ENTER_TRADE_MENU).find()) {
                 System.out.println(Response.ENTER_TRADE_MENU.message);
                 MenuType.TRADE_MENU.menu.run(scanner);
@@ -156,7 +159,8 @@ public class GameMenu extends Menu {
             else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
                 System.out.println(GameController.dropBuilding(matcher).message);
             else if (Commands.getMatcher(command, Commands.NEXT_TURN).find())
-                System.out.println(GameController.nextTurn().message);
+                System.out.printf(GameController.nextTurn().message, GameController.currentGame.getNumberOfTurns(),
+                        GameController.currentPlayer.getOwner().getUsername());
             else if((matcher = Commands.getMatcher(command, Commands.CLEAR_BLOCK)).find())
                 System.out.println(GameController.clearBlock(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_ROCK)).find())
@@ -166,9 +170,15 @@ public class GameMenu extends Menu {
                 System.out.println(result);
                 if(Objects.equals(result, "Select building successful!"))
                     MenuType.BUILDING_MENU.menu.run(scanner);
+                else if(Objects.equals(result, "Entered shop menu!"))
+                    MenuType.SHOP_MENU.menu.run(scanner);
             }
-            else if((matcher = Commands.getMatcher(command, Commands.SELECT_UNIT)).find())
-                System.out.println(GameController.selectUnit(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SELECT_UNIT)).find()) {
+                String result = GameController.selectUnit(matcher).message;
+                System.out.println(result);
+                if(Objects.equals(result, "Select soldier successful!"))
+                    MenuType.SOLDIER_MENU.menu.run(scanner);
+            }
             //todo
             else System.out.println(Response.INVALID_COMMAND.message);
         }

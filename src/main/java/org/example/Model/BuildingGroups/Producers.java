@@ -23,16 +23,16 @@ public class Producers extends Building{
         return resourceUsageRate;
     }
 
+    public void addToStored(int amount){
+        this.stored += amount;
+    }
+
     public int getCapacity() {
         return capacity;
     }
 
     public int getStored() {
         return stored;
-    }
-
-    public void addToStored(int amount){
-        this.stored += amount;
     }
 
     public Asset getAssetOutput2() {
@@ -91,7 +91,7 @@ public class Producers extends Building{
                 resourcesInput = new Resources(0, null);
                 assetOutput = new Weapon(1, WeaponType.OIL);
                 isClickable = false;
-                capacity = 15;
+                break;
             case HOPS_FARMER:
                 resourcesInput = new Resources(0, null);
                 assetOutput = new Resources(4, ResourcesType.HOPS);

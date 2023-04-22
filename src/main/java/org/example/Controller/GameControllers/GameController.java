@@ -223,8 +223,9 @@ public class GameController {
             currentPlayer.addToMaxPopulation(8);
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
+        if(buildingtype == BuildingType.STABLE)
+            currentPlayer.addToHorseNumber(4);
         //if(building type == INN) ...
-        //if(building type == oil smelter) ...
         //if(building type == ...) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
@@ -232,7 +233,7 @@ public class GameController {
     public static Response putMainCastle(Matcher matcher){
         String xString = matcher.group("x");
         String yString = matcher.group("y");
-        String color = Controller.makeEntryValid(matcher.group("color"));//////remove this
+        String color = Controller.makeEntryValid(matcher.group("color"));
         String directionString = Controller.makeEntryValid(matcher.group("direction"));
         if(directionString == null)
             return Response.ENTER_DIRECTION;
@@ -296,8 +297,7 @@ public class GameController {
                 break;
         }
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight() ||
-                currentGame.getTileByCoordinates(y, x).getBuilding() != null ||
-                !BuildingType.checkGround(BuildingType.STOCKPILE, currentGame.getTileByCoordinates(y, x).getType()))
+                currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return null;
         else{
             ArrayList<Integer> arrayList = new ArrayList<>();
@@ -352,30 +352,43 @@ public class GameController {
     public static Response selectBuilding(Matcher matcher){
         int x = Integer.parseInt(matcher.group("x"));
         int y = Integer.parseInt(matcher.group("y"));
-        if(x < 0 || y < 0)
+        if(x < 0 || y < 0 || x >= currentGame.getMapWidth() || y >= currentGame.getMapHeight())
             return Response.INVALID_INPUT;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() == null)
             return Response.THERE_IS_NO_BUILDING_HERE;
         if(currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != currentPlayer)
             return Response.YOU_CANT_SELECT_THIS_BUILDING;
-        BuildingController.building = currentGame.getTileByCoordinates(y, x).getBuilding();
-        return Response.SELECT_BUILDING_SUCCESSFUL;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.MARKET) {
+            BuildingController.building = currentGame.getTileByCoordinates(y, x).getBuilding();
+            return Response.SELECT_BUILDING_SUCCESSFUL;
+        }
+        else{
+            ShopController.currentKingdom = currentPlayer;
+            return Response.ENTER_SHOP_MENU;
+        }
     }
 
     public static Response selectUnit(Matcher matcher){
         int x = Integer.parseInt(matcher.group("x"));
         int y = Integer.parseInt(matcher.group("y"));
-        if(x < 0 || y < 0)
+        if(x < 0 || y < 0 || x >= currentGame.getMapWidth() || y >= currentGame.getMapHeight())
             return Response.INVALID_INPUT;
-        //todo
-        return null;
+        ArrayList<Soldier> soldiers = new ArrayList<>();
+        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
+            if(soldier.getOwner() == currentPlayer)
+                soldiers.add(soldier);
+        }
+        if(soldiers.size() == 0)
+            return Response.NO_SOLDIER_ON_THE_TILE;
+        SoldierController.soldiers = soldiers;
+        return Response.SELECT_SOLDIER_SUCCESSFUL;
     }
 
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
             for(Kingdom kingdom : currentGame.getKingdoms()) {
-                kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
                 //computeDamages
+                kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
                 computeFoods(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
@@ -385,8 +398,8 @@ public class GameController {
                     kingdom.setTax(0);
                 autoProducing(kingdom);
                 //computePopulation  //soldiers and engineers
-                //check for unit states and move them
                 //check if a king died
+                //add from quarry to stockpile
             }
         }
         currentGame.nextTurn();
@@ -403,7 +416,7 @@ public class GameController {
 
     private static void computeFoods(Kingdom player){
         float rate = 1 + (player.getFoodRate() / 2);
-        int totalFoodUsage = (int)(rate * player.getPopulation());
+        int totalFoodUsage = (int)(rate * player.getMaxPopulation());
         player.eatFoods(totalFoodUsage);
         player.addToHappiness(player.getFoodDiversity() - 1);
         player.addToHappiness(player.getFoodRate() * 4);
@@ -427,14 +440,12 @@ public class GameController {
             addToWealth = 0.2 * tax + 0.4;
         else if(tax < 0)
             addToWealth = -0.2 * tax + 0.4;
-        player.addToWealth((int)(addToWealth * player.getPopulation()));
-        player.addToHappiness(addToHappiness * player.getPopulation());
+        player.addToWealth((int)(addToWealth * player.getMaxPopulation()));
+        player.addToHappiness(addToHappiness * player.getMaxPopulation());
     }
 
-    private static Response computePopulations(){
-        return null;
+    private static void autoTeleportByCow(Kingdom player){
         //todo
-        //not sure if this is necessary
     }
 
     private static void autoProducing(Kingdom player){
@@ -445,22 +456,24 @@ public class GameController {
                 Asset output1 = ((Producers) building).getAssetOutput();
                 Asset output2 = ((Producers) building).getAssetOutput2();
                 //if(building.getBuildingType() == BuildingType.INN)
-                if(building.getBuildingType() == BuildingType.QUARRY || building.getBuildingType() == BuildingType.OIL_SMELTER){
-                    if(output1.getAmount() <= ((Producers) building).getCapacity() - ((Producers) building).getStored())
-                        ((Producers) building).addToStored(output1.getAmount());
-                    return;
-                }
+                if(building.getBuildingType() == BuildingType.OIL_SMELTER || building.getBuildingType() == BuildingType.QUARRY)
+                    ((Producers) building).addToStored(Math.min(((Producers) building).getCapacity() - ((Producers) building).getStored(), output1.getAmount()));
                 //if(building.getBuildingType() == BuildingType....)
-                //arraylist of trees for woodcutter
-                if(InputAmount != 0){
-                    if(player.getResourceAmountByType(InputType) < InputAmount)
-                        return;
-                    player.payResource(((Producers) building).getResourcesInput());
+                else {
+                    boolean canPay = true;
+                    if (InputAmount != 0) {
+                        if (player.getResourceAmountByType(InputType) < InputAmount)
+                            canPay = false;
+                        if(canPay)
+                            player.payResource(((Producers) building).getResourcesInput());
+                    }
+                    //what if storages are full
+                    if(canPay) {
+                        player.addAsset(output1);
+                        if (output2 != null)
+                            player.addAsset(output2);
+                    }
                 }
-                //what if storages are full
-                player.addAsset(output1);
-                if(output2 != null)
-                    player.addAsset(output2);
             }
         }
     }
