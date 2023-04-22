@@ -1,10 +1,12 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.Kingdom;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
 
 public class ShopController {
+    public static Kingdom currentKingdom;
 
     public static Response showPriceList(){
         return null;

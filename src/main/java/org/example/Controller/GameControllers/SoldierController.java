@@ -3,10 +3,11 @@ package org.example.Controller.GameControllers;
 import org.example.Model.Soldier;
 import org.example.View.Response;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 
 public class SoldierController {
-    public static Soldier soldier;
+    public static ArrayList<Soldier> soldiers;
 
     public static Response moveUnit(Matcher matcher){
         return null;

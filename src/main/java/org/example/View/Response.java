@@ -97,7 +97,7 @@ public enum Response {
     CAPTCHA_WRONG("Captcha is wrong!"),
     EMPTY_MAP_NAME("Map name can't be empty!"),
     SAVE_MAP_SUCCESSFUL("Map saved successfully!"),
-    NEXT_TURN("next person is now playing"),
+    NEXT_TURN("turn %d : %s is now playing\n"),
     EMPTY_TYPE("type field can't be empty!"),
     EMPTY_COUNT("count field can't be empty!"),
     INVALID_SOLDIER_TYPE("Invalid soldier type!"),
@@ -114,10 +114,12 @@ public enum Response {
     FULL_HIT_POINT("Hit point is already full!"),
     REPAIRED("Building repaired successfully!"),
     CLOSE_BUILDING_MENU("Closed building menu!"),
+    CLOSE_SOLDIER_MENU("Closed soldier menu!"),
     INVALID_WEAPON_TYPE("Invalid weapon type!"),
     NOT_ENOUGH_RESOURCES_WEAPON("You don't have enough resources to create this amount of weapons!"),
     CANT_CREATE_ANY_WEAPON_BUILDING("You can't create any weapon in this building!"),
-
+    NO_SOLDIER_ON_THE_TILE("You have no soldier on this tile!"),
+    SELECT_SOLDIER_SUCCESSFUL("Select soldier successful!"),
     ;
     public final String message;
 
