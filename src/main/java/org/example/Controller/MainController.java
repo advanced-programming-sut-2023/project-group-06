@@ -45,6 +45,8 @@ public class MainController {
             return null;
         if(Data.getUserByName(username) == null)
             return "failed";
+        //if(players.contains(Data.getUserByName(username)))
+        //    return "failed";
         players.add(Data.getUserByName(username));
         return null;
     }

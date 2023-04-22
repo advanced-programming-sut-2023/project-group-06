@@ -9,15 +9,15 @@ public class Kingdom {
     private int happiness = 0;
     private int foodDiversity = 0;
     private int totalFoodAmount = 0;
-    private int foodRate;
-    private int tax;
+    private int foodRate = 0;
+    private int tax = 0;
     private int wealth;
-    private int population = 0;
-    private int maxPopulation;
+    private int population = 1;
+    private int maxPopulation = 9;
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
-    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people ????
+    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people or units????
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
@@ -25,15 +25,11 @@ public class Kingdom {
     private User owner;
     private Soldier king;
     private Building mainCastle;
-    private int color;
     private int happinessIncrease;
 
     public Kingdom(User owner) {
-        this.tax = 0;
-        this.wealth = 1000;
-        this.maxPopulation = 100;
+        this.wealth = 500;
         this.owner = owner;
-        //todo
     }
 
     public void addToHappinessIncrease(int amount){
@@ -141,7 +137,7 @@ public class Kingdom {
     }
 
     public void addToWealth(int wealth) {
-        this.wealth = wealth;
+        this.wealth += wealth;
     }
 
     public void addToPopulation(int population) {
@@ -174,10 +170,6 @@ public class Kingdom {
 
     public ArrayList<Storage> getWeapons() {
         return weapons;
-    }
-
-    public int getColor() {
-        return color;
     }
 
     public void addSoldier(Soldier soldier) {
@@ -279,5 +271,63 @@ public class Kingdom {
             }
         }
         return amount;
+    }
+
+    public void addAsset(Asset asset){
+        int amount = asset.getAmount();
+        if(asset instanceof Food){
+            for(Storage storage : foods){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Food)asset1).getType() == ((Food) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Food newFood = new Food(cost, ((Food)asset).getType());
+                    storage.getAssets().add(newFood);
+                }
+                storage.addToStored(cost);
+            }
+        }
+        else if(asset instanceof Weapon){
+            for(Storage storage : weapons){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Weapon)asset1).getType() == ((Weapon) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Weapon newWeapon = new Weapon(cost, ((Weapon)asset).getType());
+                    storage.getAssets().add(newWeapon);
+                }
+                storage.addToStored(cost);
+            }
+        }
+        else if(asset instanceof Resources){
+            for(Storage storage : resources){
+                int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
+                boolean assetTypeFound = false;
+                for(Asset asset1 : storage.getAssets()){
+                    if(((Resources)asset1).getType() == ((Resources) asset).getType()){
+                        asset1.addToAmount(cost);
+                        assetTypeFound = true;
+                        break;
+                    }
+                }
+                if(!assetTypeFound) {
+                    Resources newResource = new Resources(cost, ((Resources)asset).getType());
+                    storage.getAssets().add(newResource);
+                }
+                storage.addToStored(cost);
+            }
+        }
     }
 }

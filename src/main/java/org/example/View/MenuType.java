@@ -13,6 +13,8 @@ public enum MenuType {
     MAP_MENU(new MapMenu()),
     TRADE_MENU(new TradeMenu()),
     KINGDOM_MENU(new KingdomMenu()),
+    BUILDING_MENU(new BuildingMenu()),
+    SOLDIER_MENU(new SoldierMenu()),
     ;
 
     public Menu menu;

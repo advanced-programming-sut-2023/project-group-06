@@ -11,7 +11,7 @@ import org.example.View.Response;
 import java.util.regex.Matcher;
 
 public class BuildingController {
-    private static Building building;
+    public static Building building;
 
     public static Response createUnit(Matcher matcher){
         String[] groupNames = {"type","count"};
