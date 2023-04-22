@@ -56,7 +56,7 @@ public class GameController {
         }
         for(Unit unit : currentGame.getTileByCoordinates(y, x).getUnits()){
             if(unit.getOwner() == currentPlayer) {
-                currentGame.getTileByCoordinates(y, x).removePerson(unit);
+                currentGame.getTileByCoordinates(y, x).removeUnit(unit);
                 //remove those people from the kingdom
                 //if person instanceof soldier remove from soldiers as well
             }

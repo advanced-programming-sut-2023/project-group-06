@@ -117,8 +117,10 @@ public class BuildingController {
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         building.getOwner().addAvailableEngineers(count);
         building.getOwner().addToWealth(-1 * type.getCost() * count);
-        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        for (int i = 0; i < count; i++) {
+            Unit engineer = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addUnit(engineer);
+        }
         building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }

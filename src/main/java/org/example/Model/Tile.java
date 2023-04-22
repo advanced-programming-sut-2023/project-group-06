@@ -76,11 +76,11 @@ public class Tile {
         this.soldiers.add(soldier);
     }
 
-    public void addPerson(Unit unit) {
+    public void addUnit(Unit unit) {
         this.units.add(unit);
     }
 
-    public void removePerson(Unit unit) {
+    public void removeUnit(Unit unit) {
         this.units.remove(unit);
     }
 

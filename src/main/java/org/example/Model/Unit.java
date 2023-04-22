@@ -1,10 +1,17 @@
 package org.example.Model;
 
 public class Unit {
-    int XCoordinate;
-    int YCoordinate;
+    private int XCoordinate;
+    private int YCoordinate;
     private Kingdom owner;
-    private boolean isEngineer;
+    private UnitType unitType;
+
+    public Unit(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
+        this.XCoordinate = XCoordinate;
+        this.YCoordinate = YCoordinate;
+        this.owner = owner;
+        this.unitType = unitType;
+    }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner) {
         this.XCoordinate = XCoordinate;
@@ -12,14 +19,19 @@ public class Unit {
         this.owner = owner;
     }
 
-    public Unit(int XCoordinate, int YCoordinate, Kingdom owner, boolean isEngineer) {
-        this.XCoordinate = XCoordinate;
-        this.YCoordinate = YCoordinate;
-        this.owner = owner;
-        this.isEngineer = isEngineer;
-    }
-
     public Kingdom getOwner() {
         return owner;
+    }
+
+    public int getXCoordinate() {
+        return XCoordinate;
+    }
+
+    public int getYCoordinate() {
+        return YCoordinate;
+    }
+
+    public UnitType getUnitType() {
+        return unitType;
     }
 }

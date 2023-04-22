@@ -59,7 +59,7 @@ public class Producers extends Building{
                 resourcesInput = new Resources(0, null);
                 assetOutput = new Resources(9, ResourcesType.WOOD);
                 break;
-            case ARMORER:
+            /*case ARMORER:
                 resourcesInput = new Resources(6, ResourcesType.IRON);
                 assetOutput = new Weapon(1, WeaponType.METAL_ARMOR);
                 isClickable = false;
@@ -75,7 +75,7 @@ public class Producers extends Building{
                 assetOutput2 = new Weapon(1, WeaponType.PIKE);
                 isClickable = false;
                 break;
-            case OIL_SMELTER:
+            */case OIL_SMELTER:
                 //todo
                 break;
             case HOPS_FARMER:
