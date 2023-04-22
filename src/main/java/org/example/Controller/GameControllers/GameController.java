@@ -219,6 +219,10 @@ public class GameController {
             currentPlayer.addToHappinessIncrease(2);
         if(buildingtype == BuildingType.CATHEDRAL)
             currentPlayer.addToHappinessIncrease(4);
+        if(buildingtype == BuildingType.HOVEL || buildingtype == BuildingType.SMALL_STONE_GATEHOUSE)
+            currentPlayer.addToMaxPopulation(8);
+        if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
+            currentPlayer.addToMaxPopulation(10);
         //if(building type == INN) ...
         //if(building type == oil smelter) ...
         //if(building type == ...) ...
@@ -228,7 +232,7 @@ public class GameController {
     public static Response putMainCastle(Matcher matcher){
         String xString = matcher.group("x");
         String yString = matcher.group("y");
-        String color = Controller.makeEntryValid(matcher.group("color"));
+        String color = Controller.makeEntryValid(matcher.group("color"));//////remove this
         String directionString = Controller.makeEntryValid(matcher.group("direction"));
         if(directionString == null)
             return Response.ENTER_DIRECTION;
@@ -292,7 +296,8 @@ public class GameController {
                 break;
         }
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight() ||
-                currentGame.getTileByCoordinates(y, x).getBuilding() != null)
+                currentGame.getTileByCoordinates(y, x).getBuilding() != null ||
+                !BuildingType.checkGround(BuildingType.STOCKPILE, currentGame.getTileByCoordinates(y, x).getType()))
             return null;
         else{
             ArrayList<Integer> arrayList = new ArrayList<>();
@@ -380,6 +385,7 @@ public class GameController {
                     kingdom.setTax(0);
                 autoProducing(kingdom);
                 //computePopulation  //soldiers and engineers
+                //check for unit states and move them
                 //check if a king died
             }
         }
@@ -439,9 +445,13 @@ public class GameController {
                 Asset output1 = ((Producers) building).getAssetOutput();
                 Asset output2 = ((Producers) building).getAssetOutput2();
                 //if(building.getBuildingType() == BuildingType.INN)
-                //if(building.getBuildingType() == BuildingType.OIL_SMELTER)
-                //if(building.getBuildingType() == BuildingType.QUARRY)
+                if(building.getBuildingType() == BuildingType.QUARRY || building.getBuildingType() == BuildingType.OIL_SMELTER){
+                    if(output1.getAmount() <= ((Producers) building).getCapacity() - ((Producers) building).getStored())
+                        ((Producers) building).addToStored(output1.getAmount());
+                    return;
+                }
                 //if(building.getBuildingType() == BuildingType....)
+                //arraylist of trees for woodcutter
                 if(InputAmount != 0){
                     if(player.getResourceAmountByType(InputType) < InputAmount)
                         return;

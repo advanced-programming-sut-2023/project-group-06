@@ -18,6 +18,7 @@ public class Building {
         this.yCoordinate = yCoordinate;
         this.owner = owner;
         this.buildingType = buildingType;
+        this.hitPoint = buildingType.getHitPoint();
     }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){
@@ -26,6 +27,7 @@ public class Building {
         this.owner = owner;
         this.buildingType = buildingType;
         this.direction = direction;
+        this.hitPoint = buildingType.getHitPoint();
     }
 
     public int getDelay() {

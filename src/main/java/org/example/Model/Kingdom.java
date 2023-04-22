@@ -140,8 +140,8 @@ public class Kingdom {
         this.wealth += wealth;
     }
 
-    public void addToPopulation(int population) {
-        this.population = population;
+    public void addToMaxPopulation(int population) {
+        this.maxPopulation += population;
     }
 
     public void setMaxPopulation(int maxPopulation) {

@@ -8,5 +8,6 @@ public enum WeaponType {
     MACE,
     SWORDS,
     LEATHER_ARMOR,
-    METAL_ARMOR;
+    METAL_ARMOR,
+    OIL;
 }

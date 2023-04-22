@@ -45,7 +45,7 @@ public class GameMenu extends Menu {
                     System.out.println("set map width and height");
                     command = scanner.nextLine();
                     if((matcher = Commands.getMatcher(command, Commands.SET_MAP_WIDTH_HEIGHT)).find()){
-                        System.out.println(GameController.initializeMap(matcher));
+                        System.out.println(GameController.initializeMap(matcher).message);
                         break;
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);

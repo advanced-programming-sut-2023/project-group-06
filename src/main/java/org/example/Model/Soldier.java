@@ -1,5 +1,7 @@
 package org.example.Model;
 
+import org.example.Controller.GameControllers.GameController;
+
 public class Soldier extends Unit {
     int attackPower;
     double defensePower;

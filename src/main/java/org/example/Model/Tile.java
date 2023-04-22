@@ -87,6 +87,7 @@ public class Tile {
     public void removeSoldier(Soldier soldier) {
         this.soldiers.remove(soldier);
     }
+
     public boolean existEnemyOnThisTile(Kingdom ourKingdom) {
         for (Soldier soldier : soldiers) {
             if (soldier.getOwner() != ourKingdom) return true;
