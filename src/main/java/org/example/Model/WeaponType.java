@@ -10,7 +10,8 @@ public enum WeaponType {
     MACE(new Resources(1,ResourcesType.IRON), BuildingType.POLETURNER,"mace"),
     SWORDS(new Resources(1,ResourcesType.IRON), BuildingType.BLACKSMITH,"swords"),
     LEATHER_ARMOR(null, BuildingType.DIARY_FARMER,"leather armor"),
-    METAL_ARMOR(new Resources(1,ResourcesType.IRON), BuildingType.ARMORER,"metal armor");
+    METAL_ARMOR(new Resources(1,ResourcesType.IRON), BuildingType.ARMORER,"metal armor"),
+    OIL(null,BuildingType.OIL_SMELTER,"oil");
     private Resources resourcePrice;
     private BuildingType buildingType;
     private String name;

@@ -17,7 +17,7 @@ public class BuildingMenu extends Menu {
                 System.out.println(BuildingController.createUnit(Commands.getMatcher(command,Commands.CREATE_UNIT)).message);
             } else if (Commands.getMatcher(command,Commands.REPAIR).find()) {
                 System.out.println(BuildingController.repair().message);
-            } else if (Commands.getMatcher(command,Commands.BACK).find()) {
+            } else if (Commands.getMatcher(command,Commands.EXIT).find()) {
                 System.out.println(Response.CLOSE_BUILDING_MENU.message);
                 break;
             } else if (Commands.getMatcher(command,Commands.CREATE_WEAPON).find()) {

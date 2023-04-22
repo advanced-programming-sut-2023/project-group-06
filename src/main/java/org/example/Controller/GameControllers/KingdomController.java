@@ -2,6 +2,8 @@ package org.example.Controller.GameControllers;
 
 import org.example.Model.FoodType;
 import org.example.Model.Kingdom;
+import org.example.Model.ResourcesType;
+import org.example.Model.WeaponType;
 import org.example.View.MainMenu;
 import org.example.View.Response;
 
@@ -64,5 +66,32 @@ public class KingdomController {
             return Response.FEAR_RATE_NUMBER_INVALID;
         currentKingdom.setFear(fearRate);
         return Response.SET_FEAR_RATE_SUCCESSFUL;
+    }
+
+    public static String showResources() {
+        String output = "";
+        output += "Stone: " + currentKingdom.getResourceAmountByType(ResourcesType.STONE) + '\n';
+        output += "Wood: " + currentKingdom.getResourceAmountByType(ResourcesType.WOOD) + '\n';
+        output += "Wheat: " + currentKingdom.getResourceAmountByType(ResourcesType.WHEAT) + '\n';
+        output += "Ale: " + currentKingdom.getResourceAmountByType(ResourcesType.ALE) + '\n';
+        output += "Hops: " + currentKingdom.getResourceAmountByType(ResourcesType.HOPS) + '\n';
+        output += "Iron: " + currentKingdom.getResourceAmountByType(ResourcesType.IRON) + '\n';
+        output += "Pitch: " + currentKingdom.getResourceAmountByType(ResourcesType.PITCH) + '\n';
+        output += "Flour: " + currentKingdom.getResourceAmountByType(ResourcesType.FLOUR);
+        return output;
+    }
+
+    public static String showWeapons() {
+        String output = "";
+        output += "Bow: " + currentKingdom.getWeaponAmountByType(WeaponType.BOW) + '\n';
+        output += "Crossbow: " + currentKingdom.getWeaponAmountByType(WeaponType.CROSSBOW) + '\n';
+        output += "Pike: " + currentKingdom.getWeaponAmountByType(WeaponType.PIKE) + '\n';
+        output += "Mace: " + currentKingdom.getWeaponAmountByType(WeaponType.MACE) + '\n';
+        output += "Swords: " + currentKingdom.getWeaponAmountByType(WeaponType.SWORDS) + '\n';
+        output += "Spear: " + currentKingdom.getWeaponAmountByType(WeaponType.SPEAR) + '\n';
+        output += "Leather armor: " + currentKingdom.getWeaponAmountByType(WeaponType.LEATHER_ARMOR) + '\n';
+        output += "Metal armor: " + currentKingdom.getWeaponAmountByType(WeaponType.METAL_ARMOR) +'\n';
+        output += "Oil: " + currentKingdom.getWeaponAmountByType(WeaponType.OIL) + '\n';
+        return output;
     }
 }

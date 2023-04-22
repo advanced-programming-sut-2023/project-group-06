@@ -54,7 +54,7 @@ public class GameController {
                 }
             }
         }
-        for(Unit unit : currentGame.getTileByCoordinates(y, x).getPeople()){
+        for(Unit unit : currentGame.getTileByCoordinates(y, x).getUnits()){
             if(unit.getOwner() == currentPlayer) {
                 currentGame.getTileByCoordinates(y, x).removePerson(unit);
                 //remove those people from the kingdom
@@ -171,9 +171,9 @@ public class GameController {
                     return Response.BUILDING_ALREADY_EXIST;
             }
         }
-        if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() < buildingtype.getWorkerPrice())
-            return Response.POPULATION_EXCEEDED;
-        if(currentPlayer.getEngineers() < buildingtype.getEngineerPrice())
+        if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
+            return Response.NOT_ENOUGH_PEASANT;
+        if(currentPlayer.getAvailableEngineers() < buildingtype.getEngineerPrice())
             return Response.NOT_ENOUGH_ENGINEERS;
         if(currentPlayer.getWealth() < buildingtype.getGoldPrice())
             return Response.NOT_ENOUGH_MONEY;
@@ -213,8 +213,8 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
-        currentPlayer.addEngineers(-1 * buildingtype.getEngineerPrice());
-        currentPlayer.addPopulation(buildingtype.getWorkerPrice());
+        currentPlayer.addAvailableEngineers(-1 * buildingtype.getEngineerPrice());
+        currentPlayer.addPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
         if(buildingtype == BuildingType.CATHEDRAL)

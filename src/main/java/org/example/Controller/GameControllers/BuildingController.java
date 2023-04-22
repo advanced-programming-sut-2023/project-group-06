@@ -14,6 +14,7 @@ public class BuildingController {
     public static Building building;
 
     public static Response createUnit(Matcher matcher){
+        matcher.find();
         String[] groupNames = {"type","count"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
@@ -27,7 +28,7 @@ public class BuildingController {
         if (type.getCost() * count > GameController.currentPlayer.getWealth()) return Response.NOT_ENOUGH_GOLD_UNIT;
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (numberOfWeaponsNeeded < numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
+        if (numberOfWeaponsNeeded > numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
@@ -89,6 +90,7 @@ public class BuildingController {
         if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
@@ -101,6 +103,7 @@ public class BuildingController {
         if (!type.isArab()) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
@@ -109,10 +112,10 @@ public class BuildingController {
     }
 
     private static Response createUnitEngineerGuild(UnitType type, int count) {
-        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
-        building.getOwner().addEngineers(count);
+        building.getOwner().addAvailableEngineers(count);
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
