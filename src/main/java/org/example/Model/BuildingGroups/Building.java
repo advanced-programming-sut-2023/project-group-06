@@ -9,10 +9,9 @@ public class Building {
     private int delay = 0;
     private int hitPoint;
     private Kingdom owner;
+    private int happinessIncrease;
     private BuildingType buildingType;
     private int direction;
-
-    private int happinessIncrease;
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
@@ -29,7 +28,6 @@ public class Building {
         this.buildingType = buildingType;
         this.direction = direction;
         this.hitPoint = buildingType.getHitPoint();
-
     }
 
     public int getDelay() {
@@ -87,6 +85,4 @@ public class Building {
     public void setHitPoint(int hitPoint) {
         this.hitPoint = hitPoint;
     }
-
-
 }
