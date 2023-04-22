@@ -86,6 +86,10 @@ public class Kingdom {
         return maxPopulation;
     }
 
+    public void addToMaxPopulation(int amount){
+        this.maxPopulation += amount;
+    }
+
     public int getFear() {
         return fear;
     }
@@ -164,9 +168,14 @@ public class Kingdom {
         return horseNumber;
     }
 
+    public void addToHorseNumber(int amount){
+        this.horseNumber += amount;
+    }
+
     public int getAvailableEngineers() {
         return availableEngineers;
     }
+
     public void addAvailableEngineers(int amount) {
         this.availableEngineers += amount;
     }

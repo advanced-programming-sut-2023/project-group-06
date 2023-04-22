@@ -11,6 +11,7 @@ public class Game {
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
     private int turnIndex = 0;
     private int woodCuttersNumber = 0;
+    private int numberOfTurns = 1;
 
     Tile[][] map;
 
@@ -41,6 +42,10 @@ public class Game {
         this.map = map;
         this.mapHeight = mapHeight;
         this.mapWidth = mapWidth;
+    }
+
+    public int getNumberOfTurns() {
+        return numberOfTurns;
     }
 
     public void addToWoodCutters(int amount){
@@ -102,6 +107,7 @@ public class Game {
     public void nextTurn(){
         this.turnIndex++;
         this.turnIndex %= numberOfPlayers;
+        this.numberOfTurns++;
     }
 
     public Kingdom currentPlayer(){
