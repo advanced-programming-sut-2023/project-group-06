@@ -80,7 +80,7 @@ public class KingdomController {
         output += "Flour: " + currentKingdom.getResourceAmountByType(ResourcesType.FLOUR);
         return output;
     }
-
+    //salam
     public static String showWeapons() {
         String output = "";
         output += "Bow: " + currentKingdom.getWeaponAmountByType(WeaponType.BOW) + '\n';
