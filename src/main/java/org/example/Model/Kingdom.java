@@ -7,6 +7,8 @@ import org.example.Model.BuildingGroups.Storage;
 import java.util.ArrayList;
 
 public class Kingdom {
+
+    //todo decide about nonSoldierUnits...
     private int happiness = 0;
     private int foodDiversity = 0;
     private int totalFoodAmount = 0;
@@ -18,7 +20,8 @@ public class Kingdom {
     private int fear = 0;
     private int horseNumber;
     private int availableEngineers;
-    private ArrayList<Soldier> soldiers = new ArrayList<>();//shouldn't we have an arraylist of people or units????
+    private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
@@ -186,6 +189,14 @@ public class Kingdom {
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+    }
+
+    public ArrayList<Unit> getNonSoldierUnits() {
+        return nonSoldierUnits;
+    }
+
+    public void addNonSoldierUnits(Unit unit) {
+        this.nonSoldierUnits.add(unit);
     }
 
     public ArrayList<TradeRequest> getTradeRequestsSentByMe() {

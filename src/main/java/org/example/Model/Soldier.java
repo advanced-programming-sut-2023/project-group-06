@@ -11,7 +11,7 @@ public class Soldier extends Unit {
     int cost;
     int precision;
     int delay;
-    int state;
+    int state; // -1 --> standing   0 --> defensive  1 --> offensive
     boolean isCapableOfClimbing;
     boolean canThrowLadders;
     boolean canDigDitch;
