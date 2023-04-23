@@ -2,8 +2,13 @@ package org.example.Model;
 
 public enum UnitType {
     //king must be checked
-    KING(12121, 13131, 0.1, 13123, 13131, 123, 0, 123, 0, null, false, false, false,false,"king"),
-    ARCHER(4000,750,0.7,3,10,5,100,1,0,WeaponType.BOW,false,false,false,false,"archer"),
+    KING(12121, 13131, 0.1, 13123, 13131, 123, 0, 123, 0, null, null, false, false, false,false,"king"),
+    ARCHER(687,750,0.7,3,10,5,12,1,0,WeaponType.BOW, null,false,false,false,false,"archer"),
+    SPEAR_MAN(100, 12, 21, 21 ,2, 2, 12, 1, 0, WeaponType.SPEAR, null, false, false, false, false, "spear man"),
+    ;
+
+    //cow and war dogs?
+
     ;
     int hitPoint;
     int attackPower;
@@ -15,6 +20,7 @@ public enum UnitType {
     double precision;
     int delay;
     WeaponType weapon;
+    WeaponType weapon2;
     boolean canClimb;
     boolean canThrowLadders;
     boolean canDigDitch;
@@ -22,7 +28,7 @@ public enum UnitType {
     String name;
 
     UnitType(int hitPoint, int attackPower, double defensePower, double speed, int range, int secondRange, int cost,
-             double precision, int delay, WeaponType weapon, boolean canClimb, boolean canThrowLadders, boolean canDigDitch, boolean isArab, String name) {
+             double precision, int delay, WeaponType weapon, WeaponType weapon2, boolean canClimb, boolean canThrowLadders, boolean canDigDitch, boolean isArab, String name) {
         this.hitPoint = hitPoint;
         this.attackPower = attackPower;
         this.defensePower = defensePower;
@@ -33,6 +39,7 @@ public enum UnitType {
         this.precision = precision;
         this.delay = delay;
         this.weapon = weapon;
+        this.weapon2 = weapon2;
         this.canClimb = canClimb;
         this.canThrowLadders = canThrowLadders;
         this.canDigDitch = canDigDitch;
