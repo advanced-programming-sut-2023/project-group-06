@@ -1,9 +1,6 @@
 package org.example.Model.BuildingGroups;
 
-import org.example.Model.Asset;
-import org.example.Model.Kingdom;
-import org.example.Model.Unit;
-import org.example.Model.UnitType;
+import org.example.Model.*;
 
 import java.util.ArrayList;
 
@@ -42,10 +39,9 @@ public class Storage extends Building{
             case STOCKPILE:
                 capacity = 75;
                 break;
-//            case OX_TETHER:
-//                capacity = 1;
-//                cow = new Unit(xCoordinate,yCoordinate,owner, UnitType.COW);
-//                break;
+            case OX_TETHER:
+                capacity = 1;
+                break;
         }
     }
 
