@@ -225,6 +225,7 @@ public class GameController {
             currentPlayer.addToMaxPopulation(10);
         if(buildingtype == BuildingType.STABLE)
             currentPlayer.addToHorseNumber(4);
+        //if(building type == ox tether) create cow unit;
         //if(building type == INN) ...
         //if(building type == ...) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
