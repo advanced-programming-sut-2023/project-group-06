@@ -122,6 +122,13 @@ public enum Response {
     SELECT_SOLDIER_SUCCESSFUL("Select soldier successful!"),
     WEAPON_BUILDING_MISMATCHING("You can't create this weapon in this building!"),
     WEAPON_CREATED("Weapon created successfully!"),
+    CLOSE_SHOP_MENU("Shop menu closed!"),
+    INVALID_RESOURCE_TYPE("Invalid resource type!"),
+    NOT_ENOUGH_STORAGE("You don't have the necessary storage to do this!"),
+    NOT_ENOUGH_GOLD_BUY("You don't have enough gold to buy this!"),
+    BUY("You bought those items successfully!"),
+    NOT_THIS_MUCH_RESOURCES("You don't have this much resources to sell!"),
+    SELL("You sold these items successfully!"),
     ;
     public final String message;
 

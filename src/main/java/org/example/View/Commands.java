@@ -72,6 +72,9 @@ public enum Commands {
     CREATE_WEAPON("(?!.* -t .* -t .*)(?=.* -t )^create weapon( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\"))){1,2}$)"),
     SHOW_RESOURCES("^show resources$"),
     SHOW_WEAPONS("^show weapons$"),
+    SHOW_PRICES_LIST("^show prices list$"),
+    BUY("(?!.* -t .* -t .*)(?=.* -t )^buy( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
+    SELL("(?!.* -t .* -t .*)(?=.* -t )^sell( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$")
     ;
 
     private String regex;

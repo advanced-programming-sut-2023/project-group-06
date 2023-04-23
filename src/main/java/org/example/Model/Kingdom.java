@@ -1,6 +1,7 @@
 package org.example.Model;
 
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Storage;
 
 import java.util.ArrayList;
@@ -260,6 +261,22 @@ public class Kingdom {
             }
         }
         return amount;
+    }
+
+    public int getResourcesAmount() {
+        int amount = 0;
+        for (Storage storage : resources) {
+            if (storage.getBuildingType() == BuildingType.STOCKPILE) amount += storage.getStored();
+        }
+        return amount;
+    }
+
+    public int getResourcesCapacity() {
+        int capacity = 0;
+        for (Storage storage : resources) {
+            if (storage.getBuildingType() == BuildingType.STOCKPILE) capacity += storage.getCapacity();
+        }
+        return capacity;
     }
 
     public int getFoodAmountByType(FoodType foodType){
