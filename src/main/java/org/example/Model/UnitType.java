@@ -4,6 +4,7 @@ public enum UnitType {
     //king must be checked
     KING(12121, 13131, 0.1, 13123, 13131, 123, 0, 123, 0, null, false, false, false,false,"king"),
     ARCHER(4000,750,0.7,3,10,5,100,1,0,WeaponType.BOW,false,false,false,false,"archer"),
+    COW(5000,0,0,2,0,0,0,0,0,null,false,false,false,false,"cow"),
     ;
     int hitPoint;
     int attackPower;
