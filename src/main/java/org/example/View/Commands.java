@@ -43,6 +43,8 @@ public enum Commands {
     SHOW_FOOD_LIST("^show food list$"),
     SHOW_FOOD_RATE("^food rate show$"),
     SHOW_TAX_RATE("^tax rate show$"),
+    SHOW_POPULATION("^show population$"),
+    SHOW_WEALTH("^show wealth$"),
     EXIT("^exit$"),
     //Game Menu Commands
     START_THE_GAME("^let's play$"),

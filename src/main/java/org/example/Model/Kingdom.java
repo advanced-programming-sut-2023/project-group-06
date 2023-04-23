@@ -57,7 +57,10 @@ public class Kingdom {
     }
 
     public int getTotalFoodAmount() {
-        return totalFoodAmount;
+        return this.getFoodAmountByType(FoodType.APPLES) +
+                this.getFoodAmountByType(FoodType.CHEESE) +
+                this.getFoodAmountByType(FoodType.MEAT) +
+                this.getFoodAmountByType(FoodType.BREAD);
     }
 
     public int getFoodRate() {
@@ -137,7 +140,7 @@ public class Kingdom {
     }
 
     public void addToTotalFoodAmount(int totalFoodAmount) {
-        this.totalFoodAmount = totalFoodAmount;
+        this.totalFoodAmount += totalFoodAmount;
     }
 
     public void setTax(int tax) {
