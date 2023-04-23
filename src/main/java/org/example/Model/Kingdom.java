@@ -23,6 +23,9 @@ public class Kingdom {
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
     private ArrayList<Storage> weapons = new ArrayList<>();
+    private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
+    private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
+    private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
     private User owner;
     private Soldier king;
     private Building mainCastle;
@@ -183,6 +186,44 @@ public class Kingdom {
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+    }
+
+    public ArrayList<TradeRequest> getTradeRequestsSentByMe() {
+        return tradeRequestsSentByMe;
+    }
+
+    public ArrayList<TradeRequest> getTradeRequestsAcceptedByMe() {
+        return tradeRequestsAcceptedByMe;
+    }
+
+    public void addToTradeRequestsAcceptedByMe(TradeRequest tradeRequest) {
+        this.tradeRequestsAcceptedByMe.add(tradeRequest);
+    }
+
+    public void addToTradeRequestsSentByMe(TradeRequest tradeRequest) {
+        this.tradeRequestsSentByMe.add(tradeRequest);
+    }
+
+    public ArrayList<TradeRequest> getAllTradeRequestsSentToMe() {
+        return allTradeRequestsSentToMe;
+    }
+
+    public void addToAllTradeRequestsSentToMe(TradeRequest tradeRequest) {
+        this.allTradeRequestsSentToMe.add(tradeRequest);
+    }
+
+    public TradeRequest getTradeRequestSentToMeById(int id) {
+        for (TradeRequest tradeRequest : allTradeRequestsSentToMe) {
+            if (tradeRequest.getId() == id) return tradeRequest;
+        }
+        return null;
+    }
+
+    public TradeRequest getTradeRequestsNotAcceptedByMeById(int id) {
+        for (TradeRequest tradeRequest : allTradeRequestsSentToMe) {
+            if ((tradeRequest.getId() == id) && !tradeRequest.isAccepted()) return tradeRequest;
+        }
+        return null;
     }
 
     public Food getFoodByTypeFromStorage(Storage storage, FoodType type){

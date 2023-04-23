@@ -80,7 +80,6 @@ public class KingdomController {
         output += "Flour: " + currentKingdom.getResourceAmountByType(ResourcesType.FLOUR);
         return output;
     }
-    //salam
     public static String showWeapons() {
         String output = "";
         output += "Bow: " + currentKingdom.getWeaponAmountByType(WeaponType.BOW) + '\n';
@@ -93,5 +92,9 @@ public class KingdomController {
         output += "Metal armor: " + currentKingdom.getWeaponAmountByType(WeaponType.METAL_ARMOR) +'\n';
         output += "Oil: " + currentKingdom.getWeaponAmountByType(WeaponType.OIL);
         return output;
+    }
+
+    public static int showGold() {
+        return currentKingdom.getWealth();
     }
 }

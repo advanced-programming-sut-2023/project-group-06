@@ -478,6 +478,10 @@ public class GameController {
         }
     }
 
+    public static void initializeTradeController() {
+        TradeController.currentPlayer = currentPlayer;
+    }
+
     private static Response endGame(){
         return null;
         //todo

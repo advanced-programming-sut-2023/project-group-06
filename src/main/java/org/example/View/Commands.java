@@ -74,7 +74,16 @@ public enum Commands {
     SHOW_WEAPONS("^show weapons$"),
     SHOW_PRICES_LIST("^show prices list$"),
     BUY("(?!.* -t .* -t .*)(?=.* -t )^buy( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
-    SELL("(?!.* -t .* -t .*)(?=.* -t )^sell( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$")
+    SELL("(?!.* -t .* -t .*)(?=.* -t )^sell( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
+    SEND_TRADE_REQUEST("(?=.* -u )(?=.* -t )(?=.* -a )(?=.* -p )(?=.* -m )^trade(( -t (?<resourceType>(((\\\"[^\\\"]*\\\")|\\S*))))" +
+            "|( -a (?<resourceAmount>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
+            "|( -m (?<message>(((\\\"[^\\\"]*\\\")|\\S*))))|( -p (?<price>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
+            "|( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))){5}$"),
+    ACCEPT_TRADE_REQUEST("(?=.* -m )(?=.* -i )^trade accept(( -i (?<id>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
+            "|( -m (?<message>(((\\\"[^\\\"]*\\\")|\\S*))))){2}$"),
+    TRADE_LIST("^trade list$"),
+    TRADE_HISTORY("^trade history$"),
+    SHOW_GOLD("^show gold$"),
     ;
 
     private String regex;

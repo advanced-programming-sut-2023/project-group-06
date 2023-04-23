@@ -94,7 +94,7 @@ public class Game {
 
     public TradeRequest getTradeRequestById(int id){
         for(TradeRequest tradeRequest : tradeRequests){
-            if(tradeRequest.id == id)
+            if(tradeRequest.getId() == id)
                 return tradeRequest;
         }
         return null;
@@ -116,5 +116,16 @@ public class Game {
 
     public int getTurnIndex() {
         return turnIndex;
+    }
+    public int getATradeRequestId() {
+        int size = tradeRequests.size();
+        return size + 1;
+    }
+
+    public Kingdom getKingdomByUsername(String username) {
+        for (Kingdom kingdom : kingdoms) {
+            if (kingdom.getOwner().getUsername().equals(username)) return kingdom;
+        }
+        return null;
     }
 }

@@ -113,8 +113,8 @@ public enum Response {
     NOT_REPAIRABLE("You can't repair this building!"),
     FULL_HIT_POINT("Hit point is already full!"),
     REPAIRED("Building repaired successfully!"),
-    CLOSE_BUILDING_MENU("Closed building menu!"),
-    CLOSE_SOLDIER_MENU("Closed soldier menu!"),
+    CLOSE_BUILDING_MENU("Building menu closed!"),
+    CLOSE_SOLDIER_MENU("Soldier menu closed!"),
     INVALID_WEAPON_TYPE("Invalid weapon type!"),
     NOT_ENOUGH_RESOURCES_WEAPON("You don't have enough resources to create this amount of weapons!"),
     CANT_CREATE_ANY_WEAPON_BUILDING("You can't create any weapon in this building!"),
@@ -129,6 +129,21 @@ public enum Response {
     BUY("You bought those items successfully!"),
     NOT_THIS_MUCH_RESOURCES("You don't have this much resources to sell!"),
     SELL("You sold these items successfully!"),
+    CLOSE_TRADE_MENU("Trade menu closed!"),
+    EMPTY_RESOURCE_TYPE("Resource type field can't be empty!"),
+    EMPTY_RESOURCE_AMOUNT("Resource amount field can't be empty!"),
+    EMPTY_PRICE("Price field can't be empty!"),
+    EMPTY_MESSAGE("Message field can't be empty!"),
+    INVALID_PRICE("Invalid price!"),
+    INVALID_AMOUNT("Invalid amount!"),
+    TRADE_REQUEST_CREATED("Trade request successfully sent!"),
+    EMPTY_ID("Id field can't be empty!"),
+    TRADE_REQUEST_NOT_SENT("No trade request with this id has been sent to you!"),
+    NOT_ENOUGH_GOLD_TRADE("You don't have enough gold to send this trade!"),
+    NOT_ENOUGH_RESOURCE_TRADE("You don't have enough resources to accept this trade!"),
+    TRADE_REQUEST_OWNER("You can't accept a trade request from yourself!"),
+    TRADE_REQUEST_ACCEPTED("You accepted this trade request successfully!"),
+
     ;
     public final String message;
 
@@ -146,6 +161,11 @@ public enum Response {
         if (name.equals("answerConfirmation")) return EMPTY_CONFIRMATION;
         if (name.equals("type")) return EMPTY_TYPE;
         if (name.equals("count")) return EMPTY_COUNT;
+        if (name.equals("message")) return EMPTY_MESSAGE;
+        if (name.equals("price")) return EMPTY_PRICE;
+        if (name.equals("resourceAmount")) return EMPTY_RESOURCE_AMOUNT;
+        if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
+        if (name.equals("id")) return EMPTY_ID;
         return null;
     }
 }
