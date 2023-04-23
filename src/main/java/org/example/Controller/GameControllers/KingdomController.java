@@ -20,6 +20,14 @@ public class KingdomController {
         return currentKingdom.getHappiness();
     }
 
+    public static int showPopulation(){
+        return currentKingdom.getMaxPopulation();
+    }
+
+    public static int showWealth(){
+        return currentKingdom.getWealth();
+    }
+
     public static String showFoodList(){
         String result = "";
         result += "meat: " + currentKingdom.getFoodAmountByType(FoodType.MEAT) + "\n";

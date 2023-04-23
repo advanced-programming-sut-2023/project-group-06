@@ -415,10 +415,19 @@ public class GameController {
     }
 
     private static void computeFoods(Kingdom player){
-        float rate = 1 + (player.getFoodRate() / 2);
+        double rate = 1 + ((double)player.getFoodRate() / 2);
         int totalFoodUsage = (int)(rate * player.getMaxPopulation());
+        int foodDiversity = 0;
+        if(currentPlayer.getFoodAmountByType(FoodType.CHEESE) > 0)
+            foodDiversity++;
+        if(currentPlayer.getFoodAmountByType(FoodType.MEAT) > 0)
+            foodDiversity++;
+        if(currentPlayer.getFoodAmountByType(FoodType.BREAD) > 0)
+            foodDiversity++;
+        if(currentPlayer.getFoodAmountByType(FoodType.APPLES) > 0)
+            foodDiversity++;
         player.eatFoods(totalFoodUsage);
-        player.addToHappiness(player.getFoodDiversity() - 1);
+        player.addToHappiness(foodDiversity - 1);
         player.addToHappiness(player.getFoodRate() * 4);
     }
 
@@ -439,9 +448,9 @@ public class GameController {
         if(tax > 0)
             addToWealth = 0.2 * tax + 0.4;
         else if(tax < 0)
-            addToWealth = -0.2 * tax + 0.4;
+            addToWealth = 0.2 * tax - 0.4;
         player.addToWealth((int)(addToWealth * player.getMaxPopulation()));
-        player.addToHappiness(addToHappiness * player.getMaxPopulation());
+        player.addToHappiness(addToHappiness);
     }
 
     private static void autoTeleportByCow(Kingdom player){
