@@ -7,13 +7,14 @@ import org.example.Model.BuildingGroups.Towers;
 import java.util.ArrayList;
 
 public class Tile {
+    //todo handle nonSoldierUnits...
     private TileStructure type;
     private Building building;
     private int xCoordinate;
     private int yCoordinate;
     private int height;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
-    private ArrayList<Unit> units = new ArrayList<>();//Person or Worker??? all???
+    private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -40,7 +41,7 @@ public class Tile {
     }
 
     public ArrayList<Unit> getUnits() {
-        return units;
+        return nonSoldierUnits;
     }
 
     public ArrayList<Soldier> getSoldiers() {
@@ -76,12 +77,12 @@ public class Tile {
         this.soldiers.add(soldier);
     }
 
-    public void addUnit(Unit unit) {
-        this.units.add(unit);
+    public void addToNonSoldierUnits(Unit unit) {
+        this.nonSoldierUnits.add(unit);
     }
 
-    public void removeUnit(Unit unit) {
-        this.units.remove(unit);
+    public void removeFromNonSoldierUnits(Unit unit) {
+        this.nonSoldierUnits.remove(unit);
     }
 
     public void removeSoldier(Soldier soldier) {

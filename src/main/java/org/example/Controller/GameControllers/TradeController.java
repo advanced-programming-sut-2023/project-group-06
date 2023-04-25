@@ -18,13 +18,16 @@ public class TradeController {
         int resourceAmount = Integer.parseInt(Controller.makeEntryValid(matcher.group("resourceAmount")));
         String message = Controller.makeEntryValid(matcher.group("message"));
         String username = Controller.makeEntryValid(matcher.group("username"));
+        if (GameController.currentGame.getKingdomByUsername(username) == null) return Response.NO_KINGDOM_USERNAME;
+        if (currentPlayer.getOwner().getUsername().equals(username)) return Response.KINGDOM_YOURSELF;
         if (resourcesType == null) return Response.INVALID_RESOURCE_TYPE;
         if (price < 0) return Response.INVALID_PRICE;
         if (resourceAmount <= 0) return Response.INVALID_AMOUNT;
         if (price > currentPlayer.getWealth()) return Response.NOT_ENOUGH_GOLD_TRADE;
         Resources resource = new Resources(resourceAmount,resourcesType);
         currentPlayer.addToWealth(-1 * price);
-        TradeRequest tradeRequest = new TradeRequest(resource,price,message,GameController.currentGame.getATradeRequestId(),currentPlayer,GameController.currentGame.getKingdomByUsername(username),GameController.currentGame.getNumberOfTurns());
+        TradeRequest tradeRequest = new TradeRequest(resource,price,message, GameController.currentGame.getATradeRequestId()
+                ,currentPlayer,GameController.currentGame.getKingdomByUsername(username),GameController.currentGame.getNumberOfTurns());
         GameController.currentGame.addTradeRequest(tradeRequest);
         return Response.TRADE_REQUEST_CREATED;
     }

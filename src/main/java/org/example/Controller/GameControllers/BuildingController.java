@@ -15,7 +15,7 @@ public class BuildingController {
 
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
-    //  HOW TO TRAIN BLACK MONKS
+    //  KNIGHT/HORSE ARCHER/EACH SOLDIER NEEDS TWO WEAPON
 
     public static Response createUnit(Matcher matcher){
         matcher.find();
@@ -125,7 +125,8 @@ public class BuildingController {
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         for (int i = 0; i < count; i++) {
             Unit engineer = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addUnit(engineer);
+            GameController.currentPlayer.addNonSoldierUnits(engineer); //todo maybe delete this...
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addToNonSoldierUnits(engineer);
         }
         building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
