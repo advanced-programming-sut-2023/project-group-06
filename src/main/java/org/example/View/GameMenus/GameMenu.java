@@ -135,6 +135,7 @@ public class GameMenu extends Menu {
             }*/
             else if(Commands.getMatcher(command, Commands.ENTER_TRADE_MENU).find()) {
                 System.out.println(Response.ENTER_TRADE_MENU.message);
+                GameController.initializeTradeController();
                 MenuType.TRADE_MENU.menu.run(scanner);
             }
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_MAP)).find()) {

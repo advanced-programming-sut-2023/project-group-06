@@ -15,8 +15,14 @@ public class ShopMenu extends Menu {
         while(true){
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.EXIT).find()) {
-                System.out.println(Response.CLOSE_BUILDING_MENU.message);
+                System.out.println(Response.CLOSE_SHOP_MENU.message);
                 break;
+            } else if (Commands.getMatcher(command,Commands.SHOW_PRICES_LIST).find()) {
+                System.out.println(ShopController.showPriceList());
+            } else if (Commands.getMatcher(command,Commands.BUY).find()) {
+                System.out.println(ShopController.buy(Commands.getMatcher(command,Commands.BUY)).message);
+            } else if (Commands.getMatcher(command,Commands.SELL).find()) {
+                System.out.println(ShopController.sell(Commands.getMatcher(command,Commands.SELL)).message);
             }
             else System.out.println(Response.INVALID_COMMAND.message);
         }

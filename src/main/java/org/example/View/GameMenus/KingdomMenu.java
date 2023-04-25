@@ -36,12 +36,14 @@ public class KingdomMenu extends Menu {
                 return null;
             else if(Commands.getMatcher(command,Commands.SHOW_RESOURCES).find())
                 System.out.println(KingdomController.showResources());
-            else if(Commands.getMatcher(command,Commands.SHOW_WEAPONS).find())
+            else if (Commands.getMatcher(command,Commands.SHOW_WEAPONS).find())
                 System.out.println(KingdomController.showWeapons());
             else if(Commands.getMatcher(command, Commands.SHOW_POPULATION).find())
                 System.out.println(KingdomController.showPopulation());
             else if(Commands.getMatcher(command, Commands.SHOW_WEALTH).find())
                 System.out.println(KingdomController.showWealth());
+            else if (Commands.getMatcher(command,Commands.SHOW_GOLD).find())
+                System.out.println(KingdomController.showGold());
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

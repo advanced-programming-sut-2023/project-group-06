@@ -56,7 +56,7 @@ public class GameController {
         }
         for(Unit unit : currentGame.getTileByCoordinates(y, x).getUnits()){
             if(unit.getOwner() == currentPlayer) {
-                currentGame.getTileByCoordinates(y, x).removePerson(unit);
+                currentGame.getTileByCoordinates(y, x).removeFromNonSoldierUnits(unit);
                 //remove those people from the kingdom
                 //if person instanceof soldier remove from soldiers as well
             }
@@ -225,7 +225,11 @@ public class GameController {
             currentPlayer.addToMaxPopulation(10);
         if(buildingtype == BuildingType.STABLE)
             currentPlayer.addToHorseNumber(4);
-        //if(building type == ox tether) create cow unit;
+        /*if(buildingtype == BuildingType.OX_TETHER) {
+            Soldier cow = new Soldier(x, y, currentPlayer, UnitType.COW);
+            currentPlayer.getSoldiers().add(cow);
+            ////bugs
+        }*/
         //if(building type == INN) ...
         //if(building type == ...) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
@@ -486,6 +490,10 @@ public class GameController {
                 }
             }
         }
+    }
+
+    public static void initializeTradeController() {
+        TradeController.currentPlayer = currentPlayer;
     }
 
     private static Response endGame(){

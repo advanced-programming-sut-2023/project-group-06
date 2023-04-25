@@ -13,6 +13,10 @@ import java.util.regex.Matcher;
 public class BuildingController {
     public static Building building;
 
+    // TODO
+    //  KILLING COWS FOR LEATHER ARMOR
+    //  KNIGHT/HORSE ARCHER/EACH SOLDIER NEEDS TWO WEAPON
+
     public static Response createUnit(Matcher matcher){
         matcher.find();
         String[] groupNames = {"type","count"};
@@ -32,6 +36,7 @@ public class BuildingController {
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
+        else if (building.getBuildingType() == BuildingType.CATHEDRAL) response = createUnitCathedral(type, count);
         else response = Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
         return response;
     }
@@ -48,6 +53,7 @@ public class BuildingController {
     }
 
     public static Response createWeapon(Matcher matcher) {
+        matcher.find();
         String[] groupNames = {"type","count"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
@@ -117,35 +123,60 @@ public class BuildingController {
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         building.getOwner().addAvailableEngineers(count);
         building.getOwner().addToWealth(-1 * type.getCost() * count);
-        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        for (int i = 0; i < count; i++) {
+            Unit engineer = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentPlayer.addNonSoldierUnits(engineer); //todo maybe delete this...
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addToNonSoldierUnits(engineer);
+        }
         building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
+    private static Response createUnitCathedral(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+            return Response.NOT_ENOUGH_PEASANT;
+        if (!type.getName().equals("black monk")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        for (int i = 0; i < count; i++) {
+            Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+        }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        return Response.UNIT_CREATED_SUCCESSFULLY;
+    }
+
     private static Response createWeaponFletcher(WeaponType type, int count) {
-        return null;
-        //todo
+        if (type.getBuildingType() != BuildingType.FLETCHER) return Response.WEAPON_BUILDING_MISMATCHING;
+        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
+        return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponPoleturner(WeaponType type, int count) {
-        return null;
-        //todo
+        if (type.getBuildingType() != BuildingType.POLETURNER) return Response.WEAPON_BUILDING_MISMATCHING;
+        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
+        return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponBlacksmith(WeaponType type, int count) {
-        return null;
-        //todo
+        if (type.getBuildingType() != BuildingType.BLACKSMITH) return Response.WEAPON_BUILDING_MISMATCHING;
+        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
+        return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponArmorer(WeaponType type, int count) {
-        return null;
-        //todo
+        if (type.getBuildingType() != BuildingType.ARMORER) return Response.WEAPON_BUILDING_MISMATCHING;
+        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
+        return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponDiaryFarmer(WeaponType type, int count) {
-        return null;
-        //todo
+        if (type.getBuildingType() != BuildingType.DIARY_FARMER) return Response.WEAPON_BUILDING_MISMATCHING;
+        building.getOwner().addAsset(new Weapon(count,type));
+        // todo whenever cow is handled remember to kill [count/3] cows!
+        return Response.WEAPON_CREATED;
     }
 
     public static int showBuildingHp() {
