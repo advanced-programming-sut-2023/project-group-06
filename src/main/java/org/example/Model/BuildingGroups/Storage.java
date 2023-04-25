@@ -39,9 +39,9 @@ public class Storage extends Building{
             case STOCKPILE:
                 capacity = 75;
                 break;
-            case OX_TETHER:
+            /*case OX_TETHER:
                 capacity = 1;
-                break;
+                break;*/
         }
     }
 
