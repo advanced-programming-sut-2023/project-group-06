@@ -42,7 +42,6 @@ public class SignUpMenu extends Menu{
                         } else {
                             System.out.println(Response.INVALID_COMMAND.message);
                         }
-
                     }
                 }
             } else if (Commands.getMatcher(command,Commands.BACK).find()) {

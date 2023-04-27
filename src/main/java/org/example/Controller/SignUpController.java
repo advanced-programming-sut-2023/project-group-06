@@ -100,6 +100,4 @@ public class SignUpController {
         return randomPassword;
     }
 
-
-
 }
