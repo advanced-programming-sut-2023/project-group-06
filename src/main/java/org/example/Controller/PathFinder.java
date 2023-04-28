@@ -21,7 +21,7 @@ public class PathFinder {
     private boolean[][] endFound;
     private int[][] father;
 
-    PathFinder(Tile[][] map) {
+    public PathFinder(Tile[][] map) {
         this.map = map;
         height = map.length;
         width = map[0].length;
@@ -47,8 +47,11 @@ public class PathFinder {
                 father[i][j] = -1;
             }
     }
+
     public Deque<Tile> findPath(Tile start, Tile end) {
-        if(start == end) return new ArrayDeque<>();
+        if (start == end) return new ArrayDeque<>();
+        if (end.getY() * width + end.getX() < start.getY() * width + end.getX())
+            return reversePath(findPath(end, start));
         int si = start.getY();
         int sj = start.getX();
         int ei = end.getY();
@@ -64,13 +67,15 @@ public class PathFinder {
             Deque<Tile> path1 = getTiles(start, end, BFSFromStart, endFound, startFound);
             if (path1 != null) return path1;
             Deque<Tile> path2 = getTiles(end, start, BFSFromEnd, startFound, endFound);
-            if (path1 != null) {
-                Deque<Tile> path = new ArrayDeque<>();
-                while (!path2.isEmpty()) path.addFirst(path2.pollFirst());
-                return path;
-            }
+            return reversePath(path2);
         }
         return null;
+    }
+
+    private Deque<Tile> reversePath(Deque<Tile> path) {
+        Deque<Tile> reversedPath = new ArrayDeque<>();
+        while (!path.isEmpty()) reversedPath.addFirst(path.pollFirst());
+        return reversedPath;
     }
 
     private Deque<Tile> getTiles(Tile start, Tile end, Queue<Integer> BFSFromStart, boolean endFound[][], boolean startFound[][]) {

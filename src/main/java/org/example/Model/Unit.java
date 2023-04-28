@@ -5,6 +5,24 @@ public class Unit {
     private int YCoordinate;
     private Kingdom owner;
     private UnitType unitType;
+    private Tile wishPlace;
+    boolean isKingSaidToMove = false;
+
+    public boolean isKingSaidToMove() {
+        return isKingSaidToMove;
+    }
+
+    public void setKingSaidToMove(boolean kingSaidToMove) {
+        isKingSaidToMove = kingSaidToMove;
+    }
+
+    public Tile getWishPlace() {
+        return wishPlace;
+    }
+
+    public void setWishPlace(Tile wishPlace) {
+        this.wishPlace = wishPlace;
+    }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         this.XCoordinate = XCoordinate;

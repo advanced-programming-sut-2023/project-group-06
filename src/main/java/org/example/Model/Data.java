@@ -171,8 +171,13 @@ public class Data {
     null: error
     map will be loaded from "src/main/java/org/example/Model/Maps/[fileName].bin" */
     public static Tile[][] loadMap(String fileName) {
+        String path = "src/main/java/org/example/Model/Maps/" + fileName + ".bin";
+        File f = new File(path);
+        if (!f.exists() || f.isDirectory()) {
+            return null;
+        }
         try {
-            FileInputStream fileInputStream = new FileInputStream("src/main/java/org/example/Model/Maps/" + fileName + ".bin");
+            FileInputStream fileInputStream = new FileInputStream(path);
             int height = fileInputStream.read() * 256 + fileInputStream.read();
             int width = fileInputStream.read() * 256 + fileInputStream.read();
             Tile[][] map = new Tile[height][width];

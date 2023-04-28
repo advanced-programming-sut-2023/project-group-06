@@ -87,6 +87,9 @@ public enum Commands {
     TRADE_HISTORY("^trade history$"),
     SHOW_GOLD("^show gold$"),
     SET_THE_GATE("^(?<command>(open|close)) the gate -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    //Soldier Menu Commands
+    MOVE_UNITES_WITH_TYPE_SINA("(?=.* -x )(?=.* -y )(?=.* -t )^move unit to( -x (?<x>((-?\\d*)|(\\\"-?\\d*\\\")))| -y (?<y>((-?\\d*)|(\\\"-?\\d*\\\")))| -type (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))){3}$"),
+    MOVE_UNITES_WITH_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))$"),
     ;
 
     private String regex;
