@@ -21,7 +21,7 @@ public class PathFinder {
     private boolean[][] endFound;
     private int[][] father;
 
-    PathFinder(Tile[][] map) {
+    public PathFinder(Tile[][] map) {
         this.map = map;
         height = map.length;
         width = map[0].length;
@@ -72,7 +72,7 @@ public class PathFinder {
         return null;
     }
 
-    public Deque<Tile> reversePath(Deque<Tile> path) {
+    private Deque<Tile> reversePath(Deque<Tile> path) {
         Deque<Tile> reversedPath = new ArrayDeque<>();
         while (!path.isEmpty()) reversedPath.addFirst(path.pollFirst());
         return reversedPath;
