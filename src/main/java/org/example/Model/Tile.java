@@ -15,6 +15,7 @@ public class Tile {
     private int height;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
+    private ArrayList<Unit> allUnits = new ArrayList<>();
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -46,6 +47,10 @@ public class Tile {
 
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
+    }
+
+    public ArrayList<Unit> getAllUnits() {
+        return allUnits;
     }
 
     public int getHeight() {
@@ -80,10 +85,12 @@ public class Tile {
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+        this.allUnits.add(soldier);
     }
 
     public void addToNonSoldierUnits(Unit unit) {
         this.nonSoldierUnits.add(unit);
+        this.allUnits.add(unit);
     }
 
     public void removeFromNonSoldierUnits(Unit unit) {
