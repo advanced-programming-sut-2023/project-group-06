@@ -17,7 +17,7 @@ public class KingdomMenu extends Menu {
             Matcher matcher;
             String command = scanner.nextLine();
             if(Commands.getMatcher(command, Commands.SHOW_POPULARITY_FACTORS).find())
-                System.out.println(KingdomController.showPopularityFactors());
+                System.out.print(KingdomController.showPopularityFactors());
             else if(Commands.getMatcher(command, Commands.SHOW_POPULARITY).find())
                 System.out.println(KingdomController.showPopularity());
             else if(Commands.getMatcher(command, Commands.SHOW_FOOD_LIST).find())

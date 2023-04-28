@@ -422,17 +422,17 @@ public class GameController {
     private static void computeFoods(Kingdom player){
         double rate = 1 + ((double)player.getFoodRate() / 2);
         int totalFoodUsage = (int)(rate * player.getMaxPopulation());
-        int foodDiversity = 0;
-        if(currentPlayer.getFoodAmountByType(FoodType.CHEESE) > 0)
-            foodDiversity++;
-        if(currentPlayer.getFoodAmountByType(FoodType.MEAT) > 0)
-            foodDiversity++;
-        if(currentPlayer.getFoodAmountByType(FoodType.BREAD) > 0)
-            foodDiversity++;
-        if(currentPlayer.getFoodAmountByType(FoodType.APPLES) > 0)
-            foodDiversity++;
+        int newFoodDiversity = 0;
+        if(player.getFoodAmountByType(FoodType.CHEESE) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.MEAT) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.BREAD) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.APPLES) > 0)
+            newFoodDiversity++;
         player.eatFoods(totalFoodUsage);
-        player.addToHappiness(foodDiversity - 1);
+        player.addToHappiness(newFoodDiversity - 1);
         player.addToHappiness(player.getFoodRate() * 4);
     }
 
@@ -444,12 +444,7 @@ public class GameController {
     private static void computeTaxes(Kingdom player){
         int tax = player.getTax();
         double addToWealth = 0;
-        int addToHappiness;
-        if(tax > 3)
-            addToHappiness = -4 * tax + 8;
-        else if(tax > 0)
-            addToHappiness = -2 * tax;
-        else addToHappiness = -2 * tax + 1;
+        int addToHappiness = currentPlayer.taxEffectOnHappiness(tax);
         if(tax > 0)
             addToWealth = 0.2 * tax + 0.4;
         else if(tax < 0)
