@@ -32,13 +32,13 @@ public class GameMenu extends Menu {
                     command = scanner.nextLine();
                     if((matcher = Commands.getMatcher(command, Commands.CHOOSE_DEFAULT_MAP)).find()) {
                         mapName = matcher.group("mapName");
-                        //if map doesn't exist return map not found
-                        break;
+                        String result = GameController.setDefaultMap(mapName).message;
+                        System.out.println(result);
+                        if(Objects.equals(result, "Map is set!"))
+                            break;
                     }
                     else System.out.println(Response.INVALID_COMMAND.message);
                 }
-                GameController.setDefaultMap(Data.loadMap(mapName), Objects.requireNonNull(Data.loadMap(mapName)).length, Objects.requireNonNull(Data.loadMap(mapName))[0].length);
-                System.out.println("map is set");
                 break;
             }
             else if(Objects.equals(command, "n")){

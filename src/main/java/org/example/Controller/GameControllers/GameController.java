@@ -6,6 +6,7 @@ import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -22,8 +23,14 @@ public class GameController {
         return Response.INITIALIZE_MAP_SUCCESSFUL;
     }
 
-    public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
+    public static Response setDefaultMap(String mapName){
+        Tile[][] defaultMap = Data.loadMap(mapName);
+        if(mapName == null)
+            return Response.NO_SUCH_MAP;
+        int defaultMapWidth = Objects.requireNonNull(Data.loadMap(mapName)).length;
+        int defaultMapHeight = Objects.requireNonNull(Data.loadMap(mapName))[0].length;
         currentGame.setMap(defaultMap, defaultMapWidth, defaultMapHeight);
+        return Response.MAP_IS_SET;
     }
 
     public static Response clearBlock(Matcher matcher){

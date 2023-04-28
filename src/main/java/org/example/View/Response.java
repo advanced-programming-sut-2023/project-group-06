@@ -15,6 +15,8 @@ public enum Response {
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     NO_REPEATED_NAME("You can't repeat a name!"),
+    NO_SUCH_MAP("There is no default map with this name!"),
+    MAP_IS_SET("Map is set!"),
     PUT_MAIN_CASTLE("Put your main castle first!"),
     ENTER_DIRECTION("Enter building's direction!"),
     CANT_PUT_STOCKPILE("There is nowhere to put your stockpile near the main castle!"),
