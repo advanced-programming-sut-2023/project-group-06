@@ -147,8 +147,14 @@ public enum Response {
     TRADE_REQUEST_OWNER("You can't accept a trade request from yourself!"),
     TRADE_REQUEST_ACCEPTED("You accepted this trade request successfully!"),
     NO_KINGDOM_USERNAME("No kingdom exists with this username!"),
-    KINGDOM_YOURSELF("You can't send a trade to yourself!");
-
+    KINGDOM_YOURSELF("You can't send a trade to yourself!"),
+    GATE_OPEN("The gate is open!"),
+    GATE_CLOSE("The gate is close!"),
+    CANT_OPEN("Can't open the gate!"),
+    CANT_CLOSE("Can't close the gate!"),
+    ALREADY_OPEN("The gate is already opened!"),
+    ALREADY_CLOSE("The gate is already closed!"),
+    NO_GATE_HERE("There is no gate here!"),
     ;
     public final String message;
 

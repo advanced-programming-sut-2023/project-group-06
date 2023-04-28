@@ -86,6 +86,7 @@ public enum Commands {
     TRADE_LIST("^trade list$"),
     TRADE_HISTORY("^trade history$"),
     SHOW_GOLD("^show gold$"),
+    SET_THE_GATE("^(?<command>(open|close)) the gate -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     ;
 
     private String regex;

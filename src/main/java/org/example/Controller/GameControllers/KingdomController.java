@@ -15,7 +15,7 @@ public class KingdomController {
         String result = "";
         result += "Food: " + (currentKingdom.getFoodDiversity() + currentKingdom.getFoodRate() * 4 - 1) + "\n";
         result += "Tax: " + currentKingdom.taxEffectOnHappiness(currentKingdom.getTax()) + "\n";
-        result += "Fear: " + "\n";
+        result += "Fear: " + currentKingdom.getFear() + "\n";
         result += "Religion: " + currentKingdom.getHappinessIncrease() + "\n";
         return result;
     }

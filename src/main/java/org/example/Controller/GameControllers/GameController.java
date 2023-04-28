@@ -396,6 +396,82 @@ public class GameController {
         return Response.SELECT_SOLDIER_SUCCESSFUL;
     }
 
+    private static Response openTheGate(Gate gate, int x, int y, int frontX, int frontY){
+        currentGame.getTileByCoordinates(y, x).setHeight(0);
+        if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
+            currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(0);
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+        }
+        else {
+            if (currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getBuilding() != null ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getBuilding() != null ||
+                    currentGame.getTileByCoordinates(frontY , frontX).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(frontY , frontX).getBuilding() != null)
+                return Response.CANT_OPEN;
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, 2 * frontX - x, 2 * frontY - y)
+            );
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, 3 * frontX - 2 * x, 3 * frontY - 2 * y)
+            );
+            currentGame.getTileByCoordinates(frontY , frontX).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, frontX, frontY)
+            );
+        }
+        return Response.GATE_OPEN;
+    }
+
+    private static Response closeTheGate(Gate gate, int x, int y, int frontX, int frontY){
+        currentGame.getTileByCoordinates(y, x).setHeight(3);
+        if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
+            currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(3);
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(3);
+        }
+        else{
+            if(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(frontY, frontX).getSoldiers().size() > 0)
+                return Response.CANT_CLOSE;
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+            currentGame.getTileByCoordinates(frontY, frontX).setBuilding(null);
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(null);
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setHeight(0);
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(null);
+            //check for tile structure to set the height
+            //getTileByCoordinates(frontX, frontY)
+        }
+        return Response.GATE_CLOSE;
+    }
+
+    public static Response setTheGate(Matcher matcher){
+        int xCommand = Integer.parseInt(matcher.group("x"));
+        int yCommand = Integer.parseInt(matcher.group("y"));
+        String command = matcher.group("command");
+        boolean open = Objects.equals(command, "open");
+        if(xCommand - 1 < 0 || xCommand + 1 >= currentGame.getMapWidth() || yCommand - 1 < 0 || yCommand + 1 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding() == null || currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding().getBuildingType().getBuildingClass() != Gate.class)
+            return Response.NO_GATE_HERE;
+        Gate gate = (Gate) currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding();
+        if(open && !gate.isOpen() || !open && gate.isOpen()){
+            gate.setTheDoor();
+            int x = gate.getXCoordinate();
+            int y = gate.getYCoordinate();
+            int frontX = x;
+            int frontY = y;
+            if(gate.getDirection() % 2 == 0) frontY += gate.getDirection() - 1;
+            else frontX += 2 - gate.getDirection();
+            if(open) return openTheGate(gate, x, y, frontX, frontY);
+            else return closeTheGate(gate, x, y, frontX, frontY);
+        }
+        else if(open)
+            return Response.ALREADY_OPEN;
+        else return Response.ALREADY_CLOSE;
+    }
+
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
             for(Kingdom kingdom : currentGame.getKingdoms()) {
