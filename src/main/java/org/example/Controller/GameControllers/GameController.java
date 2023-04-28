@@ -476,10 +476,10 @@ public class GameController {
 
     private static void destroyDeadBodies() {
         for (Kingdom k : currentGame.getKingdoms()) {
-            for (Soldier s : k.getSoldiers()) {
-                if (s.getHealth() <= 0) {
-                    currentGame.getMap()[s.getYCoordinate()][s.getXCoordinate()].removeSoldier(s);
-                    k.getSoldiers().remove(s);
+            for(int i = 0; i < k.getSoldiers().size(); i++){
+                if(k.getSoldiers().get(i).getHealth() <= 0){
+                    k.getSoldiers().remove(i);
+                    i--;
                 }
             }
         }
