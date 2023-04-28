@@ -495,6 +495,10 @@ public class GameController {
                 Tile targetTile = curTile;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
                     targetTile = path.pollFirst();
+                if (targetTile == curTile){
+                    s.setKingSaidToMove(false);
+                    continue;
+                }
                 curTile.removeSoldier(s);
                 targetTile.addSoldier(s);
             }
