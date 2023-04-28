@@ -20,7 +20,7 @@ public class Tile {
         this.type = type;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        if (type.isBlue()) height = -2;
+        if (!type.CanBeCrossed()) height = -2;
         else height = 0;
     }
 
@@ -52,6 +52,10 @@ public class Tile {
         return height;
     }
 
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
     public int getX() {
         return xCoordinate;
     }
@@ -70,6 +74,7 @@ public class Tile {
         if (building instanceof Towers) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
+        else if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
         else height = -2;
     }
 

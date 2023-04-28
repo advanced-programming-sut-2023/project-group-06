@@ -166,6 +166,8 @@ public class GameMenu extends Menu {
                 System.out.println(GameController.clearBlock(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_ROCK)).find())
                 System.out.println(GameController.dropRuck(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_THE_GATE)).find())
+                System.out.println(GameController.setTheGate(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SELECT_BUILDING)).find()) {
                 String result = GameController.selectBuilding(matcher).message;
                 System.out.println(result);

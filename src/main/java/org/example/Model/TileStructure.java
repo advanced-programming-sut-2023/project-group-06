@@ -33,6 +33,10 @@ public enum TileStructure {
         return colorString;
     }
 
+    public boolean CanBeCrossed() {
+        return canBeCrossed;
+    }
+
     public String getResource() {
         return resource;
     }
