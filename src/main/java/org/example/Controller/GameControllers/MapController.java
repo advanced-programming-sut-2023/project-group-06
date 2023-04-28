@@ -96,7 +96,6 @@ public class MapController {
             return "Invalid coordinates\n";
         String result = "";
         result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
-        //show resources
         for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
             //show soldiers
         }
@@ -108,7 +107,11 @@ public class MapController {
             else tree = true;
         }
         result += "buildings: " + buildingString;
-        if(tree) result += "there is a tree here!\n";
+        if(tree) {
+            result += "there is a tree here!\n";
+            result += "resources: wood";
+        }
+        else result += "resources: " + currentGame.getTileByCoordinates(y, x).getType().getResource() + "\n";
         return result;
     }
 

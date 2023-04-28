@@ -14,6 +14,7 @@ public enum Response {
     POPULATION_EXCEEDED("Population exceeded!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
+    NO_REPEATED_NAME("You can't repeat a name!"),
     PUT_MAIN_CASTLE("Put your main castle first!"),
     ENTER_DIRECTION("Enter building's direction!"),
     CANT_PUT_STOCKPILE("There is nowhere to put your stockpile near the main castle!"),

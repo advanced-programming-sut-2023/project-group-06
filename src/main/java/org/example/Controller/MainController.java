@@ -34,6 +34,11 @@ public class MainController {
             return Response.USER_NOT_FOUND;
         if(users.size() == 1)
             return Response.CANT_PLAY_ALONE;
+        for(int i = 1; i < users.size(); i++){
+            for(int j = 0; j < i; j++)
+                if(users.get(i) == users.get(j))
+                    return Response.NO_REPEATED_NAME;
+        }
         Game game = new Game(users);
         GameController.currentGame = game;
         GameController.currentPlayer = game.currentPlayer();
@@ -45,8 +50,6 @@ public class MainController {
             return null;
         if(Data.getUserByName(username) == null)
             return "failed";
-        //if(players.contains(Data.getUserByName(username)))
-        //    return "failed";
         players.add(Data.getUserByName(username));
         return null;
     }
