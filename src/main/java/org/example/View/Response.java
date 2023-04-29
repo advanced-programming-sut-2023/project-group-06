@@ -14,6 +14,9 @@ public enum Response {
     POPULATION_EXCEEDED("Population exceeded!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
+    NO_REPEATED_NAME("You can't repeat a name!"),
+    NO_SUCH_MAP("There is no default map with this name!"),
+    MAP_IS_SET("Map is set!"),
     PUT_MAIN_CASTLE("Put your main castle first!"),
     ENTER_DIRECTION("Enter building's direction!"),
     CANT_PUT_STOCKPILE("There is nowhere to put your stockpile near the main castle!"),
@@ -144,8 +147,15 @@ public enum Response {
     TRADE_REQUEST_OWNER("You can't accept a trade request from yourself!"),
     TRADE_REQUEST_ACCEPTED("You accepted this trade request successfully!"),
     NO_KINGDOM_USERNAME("No kingdom exists with this username!"),
-    KINGDOM_YOURSELF("You can't send a trade to yourself!");
-
+    KINGDOM_YOURSELF("You can't send a trade to yourself!"),
+    GATE_OPEN("The gate is opened!"),
+    GATE_CLOSE("The gate is closed!"),
+    CANT_OPEN("Can't open the gate!"),
+    CANT_CLOSE("Can't close the gate!"),
+    ALREADY_OPEN("The gate is already opened!"),
+    ALREADY_CLOSE("The gate is already closed!"),
+    NO_GATE_HERE("There is no gate here!"),
+    MOVE_SUCCESSFUL("Move successful!"),
     ;
     public final String message;
 

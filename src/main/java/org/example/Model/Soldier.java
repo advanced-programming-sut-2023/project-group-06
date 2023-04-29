@@ -8,20 +8,55 @@ public class Soldier extends Unit {
     double speed;
     int range;
     int secondRange = 0;
-    int cost;
     int precision;
     int delay;
-    int state; // -1 --> standing   0 --> defensive  1 --> offensive
+    int health;
+    int state = 1; // 0 --> defensive   1 --> standing  2 --> offensive
     boolean isCapableOfClimbing;
     boolean canThrowLadders;
     boolean canDigDitch;
     boolean visibility;
-    UnitType unitType;
+    boolean isArab = false;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
-        super(XCoordinate, YCoordinate, owner);
-        this.unitType = unitType;
+        super(XCoordinate, YCoordinate, owner, unitType);
         owner.addSoldier(this);
         owner.addToPopulation(1);
+        //health = unitType.getHitPoint();
+        speed = unitType.getSpeed();
+        range = unitType.getRange();
+        secondRange = unitType.getSecondRange();
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public boolean isArab() {
+        return isArab;
+    }
+
+    public int getRange() {
+        return range;
+    }
+
+    public int getSecondRange() {
+        return secondRange;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public int getAttackPower() {
+        return attackPower;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void subHealth(int hit) {
+        health -= hit;
     }
 }

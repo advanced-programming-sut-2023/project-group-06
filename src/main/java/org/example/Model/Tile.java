@@ -15,12 +15,13 @@ public class Tile {
     private int height;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
+    private ArrayList<Unit> allUnits = new ArrayList<>();
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        if (type.isBlue()) height = -2;
+        if (!type.CanBeCrossed()) height = -2;
         else height = 0;
     }
 
@@ -48,8 +49,16 @@ public class Tile {
         return soldiers;
     }
 
+    public ArrayList<Unit> getAllUnits() {
+        return allUnits;
+    }
+
     public int getHeight() {
         return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 
     public int getX() {
@@ -70,15 +79,18 @@ public class Tile {
         if (building instanceof Towers) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
+        else if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
         else height = -2;
     }
 
     public void addSoldier(Soldier soldier) {
-        this.soldiers.add(soldier);
+        soldiers.add(soldier);
+        allUnits.add(soldier);
     }
 
     public void addToNonSoldierUnits(Unit unit) {
         this.nonSoldierUnits.add(unit);
+        this.allUnits.add(unit);
     }
 
     public void removeFromNonSoldierUnits(Unit unit) {

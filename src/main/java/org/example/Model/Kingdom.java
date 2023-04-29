@@ -10,10 +10,10 @@ public class Kingdom {
 
     //todo decide about nonSoldierUnits...
     private int happiness = 0;
-    private int foodDiversity = 0;
+    private int foodDiversity;
     private int totalFoodAmount = 0;
     private int foodRate = 0;
-    private int tax = 0;
+    private int tax;
     private int wealth;
     private int population = 1;
     private int maxPopulation = 9;
@@ -55,12 +55,11 @@ public class Kingdom {
         return happiness;
     }
 
-    public int getFoodDiversity() {
-        return foodDiversity;
-    }
-
     public int getTotalFoodAmount() {
-        return totalFoodAmount;
+        return this.getFoodAmountByType(FoodType.APPLES) +
+                this.getFoodAmountByType(FoodType.CHEESE) +
+                this.getFoodAmountByType(FoodType.MEAT) +
+                this.getFoodAmountByType(FoodType.BREAD);
     }
 
     public int getFoodRate() {
@@ -140,7 +139,7 @@ public class Kingdom {
     }
 
     public void addToTotalFoodAmount(int totalFoodAmount) {
-        this.totalFoodAmount = totalFoodAmount;
+        this.totalFoodAmount += totalFoodAmount;
     }
 
     public void setTax(int tax) {
@@ -259,6 +258,29 @@ public class Kingdom {
                 return (Resources) asset;
         }
         return null;
+    }
+
+    public int getFoodDiversity(){
+        int newFoodDiversity = 0;
+        if(getFoodAmountByType(FoodType.CHEESE) > 0)
+            newFoodDiversity++;
+        if(getFoodAmountByType(FoodType.MEAT) > 0)
+            newFoodDiversity++;
+        if(getFoodAmountByType(FoodType.BREAD) > 0)
+            newFoodDiversity++;
+        if(getFoodAmountByType(FoodType.APPLES) > 0)
+            newFoodDiversity++;
+        return newFoodDiversity;
+    }
+
+    public int taxEffectOnHappiness(int theTax){
+        int addToHappiness;
+        if(theTax > 3)
+            addToHappiness = -4 * theTax + 8;
+        else if(theTax > 0)
+            addToHappiness = -2 * theTax;
+        else addToHappiness = -2 * theTax + 1;
+        return addToHappiness;
     }
 
     public void eatFoods(int amount){

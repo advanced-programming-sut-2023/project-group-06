@@ -1,10 +1,7 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.*;
 import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.Data;
-import org.example.Model.Game;
-import org.example.Model.Soldier;
-import org.example.Model.TileStructure;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -96,10 +93,17 @@ public class MapController {
             return "Invalid coordinates\n";
         String result = "";
         result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
-        //show resources
-        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            //show soldiers
+        StringBuilder soldierString = new StringBuilder("soldiers:\n");
+        for(UnitType unitType : UnitType.values()){
+            int number = 0;
+            for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
+                if(soldier.getUnitType() == unitType)
+                    number++;
+            }
+            if(number > 0)
+                soldierString.append(unitType.getName()).append(" : ").append(number).append("\n");
         }
+        result += soldierString;
         String buildingString = "empty\n";
         boolean tree = false;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
@@ -108,7 +112,11 @@ public class MapController {
             else tree = true;
         }
         result += "buildings: " + buildingString;
-        if(tree) result += "there is a tree here!\n";
+        if(tree) {
+            result += "there is a tree here!\n";
+            result += "resources: wood";
+        }
+        else result += "resources: " + currentGame.getTileByCoordinates(y, x).getType().getResource() + "\n";
         return result;
     }
 

@@ -67,10 +67,10 @@ public class BuildingController {
             if (building.getOwner().getResourceAmountByType(type.getResourcesPriceType()) < count * type.getResourcePriceAmount())
                 return Response.NOT_ENOUGH_RESOURCES_WEAPON;
             else {
-                if (type.getBuildingType() == BuildingType.FLETCHER) return createWeaponFletcher(type,count);
-                if (type.getBuildingType() == BuildingType.BLACKSMITH) return createWeaponBlacksmith(type,count);
-                if (type.getBuildingType() == BuildingType.POLETURNER) return createWeaponPoleturner(type,count);
-                if (type.getBuildingType() == BuildingType.ARMORER) return createWeaponArmorer(type,count);
+                if (building.getBuildingType() == BuildingType.FLETCHER) return createWeaponFletcher(type,count);
+                if (building.getBuildingType() == BuildingType.BLACKSMITH) return createWeaponBlacksmith(type,count);
+                if (building.getBuildingType() == BuildingType.POLETURNER) return createWeaponPoleturner(type,count);
+                if (building.getBuildingType() == BuildingType.ARMORER) return createWeaponArmorer(type,count);
             }
         } else if (type.getBuildingType() == BuildingType.DIARY_FARMER) return createWeaponDiaryFarmer(type,count);
         return Response.CANT_CREATE_ANY_WEAPON_BUILDING;

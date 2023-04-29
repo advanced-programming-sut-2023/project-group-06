@@ -12,12 +12,24 @@ import java.util.regex.Matcher;
 public class KingdomController {
     public static Kingdom currentKingdom;
     public static String showPopularityFactors(){
-        return null;
-        //todo
+        String result = "";
+        result += "Food: " + (currentKingdom.getFoodDiversity() + currentKingdom.getFoodRate() * 4 - 1) + "\n";
+        result += "Tax: " + currentKingdom.taxEffectOnHappiness(currentKingdom.getTax()) + "\n";
+        result += "Fear: " + currentKingdom.getFear() + "\n";
+        result += "Religion: " + currentKingdom.getHappinessIncrease() + "\n";
+        return result;
     }
 
     public static int showPopularity(){
         return currentKingdom.getHappiness();
+    }
+
+    public static int showPopulation(){
+        return currentKingdom.getMaxPopulation();
+    }
+
+    public static int showWealth(){
+        return currentKingdom.getWealth();
     }
 
     public static String showFoodList(){

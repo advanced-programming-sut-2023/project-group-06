@@ -1,11 +1,14 @@
 package org.example.Controller.GameControllers;
 
 import org.example.Controller.Controller;
+import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class GameController {
@@ -22,8 +25,14 @@ public class GameController {
         return Response.INITIALIZE_MAP_SUCCESSFUL;
     }
 
-    public static void setDefaultMap(Tile[][] defaultMap, int defaultMapWidth, int defaultMapHeight){
+    public static Response setDefaultMap(String mapName){
+        Tile[][] defaultMap = Data.loadMap(mapName);
+        if(defaultMap == null)
+            return Response.NO_SUCH_MAP;
+        int defaultMapWidth = Objects.requireNonNull(Data.loadMap(mapName)).length;
+        int defaultMapHeight = Objects.requireNonNull(Data.loadMap(mapName))[0].length;
         currentGame.setMap(defaultMap, defaultMapWidth, defaultMapHeight);
+        return Response.MAP_IS_SET;
     }
 
     public static Response clearBlock(Matcher matcher){
@@ -151,7 +160,7 @@ public class GameController {
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
         String type = Controller.makeEntryValid(typeString);
-        String direction = Controller.makeEntryValid("direction");
+        String direction = Controller.makeEntryValid(matcher.group("direction"));
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
@@ -225,6 +234,11 @@ public class GameController {
             currentPlayer.addToMaxPopulation(10);
         if(buildingtype == BuildingType.STABLE)
             currentPlayer.addToHorseNumber(4);
+        /*if(buildingtype == BuildingType.OX_TETHER) {
+            Soldier cow = new Soldier(x, y, currentPlayer, UnitType.COW);
+            currentPlayer.getSoldiers().add(cow);
+            ////bugs
+        }*/
         //if(building type == INN) ...
         //if(building type == ...) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
@@ -381,13 +395,95 @@ public class GameController {
         if(soldiers.size() == 0)
             return Response.NO_SOLDIER_ON_THE_TILE;
         SoldierController.soldiers = soldiers;
+        SoldierController.currentGame = currentGame;
         return Response.SELECT_SOLDIER_SUCCESSFUL;
+    }
+
+    private static Response openTheGate(Gate gate, int x, int y, int frontX, int frontY){
+        currentGame.getTileByCoordinates(y, x).setHeight(0);
+        if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
+            currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(0);
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+        }
+        else {
+            if (3 * frontX - 2 * x < 0 || 3 * frontX - 2 * x >= currentGame.getMapWidth() ||
+                    3 * frontY - 2 * y < 0 || 3 * frontY - 2 * y >= currentGame.getMapHeight() ||
+                    currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getBuilding() != null ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getBuilding() != null ||
+                    currentGame.getTileByCoordinates(frontY , frontX).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(frontY , frontX).getBuilding() != null)
+                return Response.CANT_OPEN;
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, 2 * frontX - x, 2 * frontY - y)
+            );
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, 3 * frontX - 2 * x, 3 * frontY - 2 * y)
+            );
+            currentGame.getTileByCoordinates(frontY , frontX).setBuilding(
+                    new Building(currentPlayer, BuildingType.BRIDGE, frontX, frontY)
+            );
+        }
+        gate.setTheDoor();
+        return Response.GATE_OPEN;
+    }
+
+    private static Response closeTheGate(Gate gate, int x, int y, int frontX, int frontY){
+        currentGame.getTileByCoordinates(y, x).setHeight(3);
+        if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
+            currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(3);
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(3);
+        }
+        else{
+            if(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getSoldiers().size() > 0 ||
+                    currentGame.getTileByCoordinates(frontY, frontX).getSoldiers().size() > 0)
+                return Response.CANT_CLOSE;
+            currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+            currentGame.getTileByCoordinates(frontY, frontX).setBuilding(null);
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
+            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(null);
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setHeight(0);
+            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(null);
+            //check for tile structure to set the height
+            //getTileByCoordinates(frontX, frontY)
+        }
+        gate.setTheDoor();
+        return Response.GATE_CLOSE;
+    }
+
+    public static Response setTheGate(Matcher matcher){
+        int xCommand = Integer.parseInt(matcher.group("x"));
+        int yCommand = Integer.parseInt(matcher.group("y"));
+        String command = matcher.group("command");
+        boolean open = Objects.equals(command, "open");
+        if(xCommand - 1 < 0 || xCommand + 1 >= currentGame.getMapWidth() || yCommand - 1 < 0 || yCommand + 1 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding() == null || currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding().getBuildingType().getBuildingClass() != Gate.class)
+            return Response.NO_GATE_HERE;
+        Gate gate = (Gate) currentGame.getTileByCoordinates(yCommand, xCommand).getBuilding();
+        if(open && !gate.isOpen() || !open && gate.isOpen()){
+            int x = gate.getXCoordinate();
+            int y = gate.getYCoordinate();
+            int frontX = x;
+            int frontY = y;
+            if(gate.getDirection() % 2 == 0) frontY += gate.getDirection() - 1;
+            else frontX += 2 - gate.getDirection();
+            if(open) return openTheGate(gate, x, y, frontX, frontY);
+            else return closeTheGate(gate, x, y, frontX, frontY);
+        }
+        else if(open)
+            return Response.ALREADY_OPEN;
+        else return Response.ALREADY_CLOSE;
     }
 
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
             for(Kingdom kingdom : currentGame.getKingdoms()) {
-                //computeDamages
+                computeDamages(); // computeDamages
+                destroyDeadBodies(); // destroyDeadBodies
+                moveUnits(); // moveUnits
                 kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
                 computeFoods(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
@@ -409,16 +505,109 @@ public class GameController {
         //todo
     }
 
-    private static Response computeDamages(){
+    private static void computeDamages() {
+        // compute unit attack damages
+        for (Kingdom k : currentGame.getKingdoms()) {
+            for (Soldier s : k.getSoldiers()) {
+                if (!s.isKingSaidToMove())
+                    computeAttackDamageOfSoldier(s);
+            }
+        }
+    }
+
+    private static void computeAttackDamageOfSoldier(Soldier s) {
+        int x = s.getXCoordinate();
+        int y = s.getYCoordinate();
+        int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
+        Soldier enemy = findNearestEnemyTo(s, fightRange);
+        if (enemy == null) return;
+        int enemyX = enemy.getXCoordinate();
+        int enemyY = enemy.getYCoordinate();
+        int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
+        if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return;
+        if (squareOfDistance <= s.getRange() * s.getRange()) {
+            s.setWishPlace(currentGame.getMap()[y][x]);
+            enemy.subHealth(s.getAttackPower());
+            return;
+        }
+        s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
+    }
+
+    private static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
+        int x = soldier.getXCoordinate();
+        int y = soldier.getYCoordinate();
+        for (Soldier e : currentGame.getMap()[y][x].getSoldiers())
+            if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) return e;
+        for (int i = 1; i <= fightRange; i++) {
+            for (int j = 0; j <= i; j++) { // x+i-j, y+j
+                if (x + i - j >= currentGame.getMapWidth() || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) return e;
+            }
+            for (int j = 0; j <= i; j++) { // x+i-j, y-j
+                if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) return e;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y+j
+                if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) return e;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y-j
+                if (x - i + j < 0 || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) return e;
+            }
+        }
         return null;
-        //todo
+    }
+
+    private static void destroyDeadBodies() {
+        for (Kingdom k : currentGame.getKingdoms()) {
+            for(int i = 0; i < k.getSoldiers().size(); i++){
+                if(k.getSoldiers().get(i).getHealth() <= 0){
+                    k.getSoldiers().remove(i);
+                    i--;
+                }
+            }
+        }
+    }
+
+    private static void moveUnits() {
+        Tile[][] map = currentGame.getMap();
+        PathFinder pathFinder = new PathFinder(map);
+        for (Kingdom k : currentGame.getKingdoms()) {
+            for (Soldier s : k.getSoldiers()) {
+                Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
+                Deque<Tile> path = pathFinder.findPath(curTile, s.getWishPlace());
+                Tile targetTile = curTile;
+                for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
+                    targetTile = path.pollFirst();
+                if (targetTile == curTile){
+                    s.setKingSaidToMove(false);
+                    continue;
+                }
+                curTile.removeSoldier(s);
+                targetTile.addSoldier(s);
+            }
+        }
     }
 
     private static void computeFoods(Kingdom player){
-        float rate = 1 + (player.getFoodRate() / 2);
+        double rate = 1 + ((double)player.getFoodRate() / 2);
         int totalFoodUsage = (int)(rate * player.getMaxPopulation());
+        int newFoodDiversity = 0;
+        if(player.getFoodAmountByType(FoodType.CHEESE) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.MEAT) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.BREAD) > 0)
+            newFoodDiversity++;
+        if(player.getFoodAmountByType(FoodType.APPLES) > 0)
+            newFoodDiversity++;
         player.eatFoods(totalFoodUsage);
-        player.addToHappiness(player.getFoodDiversity() - 1);
+        player.addToHappiness(newFoodDiversity - 1);
         player.addToHappiness(player.getFoodRate() * 4);
     }
 
@@ -430,18 +619,13 @@ public class GameController {
     private static void computeTaxes(Kingdom player){
         int tax = player.getTax();
         double addToWealth = 0;
-        int addToHappiness;
-        if(tax > 3)
-            addToHappiness = -4 * tax + 8;
-        else if(tax > 0)
-            addToHappiness = -2 * tax;
-        else addToHappiness = -2 * tax + 1;
+        int addToHappiness = currentPlayer.taxEffectOnHappiness(tax);
         if(tax > 0)
             addToWealth = 0.2 * tax + 0.4;
         else if(tax < 0)
-            addToWealth = -0.2 * tax + 0.4;
+            addToWealth = 0.2 * tax - 0.4;
         player.addToWealth((int)(addToWealth * player.getMaxPopulation()));
-        player.addToHappiness(addToHappiness * player.getMaxPopulation());
+        player.addToHappiness(addToHappiness);
     }
 
     private static void autoTeleportByCow(Kingdom player){

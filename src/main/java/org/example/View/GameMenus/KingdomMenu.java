@@ -17,7 +17,7 @@ public class KingdomMenu extends Menu {
             Matcher matcher;
             String command = scanner.nextLine();
             if(Commands.getMatcher(command, Commands.SHOW_POPULARITY_FACTORS).find())
-                System.out.println(KingdomController.showPopularityFactors());
+                System.out.print(KingdomController.showPopularityFactors());
             else if(Commands.getMatcher(command, Commands.SHOW_POPULARITY).find())
                 System.out.println(KingdomController.showPopularity());
             else if(Commands.getMatcher(command, Commands.SHOW_FOOD_LIST).find())
@@ -38,6 +38,10 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.showResources());
             else if (Commands.getMatcher(command,Commands.SHOW_WEAPONS).find())
                 System.out.println(KingdomController.showWeapons());
+            else if(Commands.getMatcher(command, Commands.SHOW_POPULATION).find())
+                System.out.println(KingdomController.showPopulation());
+            else if(Commands.getMatcher(command, Commands.SHOW_WEALTH).find())
+                System.out.println(KingdomController.showWealth());
             else if (Commands.getMatcher(command,Commands.SHOW_GOLD).find())
                 System.out.println(KingdomController.showGold());
             else System.out.println(Response.INVALID_COMMAND.message);

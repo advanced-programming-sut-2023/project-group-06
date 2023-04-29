@@ -34,10 +34,10 @@ public enum BuildingType {
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
     CATHEDRAL(1200,1000,5,null,0,0,0,false,"cathedral", Building.class), //kelisaye jame
-    ARMORER(300,100,3,ResourcesType.WOOD,20,1,0,false,"armorer", Producers.class), //zereh sazi
+    ARMORER(300,100,3,ResourcesType.WOOD,20,1,0,false,"armorer", Building.class), //zereh sazi
     BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,false,"blacksmith", Building.class), //sakhteman ahangari
-    FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Producers.class), //kaman sazi
-    POLETURNER(300,100,3,ResourcesType.WOOD,10,1,0,false,"poleturner", Producers.class), //neyze sazi
+    FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Building.class), //kaman sazi
+    POLETURNER(300,100,3,ResourcesType.WOOD,10,1,0,false,"poleturner", Building.class), //neyze sazi
     OIL_SMELTER(300,100,3,ResourcesType.IRON,10,0,1,false,"oil smelter", Producers.class), //karkhane zob
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Trap.class),
@@ -51,10 +51,11 @@ public enum BuildingType {
     BAKERY(300,0,3,ResourcesType.WOOD,10,1,0,false,"bakery", Producers.class),
     BREWER(300,0,3,ResourcesType.WOOD,10,1,0,false,"brewer", Producers.class), //abjo sazi
     GRANARY(500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
-    MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
+    MAIN_CASTLE(0, 0, 7, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
     STAIR(100, 0, 1, null, 0, 0, 0, false, "stair", null),
     WALL(100, 0, 1, null, 0, 0, 0, false, "wall", null),
+    BRIDGE(1, 0, 1, null, 0, 0, 0, true, "bridge", null),
     ;
     private int size;
     private int height;
@@ -90,7 +91,7 @@ public enum BuildingType {
 
     public static boolean checkGround(BuildingType buildingType, TileStructure tileStructure){
         if(buildingType == QUARRY)
-            return tileStructure == TileStructure.STONE;
+            return tileStructure == TileStructure.ROCK;
         else if(buildingType == PITCH_RIG)
             return tileStructure == TileStructure.PLAIN;
         else if(buildingType == IRON_MINE)
@@ -99,17 +100,18 @@ public enum BuildingType {
             return tileStructure == TileStructure.OIL;
         else if(tileStructure.isBlue())
             return false;
+        else if(buildingType == APPLE_ORCHARD || buildingType == HOPS_FARMER || buildingType == WHEAT_FARMER)
+            return tileStructure == TileStructure.GRASS || tileStructure == TileStructure.DENSE_MEADOW;
         else if(tileStructure == TileStructure.EARTH || tileStructure == TileStructure.GRASS ||
                 tileStructure == TileStructure.MEADOW)
             return true;
-        else if(buildingType == APPLE_ORCHARD || buildingType == HOPS_FARMER ||
-                buildingType == WHEAT_FARMER || buildingType == MILL)
+        else if(buildingType == MILL)
             return false;
         else if(buildingType == TREE)
             return tileStructure == TileStructure.DENSE_MEADOW;
         else if(buildingType.getBuildingClass() == Towers.class)
-            return tileStructure != TileStructure.ROCK;
-        else return tileStructure == TileStructure.PEBBLE || tileStructure == TileStructure.STONE ||
+            return tileStructure != TileStructure.ROCK && tileStructure != TileStructure.STONE;
+        else return tileStructure == TileStructure.PEBBLE ||
                     tileStructure == TileStructure.DENSE_MEADOW;
     }
 
