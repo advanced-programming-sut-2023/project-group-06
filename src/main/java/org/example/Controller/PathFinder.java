@@ -74,6 +74,7 @@ public class PathFinder {
 
     private Deque<Tile> reversePath(Deque<Tile> path) {
         Deque<Tile> reversedPath = new ArrayDeque<>();
+        System.out.println(path);
         while (!path.isEmpty()) reversedPath.addFirst(path.pollFirst());
         return reversedPath;
     }

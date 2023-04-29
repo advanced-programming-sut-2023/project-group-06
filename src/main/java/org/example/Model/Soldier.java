@@ -22,7 +22,7 @@ public class Soldier extends Unit {
         super(XCoordinate, YCoordinate, owner, unitType);
         owner.addSoldier(this);
         owner.addToPopulation(1);
-        //health = unitType.getHitPoint();
+        health = unitType.getHitPoint();
         speed = unitType.getSpeed();
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();

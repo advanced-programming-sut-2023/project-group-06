@@ -575,12 +575,19 @@ public class GameController {
     }
 
     private static void moveUnits() {
+        System.out.println("salam------------salam");
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
+            System.out.println(k.getSoldiers().size());
             for (Soldier s : k.getSoldiers()) {
+                System.out.println(s.getUnitType());
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
-                Deque<Tile> path = pathFinder.findPath(curTile, s.getWishPlace());
+                Tile tileee = s.getWishPlace();
+                if (tileee == null) continue;
+                System.out.println(curTile + "    " + tileee);
+                System.out.println("----------------------------------------------");
+                Deque<Tile> path = pathFinder.findPath(curTile, tileee);
                 Tile targetTile = curTile;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
                     targetTile = path.pollFirst();
