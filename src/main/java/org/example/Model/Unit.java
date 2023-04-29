@@ -1,5 +1,7 @@
 package org.example.Model;
 
+import org.example.Controller.GameControllers.GameController;
+
 public class Unit {
     private int XCoordinate;
     private int YCoordinate;
@@ -29,6 +31,7 @@ public class Unit {
         this.YCoordinate = YCoordinate;
         this.owner = owner;
         this.unitType = unitType;
+        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
     }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner) {
