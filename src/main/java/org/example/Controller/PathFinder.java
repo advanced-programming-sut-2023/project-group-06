@@ -3,6 +3,7 @@ package org.example.Controller;
 import org.example.Model.Tile;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Queue;
 
@@ -26,6 +27,9 @@ public class PathFinder {
         height = map.length;
         width = map[0].length;
         graph = new int[height][width];
+    }
+
+    private void resetParent() {
         startFound = new boolean[height][width];
         endFound = new boolean[height][width];
         father = new int[height][width];
@@ -49,7 +53,12 @@ public class PathFinder {
     }
 
     public Deque<Tile> findPath(Tile start, Tile end) {
-        if (start == end) return new ArrayDeque<>();
+        resetParent();
+        if (start == end) {
+            Deque<Tile> dq = new ArrayDeque<>();
+            dq.add(start);
+            return dq;
+        }
         if (end.getY() * width + end.getX() < start.getY() * width + end.getX())
             return reversePath(findPath(end, start));
         int si = start.getY();

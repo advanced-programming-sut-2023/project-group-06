@@ -187,4 +187,9 @@ public class Controller {
     protected static boolean isValidEmail(String email) {
         return Pattern.compile("^\\w+([\\.]?\\w+)*@\\w+([\\.]?\\w+)*(\\.\\w+)+$").matcher(email).find();
     }
+
+    public void makeError(String s) {
+        System.out.println(s);
+        int[] a = new int[-1];
+    }
 }

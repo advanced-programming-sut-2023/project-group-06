@@ -187,6 +187,7 @@ public class Kingdom {
     }
 
     public void addSoldier(Soldier soldier) {
+
         this.soldiers.add(soldier);
     }
 
