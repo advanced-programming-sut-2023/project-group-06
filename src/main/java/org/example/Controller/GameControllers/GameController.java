@@ -518,7 +518,7 @@ public class GameController {
     private static void computeAttackDamageOfSoldier(Soldier s) {
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
-        int fightRange = s.getState() * (s.isArab() ? 7 : 5);
+        int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
         Soldier enemy = findNearestEnemyTo(s, fightRange);
         if (enemy == null) return;
         int enemyX = enemy.getXCoordinate();

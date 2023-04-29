@@ -5,26 +5,27 @@ import org.example.Controller.GameControllers.GameController;
 public class Soldier extends Unit {
     int attackPower;
     double defensePower;
-    int speed;
+    double speed;
     int range;
     int secondRange = 0;
-    int cost;
     int precision;
     int delay;
     int health;
-    int state; // 0 --> defensive   1 --> standing  2 --> offensive
+    int state = 1; // 0 --> defensive   1 --> standing  2 --> offensive
     boolean isCapableOfClimbing;
     boolean canThrowLadders;
     boolean canDigDitch;
     boolean visibility;
     boolean isArab = false;
-    UnitType unitType;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
-        super(XCoordinate, YCoordinate, owner);
-        this.unitType = unitType;
+        super(XCoordinate, YCoordinate, owner, unitType);
         owner.addSoldier(this);
         owner.addToPopulation(1);
+        //health = unitType.getHitPoint();
+        speed = unitType.getSpeed();
+        range = unitType.getRange();
+        secondRange = unitType.getSecondRange();
     }
 
     public int getState() {
@@ -43,7 +44,7 @@ public class Soldier extends Unit {
         return secondRange;
     }
 
-    public int getSpeed() {
+    public double getSpeed() {
         return speed;
     }
 
