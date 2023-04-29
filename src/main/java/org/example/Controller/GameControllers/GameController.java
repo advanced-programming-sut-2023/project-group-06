@@ -282,7 +282,6 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(mainCastle);
         Soldier king = new Soldier(x, y, currentPlayer, UnitType.KING);
-        currentGame.getTileByCoordinates(y,x).addSoldier(king);
         currentPlayer.setKing(king);
         int newX = checkDirection(x, y, newDirection).get(0);
         int newY = checkDirection(x, y, newDirection).get(1);
@@ -481,10 +480,10 @@ public class GameController {
 
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
-            computeDamages(); // computeDamages
-            destroyDeadBodies(); // destroyDeadBodies
-            moveUnits(); // moveUnits
             for(Kingdom kingdom : currentGame.getKingdoms()) {
+                computeDamages(); // computeDamages
+                destroyDeadBodies(); // destroyDeadBodies
+                //moveUnits(); // moveUnits
                 kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
                 computeFoods(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
@@ -568,8 +567,6 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for(int i = 0; i < k.getSoldiers().size(); i++){
                 if(k.getSoldiers().get(i).getHealth() <= 0){
-                    Soldier soldier = k.getSoldiers().get(i);
-                    currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
                     k.getSoldiers().remove(i);
                     i--;
                 }
@@ -583,23 +580,16 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for (Soldier s : k.getSoldiers()) {
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
-                Tile wishPlace = s.getWishPlace();
-                Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
-                if (path == null) {
-                    s.setKingSaidToMove(false);
-                    continue;
-                }
+                Deque<Tile> path = pathFinder.findPath(curTile, s.getWishPlace());
                 Tile targetTile = curTile;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
                     targetTile = path.pollFirst();
-                if (targetTile == wishPlace){
+                if (targetTile == curTile){
                     s.setKingSaidToMove(false);
+                    continue;
                 }
-                if (targetTile == curTile) continue;
                 curTile.removeSoldier(s);
                 targetTile.addSoldier(s);
-                s.setXCoordinate(targetTile.getXCoordinate());
-                s.setYCoordinate(targetTile.getYCoordinate());
             }
         }
     }
