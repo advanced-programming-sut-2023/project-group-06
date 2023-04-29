@@ -84,8 +84,8 @@ public class Tile {
     }
 
     public void addSoldier(Soldier soldier) {
-        this.soldiers.add(soldier);
-        this.allUnits.add(soldier);
+        soldiers.add(soldier);
+        allUnits.add(soldier);
     }
 
     public void addToNonSoldierUnits(Unit unit) {
