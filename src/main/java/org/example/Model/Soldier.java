@@ -5,7 +5,7 @@ import org.example.Controller.GameControllers.GameController;
 public class Soldier extends Unit {
     int attackPower;
     double defensePower;
-    double speed;
+    int speed;
     int range;
     int secondRange = 0;
     int precision;
@@ -26,6 +26,7 @@ public class Soldier extends Unit {
         speed = unitType.getSpeed();
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();
+        attackPower = unitType.getAttackPower();
     }
 
     public int getState() {
@@ -44,7 +45,7 @@ public class Soldier extends Unit {
         return secondRange;
     }
 
-    public double getSpeed() {
+    public int getSpeed() {
         return speed;
     }
 
@@ -58,5 +59,9 @@ public class Soldier extends Unit {
 
     public void subHealth(int hit) {
         health -= hit;
+    }
+
+    public String toString() {
+        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername();
     }
 }

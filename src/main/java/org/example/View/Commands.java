@@ -63,7 +63,7 @@ public enum Commands {
     CLEAR_BLOCK("clear -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     DROP_ROCK("droprock -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])"),
     SELECT_BUILDING("select building -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
-    SELECT_UNIT("select unit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
+    SELECT_UNIT("^select unit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     //Map Menu Commands
     SHOW_MAP("show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*"),

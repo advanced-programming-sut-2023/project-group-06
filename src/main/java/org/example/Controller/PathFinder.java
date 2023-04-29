@@ -3,6 +3,7 @@ package org.example.Controller;
 import org.example.Model.Tile;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Queue;
 
@@ -26,6 +27,9 @@ public class PathFinder {
         height = map.length;
         width = map[0].length;
         graph = new int[height][width];
+    }
+
+    private void resetParent() {
         startFound = new boolean[height][width];
         endFound = new boolean[height][width];
         father = new int[height][width];
@@ -49,7 +53,12 @@ public class PathFinder {
     }
 
     public Deque<Tile> findPath(Tile start, Tile end) {
-        if (start == end) return new ArrayDeque<>();
+        resetParent();
+        if (start == end) {
+            Deque<Tile> dq = new ArrayDeque<>();
+            dq.add(start);
+            return dq;
+        }
         if (end.getY() * width + end.getX() < start.getY() * width + end.getX())
             return reversePath(findPath(end, start));
         int si = start.getY();
@@ -67,13 +76,14 @@ public class PathFinder {
             Deque<Tile> path1 = getTiles(start, end, BFSFromStart, endFound, startFound);
             if (path1 != null) return path1;
             Deque<Tile> path2 = getTiles(end, start, BFSFromEnd, startFound, endFound);
-            return reversePath(path2);
+            if (path2 != null) return reversePath(path2);
         }
         return null;
     }
 
     private Deque<Tile> reversePath(Deque<Tile> path) {
         Deque<Tile> reversedPath = new ArrayDeque<>();
+        if (path == null) return null;
         while (!path.isEmpty()) reversedPath.addFirst(path.pollFirst());
         return reversedPath;
     }
