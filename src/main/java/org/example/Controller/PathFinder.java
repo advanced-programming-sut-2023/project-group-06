@@ -67,14 +67,14 @@ public class PathFinder {
             Deque<Tile> path1 = getTiles(start, end, BFSFromStart, endFound, startFound);
             if (path1 != null) return path1;
             Deque<Tile> path2 = getTiles(end, start, BFSFromEnd, startFound, endFound);
-            return reversePath(path2);
+            if (path2 != null) return reversePath(path2);
         }
         return null;
     }
 
     private Deque<Tile> reversePath(Deque<Tile> path) {
         Deque<Tile> reversedPath = new ArrayDeque<>();
-        System.out.println(path);
+        if (path == null) return null;
         while (!path.isEmpty()) reversedPath.addFirst(path.pollFirst());
         return reversedPath;
     }

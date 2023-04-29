@@ -18,9 +18,9 @@ public enum BuildingType {
     SQUARE_TOWER(1600,0,3,ResourcesType.STONE,35,0,0,true,"square tower", Towers.class), // borj moarabei
     ROUND_TOWER(2000,0,3,ResourcesType.STONE,40,0,0,true,"round tower", Towers.class), // borj dayerei
     ARMORY(500,0,1,ResourcesType.WOOD,5,0,0,false,"armory", Storage.class), //aslahekhane
-    BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,false,"barracks", Building.class), // sarbaz khane
-    MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,false,"mercenary post", Building.class), //sarbaz khane mozdooran
-    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,false,"engineers guild", Building.class), // senf mohandesan
+    BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,true,"barracks", Building.class), // sarbaz khane
+    MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,true,"mercenary post", Building.class), //sarbaz khane mozdooran
+    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Building.class), // senf mohandesan
     KILLING_PIT(0,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
     INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
@@ -33,7 +33,7 @@ public enum BuildingType {
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
-    CATHEDRAL(1200,1000,5,null,0,0,0,false,"cathedral", Building.class), //kelisaye jame
+    CATHEDRAL(1200,1000,5,null,0,0,0,true,"cathedral", Building.class), //kelisaye jame
     ARMORER(300,100,3,ResourcesType.WOOD,20,1,0,false,"armorer", Building.class), //zereh sazi
     BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,false,"blacksmith", Building.class), //sakhteman ahangari
     FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Building.class), //kaman sazi

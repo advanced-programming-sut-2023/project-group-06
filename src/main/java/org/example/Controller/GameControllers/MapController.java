@@ -93,17 +93,10 @@ public class MapController {
             return "Invalid coordinates\n";
         String result = "";
         result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
-        StringBuilder soldierString = new StringBuilder("soldiers:\n");
-        for(UnitType unitType : UnitType.values()){
-            int number = 0;
-            for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-                if(soldier.getUnitType() == unitType)
-                    number++;
-            }
-            if(number > 0)
-                soldierString.append(unitType.getName()).append(" : ").append(number).append("\n");
+        result += "soldiers:" + '\n';
+        for (Soldier soldier : currentGame.getTileByCoordinates(y,x).getSoldiers()) {
+            result += soldier.toString() + '\n';
         }
-        result += soldierString;
         String buildingString = "empty\n";
         boolean tree = false;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {

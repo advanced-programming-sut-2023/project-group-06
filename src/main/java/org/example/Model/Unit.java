@@ -49,6 +49,14 @@ public class Unit {
         return YCoordinate;
     }
 
+    public void setXCoordinate(int XCoordinate) {
+        this.XCoordinate = XCoordinate;
+    }
+
+    public void setYCoordinate(int YCoordinate) {
+        this.YCoordinate = YCoordinate;
+    }
+
     public UnitType getUnitType() {
         return unitType;
     }

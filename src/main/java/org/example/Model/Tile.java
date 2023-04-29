@@ -21,7 +21,9 @@ public class Tile {
         this.type = type;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        if (!type.CanBeCrossed()) height = -2;
+        if (!this.type.CanBeCrossed()){
+            height = -2;
+        }
         else height = 0;
     }
 
@@ -71,15 +73,18 @@ public class Tile {
 
     public void setType(TileStructure type) {
         this.type = type;
+        if (!type.CanBeCrossed()) height = -2;
+        else height = 0;
     }
 
     public void setBuilding(Building building) {
         this.building = building;
         if(building == null) return;
+        if (!type.CanBeCrossed()) return;
         if (building instanceof Towers) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
-        else if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
+        else if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType().isCanYouEnterIt()) height = 0;
         else height = -2;
     }
 
@@ -106,5 +111,9 @@ public class Tile {
             if (soldier.getOwner() != ourKingdom) return true;
         }
         return false;
+    }
+
+    public String toString() {
+        return "(" + this.getX() + this.getY() + this.getType() + this.getHeight() + ")";
     }
 }
