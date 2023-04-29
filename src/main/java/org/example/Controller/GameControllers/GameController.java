@@ -282,6 +282,7 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(mainCastle);
         Soldier king = new Soldier(x, y, currentPlayer, UnitType.KING);
+        currentGame.getTileByCoordinates(y,x).addSoldier(king);
         currentPlayer.setKing(king);
         int newX = checkDirection(x, y, newDirection).get(0);
         int newY = checkDirection(x, y, newDirection).get(1);
@@ -575,19 +576,18 @@ public class GameController {
     }
 
     private static void moveUnits() {
-        System.out.println("salam------------salam");
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
-            System.out.println(k.getSoldiers().size());
             for (Soldier s : k.getSoldiers()) {
-                System.out.println(s.getUnitType());
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
-                Tile tileee = s.getWishPlace();
-                if (tileee == null) continue;
-                System.out.println(curTile + "    " + tileee);
-                System.out.println("----------------------------------------------");
-                Deque<Tile> path = pathFinder.findPath(curTile, tileee);
+                Tile wishPlace = s.getWishPlace();
+                if (wishPlace == null) continue;
+                Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
+                if (path == null) {
+                    s.setKingSaidToMove(false);
+                    return;
+                }
                 Tile targetTile = curTile;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
                     targetTile = path.pollFirst();
@@ -597,6 +597,8 @@ public class GameController {
                 }
                 curTile.removeSoldier(s);
                 targetTile.addSoldier(s);
+                s.setXCoordinate(targetTile.getXCoordinate());
+                s.setYCoordinate(targetTile.getYCoordinate());
             }
         }
     }

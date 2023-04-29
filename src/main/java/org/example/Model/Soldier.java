@@ -59,4 +59,8 @@ public class Soldier extends Unit {
     public void subHealth(int hit) {
         health -= hit;
     }
+
+    public String toString() {
+        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername();
+    }
 }
