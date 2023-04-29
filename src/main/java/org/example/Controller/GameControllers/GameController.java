@@ -483,7 +483,7 @@ public class GameController {
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 computeDamages(); // computeDamages
                 destroyDeadBodies(); // destroyDeadBodies
-                moveUnits(); // moveUnits
+                //moveUnits(); // moveUnits
                 kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
                 computeFoods(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
