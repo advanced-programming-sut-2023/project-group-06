@@ -122,7 +122,7 @@ public enum Response {
     INVALID_WEAPON_TYPE("Invalid weapon type!"),
     NOT_ENOUGH_RESOURCES_WEAPON("You don't have enough resources to create this amount of weapons!"),
     CANT_CREATE_ANY_WEAPON_BUILDING("You can't create any weapon in this building!"),
-    NO_SOLDIER_ON_THE_TILE("You have no soldier on this tile!"),
+    NO_SOLDIER_ON_THE_TILE("You have no soldier with that type on this tile!"),
     SELECT_SOLDIER_SUCCESSFUL("Select soldier successful!"),
     WEAPON_BUILDING_MISMATCHING("You can't create this weapon in this building!"),
     WEAPON_CREATED("Weapon created successfully!"),
