@@ -429,11 +429,13 @@ public class GameController {
     public static Response selectUnit(Matcher matcher){
         int x = Integer.parseInt(matcher.group("x"));
         int y = Integer.parseInt(matcher.group("y"));
+        String typeString = Controller.makeEntryValid(matcher.group("type"));
         if(x < 0 || y < 0 || x >= currentGame.getMapWidth() || y >= currentGame.getMapHeight())
             return Response.INVALID_INPUT;
+        UnitType type = UnitType.getSoldierTypeByString(typeString);
         ArrayList<Soldier> soldiers = new ArrayList<>();
         for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            if(soldier.getOwner() == currentPlayer)
+            if(soldier.getOwner() == currentPlayer && soldier.getUnitType() == type)
                 soldiers.add(soldier);
         }
         if(soldiers.size() == 0)
