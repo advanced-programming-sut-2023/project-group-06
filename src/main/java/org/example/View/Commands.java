@@ -45,6 +45,7 @@ public enum Commands {
     SHOW_TAX_RATE("^tax rate show$"),
     SHOW_POPULATION("^show population$"),
     SHOW_WEALTH("^show wealth$"),
+    SHOW_AVAILABLE_ENGINEERS("^show available engineers$"),
     EXIT("^exit$"),
     //Game Menu Commands
     START_THE_GAME("^let's play$"),

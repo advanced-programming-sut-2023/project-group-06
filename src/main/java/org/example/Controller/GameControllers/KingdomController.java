@@ -109,4 +109,10 @@ public class KingdomController {
     public static int showGold() {
         return currentKingdom.getWealth();
     }
+
+    public static String showAvailableEngineers(){
+        String result = "";
+        result += "Available Engineers: " + currentKingdom.getAvailableEngineers() + " pop: " + currentKingdom.getPopulation();
+        return result;
+    }
 }

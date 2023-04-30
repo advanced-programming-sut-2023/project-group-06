@@ -2,6 +2,7 @@ package org.example.Model;
 
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.BuildingGroups.Gate;
 import org.example.Model.BuildingGroups.Towers;
 
 import java.util.ArrayList;
@@ -80,11 +81,12 @@ public class Tile {
     public void setBuilding(Building building) {
         this.building = building;
         if(building == null) return;
+        if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
         if (!type.CanBeCrossed()) return;
-        if (building instanceof Towers) height = 3;
+        if (building instanceof Towers || building instanceof Gate) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
-        else if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType().isCanYouEnterIt()) height = 0;
+        else if(building.getBuildingType().isCanYouEnterIt()) height = 0;
         else height = -2;
     }
 

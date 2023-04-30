@@ -28,12 +28,20 @@ public class SoldierController {
         if(type == null)
             return Response.INVALID_TYPE;
         //check for the target tile todo
+        if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
+                (currentGame.getTileByCoordinates(y, x).getBuilding() != null
+                        && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
+            return Response.CANT_GO_THERE;
+        int number = 0;
         for(Soldier soldier : soldiers){
             if(soldier.getUnitType() == type) {
+                number++;
                 soldier.setKingSaidToMove(true);
                 soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
             }
-        }//what if there are no soldiers with that type?
+        }
+        if(number == 0)
+            return Response.NO_UNITS_WITH_THAT_TYPE;
         return Response.MOVE_SUCCESSFUL;
     }
 

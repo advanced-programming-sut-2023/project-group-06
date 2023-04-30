@@ -124,9 +124,6 @@ public class Producers extends Building{
                 assetOutput = new Resources(4, ResourcesType.ALE);
                 isClickable = false;
                 break;
-            case INN:
-                resourcesInput = new Resources(3, ResourcesType.ALE);
-                break;
         }
     }
 }
