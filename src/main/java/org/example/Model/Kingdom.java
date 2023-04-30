@@ -180,20 +180,6 @@ public class Kingdom {
         }
     }
 
-    public void takeEngineerFromGuild(int count) {
-        int amount = count;
-        for (Storage storage : engineerGuilds) {
-            if (storage.getStored() > 0) {
-                int payment = Math.min(storage.getStored(), amount);
-                storage.addToStored(-1 * payment);
-                amount -= payment;
-            }
-            if (amount == 0) return;
-        }
-    }
-
-
-
     public ArrayList<Storage> getWeapons() {
         return weapons;
     }
@@ -205,6 +191,7 @@ public class Kingdom {
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
     }
+
     public int getAvailableEngineers() {
         int totalEngineers = 0;
         for (Storage storage : engineerGuilds) {

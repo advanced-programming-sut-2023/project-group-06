@@ -119,9 +119,10 @@ public class GameController {
             return Response.INVALID_TYPE;
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        //check for troops or other things on the tile
+        if(currentGame.getTileByCoordinates(y, x).getSoldiers().size() > 0)
+            return Response.TEXTURE_UNDER_UNIT;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
-            return Response.SET_TEXTURE_UNDER_BUILDING;////what if there is a tree here?
+            return Response.SET_TEXTURE_UNDER_BUILDING;
         currentGame.getTileByCoordinates(y, x).setType(type);
         return Response.SET_TEXTURE_SUCCESSFUL;
     }
@@ -142,11 +143,12 @@ public class GameController {
             return Response.INVALID_TYPE;
         if(x1 > x2 || y1 > y2 || x1 < 0 || y1 < 0 || x2 >= currentGame.getMapWidth() || y2 >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        //check for troops or other things on the tiles
         for(int i = x1; i <= x2; i++){
             for(int j = y1; j <= y2; j++){
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
-                    return Response.SET_TEXTURE_UNDER_BUILDING;////what if there is a tree here?
+                    return Response.SET_TEXTURE_UNDER_BUILDING;
+                if(currentGame.getTileByCoordinates(j, i).getSoldiers().size() > 0)
+                    return Response.TEXTURE_UNDER_UNIT;
             }
         }
         for(int i = x1; i <= x2; i++){
@@ -576,7 +578,7 @@ public class GameController {
         //todo
     }
 
-    private static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
+    public static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
         int x = soldier.getXCoordinate();
         int y = soldier.getYCoordinate();
         for (Soldier e : currentGame.getMap()[y][x].getSoldiers())
@@ -733,8 +735,10 @@ public class GameController {
     private static void removeKingdom(Kingdom kingdom){
         for(Soldier soldier : kingdom.getSoldiers())
             currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
+/*
         for(Unit unit : kingdom.getNonSoldierUnits())
             currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
+*/// TODO: 2023-04-30
         for(Building building : kingdom.getBuildings()) {
             int xCenter = building.getXCoordinate();
             int yCenter = building.getYCoordinate();

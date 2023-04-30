@@ -12,6 +12,7 @@ public enum Response {
     INITIALIZE_MAP_SUCCESSFUL("Map initialized successfully!"),
     SET_TEXTURE_SUCCESSFUL("Set texture successful!"),
     POPULATION_EXCEEDED("Population exceeded!"),
+    TEXTURE_UNDER_UNIT("You can't change the ground under a unit!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     NO_REPEATED_NAME("You can't repeat a name!"),
