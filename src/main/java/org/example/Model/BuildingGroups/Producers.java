@@ -126,6 +126,11 @@ public class Producers extends Building{
                 assetOutput = new Resources(4, ResourcesType.ALE);
                 isClickable = false;
                 break;
+            case INN:
+                resourcesInput = new Resources(5, ResourcesType.ALE);
+                assetOutput = new Asset(0);
+                capacity = 20;
+                break;
         }
     }
 }

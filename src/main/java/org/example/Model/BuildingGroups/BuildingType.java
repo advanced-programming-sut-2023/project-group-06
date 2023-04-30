@@ -22,7 +22,7 @@ public enum BuildingType {
     MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,true,"mercenary post", Building.class), //sarbaz khane mozdooran
     ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Storage.class), // senf mohandesan
     KILLING_PIT(0,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
-    INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Storage.class), //mosafer khane
+    INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
     IRON_MINE(100,0,3,ResourcesType.WOOD,20,2,0,false,"iron mine", Producers.class),
     MARKET(300,0,3,ResourcesType.WOOD,5,1,0,false,"market",Building.class),

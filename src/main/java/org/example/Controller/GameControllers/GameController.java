@@ -200,6 +200,9 @@ public class GameController {
                 case OIL_SMELTER:
                     currentPlayer.getOilSmelter().add((Producers) building);
                     break;
+                case INN:
+                    currentPlayer.getInns().add((Producers) building);
+                    break;
             }
         }
         else if(Gate.class.equals(buildingtype.getBuildingClass()))
@@ -220,9 +223,6 @@ public class GameController {
                     break;
                 case STABLE:
                     currentPlayer.getStables().add((Storage) building);
-                    break;
-                case INN:
-                    currentPlayer.getInns().add((Storage) building);
                     break;
                 case ENGINEERS_GUILD:
                     currentPlayer.getEngineerGuilds().add((Storage) building);
@@ -693,7 +693,6 @@ public class GameController {
                 ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
-                Asset output2 = ((Producers) building).getAssetOutput2();
                 //if(building.getBuildingType() == BuildingType.INN)
                 if(building.getBuildingType() == BuildingType.OIL_SMELTER || building.getBuildingType() == BuildingType.QUARRY)
                     ((Producers) building).addToStored(Math.min(((Producers) building).getCapacity() - ((Producers) building).getStored(), output1.getAmount()));
@@ -706,11 +705,10 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
-                    //what if storages are full
                     if(canPay) {
-                        player.addAsset(output1);
-                        if (output2 != null)
-                            player.addAsset(output2);
+                        if(output1.getAmount() != 0) {
+                            player.addAsset(output1);
+                        }
                     }
                 }
             }
