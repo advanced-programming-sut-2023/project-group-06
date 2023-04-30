@@ -728,4 +728,21 @@ public class GameController {
         return null;
         //todo
     }
+
+    private static void removeKingdom(Kingdom kingdom){
+        for(Soldier soldier : kingdom.getSoldiers())
+            currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
+        for(Unit unit : kingdom.getNonSoldierUnits())
+            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
+        for(Building building : kingdom.getBuildings()) {
+            int xCenter = building.getXCoordinate();
+            int yCenter = building.getYCoordinate();
+            int size = (building.getBuildingType().getSize() - 1) / 2;
+            for (int i = xCenter - size; i <= xCenter + size; i++) {
+                for (int j = yCenter - size; j <= yCenter + size; j++)
+                    currentGame.getTileByCoordinates(j, i).setBuilding(null);
+            }
+        }
+        currentGame.removeKingdom(kingdom);
+    }
 }
