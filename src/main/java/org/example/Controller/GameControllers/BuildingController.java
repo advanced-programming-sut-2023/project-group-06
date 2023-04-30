@@ -16,6 +16,7 @@ public class BuildingController {
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
     //  KNIGHT/HORSE ARCHER/EACH SOLDIER NEEDS TWO WEAPON
+    //  HANDLE OIL
 
     public static Response createUnit(Matcher matcher){
         matcher.find();
