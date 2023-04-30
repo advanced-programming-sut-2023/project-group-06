@@ -191,8 +191,17 @@ public class GameController {
         if(currentPlayer.getResourceAmountByType(buildingtype.getResourcesPrice().getType()) < buildingtype.getResourcesPrice().getAmount())
             return Response.NOT_ENOUGH_RESOURCES;
         Building building = null;
-        if (Producers.class.equals(buildingtype.getBuildingClass()))
+        if (Producers.class.equals(buildingtype.getBuildingClass())) {
             building = new Producers(currentPlayer, buildingtype, x, y);
+            switch (buildingtype) {
+                case QUARRY:
+                    currentPlayer.getQuarries().add((Producers) building);
+                    break;
+                case OIL_SMELTER:
+                    currentPlayer.getOilSmelter().add((Producers) building);
+                    break;
+            }
+        }
         else if(Gate.class.equals(buildingtype.getBuildingClass()))
             building = new Gate(currentPlayer, buildingtype, x, y, getDirection(direction));
         else if(Storage.class.equals(buildingtype.getBuildingClass())) {
@@ -211,6 +220,12 @@ public class GameController {
                     break;
                 case STABLE:
                     currentPlayer.getStables().add((Storage) building);
+                    break;
+                case INN:
+                    currentPlayer.getInns().add((Storage) building);
+                    break;
+                case ENGINEERS_GUILD:
+                    currentPlayer.getEngineerGuilds().add((Storage) building);
             }
         }
         else if(Towers.class.equals(buildingtype.getBuildingClass()))
@@ -226,7 +241,7 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
-        currentPlayer.addAvailableEngineers(-1 * buildingtype.getEngineerPrice());
+        currentPlayer.payEngineer(buildingtype.getEngineerPrice());
         currentPlayer.addToPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
@@ -326,7 +341,7 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
-        if(buildingType == BuildingType.INN)
+        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD)
             return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
