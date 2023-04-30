@@ -44,6 +44,7 @@ public class Storage extends Building{
                 break;
             case STABLE:
                 capacity = 4;
+                stored = 4;
                 break;
             case INN:
                 capacity = 20;
@@ -52,6 +53,10 @@ public class Storage extends Building{
                 capacity = 1;
                 break;*/
         }
+    }
+
+    public String toString() {
+        return "capacity: " + capacity + ", stored: " + stored;
     }
 
     //todo remember to handle cows!

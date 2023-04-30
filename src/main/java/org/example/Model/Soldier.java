@@ -21,7 +21,6 @@ public class Soldier extends Unit {
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
         owner.addSoldier(this);
-        owner.addToPopulation(1);
         health = unitType.getHitPoint();
         speed = unitType.getSpeed();
         range = unitType.getRange();
@@ -62,6 +61,6 @@ public class Soldier extends Unit {
     }
 
     public String toString() {
-        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername();
+        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
     }
 }

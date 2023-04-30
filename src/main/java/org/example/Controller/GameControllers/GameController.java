@@ -158,6 +158,7 @@ public class GameController {
     }
 
     public static Response dropBuilding(Matcher matcher){
+        System.out.println("---------------------------------");
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
@@ -341,7 +342,7 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
-        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD)
+        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE)
             return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
@@ -733,8 +734,8 @@ public class GameController {
     private static void removeKingdom(Kingdom kingdom){
         for(Soldier soldier : kingdom.getSoldiers())
             currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-        for(Unit unit : kingdom.getNonSoldierUnits())
-            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
+//        for(Unit unit : kingdom.getNonSoldierUnits())
+//            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
         for(Building building : kingdom.getBuildings()) {
             int xCenter = building.getXCoordinate();
             int yCenter = building.getYCoordinate();
