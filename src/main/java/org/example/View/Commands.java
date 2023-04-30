@@ -91,6 +91,9 @@ public enum Commands {
     //Soldier Menu Commands
     MOVE_UNITES_WITH_TYPE_SINA("(?=.* -x )(?=.* -y )(?=.* -t )^move unit to( -x (?<x>((-?\\d*)|(\\\"-?\\d*\\\")))| -y (?<y>((-?\\d*)|(\\\"-?\\d*\\\")))| -type (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))){3}$"),
     MOVE_UNITES_WITH_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))$"),
+    SHOW_SOLDIERS("^show soldiers$"),
+    SHOW_HORSE("^show horses$"),
+
     ;
 
     private String regex;

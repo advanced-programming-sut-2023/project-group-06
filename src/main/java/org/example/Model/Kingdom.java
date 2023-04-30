@@ -180,19 +180,6 @@ public class Kingdom {
         }
     }
 
-    public void takeEngineerFromGuild(int count) {
-        int amount = count;
-        for (Storage storage : engineerGuilds) {
-            if (storage.getStored() > 0) {
-                int payment = Math.min(storage.getStored(), amount);
-                storage.addToStored(-1 * payment);
-                amount -= payment;
-            }
-            if (amount == 0) return;
-        }
-    }
-
-
 
     public ArrayList<Storage> getWeapons() {
         return weapons;

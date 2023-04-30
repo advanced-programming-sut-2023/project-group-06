@@ -111,7 +111,24 @@ public class KingdomController {
 
     public static String showAvailableEngineers(){
         String result = "";
-        result += "Available Engineers: " + currentKingdom.getUnemployedEngineers() + " pop: " + currentKingdom.getPopulation();
+        result += "Available Engineers: " + currentKingdom.getAvailableEngineers() + " pop: " + currentKingdom.getPopulation();
         return result;
+    }
+
+    public static String showSoldiers() {
+        String output = "all soldiers";
+        for (int i = 0; i < currentKingdom.getSoldiers().size(); i++) {
+            output += "\n" + currentKingdom.getSoldiers().get(i).toString();
+        }
+        return output;
+    }
+
+    public static String showHorses() {
+        String output = "horse number: " + currentKingdom.getHorseNumber() + '\n';
+        output += "all stables:";
+        for (int i = 0; i < currentKingdom.getStables().size(); i++) {
+            output += '\n' + currentKingdom.getStables().get(i).toString();
+        }
+        return output;
     }
 }

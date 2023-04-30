@@ -18,6 +18,7 @@ public class BuildingController {
     //  HANDLE OIL
 
     public static Response createUnit(Matcher matcher){
+        System.out.println(building.getOwner().getPopulation());
         matcher.find();
         String[] groupNames = {"type","count"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
@@ -35,6 +36,7 @@ public class BuildingController {
         int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
         if (numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) return Response.NOT_ENOUGH_WEAPON_UNIT;
+        System.out.println(building.getOwner().getPopulation());
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
@@ -94,7 +96,8 @@ public class BuildingController {
     }
 
     private static Response createUnitBarracks(UnitType type, int count) {
-        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+        System.out.println(building.getOwner().getPopulation());
+        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
         if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
@@ -107,6 +110,7 @@ public class BuildingController {
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
         building.getOwner().addToPopulation(count);
+        System.out.println(building.getOwner().getPopulation());
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
