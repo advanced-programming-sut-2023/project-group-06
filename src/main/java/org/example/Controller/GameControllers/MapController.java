@@ -2,6 +2,7 @@ package org.example.Controller.GameControllers;
 
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.BuildingGroups.Trap;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -17,10 +18,12 @@ public class MapController {
         System.out.println("-");
         for(int i = 0; i < 15; i++){
             String tileColor = currentGame.getTileByCoordinates(y, x - 7 + i).getType().getColorNumber();
-            if(currentGame.getTileByCoordinates(y, x - 7 + i).getSoldiers().size() > 0)
+            if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForVisibleSoldiers(currentGame.currentPlayer()))
                 System.out.print("|" + "\u001B[" + tileColor + "m" + " S " + "\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
-                if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE)
+                if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE &&
+                        !(currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
+                                currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != GameController.currentPlayer))
                     System.out.print("|" + "\u001B[" + tileColor + "m" + " B " + "\u001B[0m");//instance of wall
                 else System.out.print("|" + "\u001B[" + tileColor + "m" + " T " + "\u001B[0m");
             }
@@ -95,12 +98,15 @@ public class MapController {
         result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
         result += "soldiers:" + '\n';
         for (Soldier soldier : currentGame.getTileByCoordinates(y,x).getSoldiers()) {
-            result += soldier.toString() + '\n';
+            if(!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != currentGame.currentPlayer() && GameController.findNearestEnemyTo(soldier, 4) == null))
+                result += soldier.toString() + '\n';
         }
         String buildingString = "empty\n";
         boolean tree = false;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
-            if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE)
+            if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE &&
+                    !(currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
+                            currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != GameController.currentPlayer))
                 buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString().toLowerCase() + "\n";
             else tree = true;
         }
