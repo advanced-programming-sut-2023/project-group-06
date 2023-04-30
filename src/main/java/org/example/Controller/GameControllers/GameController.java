@@ -158,7 +158,6 @@ public class GameController {
     }
 
     public static Response dropBuilding(Matcher matcher){
-        System.out.println("---------------------------------");
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
@@ -612,6 +611,8 @@ public class GameController {
             for(int i = 0; i < k.getSoldiers().size(); i++){
                 if(k.getSoldiers().get(i).getHealth() <= 0){
                     Soldier soldier = k.getSoldiers().get(i);
+                    //todo war caged dogs
+                    currentPlayer.addToPopulation(-1);
                     currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
                     if(k.getSoldiers().get(i).getUnitType() == UnitType.KING) removeKingdom(k);
                     else k.getSoldiers().remove(i);

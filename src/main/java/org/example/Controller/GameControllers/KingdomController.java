@@ -101,7 +101,7 @@ public class KingdomController {
         output += "Spear: " + currentKingdom.getWeaponAmountByType(WeaponType.SPEAR) + '\n';
         output += "Leather armor: " + currentKingdom.getWeaponAmountByType(WeaponType.LEATHER_ARMOR) + '\n';
         output += "Metal armor: " + currentKingdom.getWeaponAmountByType(WeaponType.METAL_ARMOR) +'\n';
-        output += "Oil: " + currentKingdom.getWeaponAmountByType(WeaponType.OIL);
+        output += "Oil: " + currentKingdom.getOilAmount();
         return output;
     }
 
