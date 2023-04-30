@@ -88,7 +88,9 @@ public class Producers extends Building{
                 isClickable = false;
                 break;*/
             case OIL_SMELTER:
-                //todo
+                capacity = 35;
+                resourcesInput = new Resources(0, null);
+                assetOutput = new Weapon(5, WeaponType.OIL);
                 break;
             case HOPS_FARMER:
                 resourcesInput = new Resources(0, null);

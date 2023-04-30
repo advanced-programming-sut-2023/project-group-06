@@ -212,6 +212,13 @@ public class Kingdom {
         }
     }
 
+    public int getOilAmount(){
+        int amount = 0;
+        for(Producers producers : oilSmelter)
+            amount += producers.getStored();
+        return amount;
+    }
+
     public ArrayList<Storage> getEngineerGuilds() {
         return engineerGuilds;
     }
