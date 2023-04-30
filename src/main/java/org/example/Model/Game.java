@@ -128,4 +128,9 @@ public class Game {
         }
         return null;
     }
+
+    public void removeKingdom(Kingdom kingdom){
+        this.kingdoms.remove(kingdom);
+        this.numberOfPlayers--;
+    }
 }

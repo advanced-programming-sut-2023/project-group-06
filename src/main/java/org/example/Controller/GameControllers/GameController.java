@@ -612,7 +612,8 @@ public class GameController {
                 if(k.getSoldiers().get(i).getHealth() <= 0){
                     Soldier soldier = k.getSoldiers().get(i);
                     currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-                    k.getSoldiers().remove(i);
+                    if(k.getSoldiers().get(i).getUnitType() == UnitType.KING) removeKingdom(k);
+                    else k.getSoldiers().remove(i);
                     i--;
                 }
             }
@@ -727,5 +728,22 @@ public class GameController {
     public static Response terminateTheGame(){
         return null;
         //todo
+    }
+
+    private static void removeKingdom(Kingdom kingdom){
+        for(Soldier soldier : kingdom.getSoldiers())
+            currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
+        for(Unit unit : kingdom.getNonSoldierUnits())
+            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
+        for(Building building : kingdom.getBuildings()) {
+            int xCenter = building.getXCoordinate();
+            int yCenter = building.getYCoordinate();
+            int size = (building.getBuildingType().getSize() - 1) / 2;
+            for (int i = xCenter - size; i <= xCenter + size; i++) {
+                for (int j = yCenter - size; j <= yCenter + size; j++)
+                    currentGame.getTileByCoordinates(j, i).setBuilding(null);
+            }
+        }
+        currentGame.removeKingdom(kingdom);
     }
 }
