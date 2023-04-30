@@ -86,6 +86,10 @@ public enum UnitType {
         return defensePower;
     }
 
+    public boolean isArcherType() {
+        return isArcherType;
+    }
+
     public int getSpeed() {
         return speed;
     }

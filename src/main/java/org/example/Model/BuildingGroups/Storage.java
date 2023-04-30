@@ -39,6 +39,12 @@ public class Storage extends Building{
             case STOCKPILE:
                 capacity = 75;
                 break;
+            case ENGINEERS_GUILD:
+                capacity = 16;
+                break;
+            case STABLE:
+                capacity = 4;
+                break;
             /*case OX_TETHER:
                 capacity = 1;
                 break;*/

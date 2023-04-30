@@ -156,6 +156,8 @@ public enum Response {
     ALREADY_CLOSE("The gate is already closed!"),
     NO_GATE_HERE("There is no gate here!"),
     MOVE_SUCCESSFUL("Move successful!"),
+    CANT_GO_THERE("The unit can't go there!"),
+    NO_UNITS_WITH_THAT_TYPE("There are no units with that type here!"),
     ;
     public final String message;
 

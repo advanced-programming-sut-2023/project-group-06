@@ -15,10 +15,9 @@ public class Kingdom {
     private int foodRate = 0;
     private int tax;
     private int wealth;
-    private int population = 1;
+    private int population = 0;
     private int maxPopulation = 9;
     private int fear = 0;
-    private int horseNumber;
     private int availableEngineers;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
@@ -26,6 +25,7 @@ public class Kingdom {
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
     private ArrayList<Storage> weapons = new ArrayList<>();
+    private ArrayList<Storage> stables = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
     private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
@@ -167,11 +167,19 @@ public class Kingdom {
     }
 
     public int getHorseNumber() {
-        return horseNumber;
+        int number = 0;
+        for(Storage storage : stables)
+            number += storage.getStored();
+        return number;
     }
 
-    public void addToHorseNumber(int amount){
-        this.horseNumber += amount;
+    public void takeHorseFromStable(){
+        for(Storage storage : stables){
+            if(storage.getStored() > 0){
+                storage.addToStored(-1);
+                break;
+            }
+        }
     }
 
     public int getAvailableEngineers() {
@@ -186,8 +194,11 @@ public class Kingdom {
         return weapons;
     }
 
-    public void addSoldier(Soldier soldier) {
+    public ArrayList<Storage> getStables() {
+        return stables;
+    }
 
+    public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
     }
 
