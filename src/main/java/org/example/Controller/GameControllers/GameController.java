@@ -597,7 +597,8 @@ public class GameController {
                 if(k.getSoldiers().get(i).getHealth() <= 0){
                     Soldier soldier = k.getSoldiers().get(i);
                     currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-                    k.getSoldiers().remove(i);
+                    if(k.getSoldiers().get(i).getUnitType() == UnitType.KING) removeKingdom(k);
+                    else k.getSoldiers().remove(i);
                     i--;
                 }
             }
