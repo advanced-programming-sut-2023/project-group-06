@@ -4,7 +4,6 @@ import org.example.Model.FoodType;
 import org.example.Model.Kingdom;
 import org.example.Model.ResourcesType;
 import org.example.Model.WeaponType;
-import org.example.View.MainMenu;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -112,7 +111,7 @@ public class KingdomController {
 
     public static String showAvailableEngineers(){
         String result = "";
-        result += "Available Engineers: " + currentKingdom.getAvailableEngineers() + " pop: " + currentKingdom.getPopulation();
+        result += "Available Engineers: " + currentKingdom.getUnemployedEngineers() + " pop: " + currentKingdom.getPopulation();
         return result;
     }
 }

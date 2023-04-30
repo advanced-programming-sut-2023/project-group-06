@@ -12,7 +12,7 @@ public enum UnitType {
     TUNNELER(100, 100, 0.1, 3, 1, 0, 30, 0, 2, null, null, false, true, false, "tunneler", false),
     LADDER_MAN(80, 0, 0.05, 3, 1, 0, 6, 0, 2, null, null, true, false, false, "ladder man", false),
     ENGINEER(80, 0, 0.05, 3, 0, 0, 30, 0, 3, null, null, false, true, false, "engineer", false),
-    SOLDIER_ENGINEER(80, 100, 0.05, 2, 1, 0, 0, 0, 0, WeaponType.OIL, null, false, false, false, "oil engineer", false),
+    OIL_ENGINEER(80, 100, 0.05, 2, 1, 0, 0, 0, 0, WeaponType.OIL, null, false, false, false, "oil engineer", false),
     BLACK_MONK(200, 100, 0.15, 1, 1, 0, 10, 0.2, 0, null, null, false, false, false, "black monk", false),
 
     ARCHER_BOW(200, 100, 0.12, 3, 11, 5, 75, 0.3, 0, WeaponType.BOW, null, false, false, true, "archer bow", true),
@@ -132,5 +132,9 @@ public enum UnitType {
 
     public String getName() {
         return name;
+    }
+
+    public WeaponType getWeapon2() {
+        return weapon2;
     }
 }

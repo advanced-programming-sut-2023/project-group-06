@@ -45,6 +45,9 @@ public class Storage extends Building{
             case STABLE:
                 capacity = 4;
                 break;
+            case INN:
+                capacity = 20;
+                break;
             /*case OX_TETHER:
                 capacity = 1;
                 break;*/
