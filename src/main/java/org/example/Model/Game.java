@@ -1,5 +1,7 @@
 package org.example.Model;
 
+import org.example.Model.BuildingGroups.Tree;
+
 import java.util.ArrayList;
 
 public class Game {
@@ -9,8 +11,8 @@ public class Game {
     private ArrayList<User> players;
     private ArrayList<Kingdom> kingdoms = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
+    private ArrayList<Tree> trees = new ArrayList<>();
     private int turnIndex = 0;
-    private int woodCuttersNumber = 0;
     private int numberOfTurns = 1;
 
     Tile[][] map;
@@ -48,10 +50,6 @@ public class Game {
         return numberOfTurns;
     }
 
-    public void addToWoodCutters(int amount){
-        this.woodCuttersNumber += amount;
-    }
-
     public int getMapWidth() {
         return mapWidth;
     }
@@ -66,6 +64,16 @@ public class Game {
 
     public int getNumberOfPlayers() {
         return numberOfPlayers;
+    }
+
+    public ArrayList<Tree> getTrees() {
+        return trees;
+    }
+
+    public void cutTree(){
+        Tree tree = trees.get(0);
+        this.getTileByCoordinates(tree.getYCoordinate(), tree.getXCoordinate()).setBuilding(null);
+        trees.remove(0);
     }
 
     public void setNewTile(int x, int y, TileStructure type){

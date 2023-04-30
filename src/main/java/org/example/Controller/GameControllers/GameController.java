@@ -125,6 +125,7 @@ public class GameController {
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
+        currentGame.getTrees().add(tree);
         return Response.DROP_TREE_SUCCESSFUL;
     }
 
@@ -706,8 +707,8 @@ public class GameController {
         player.addToHappiness(addToHappiness);
     }
 
-    private static void autoTeleportByCow(Kingdom player){
-        //todo
+    private static void computeWishPlacesCows(){
+
     }
 
     private static void autoProducing(Kingdom player){
@@ -716,10 +717,8 @@ public class GameController {
                 ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
-                //if(building.getBuildingType() == BuildingType.INN)
                 if(building.getBuildingType() == BuildingType.OIL_SMELTER || building.getBuildingType() == BuildingType.QUARRY)
                     ((Producers) building).addToStored(Math.min(((Producers) building).getCapacity() - ((Producers) building).getStored(), output1.getAmount()));
-                //if(building.getBuildingType() == BuildingType....)
                 else {
                     boolean canPay = true;
                     if (InputAmount != 0) {
@@ -728,6 +727,12 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
+                    /*if(building.getBuildingType() == BuildingType.WOODCUTTERS){
+                        if(currentGame.getTrees().size() == 0)
+                            canPay = false;
+                        if(canPay)
+                            currentGame.cutTree();
+                    }*/
                     if(canPay) {
                         if(output1.getAmount() != 0) {
                             player.addAsset(output1);
