@@ -2,6 +2,7 @@ package org.example.Model;
 
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.Model.BuildingGroups.Producers;
 import org.example.Model.BuildingGroups.Storage;
 
 import java.util.ArrayList;
@@ -18,14 +19,17 @@ public class Kingdom {
     private int population = 0;
     private int maxPopulation = 9;
     private int fear = 0;
-    private int availableEngineers;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
-    private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
+
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
     private ArrayList<Storage> weapons = new ArrayList<>();
     private ArrayList<Storage> stables = new ArrayList<>();
+    private ArrayList<Storage> engineerGuilds = new ArrayList<>();
+    private ArrayList<Producers> quarries = new ArrayList<>();
+    private ArrayList<Storage> inns = new ArrayList<>();
+    private ArrayList<Producers> oilSmelter = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
     private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
@@ -45,10 +49,6 @@ public class Kingdom {
 
     public int getHappinessIncrease() {
         return happinessIncrease;
-    }
-
-    public int getEngineers() {
-        return availableEngineers;
     }
 
     public int getHappiness() {
@@ -103,8 +103,6 @@ public class Kingdom {
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
     }
-
-    public void addEngineers(int number) { availableEngineers += number; }
 
     public ArrayList<Building> getBuildings() {
         return buildings;
@@ -182,13 +180,19 @@ public class Kingdom {
         }
     }
 
-    public int getAvailableEngineers() {
-        return availableEngineers;
+    public void takeEngineerFromGuild(int count) {
+        int amount = count;
+        for (Storage storage : engineerGuilds) {
+            if (storage.getStored() > 0) {
+                int payment = Math.min(storage.getStored(), amount);
+                storage.addToStored(-1 * payment);
+                amount -= payment;
+            }
+            if (amount == 0) return;
+        }
     }
 
-    public void addAvailableEngineers(int amount) {
-        this.availableEngineers += amount;
-    }
+
 
     public ArrayList<Storage> getWeapons() {
         return weapons;
@@ -201,15 +205,41 @@ public class Kingdom {
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
     }
-
-    public ArrayList<Unit> getNonSoldierUnits() {
-        return nonSoldierUnits;
+    public int getAvailableEngineers() {
+        int totalEngineers = 0;
+        for (Storage storage : engineerGuilds) {
+            totalEngineers += storage.getStored();
+        }
+        return totalEngineers;
     }
 
-    public void addNonSoldierUnits(Unit unit) {
-        this.nonSoldierUnits.add(unit);
+    public void payEngineer(int count) {
+        int amount = count;
+        for (Storage storage : engineerGuilds) {
+            if (storage.getStored() > 0) {
+                int payment = Math.min(amount, storage.getStored());
+                storage.addToStored(-1 * payment);
+                amount -= payment;
+            }
+            if (amount == 0) break;
+        }
     }
 
+    public ArrayList<Storage> getEngineerGuilds() {
+        return engineerGuilds;
+    }
+
+    public ArrayList<Producers> getQuarries() {
+        return quarries;
+    }
+
+    public ArrayList<Storage> getInns() {
+        return inns;
+    }
+
+    public ArrayList<Producers> getOilSmelter() {
+        return oilSmelter;
+    }
     public ArrayList<TradeRequest> getTradeRequestsSentByMe() {
         return tradeRequestsSentByMe;
     }

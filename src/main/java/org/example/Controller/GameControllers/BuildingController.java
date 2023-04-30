@@ -4,8 +4,8 @@ import org.example.Controller.Controller;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.BuildingGroups.Gate;
-import org.example.Model.BuildingGroups.Towers;
+import org.example.Model.BuildingGroups.Producers;
+import org.example.Model.BuildingGroups.Storage;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -15,7 +15,6 @@ public class BuildingController {
 
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
-    //  KNIGHT/HORSE ARCHER/EACH SOLDIER NEEDS TWO WEAPON
     //  HANDLE OIL
 
     public static Response createUnit(Matcher matcher){
@@ -33,11 +32,14 @@ public class BuildingController {
         if (type.getCost() * count > GameController.currentPlayer.getWealth()) return Response.NOT_ENOUGH_GOLD_UNIT;
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (numberOfWeaponsNeeded > numberOfWeapons) return Response.NOT_ENOUGH_WEAPON_UNIT;
+        int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
+        int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
+        if (numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) return Response.NOT_ENOUGH_WEAPON_UNIT;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
         else if (building.getBuildingType() == BuildingType.CATHEDRAL) response = createUnitCathedral(type, count);
+        else if (building.getBuildingType() == BuildingType.OIL_SMELTER) response = createUnitOilSmelter(type, count);
         else response = Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
         return response;
     }
@@ -95,9 +97,11 @@ public class BuildingController {
         if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
             return Response.NOT_ENOUGH_PEASANT;
         if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+            if (type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) building.getOwner().takeHorseFromStable();
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
@@ -122,14 +126,9 @@ public class BuildingController {
         if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
-        building.getOwner().addAvailableEngineers(count);
+        if (((Storage)building).getCapacity() - ((Storage)building).getStored() < count) return Response.NOT_ENOUGH_SPACE;
         building.getOwner().addToWealth(-1 * type.getCost() * count);
-        for (int i = 0; i < count; i++) {
-            Unit engineer = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
-            GameController.currentPlayer.addNonSoldierUnits(engineer); //todo maybe delete this...
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addToNonSoldierUnits(engineer);
-        }
-        building.getOwner().addToPopulation(count);
+        ((Storage) building).addToStored(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
@@ -139,6 +138,21 @@ public class BuildingController {
         if (!type.getName().equals("black monk")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+        }
+        building.getOwner().addToWealth(-1 * type.getCost() * count);
+        return Response.UNIT_CREATED_SUCCESSFULLY;
+    }
+
+    private static Response createUnitOilSmelter(UnitType type, int count) {
+        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+            return Response.NOT_ENOUGH_PEASANT;
+        if (!type.getName().equals("oil engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        if (building.getOwner().getAvailableEngineers() < count) return Response.NOT_ENOUGH_ENGINEERS;
+        if (((Producers)building).getStored() < count) return Response.NOT_ENOUGH_OIL;
+        building.getOwner().payEngineer(count);
+        for (int i = 0; i < count; i++) {
+            Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.OIL_ENGINEER);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
