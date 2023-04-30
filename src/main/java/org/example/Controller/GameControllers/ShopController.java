@@ -31,10 +31,19 @@ public class ShopController {
         int count = Integer.parseInt(Controller.makeEntryValid(matcher.group("count")));
         if (count <= 0) return Response.INVALID_COUNT;
         if (type == null) return Response.INVALID_RESOURCE_TYPE;
+        if (type == ResourcesType.ALE) return buyAle(count);
         if (currentKingdom.getResourcesCapacity() - currentKingdom.getResourcesAmount() < count) return Response.NOT_ENOUGH_STORAGE;
         if (count * type.getBuyPrice() > currentKingdom.getWealth()) return Response.NOT_ENOUGH_GOLD_BUY;
         currentKingdom.addAsset(new Resources(count,type));
         currentKingdom.addToWealth(-1 * count * type.getBuyPrice());
+        return Response.BUY;
+    }
+
+    private static Response buyAle(int count) {
+        if (currentKingdom.getInnsCapacity() - currentKingdom.getAleAmount() < count) return Response.NOT_ENOUGH_STORAGE;
+        if (count * ResourcesType.ALE.getBuyPrice() > currentKingdom.getWealth()) return Response.NOT_ENOUGH_GOLD_BUY;
+        currentKingdom.addAsset(new Resources(count,ResourcesType.ALE));
+        currentKingdom.addToWealth(-1 * count * ResourcesType.ALE.getBuyPrice());
         return Response.BUY;
     }
 
