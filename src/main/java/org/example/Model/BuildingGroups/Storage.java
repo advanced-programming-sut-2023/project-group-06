@@ -37,21 +37,23 @@ public class Storage extends Building{
                 capacity = 50;
                 break;
             case STOCKPILE:
-                capacity = 75;
+                capacity = 10000;
                 break;
             case ENGINEERS_GUILD:
                 capacity = 16;
                 break;
             case STABLE:
                 capacity = 4;
-                break;
-            case INN:
-                capacity = 20;
+                stored = 4;
                 break;
             /*case OX_TETHER:
                 capacity = 1;
                 break;*/
         }
+    }
+
+    public String toString() {
+        return "capacity: " + capacity + ", stored: " + stored;
     }
 
     //todo remember to handle cows!

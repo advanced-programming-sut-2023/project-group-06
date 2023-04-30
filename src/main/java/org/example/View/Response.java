@@ -161,7 +161,7 @@ public enum Response {
     NO_UNITS_WITH_THAT_TYPE("There are no units with that type here!"),
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
-    NOT_ENOUGH_OIL("You don't have enough oil  to fo this!"),
+    NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
     ;
     public final String message;
 

@@ -101,7 +101,7 @@ public class KingdomController {
         output += "Spear: " + currentKingdom.getWeaponAmountByType(WeaponType.SPEAR) + '\n';
         output += "Leather armor: " + currentKingdom.getWeaponAmountByType(WeaponType.LEATHER_ARMOR) + '\n';
         output += "Metal armor: " + currentKingdom.getWeaponAmountByType(WeaponType.METAL_ARMOR) +'\n';
-        output += "Oil: " + currentKingdom.getWeaponAmountByType(WeaponType.OIL);
+        output += "Oil: " + currentKingdom.getOilAmount();
         return output;
     }
 
@@ -113,5 +113,22 @@ public class KingdomController {
         String result = "";
         result += "Available Engineers: " + currentKingdom.getAvailableEngineers() + " pop: " + currentKingdom.getPopulation();
         return result;
+    }
+
+    public static String showSoldiers() {
+        String output = "all soldiers";
+        for (int i = 0; i < currentKingdom.getSoldiers().size(); i++) {
+            output += "\n" + currentKingdom.getSoldiers().get(i).toString();
+        }
+        return output;
+    }
+
+    public static String showHorses() {
+        String output = "horse number: " + currentKingdom.getHorseNumber() + '\n';
+        output += "all stables:";
+        for (int i = 0; i < currentKingdom.getStables().size(); i++) {
+            output += '\n' + currentKingdom.getStables().get(i).toString();
+        }
+        return output;
     }
 }

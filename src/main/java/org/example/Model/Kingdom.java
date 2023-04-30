@@ -28,7 +28,7 @@ public class Kingdom {
     private ArrayList<Storage> stables = new ArrayList<>();
     private ArrayList<Storage> engineerGuilds = new ArrayList<>();
     private ArrayList<Producers> quarries = new ArrayList<>();
-    private ArrayList<Storage> inns = new ArrayList<>();
+    private ArrayList<Producers> inns = new ArrayList<>();
     private ArrayList<Producers> oilSmelter = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
@@ -180,6 +180,7 @@ public class Kingdom {
         }
     }
 
+
     public ArrayList<Storage> getWeapons() {
         return weapons;
     }
@@ -212,6 +213,13 @@ public class Kingdom {
         }
     }
 
+    public int getOilAmount(){
+        int amount = 0;
+        for(Producers producers : oilSmelter)
+            amount += producers.getStored();
+        return amount;
+    }
+
     public ArrayList<Storage> getEngineerGuilds() {
         return engineerGuilds;
     }
@@ -220,7 +228,7 @@ public class Kingdom {
         return quarries;
     }
 
-    public ArrayList<Storage> getInns() {
+    public ArrayList<Producers> getInns() {
         return inns;
     }
 
@@ -327,15 +335,25 @@ public class Kingdom {
 
     public void payResource(Resources resource){
         int amount = resource.getAmount();
-        for(Storage storage : resources){
-            for(Asset asset : storage.getAssets()){
-                if(((Resources)asset).getType() == resource.getType()){
-                    int cost = Math.min(amount, asset.getAmount());
-                    asset.addToAmount(-1 * cost);
-                    amount -= cost;
-                    storage.addToStored(-1 * cost);
-                    if(amount == 0) return;
+        if(resource.getType() != ResourcesType.ALE) {
+            for (Storage storage : resources) {
+                for (Asset asset : storage.getAssets()) {
+                    if (((Resources) asset).getType() == resource.getType()) {
+                        int cost = Math.min(amount, asset.getAmount());
+                        asset.addToAmount(-1 * cost);
+                        amount -= cost;
+                        storage.addToStored(-1 * cost);
+                        if (amount == 0) return;
+                    }
                 }
+            }
+        }
+        else{
+            for(Producers producers : inns){
+                int payment = -1 * Math.min(producers.getStored(), amount);
+                producers.addToStored(payment);
+                amount -= payment;
+                if(amount == 0) return;
             }
         }
     }
@@ -357,11 +375,17 @@ public class Kingdom {
 
     public int getResourceAmountByType(ResourcesType resourcesType){
         int amount = 0;
-        for(Storage storage : resources){
-            for(Asset asset : storage.getAssets()){
-                if(((Resources)asset).getType() == resourcesType)
-                    amount += asset.getAmount();
+        if(resourcesType != ResourcesType.ALE) {
+            for (Storage storage : resources) {
+                for (Asset asset : storage.getAssets()) {
+                    if (((Resources) asset).getType() == resourcesType)
+                        amount += asset.getAmount();
+                }
             }
+        }
+        else{
+            for(Producers storage : inns)
+                amount += storage.getStored();
         }
         return amount;
     }
@@ -369,16 +393,30 @@ public class Kingdom {
     public int getResourcesAmount() {
         int amount = 0;
         for (Storage storage : resources) {
-            if (storage.getBuildingType() == BuildingType.STOCKPILE) amount += storage.getStored();
+            amount += storage.getStored();
+        }
+        return amount;
+    }
+
+    public int getAleAmount(){
+        int amount = 0;
+        for (Producers producers : inns) {
+            amount += producers.getStored();
         }
         return amount;
     }
 
     public int getResourcesCapacity() {
         int capacity = 0;
-        for (Storage storage : resources) {
-            if (storage.getBuildingType() == BuildingType.STOCKPILE) capacity += storage.getCapacity();
-        }
+        for (Storage storage : resources)
+            capacity += storage.getCapacity();
+        return capacity;
+    }
+
+    public int getInnsCapacity(){
+        int capacity = 0;
+        for (Producers producers : inns)
+            capacity += producers.getCapacity();
         return capacity;
     }
 
@@ -444,7 +482,7 @@ public class Kingdom {
                 storage.addToStored(cost);
             }
         }
-        else if(asset instanceof Resources){
+        else if(asset instanceof Resources && ((Resources) asset).getType() != ResourcesType.ALE){
             for(Storage storage : resources){
                 int cost = Math.min(amount, storage.getCapacity() - storage.getStored());
                 boolean assetTypeFound = false;
@@ -461,6 +499,13 @@ public class Kingdom {
                 }
                 amount -= cost;
                 storage.addToStored(cost);
+            }
+        }
+        else if (asset instanceof Resources && ((Resources)asset).getType() == ResourcesType.ALE) {
+            for(Producers producers : inns){
+                int cost = Math.min(amount, producers.getCapacity() - producers.getStored());
+                producers.addToStored(cost);
+                amount -= cost;
             }
         }
     }

@@ -34,7 +34,7 @@ public class BuildingController {
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
-        if (numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) return Response.NOT_ENOUGH_WEAPON_UNIT;
+        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER) return Response.NOT_ENOUGH_WEAPON_UNIT;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
         else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
         else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
@@ -94,9 +94,9 @@ public class BuildingController {
     }
 
     private static Response createUnitBarracks(UnitType type, int count) {
-        if (GameController.currentPlayer.getMaxPopulation() - count < GameController.currentPlayer.getPopulation())
+        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
-        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer") || type.getName().equals("oil engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
@@ -155,6 +155,7 @@ public class BuildingController {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.OIL_ENGINEER);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
+        ((Producers) building).addToStored(-1 * count);
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }

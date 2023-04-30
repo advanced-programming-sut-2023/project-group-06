@@ -20,9 +20,9 @@ public enum BuildingType {
     ARMORY(500,0,1,ResourcesType.WOOD,5,0,0,false,"armory", Storage.class), //aslahekhane
     BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,true,"barracks", Building.class), // sarbaz khane
     MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,true,"mercenary post", Building.class), //sarbaz khane mozdooran
-    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Building.class), // senf mohandesan
+    ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Storage.class), // senf mohandesan
     KILLING_PIT(0,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
-    INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Storage.class), //mosafer khane
+    INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
     IRON_MINE(100,0,3,ResourcesType.WOOD,20,2,0,false,"iron mine", Producers.class),
     MARKET(300,0,3,ResourcesType.WOOD,5,1,0,false,"market",Building.class),
@@ -42,7 +42,7 @@ public enum BuildingType {
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Trap.class),
     SIEGE_TENT(100,0,1,null,0,0,1,false,"siege tent", Building.class), //chador mohasere
-    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Building.class),
+    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Storage.class),
     APPLE_ORCHARD(100,0,3,ResourcesType.WOOD,5,1,0,false,"apple orchard", Producers.class), //bagh sib
     DIARY_FARMER(100,0,3,ResourcesType.WOOD,10,1,0,false,"diary farmer", Producers.class), //labani
     HOPS_FARMER(100,0,3,ResourcesType.WOOD,15,1,0,false,"hops farmer", Producers.class), //mazrae jo
