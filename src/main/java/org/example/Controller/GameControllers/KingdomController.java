@@ -16,6 +16,7 @@ public class KingdomController {
         result += "Tax: " + currentKingdom.taxEffectOnHappiness(currentKingdom.getTax()) + "\n";
         result += "Fear: " + currentKingdom.getFear() + "\n";
         result += "Religion: " + currentKingdom.getHappinessIncrease() + "\n";
+        result += "Wine usage: " + currentKingdom.wineUsage() + "\n";
         return result;
     }
 

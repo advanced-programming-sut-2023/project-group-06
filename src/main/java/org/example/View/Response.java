@@ -162,6 +162,9 @@ public enum Response {
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
     NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
+    CLOSE_THE_GATE_FIRST("Close The gate first!"),
+    CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
+    DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     ;
     public final String message;
 

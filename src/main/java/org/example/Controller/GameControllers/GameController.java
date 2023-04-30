@@ -43,7 +43,6 @@ public class GameController {
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         else if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
-                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE &&
                 currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() == currentPlayer){
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.MAIN_CASTLE)
                 return Response.CLEAR_MAIN_CASTLE;
@@ -54,6 +53,13 @@ public class GameController {
                 currentPlayer.getWeapons().remove((Storage) (currentGame.getTileByCoordinates(y, x).getBuilding()));
             else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.STOCKPILE)
                 currentPlayer.getResources().remove((Storage) (currentGame.getTileByCoordinates(y, x).getBuilding()));
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.CHURCH)
+                currentPlayer.addToHappinessIncrease(-2);
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.CATHEDRAL)
+                currentPlayer.addToHappinessIncrease(-4);
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.DRAWBRIDGE &&
+                    ((Gate) currentGame.getTileByCoordinates(y, x).getBuilding()).isOpen())
+                return Response.CLOSE_THE_GATE_FIRST;
             int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
             int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
             int size = (currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize() - 1) / 2;
@@ -63,16 +69,14 @@ public class GameController {
                 }
             }
         }
-        for(Unit unit : currentGame.getTileByCoordinates(y, x).getUnits()){
-            if(unit.getOwner() == currentPlayer) {
-                currentGame.getTileByCoordinates(y, x).removeFromNonSoldierUnits(unit);
-                //remove those people from the kingdom
-                //if person instanceof soldier remove from soldiers as well
-                //if it was church ....
-                //set the height back ....
+        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
+            if(soldier.getOwner() == currentPlayer){
+                currentGame.getTileByCoordinates(y, x).removeSoldier(soldier);
+                currentPlayer.getSoldiers().remove(soldier);
+                currentPlayer.addToPopulation(-1);
             }
         }
-        //todo
+        //todo remove nonSoldier Units
         return Response.CLEAR_SUCCESSFUL;
     }
 
@@ -82,8 +86,23 @@ public class GameController {
     }
 
     public static Response dropRuck(Matcher matcher){
-        return null;
-        //todo
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String directionString = matcher.group("direction");
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        int direction = getDirection(directionString);
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!BuildingType.checkGround(BuildingType.ROCK, currentGame.getTileByCoordinates(y, x).getType()))
+            return Response.INVALID_GROUND;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
+            return Response.BUILDING_ALREADY_EXIST;
+        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+            return Response.CANT_PUT_THIS_ON_TROOPS;
+        Building rock = new Building(null, BuildingType.ROCK, x, y, direction);
+        currentGame.getTileByCoordinates(y, x).setBuilding(rock);
+        return Response.DROP_ROCK_SUCCESSFUL;
     }
 
     public static Response dropTree(Matcher matcher){
@@ -102,6 +121,8 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
+        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+            return Response.CANT_PUT_THIS_ON_TROOPS;
         Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
         return Response.DROP_TREE_SUCCESSFUL;
@@ -168,8 +189,9 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        //check for troops
-        if(buildingtype == null || buildingtype == BuildingType.TREE)
+        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+            return Response.CANT_PUT_THIS_ON_TROOPS;
+        if(buildingtype == null || buildingtype == BuildingType.TREE || buildingtype == BuildingType.ROCK)
             return Response.INVALID_TYPE;
         if(buildingtype.getBuildingClass() == Gate.class && direction == null)
             return Response.ENTER_DIRECTION;
@@ -259,8 +281,6 @@ public class GameController {
             currentPlayer.getSoldiers().add(cow);
             ////bugs
         }*/
-        //if(building type == INN) ...
-        //if(building type == ...) ...
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 
@@ -578,7 +598,7 @@ public class GameController {
         //todo
     }
 
-    private static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
+    public static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
         int x = soldier.getXCoordinate();
         int y = soldier.getYCoordinate();
         for (Soldier e : currentGame.getMap()[y][x].getSoldiers())
@@ -666,6 +686,7 @@ public class GameController {
         player.eatFoods(totalFoodUsage);
         player.addToHappiness(newFoodDiversity - 1);
         player.addToHappiness(player.getFoodRate() * 4);
+        player.addToHappiness(player.wineUsage());
     }
 
     private static Response computeFears(Kingdom player){
