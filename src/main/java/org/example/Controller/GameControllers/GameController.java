@@ -125,6 +125,7 @@ public class GameController {
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
+        currentGame.getTrees().add(tree);
         return Response.DROP_TREE_SUCCESSFUL;
     }
 
@@ -224,6 +225,9 @@ public class GameController {
                 case OIL_SMELTER:
                     currentPlayer.getOilSmelter().add((Producers) building);
                     break;
+                case INN:
+                    currentPlayer.getInns().add((Producers) building);
+                    break;
             }
         }
         else if(Gate.class.equals(buildingtype.getBuildingClass()))
@@ -244,9 +248,6 @@ public class GameController {
                     break;
                 case STABLE:
                     currentPlayer.getStables().add((Storage) building);
-                    break;
-                case INN:
-                    currentPlayer.getInns().add((Storage) building);
                     break;
                 case ENGINEERS_GUILD:
                     currentPlayer.getEngineerGuilds().add((Storage) building);
@@ -363,7 +364,7 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
-        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD)
+        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE)
             return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
@@ -633,6 +634,8 @@ public class GameController {
             for(int i = 0; i < k.getSoldiers().size(); i++){
                 if(k.getSoldiers().get(i).getHealth() <= 0){
                     Soldier soldier = k.getSoldiers().get(i);
+                    //todo war caged dogs
+                    currentPlayer.addToPopulation(-1);
                     currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
                     if(k.getSoldiers().get(i).getUnitType() == UnitType.KING) removeKingdom(k);
                     else k.getSoldiers().remove(i);
@@ -704,8 +707,8 @@ public class GameController {
         player.addToHappiness(addToHappiness);
     }
 
-    private static void autoTeleportByCow(Kingdom player){
-        //todo
+    private static void computeWishPlacesCows(){
+
     }
 
     private static void autoProducing(Kingdom player){
@@ -714,11 +717,8 @@ public class GameController {
                 ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
-                Asset output2 = ((Producers) building).getAssetOutput2();
-                //if(building.getBuildingType() == BuildingType.INN)
                 if(building.getBuildingType() == BuildingType.OIL_SMELTER || building.getBuildingType() == BuildingType.QUARRY)
                     ((Producers) building).addToStored(Math.min(((Producers) building).getCapacity() - ((Producers) building).getStored(), output1.getAmount()));
-                //if(building.getBuildingType() == BuildingType....)
                 else {
                     boolean canPay = true;
                     if (InputAmount != 0) {
@@ -727,11 +727,16 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
-                    //what if storages are full
+                    /*if(building.getBuildingType() == BuildingType.WOODCUTTERS){
+                        if(currentGame.getTrees().size() == 0)
+                            canPay = false;
+                        if(canPay)
+                            currentGame.cutTree();
+                    }*/
                     if(canPay) {
-                        player.addAsset(output1);
-                        if (output2 != null)
-                            player.addAsset(output2);
+                        if(output1.getAmount() != 0) {
+                            player.addAsset(output1);
+                        }
                     }
                 }
             }
@@ -756,10 +761,8 @@ public class GameController {
     private static void removeKingdom(Kingdom kingdom){
         for(Soldier soldier : kingdom.getSoldiers())
             currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-/*
-        for(Unit unit : kingdom.getNonSoldierUnits())
-            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
-*/// TODO: 2023-04-30
+//        for(Unit unit : kingdom.getNonSoldierUnits())
+//            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
         for(Building building : kingdom.getBuildings()) {
             int xCenter = building.getXCoordinate();
             int yCenter = building.getYCoordinate();
