@@ -29,4 +29,12 @@ public class Towers extends Building{
                 break;
         }
     }
+
+    public int getDefendRange() {
+        return defendRange;
+    }
+
+    public int getFireRange() {
+        return fireRange;
+    }
 }

@@ -44,6 +44,8 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.showWealth());
             else if (Commands.getMatcher(command,Commands.SHOW_GOLD).find())
                 System.out.println(KingdomController.showGold());
+            else if(Commands.getMatcher(command, Commands.SHOW_AVAILABLE_ENGINEERS).find())
+                System.out.println(KingdomController.showAvailableEngineers());
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

@@ -68,6 +68,8 @@ public class GameController {
                 currentGame.getTileByCoordinates(y, x).removeFromNonSoldierUnits(unit);
                 //remove those people from the kingdom
                 //if person instanceof soldier remove from soldiers as well
+                //if it was church ....
+                //set the height back ....
             }
         }
         //todo
@@ -207,6 +209,8 @@ public class GameController {
                 case ARMORY:
                     currentPlayer.getWeapons().add((Storage) building);
                     break;
+                case STABLE:
+                    currentPlayer.getStables().add((Storage) building);
             }
         }
         else if(Towers.class.equals(buildingtype.getBuildingClass()))
@@ -232,8 +236,7 @@ public class GameController {
             currentPlayer.addToMaxPopulation(8);
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
-        if(buildingtype == BuildingType.STABLE)
-            currentPlayer.addToHorseNumber(4);
+
         /*if(buildingtype == BuildingType.OX_TETHER) {
             Soldier cow = new Soldier(x, y, currentPlayer, UnitType.COW);
             currentPlayer.getSoldiers().add(cow);
@@ -323,6 +326,8 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
+        if(buildingType == BuildingType.INN)
+            return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
         if(buildingType == BuildingType.STOCKPILE && currentPlayer.getResources().size() == 0)
@@ -441,17 +446,22 @@ public class GameController {
                     currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).getSoldiers().size() > 0 ||
                     currentGame.getTileByCoordinates(frontY, frontX).getSoldiers().size() > 0)
                 return Response.CANT_CLOSE;
-            currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+            setGroundBack(currentGame.getTileByCoordinates(frontY, frontX));
             currentGame.getTileByCoordinates(frontY, frontX).setBuilding(null);
-            currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
+            setGroundBack(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x));
             currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(null);
-            currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setHeight(0);
+            setGroundBack(currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x));
             currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(null);
-            //check for tile structure to set the height
             //getTileByCoordinates(frontX, frontY)
         }
         gate.setTheDoor();
         return Response.GATE_CLOSE;
+    }
+
+    private static void setGroundBack(Tile tile){
+        if(tile.getType().CanBeCrossed())
+            tile.setHeight(0);
+        else tile.setHeight(-2);
     }
 
     public static Response setTheGate(Matcher matcher){
@@ -485,7 +495,7 @@ public class GameController {
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
             for(Kingdom kingdom : currentGame.getKingdoms()) {
-                kingdom.addToHappiness(kingdom.getHappinessIncrease());//inn ........
+                kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
@@ -494,7 +504,6 @@ public class GameController {
                 if (kingdom.getWealth() == 0)
                     kingdom.setTax(0);
                 autoProducing(kingdom);
-                //computePopulation  //soldiers and engineers
                 //check if a king died
                 //add from quarry to stockpile
             }
@@ -511,27 +520,45 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for (Soldier s : k.getSoldiers()) {
                 if (!s.isKingSaidToMove())
-                    computeAttackDamageOfSoldier(s);
+                    if(!computeAttackDamageOfSoldier(s))
+                        computeAttackDamageOnBuildings(s);
             }
         }
     }
 
-    private static void computeAttackDamageOfSoldier(Soldier s) {
+    private static boolean computeAttackDamageOfSoldier(Soldier s) {
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
         int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
+        int attackPower = s.getAttackPower();
+        if(s.getUnitType().isArcherType() &&
+                currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+                currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Towers)
+            fightRange += ((Towers) currentGame.getTileByCoordinates(y, x).getBuilding()).getFireRange();
         Soldier enemy = findNearestEnemyTo(s, fightRange);
-        if (enemy == null) return;
+        if (enemy == null) return false;
         int enemyX = enemy.getXCoordinate();
         int enemyY = enemy.getYCoordinate();
+        attackPower += (int) (((double)s.getOwner().getFear() / 20) * attackPower);
+        attackPower -= (int) ((double)attackPower * enemy.getUnitType().getDefensePower());
+        if(Math.random() < s.getUnitType().getPrecision())
+            attackPower = 20;
+        //check for the enemy's defenses ( like portable shield?)
+        //defend range of towers
+        //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
-        if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return;
+        if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
         if (squareOfDistance <= s.getRange() * s.getRange()) {
             s.setWishPlace(currentGame.getMap()[y][x]);
-            enemy.subHealth(s.getAttackPower());
-            return;
+            enemy.subHealth(attackPower);
+            return true;
         }
         s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
+        return true;
+    }
+
+    private static void computeAttackDamageOnBuildings(Soldier s){
+        //todo
     }
 
     private static Soldier findNearestEnemyTo(Soldier soldier, int fightRange) {
