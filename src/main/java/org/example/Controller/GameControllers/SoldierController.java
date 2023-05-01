@@ -119,6 +119,7 @@ public class SoldierController {
         boolean check = true;
         for (Soldier soldier : soldiers) if (soldier.getUnitType() != UnitType.OIL_ENGINEER) check = false;
         if (!check) return Response.INAPPROPRIATE_UNIT;
+        check = false;
         for (Soldier soldier : soldiers) if (soldier.isHasOil()) check = true;
         if (!check) return Response.NO_OIL;
         String[] groupNames = {"direction"};
@@ -138,7 +139,7 @@ public class SoldierController {
             }
         }
         Building thisBuilding;
-        if ((thisBuilding = currentGame.getTileByCoordinates(destinationY,destinationX).getBuilding()) != null)
+        if ((thisBuilding = currentGame.getTileByCoordinates(destinationY,destinationX).getBuilding()) != null && thisBuilding.getOwner() != currentGame.currentPlayer())
             thisBuilding.setFlammable(true);
         PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
         Deque<Tile> path = null;
@@ -185,8 +186,8 @@ public class SoldierController {
     }
 
     private static int directionX(int x, String direction) {
-        if (direction.equals("e")) return x-1;
-        if (direction.equals("w")) return x+1;
+        if (direction.equals("e")) return x+1;
+        if (direction.equals("w")) return x-1;
         return x;
     }
 

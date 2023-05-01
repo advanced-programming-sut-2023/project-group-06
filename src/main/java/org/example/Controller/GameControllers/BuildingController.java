@@ -153,6 +153,7 @@ public class BuildingController {
         building.getOwner().payEngineer(count);
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.OIL_ENGINEER);
+            soldier.setHasOil(true);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
         ((Producers) building).addToStored(-1 * count);

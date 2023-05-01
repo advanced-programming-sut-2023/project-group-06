@@ -1,5 +1,6 @@
 package org.example.Controller.GameControllers;
 
+import org.example.Model.BuildingGroups.Building;
 import org.example.Model.FoodType;
 import org.example.Model.Kingdom;
 import org.example.Model.ResourcesType;
@@ -129,6 +130,14 @@ public class KingdomController {
         output += "all stables:";
         for (int i = 0; i < currentKingdom.getStables().size(); i++) {
             output += '\n' + currentKingdom.getStables().get(i).toString();
+        }
+        return output;
+    }
+
+    public static String showBuildings() {
+        String output = "all buildings:";
+        for (Building building : currentKingdom.getBuildings()) {
+            output += '\n' + building.toString();
         }
         return output;
     }

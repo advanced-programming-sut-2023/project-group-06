@@ -122,7 +122,7 @@ public enum Response {
     INVALID_WEAPON_TYPE("Invalid weapon type!"),
     NOT_ENOUGH_RESOURCES_WEAPON("You don't have enough resources to create this amount of weapons!"),
     CANT_CREATE_ANY_WEAPON_BUILDING("You can't create any weapon in this building!"),
-    NO_SOLDIER_ON_THE_TILE("You have no soldier with that type on this tile!"),
+    NO_SOLDIER_ON_THE_TILE("You have no soldier on this tile!"),
     SELECT_SOLDIER_SUCCESSFUL("Select soldier successful!"),
     WEAPON_BUILDING_MISMATCHING("You can't create this weapon in this building!"),
     WEAPON_CREATED("Weapon created successfully!"),
@@ -162,10 +162,16 @@ public enum Response {
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
     NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
+    INAPPROPRIATE_UNIT("You can't do this action with this unit!"),
+    EMPTY_DIRECTION("Direction field can't be empty!"),
+    OUT_OF_BOUNDARIES("This direction is out of boundaries!"),
+    POUR_OIL("Poured oil successfully!"),
+    NO_OIL("None of the soldiers have oil to pour!"),
     CLOSE_THE_GATE_FIRST("Close The gate first!"),
     CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     PATROL_SUCCESSFUL("The unit will patrol between the places!"),
+    NO_ARMED_OIL_ENGINEER("No armed oil engineer exists in this tile!"),
     ;
     public final String message;
 
@@ -188,6 +194,7 @@ public enum Response {
         if (name.equals("resourceAmount")) return EMPTY_RESOURCE_AMOUNT;
         if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
         if (name.equals("id")) return EMPTY_ID;
+        if (name.equals("direction")) return EMPTY_DIRECTION;
         return null;
     }
 }
