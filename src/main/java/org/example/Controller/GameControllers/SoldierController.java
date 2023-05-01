@@ -52,14 +52,35 @@ public class SoldierController {
     }
 
     public static Response moveUnitWithoutType(Matcher matcher){
-        return null;
-        //todo
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        //check for the target tile todo
+        if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
+                (currentGame.getTileByCoordinates(y, x).getBuilding() != null
+                        && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
+            return Response.CANT_GO_THERE;
+        int number = 0;
+        for(Soldier soldier : soldiers){
+            soldier.setKingSaidToMove(true);
+            soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
+        }
+        return Response.MOVE_SUCCESSFUL;
     }
 
     public static Response patrolUnit(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
+        int x1 = Integer.parseInt(matcher.group("x1"));
+        int x2 = Integer.parseInt(matcher.group("x2"));
+        int y1 = Integer.parseInt(matcher.group("y1"));
+        int y2 = Integer.parseInt(matcher.group("y2"));
+        //todo check target places
+        for(Soldier soldier : soldiers){
+            soldier.setSaidToPatrol(true);
+            soldier.setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
+            soldier.setPatrolWishPlace2(currentGame.getTileByCoordinates(y2, x2));
+        }
+        return Response.PATROL_SUCCESSFUL;
     }
 
     public static Response throwLadder(){

@@ -439,7 +439,9 @@ public class GameController {
                 soldiers.add(soldier);
         }
         if(soldiers.size() == 0)
-            return Response.NO_SOLDIER_ON_THE_TILE;
+            return Response.NO_UNITS_WITH_THAT_TYPE;
+        for(Soldier soldier : soldiers)
+            soldier.setSaidToPatrol(false);
         SoldierController.soldiers = soldiers;
         SoldierController.currentGame = currentGame;
         return Response.SELECT_SOLDIER_SUCCESSFUL;
@@ -534,6 +536,7 @@ public class GameController {
             computeDamages(); // computeDamages
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
+            checkPatrolUnits();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
@@ -670,6 +673,20 @@ public class GameController {
                 targetTile.addSoldier(s);
                 s.setXCoordinate(targetTile.getXCoordinate());
                 s.setYCoordinate(targetTile.getYCoordinate());
+            }
+        }
+    }
+
+    private static void checkPatrolUnits(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Soldier soldier : kingdom.getSoldiers()){
+                if(soldier.isSaidToPatrol()){
+                    if(soldier.getXCoordinate() == soldier.getPatrolWishPlace1().getXCoordinate() &&
+                            soldier.getYCoordinate() == soldier.getPatrolWishPlace1().getYCoordinate()) {
+                        soldier.switchPatrolPlaces();
+                        soldier.setWishPlace(soldier.getPatrolWishPlace1());
+                    }
+                }
             }
         }
     }

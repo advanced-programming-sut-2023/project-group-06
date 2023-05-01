@@ -20,8 +20,8 @@ public class SoldierMenu extends Menu {
             }
             else if((matcher = Commands.getMatcher(command, Commands.MOVE_UNITES_WITH_TYPE)).find())
                 System.out.println(SoldierController.moveUnitWithType(matcher).message);
-            else if ((matcher = Commands.getMatcher(command, Commands.POUR_OIL)).find())
-                System.out.println(SoldierController.pourOil(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.MOVE_UNITES_WITHOUT_TYPE)).find())
+                System.out.println(SoldierController.moveUnitWithoutType(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;
