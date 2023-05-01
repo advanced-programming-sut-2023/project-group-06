@@ -121,6 +121,12 @@ public class Kingdom {
         this.buildings.remove(building);
     }
 
+    public void removeUnit(Unit unit){
+        this.units.remove(unit);
+        if(unit instanceof Soldier)
+            this.soldiers.remove((Soldier) unit);
+    }
+
     public User getOwner() {
         return owner;
     }

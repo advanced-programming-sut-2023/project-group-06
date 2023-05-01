@@ -42,7 +42,7 @@ public class GameController {
         int y = Integer.parseInt(yString);
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        else if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
                 currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() == currentPlayer){
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.MAIN_CASTLE)
                 return Response.CLEAR_MAIN_CASTLE;
@@ -60,6 +60,16 @@ public class GameController {
             else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.DRAWBRIDGE &&
                     ((Gate) currentGame.getTileByCoordinates(y, x).getBuilding()).isOpen())
                 return Response.CLOSE_THE_GATE_FIRST;
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.QUARRY)
+                currentPlayer.getQuarries().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.INN)
+                currentPlayer.getInns().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.ENGINEERS_GUILD)
+                currentPlayer.getEngineerGuilds().remove((Storage) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.STABLE)
+                currentPlayer.getStables().remove((Storage) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.OIL_SMELTER)
+                currentPlayer.getOilSmelter().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
             int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
             int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
             int size = (currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize() - 1) / 2;
@@ -68,16 +78,15 @@ public class GameController {
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
                 }
             }
-            //if the building was stockpile or ... remove it's resources from the kingdom and remove it from resources arraylist
         }
-        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            if(soldier.getOwner() == currentPlayer){
-                currentGame.getTileByCoordinates(y, x).removeSoldier(soldier);
-                currentPlayer.getSoldiers().remove(soldier);
+        for(int i = 0; i < currentGame.getTileByCoordinates(y, x).getAllUnits().size(); i++){
+            Unit unit = currentGame.getTileByCoordinates(y, x).getAllUnits().get(i);
+            if(unit.getOwner() == currentPlayer){
+                currentGame.getTileByCoordinates(y, x).removeUnit(unit);
+                currentPlayer.removeUnit(unit);
                 currentPlayer.addToPopulation(-1);
             }
         }
-        //todo remove nonSoldier Units
         return Response.CLEAR_SUCCESSFUL;
     }
 
@@ -99,7 +108,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Building rock = new Building(null, BuildingType.ROCK, x, y, direction);
         currentGame.getTileByCoordinates(y, x).setBuilding(rock);
@@ -122,7 +131,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
@@ -191,8 +200,6 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
-            return Response.CANT_PUT_THIS_ON_TROOPS;
         if(buildingtype == null || buildingtype == BuildingType.TREE || buildingtype == BuildingType.ROCK)
             return Response.INVALID_TYPE;
         if(buildingtype.getBuildingClass() == Gate.class && direction == null)
@@ -206,6 +213,8 @@ public class GameController {
                     return Response.INVALID_GROUND;
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
                     return Response.BUILDING_ALREADY_EXIST;
+                if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
+                    return Response.CANT_PUT_THIS_ON_TROOPS;
             }
         }
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
