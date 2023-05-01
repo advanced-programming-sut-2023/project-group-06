@@ -164,6 +164,28 @@ public class Kingdom {
         return foods;
     }
 
+    public Producers getRandomQuarry(){
+        ArrayList<Producers> nonEmptyQuarries = new ArrayList<>();
+        for(Producers quarry : quarries){
+            if(quarry.getStored() > 0)
+                nonEmptyQuarries.add(quarry);
+        }
+        if(nonEmptyQuarries.size() == 0)
+            return null;
+        else return nonEmptyQuarries.get((int) (Math.random() * nonEmptyQuarries.size()));
+    }
+
+    public Storage getRandomStockpile(){
+        ArrayList<Storage> nonEmptyStockpiles = new ArrayList<>();
+        for(Storage storage : resources){
+            if(storage.getStored() < storage.getCapacity())
+                nonEmptyStockpiles.add(storage);
+        }
+        if(nonEmptyStockpiles.size() == 0)
+            return null;
+        else return nonEmptyStockpiles.get((int) (Math.random() * nonEmptyStockpiles.size()));
+    }
+
     public int getHorseNumber() {
         int number = 0;
         for(Storage storage : stables)
@@ -447,6 +469,24 @@ public class Kingdom {
             }
         }
         return amount;
+    }
+
+    public void addStoneToStockpile(Unit cow, Storage stockpile){
+        int cost = Math.min(cow.getCowStored(), stockpile.getCapacity() - stockpile.getStored());
+        cow.addToStored(-1 * cost);
+        boolean assetStoneFound = false;
+        for(Asset asset : stockpile.getAssets()){
+            if(((Resources) asset).getType() == ResourcesType.STONE){
+                asset.addToAmount(cost);
+                assetStoneFound = true;
+                break;
+            }
+        }
+        if(!assetStoneFound){
+            Resources newResource = new Resources(cost, ResourcesType.STONE);
+            stockpile.getAssets().add(newResource);
+        }
+        stockpile.addToStored(cost);
     }
 
     public void addAsset(Asset asset){

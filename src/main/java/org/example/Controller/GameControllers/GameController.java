@@ -68,6 +68,7 @@ public class GameController {
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
                 }
             }
+            //if the building was stockpile or ... remove it's resources from the kingdom and remove it from resources arraylist
         }
         for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
             if(soldier.getOwner() == currentPlayer){
@@ -552,6 +553,7 @@ public class GameController {
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
             checkPatrolUnits();
+            //checkCows();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
@@ -730,13 +732,41 @@ public class GameController {
             for(Unit cow : kingdom.getCows()){
                 Tile tile = cow.getWishPlace();
                 if(cow.getXCoordinate() == tile.getXCoordinate() && cow.getYCoordinate() == tile.getYCoordinate() &&
-                        tile.getBuilding() != null){
-                    if(tile.getBuilding().getBuildingType() == BuildingType.STOCKPILE){
-
+                        tile.getBuilding() != null && tile.getBuilding().getBuildingType() != BuildingType.OX_TETHER) {
+                    if (tile.getBuilding().getBuildingType() == BuildingType.STOCKPILE) {
+                        kingdom.addStoneToStockpile(cow, (Storage) tile.getBuilding());
+                        Building building;
+                        if (cow.getCowStored() == 0) building = kingdom.getRandomQuarry();
+                        else building = kingdom.getRandomStockpile();
+                        if (building == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()));
                     }
-                    else if(tile.getBuilding().getBuildingType() == BuildingType.QUARRY){
-
+                    else if (tile.getBuilding().getBuildingType() == BuildingType.QUARRY) {
+                        int cost = Math.min(((Producers) tile.getBuilding()).getStored(), 12 - cow.getCowStored());
+                        ((Producers) tile.getBuilding()).addToStored(-1 * cost);
+                        cow.addToStored(cost);
+                        Building building;
+                        if (cost == 0) building = kingdom.getRandomQuarry();
+                        else building = kingdom.getRandomStockpile();
+                        if (building == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()));
                     }
+                }
+                else if(cow.getXCoordinate() == tile.getXCoordinate() && cow.getYCoordinate() == tile.getYCoordinate()){
+                    Building building1 = kingdom.getRandomStockpile();
+                    Building building2 = kingdom.getRandomQuarry();
+                    if(cow.getCowStored() == 0){
+                        if(building2 == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building2.getYCoordinate(), building2.getXCoordinate()));
+                    }
+                    else if(cow.getCowStored() == 12){
+                        if(building1 == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building1.getYCoordinate(), building1.getXCoordinate()));
+                    }
+                    else if(building1 != null)
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building1.getYCoordinate(), building1.getXCoordinate()));
+                    else if(building2 != null)
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building2.getYCoordinate(), building2.getXCoordinate()));
                 }
             }
         }
