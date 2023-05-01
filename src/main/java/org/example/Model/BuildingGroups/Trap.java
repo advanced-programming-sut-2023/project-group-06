@@ -4,7 +4,7 @@ import org.example.Model.Kingdom;
 
 public class Trap extends Building{
     private int damage;
-    private boolean canBeSeenByEnemy;
+    private boolean canBeSeenByEnemy = false;
     public Trap(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate) {
         super(owner, buildingType, xCoordinate, yCoordinate);
     }
