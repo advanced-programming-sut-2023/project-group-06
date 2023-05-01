@@ -441,8 +441,10 @@ public class GameController {
         if(soldiers.size() == 0)
             return Response.NO_UNITS_WITH_THAT_TYPE;
         for(Soldier soldier : soldiers) {
-            soldier.setSaidToPatrol(false);
-            soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+            if(soldier.isSaidToPatrol()) {
+                soldier.setSaidToPatrol(false);
+                soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+            }
         }
         SoldierController.soldiers = soldiers;
         SoldierController.currentGame = currentGame;
