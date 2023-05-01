@@ -27,11 +27,11 @@ public class Unit {
         this.wishPlace = wishPlace;
     }
 
-    public int getCowCapacity() {
+    public int getCowStored() {
         return cowStored;
     }
 
-    public void addToCapacity(int amount){
+    public void addToStored(int amount){
         this.cowStored += amount;
     }
 
@@ -71,5 +71,9 @@ public class Unit {
 
     public UnitType getUnitType() {
         return unitType;
+    }
+
+    public String cowToString() {
+        return getUnitType().getName() + ": hp: " + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
     }
 }

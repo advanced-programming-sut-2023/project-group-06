@@ -83,6 +83,11 @@ public class Tile {
         this.building = building;
         if(building == null) return;
         if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
+        if(building.getBuildingType() == BuildingType.OX_TETHER){
+            Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getUnits().add(cow);
+            GameController.currentPlayer.getCows().add(cow);
+        }
         if (!type.CanBeCrossed()) return;
         if (building instanceof Towers || building instanceof Gate) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;

@@ -1,9 +1,6 @@
 package org.example.Controller.GameControllers;
 
-import org.example.Model.FoodType;
-import org.example.Model.Kingdom;
-import org.example.Model.ResourcesType;
-import org.example.Model.WeaponType;
+import org.example.Model.*;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -121,6 +118,8 @@ public class KingdomController {
         for (int i = 0; i < currentKingdom.getSoldiers().size(); i++) {
             output += "\n" + currentKingdom.getSoldiers().get(i).toString();
         }
+        for(Unit unit : currentKingdom.getCows())
+            output += "\n" + unit.cowToString();
         return output;
     }
 
