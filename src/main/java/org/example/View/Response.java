@@ -165,6 +165,7 @@ public enum Response {
     CLOSE_THE_GATE_FIRST("Close The gate first!"),
     CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
+    PATROL_SUCCESSFUL("The unit will patrol between the places!"),
     ;
     public final String message;
 
