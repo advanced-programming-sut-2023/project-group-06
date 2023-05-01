@@ -296,13 +296,13 @@ assignees: Arman17Babaei
 </details>
   
 <details>
-  <summary>پاترول کردن سرباز ها </summary>
+  <summary> پاترول کردن سرباز ها و انتقال با گاو </summary>
 
   <div dir="ltr" align='right'>
 
   1. [x] شروع نشده
   2. [x] در حال انجام
-  3. [x] تمام شده
+  3. [ ] تمام شده
   </div>
 </details>
 </div>
