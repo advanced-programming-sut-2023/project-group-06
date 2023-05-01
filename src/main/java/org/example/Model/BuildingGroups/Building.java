@@ -1,7 +1,9 @@
 package org.example.Model.BuildingGroups;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.Kingdom;
 import org.example.Model.Resources;
+import org.example.Model.Tile;
 
 public class Building {
     private int xCoordinate;
@@ -13,6 +15,7 @@ public class Building {
     private BuildingType buildingType;
     private int direction;
     private boolean isFlammable = false;
+    private int lastOiledTurn = -1;
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -92,5 +95,17 @@ public class Building {
 
     public void setFlammable(boolean flammable) {
         isFlammable = flammable;
+        if (flammable) lastOiledTurn = GameController.currentGame.getNumberOfTurns();
+    }
+
+    public int getLastOiledTurn() {
+        return lastOiledTurn;
+    }
+
+    public String toString() {
+        String output = ", x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
+        System.out.println(this.getBuildingType().getName());
+        output += ", is it flammable? " + isFlammable;
+        return output;
     }
 }

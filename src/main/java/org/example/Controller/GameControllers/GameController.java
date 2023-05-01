@@ -545,6 +545,7 @@ public class GameController {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
                 armOilEngineers(kingdom);
+                resetOilState(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
                 //computeFears
@@ -807,6 +808,16 @@ public class GameController {
                     soldier.setHasOil(true);
                 }
             }
+        }
+    }
+
+    private static void resetOilState(Kingdom kingdom) {
+        int difference = 5;
+        for (Building building : kingdom.getBuildings()) {
+            if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference) building.setFlammable(false);
+        }
+        for (Soldier soldier : kingdom.getSoldiers()) {
+            if (currentGame.getNumberOfTurns() - soldier.getLastOiledTurn() >= difference) soldier.setFlammable(false);
         }
     }
 }

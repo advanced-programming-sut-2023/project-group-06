@@ -22,6 +22,7 @@ public class Soldier extends Unit {
     private boolean isSaidToPatrol = false;
     private Tile patrolWishPlace1;
     private Tile patrolWishPlace2;
+    private int lastOiledTurn = -1;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -98,6 +99,7 @@ public class Soldier extends Unit {
 
     public void setFlammable(boolean flammable) {
         isFlammable = flammable;
+        if (flammable) lastOiledTurn = GameController.currentGame.getNumberOfTurns();
     }
 
     public boolean isHasOil() {
@@ -108,7 +110,14 @@ public class Soldier extends Unit {
         this.hasOil = hasOil;
     }
 
+    public int getLastOiledTurn() {
+        return lastOiledTurn;
+    }
+
     public String toString() {
-        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        String output = getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
+        return output;
+
     }
 }
