@@ -45,9 +45,9 @@ public class Tile {
         return yCoordinate;
     }
 
-    public ArrayList<Unit> getUnits() {
-        return nonSoldierUnits;
-    }
+    //public ArrayList<Unit> getUnits() {
+     //   return nonSoldierUnits;
+    //}
 
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
@@ -85,7 +85,7 @@ public class Tile {
         if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
         if(building.getBuildingType() == BuildingType.OX_TETHER){
             Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getUnits().add(cow);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getAllUnits().add(cow);
             GameController.currentPlayer.getCows().add(cow);
         }
         if (!type.CanBeCrossed()) return;

@@ -39,11 +39,11 @@ public enum BuildingType {
     BLACKSMITH(300,100,3,ResourcesType.WOOD,20,1,0,false,"blacksmith", Building.class), //sakhteman ahangari
     FLETCHER(300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Building.class), //kaman sazi
     POLETURNER(300,100,3,ResourcesType.WOOD,10,1,0,false,"poleturner", Building.class), //neyze sazi
-    OIL_SMELTER(300,100,3,ResourcesType.IRON,10,0,1,false,"oil smelter", Producers.class), //karkhane zob
+    OIL_SMELTER(300,100,3,ResourcesType.IRON,10,0,1,true,"oil smelter", Producers.class), //karkhane zob
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Trap.class),
     SIEGE_TENT(100,0,1,null,0,0,1,false,"siege tent", Building.class), //chador mohasere
-    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Storage.class),
+    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,true,"stable", Storage.class),
     APPLE_ORCHARD(100,0,3,ResourcesType.WOOD,5,1,0,false,"apple orchard", Producers.class), //bagh sib
     DIARY_FARMER(100,0,3,ResourcesType.WOOD,10,1,0,false,"diary farmer", Producers.class), //labani
     HOPS_FARMER(100,0,3,ResourcesType.WOOD,15,1,0,false,"hops farmer", Producers.class), //mazrae jo
