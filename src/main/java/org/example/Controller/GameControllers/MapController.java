@@ -20,6 +20,8 @@ public class MapController {
             String tileColor = currentGame.getTileByCoordinates(y, x - 7 + i).getType().getColorNumber();
             if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForVisibleSoldiers(currentGame.currentPlayer()))
                 System.out.print("|" + "\u001B[" + tileColor + "m" + " S " + "\u001B[0m");
+            else if(currentGame.getTileByCoordinates(y, x - 7 + i).getAllUnits().size() > 0)
+                System.out.print("|" + "\u001B[" + tileColor + "m" + " U " + "\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
                 if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE &&
                         currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.ROCK &&

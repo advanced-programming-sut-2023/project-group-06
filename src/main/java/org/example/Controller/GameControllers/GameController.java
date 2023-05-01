@@ -204,12 +204,8 @@ public class GameController {
             for(int j = y - size; j <= y + size; j++){
                 if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType()))
                     return Response.INVALID_GROUND;
-                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
-                    if(currentGame.getTileByCoordinates(j, i).getBuilding() instanceof Trap &&
-                            currentGame.getTileByCoordinates(j, i).getBuilding().getOwner() != currentPlayer)
-                        ((Trap) currentGame.getTileByCoordinates(j, i).getBuilding()).setCanBeSeenByEnemy(true);
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
                     return Response.BUILDING_ALREADY_EXIST;
-                }
             }
         }
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
@@ -256,7 +252,6 @@ public class GameController {
                     break;
                 case ENGINEERS_GUILD:
                     currentPlayer.getEngineerGuilds().add((Storage) building);
-                    break;
             }
         }
         else if(Towers.class.equals(buildingtype.getBuildingClass()))
@@ -265,12 +260,6 @@ public class GameController {
             building = new Trap(currentPlayer, buildingtype, x, y);
         else building  = new Building(currentPlayer, buildingtype, x, y);
         currentPlayer.payResource(buildingtype.getResourcesPrice());
-        if (building.getBuildingType() == BuildingType.CAGED_WAR_DOGS) {
-            for (int i = 0; i < 4; i++) {
-                Soldier soldier = new Soldier(x,y,currentPlayer,UnitType.DOG);
-                currentGame.getTileByCoordinates(y,x).addSoldier(soldier);
-            }
-        }
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
                 currentGame.getTileByCoordinates(j, i).setBuilding(building);
@@ -376,7 +365,7 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
-        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE || buildingType == BuildingType.CAGED_WAR_DOGS)
+        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE)
             return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
@@ -553,12 +542,10 @@ public class GameController {
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
             checkPatrolUnits();
-            //checkCows();
+            checkCows();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
-                armOilEngineers(kingdom);
-                resetOilState(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
                 //computeFears
@@ -567,7 +554,6 @@ public class GameController {
                     kingdom.setTax(0);
                 autoProducing(kingdom);
                 //check if a king died
-                //add from quarry to stockpile
             }
         }
         currentGame.nextTurn();
@@ -673,8 +659,7 @@ public class GameController {
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
-            for (int j = k.getSoldiers().size() - 1; j >= 0; j--) {
-                Soldier s = k.getSoldiers().get(j);
+            for (Unit s : k.getUnits()) {
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
@@ -683,34 +668,18 @@ public class GameController {
                     continue;
                 }
                 Tile targetTile = curTile;
-                boolean check = false;
-                for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
+                for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
                     targetTile = path.pollFirst();
-                    if (isTrapWorking(targetTile, s, k)) {
-                        check = true;
-                    }
-                }
                 if (targetTile == wishPlace){
                     s.setKingSaidToMove(false);
                 }
                 if (targetTile == curTile) continue;
-                curTile.removeSoldier(s);
-                if (!check) targetTile.addSoldier(s);
+                curTile.removeUnit(s);
+                targetTile.addUnit(s);
                 s.setXCoordinate(targetTile.getXCoordinate());
                 s.setYCoordinate(targetTile.getYCoordinate());
             }
         }
-    }
-
-    private static boolean isTrapWorking(Tile tile, Soldier soldier, Kingdom kingdom) {
-        Building building = tile.getBuilding();
-        if (building == null) return false;
-        if (building.getBuildingType() == BuildingType.KILLING_PIT) {
-            kingdom.getSoldiers().remove(soldier); //kill soldier
-            ((Trap)building).setCanBeSeenByEnemy(true);
-            return true;
-        }
-        return false;
     }
 
     private static void checkPatrolUnits(){
@@ -869,26 +838,5 @@ public class GameController {
             }
         }
         currentGame.removeKingdom(kingdom);
-    }
-
-    private static void armOilEngineers(Kingdom kingdom) {
-        for (Producers oilSmelter : kingdom.getOilSmelter()) {
-            for (Soldier soldier : currentGame.getTileByCoordinates(oilSmelter.getYCoordinate(),oilSmelter.getXCoordinate()).getSoldiers()) {
-                if (soldier.getUnitType() == UnitType.OIL_ENGINEER && soldier.getOwner() == kingdom && !soldier.isHasOil() && oilSmelter.getStored() > 0) {
-                    oilSmelter.addToStored(-1);
-                    soldier.setHasOil(true);
-                }
-            }
-        }
-    }
-
-    private static void resetOilState(Kingdom kingdom) {
-        int difference = 5;
-        for (Building building : kingdom.getBuildings()) {
-            if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference) building.setFlammable(false);
-        }
-        for (Soldier soldier : kingdom.getSoldiers()) {
-            if (currentGame.getNumberOfTurns() - soldier.getLastOiledTurn() >= difference) soldier.setFlammable(false);
-        }
     }
 }
