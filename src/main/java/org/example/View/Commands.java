@@ -93,7 +93,7 @@ public enum Commands {
     MOVE_UNITES_WITH_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))$"),
     SHOW_SOLDIERS("^show soldiers$"),
     SHOW_HORSE("^show horses$"),
-
+    POUR_OIL("^pour oil -d (?<direction>[nswer])$")
     ;
 
     private String regex;
