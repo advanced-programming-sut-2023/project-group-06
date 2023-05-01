@@ -23,7 +23,8 @@ public enum UnitType {
     ARABIAN_SWORDSMAN(500, 220, 0.2, 4, 2, 0, 80, 0, 0, WeaponType.SWORDS, WeaponType.LEATHER_ARMOR, false, false, true, "arabian swordsman", false),
     FIRE_THROWER(150, 200, 0.1, 4, 2, 0, 70, 0.1, 0, null, null, false, false, true, "fire throwers", false),
 
-    COW(50, 0, 0, 3, 0, 0, 0, 0, 0, null, null, false, false, false, "cow", false);
+    COW(50, 0, 0, 3, 0, 0, 0, 0, 0, null, null, false, false, false, "cow", false),
+    DOG(200,100,0,4,1,0,0,0,0,null,null,false,false,false,"dog",false),
     ;
     //cow and war dogs?
 

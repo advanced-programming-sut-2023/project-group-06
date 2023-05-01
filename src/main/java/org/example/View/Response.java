@@ -172,6 +172,9 @@ public enum Response {
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     PATROL_SUCCESSFUL("The unit will patrol between the places!"),
     NO_ARMED_OIL_ENGINEER("No armed oil engineer exists in this tile!"),
+    NO_DOG_RELEASE("There is no dogs here to release!"),
+    CAGE_BLOCKED("Cage's door is blocked!"),
+    DOGS_RELEASED("Dogs are released successfully!"),
     ;
     public final String message;
 

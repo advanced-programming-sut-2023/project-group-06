@@ -11,6 +11,11 @@ import java.util.Scanner;
 public class BuildingMenu extends Menu {
     public MenuType run(Scanner scanner) {
         if (BuildingController.isCastleType()) System.out.println("building hit point: " + BuildingController.showBuildingHp());
+        if (BuildingController.isCagedWarDogs()) {
+            System.out.println(BuildingController.releaseDogs().message);
+            System.out.println(Response.CLOSE_BUILDING_MENU.message);
+            return null;
+        }
         while (true) {
             String command = scanner.nextLine();
             if (Commands.getMatcher(command,Commands.CREATE_UNIT).find()) {
