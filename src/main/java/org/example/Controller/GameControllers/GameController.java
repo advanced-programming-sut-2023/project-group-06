@@ -251,6 +251,7 @@ public class GameController {
                     break;
                 case ENGINEERS_GUILD:
                     currentPlayer.getEngineerGuilds().add((Storage) building);
+                    break;
             }
         }
         else if(Towers.class.equals(buildingtype.getBuildingClass()))
@@ -259,6 +260,12 @@ public class GameController {
             building = new Trap(currentPlayer, buildingtype, x, y);
         else building  = new Building(currentPlayer, buildingtype, x, y);
         currentPlayer.payResource(buildingtype.getResourcesPrice());
+        if (building.getBuildingType() == BuildingType.CAGED_WAR_DOGS) {
+            for (int i = 0; i < 4; i++) {
+                Soldier soldier = new Soldier(x,y,currentPlayer,UnitType.DOG);
+                currentGame.getTileByCoordinates(y,x).addSoldier(soldier);
+            }
+        }
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
                 currentGame.getTileByCoordinates(j, i).setBuilding(building);
@@ -364,7 +371,7 @@ public class GameController {
     }
 
     private static boolean IsAdjacentToStorages(int x, int y, BuildingType buildingType){
-        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE)
+        if(buildingType == BuildingType.INN || buildingType == BuildingType.ENGINEERS_GUILD || buildingType == BuildingType.STABLE || buildingType == BuildingType.CAGED_WAR_DOGS)
             return true;
         if(buildingType == BuildingType.GRANARY && currentPlayer.getFoods().size() == 0)
             return true;
