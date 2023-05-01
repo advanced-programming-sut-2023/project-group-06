@@ -694,6 +694,7 @@ public class GameController {
         if (building == null) return false;
         if (building.getBuildingType() == BuildingType.KILLING_PIT) {
             kingdom.getSoldiers().remove(soldier); //kill soldier
+            ((Trap)building).setCanBeSeenByEnemy(true);
             return true;
         }
         return false;
