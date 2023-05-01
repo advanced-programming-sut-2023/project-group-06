@@ -512,6 +512,7 @@ public class GameController {
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
+                armOilEngineers(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
                 //computeFears
@@ -745,5 +746,16 @@ public class GameController {
             }
         }
         currentGame.removeKingdom(kingdom);
+    }
+
+    private static void armOilEngineers(Kingdom kingdom) {
+        for (Producers oilSmelter : kingdom.getOilSmelter()) {
+            for (Soldier soldier : currentGame.getTileByCoordinates(oilSmelter.getYCoordinate(),oilSmelter.getXCoordinate()).getSoldiers()) {
+                if (soldier.getUnitType() == UnitType.OIL_ENGINEER && soldier.getOwner() == kingdom && !soldier.isHasOil() && oilSmelter.getStored() > 0) {
+                    oilSmelter.addToStored(-1);
+                    soldier.setHasOil(true);
+                }
+            }
+        }
     }
 }

@@ -12,7 +12,7 @@ public class Building {
     private int happinessIncrease;
     private BuildingType buildingType;
     private int direction;
-
+    private boolean isFlammable = false;
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -84,5 +84,13 @@ public class Building {
 
     public void setHitPoint(int hitPoint) {
         this.hitPoint = hitPoint;
+    }
+
+    public boolean isFlammable() {
+        return isFlammable;
+    }
+
+    public void setFlammable(boolean flammable) {
+        isFlammable = flammable;
     }
 }

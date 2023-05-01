@@ -137,4 +137,6 @@ public enum UnitType {
     public WeaponType getWeapon2() {
         return weapon2;
     }
+
+
 }
