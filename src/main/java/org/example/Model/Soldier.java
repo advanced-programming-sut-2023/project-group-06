@@ -19,6 +19,9 @@ public class Soldier extends Unit {
     private boolean hasOil = false;
     private boolean isFlammable = false;
     private boolean isArab = false;
+    private boolean isSaidToPatrol = false;
+    private Tile patrolWishPlace1;
+    private Tile patrolWishPlace2;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -29,6 +32,32 @@ public class Soldier extends Unit {
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
+    }
+
+    public void setSaidToPatrol(boolean saidToPatrol) {
+        isSaidToPatrol = saidToPatrol;
+    }
+
+    public boolean isSaidToPatrol() {
+        return isSaidToPatrol;
+    }
+
+    public void setPatrolWishPlace1(Tile patrolWishPlace1) {
+        this.patrolWishPlace1 = patrolWishPlace1;
+    }
+
+    public void setPatrolWishPlace2(Tile patrolWishPlace2) {
+        this.patrolWishPlace2 = patrolWishPlace2;
+    }
+
+    public Tile getPatrolWishPlace1() {
+        return patrolWishPlace1;
+    }
+
+    public void switchPatrolPlaces(){
+        Tile tile = patrolWishPlace1;
+        patrolWishPlace1 = patrolWishPlace2;
+        patrolWishPlace2 = tile;
     }
 
     public int getState() {

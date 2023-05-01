@@ -1,5 +1,6 @@
 package org.example.Model;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Gate;
@@ -113,6 +114,23 @@ public class Tile {
             if (soldier.getOwner() != ourKingdom) return true;
         }
         return false;
+    }
+
+    public boolean checkForVisibleSoldiers(Kingdom kingdom){
+        boolean result = false;
+        for(Soldier soldier : soldiers){
+            if(!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != kingdom)) {
+                result = true;
+                break;
+            }
+            else{
+                if(GameController.findNearestEnemyTo(soldier, 4) != null) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 
     public String toString() {

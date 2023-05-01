@@ -20,7 +20,6 @@ public class Kingdom {
     private int maxPopulation = 9;
     private int fear = 0;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
-
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
@@ -148,10 +147,6 @@ public class Kingdom {
         this.wealth += wealth;
     }
 
-    public void setMaxPopulation(int maxPopulation) {
-        this.maxPopulation = maxPopulation;
-    }
-
     public void setFear(int fear) {
         this.fear = fear;
     }
@@ -180,6 +175,12 @@ public class Kingdom {
         }
     }
 
+    public int wineUsage(){
+        int amount = 0;
+        for(Producers producers : inns)
+            amount += Math.min(producers.getStored(), 5);
+        return (int) ((double) amount * 0.4);
+    }
 
     public ArrayList<Storage> getWeapons() {
         return weapons;
@@ -192,6 +193,7 @@ public class Kingdom {
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
     }
+
     public int getAvailableEngineers() {
         int totalEngineers = 0;
         for (Storage storage : engineerGuilds) {

@@ -12,6 +12,7 @@ public enum Response {
     INITIALIZE_MAP_SUCCESSFUL("Map initialized successfully!"),
     SET_TEXTURE_SUCCESSFUL("Set texture successful!"),
     POPULATION_EXCEEDED("Population exceeded!"),
+    TEXTURE_UNDER_UNIT("You can't change the ground under a unit!"),
     NOT_ENOUGH_MONEY("You don't have enough money to build this building!"),
     CANT_PLAY_ALONE("You can't play alone, choose some opponents!"),
     NO_REPEATED_NAME("You can't repeat a name!"),
@@ -166,6 +167,10 @@ public enum Response {
     OUT_OF_BOUNDARIES("This direction is out of boundaries!"),
     POUR_OIL("Poured oil successfully!"),
     NO_OIL("At least one of the soldiers has no oil!"),
+    CLOSE_THE_GATE_FIRST("Close The gate first!"),
+    CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
+    DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
+    PATROL_SUCCESSFUL("The unit will patrol between the places!"),
     ;
     public final String message;
 

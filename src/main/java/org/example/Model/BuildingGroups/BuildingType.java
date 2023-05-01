@@ -8,6 +8,7 @@ import org.example.View.Response;
 
 public enum BuildingType {
     TREE(100, 0, 1, null, 0, 0, 0, false, "tree",Tree.class),
+    ROCK(100, 0, 1, null, 0, 0, 0, false, "rock",Gate.class),
     SMALL_STONE_GATEHOUSE(1000,0,3,null,0,0,0,true,"small stone gatehouse",Gate.class),
     BIG_STONE_GATEHOUSE(2000,0,5,ResourcesType.STONE,20,0,0,true,"big stone gatehouse", Gate.class),
     KEEP(0,0,7,null,0,0,0,true,"keep", Towers.class), //maghar
@@ -109,6 +110,8 @@ public enum BuildingType {
             return false;
         else if(buildingType == TREE)
             return tileStructure == TileStructure.DENSE_MEADOW;
+        else if(buildingType == ROCK)
+            return tileStructure == TileStructure.ROCK || tileStructure == TileStructure.STONE;
         else if(buildingType.getBuildingClass() == Towers.class)
             return tileStructure != TileStructure.ROCK && tileStructure != TileStructure.STONE;
         else return tileStructure == TileStructure.PEBBLE ||
