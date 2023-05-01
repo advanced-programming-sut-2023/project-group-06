@@ -10,6 +10,7 @@ public class Unit {
     private UnitType unitType;
     private Tile wishPlace;
     boolean isKingSaidToMove = false;
+    private int cowStored;
 
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
@@ -25,6 +26,14 @@ public class Unit {
 
     public void setWishPlace(Tile wishPlace) {
         this.wishPlace = wishPlace;
+    }
+
+    public int getCowCapacity() {
+        return cowStored;
+    }
+
+    public void addToCapacity(int amount){
+        this.cowStored += amount;
     }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {

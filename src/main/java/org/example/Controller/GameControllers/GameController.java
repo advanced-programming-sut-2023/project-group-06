@@ -725,6 +725,23 @@ public class GameController {
         }
     }
 
+    private static void checkCows(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Unit cow : kingdom.getCows()){
+                Tile tile = cow.getWishPlace();
+                if(cow.getXCoordinate() == tile.getXCoordinate() && cow.getYCoordinate() == tile.getYCoordinate() &&
+                        tile.getBuilding() != null){
+                    if(tile.getBuilding().getBuildingType() == BuildingType.STOCKPILE){
+
+                    }
+                    else if(tile.getBuilding().getBuildingType() == BuildingType.QUARRY){
+
+                    }
+                }
+            }
+        }
+    }
+
     private static void computeFoods(Kingdom player){
         double rate = 1 + ((double)player.getFoodRate() / 2);
         int totalFoodUsage = (int)(rate * player.getMaxPopulation());
@@ -758,10 +775,6 @@ public class GameController {
             addToWealth = 0.2 * tax - 0.4;
         player.addToWealth((int)(addToWealth * player.getMaxPopulation()));
         player.addToHappiness(addToHappiness);
-    }
-
-    private static void computeWishPlacesCows(){
-
     }
 
     private static void autoProducing(Kingdom player){

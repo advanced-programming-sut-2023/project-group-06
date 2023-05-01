@@ -20,6 +20,7 @@ public class Kingdom {
     private int maxPopulation = 9;
     private int fear = 0;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Unit> cows = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
     private ArrayList<Storage> foods = new ArrayList<>();
@@ -59,6 +60,10 @@ public class Kingdom {
                 this.getFoodAmountByType(FoodType.CHEESE) +
                 this.getFoodAmountByType(FoodType.MEAT) +
                 this.getFoodAmountByType(FoodType.BREAD);
+    }
+
+    public ArrayList<Unit> getCows() {
+        return cows;
     }
 
     public int getFoodRate() {
@@ -236,6 +241,7 @@ public class Kingdom {
     public ArrayList<Producers> getOilSmelter() {
         return oilSmelter;
     }
+
     public ArrayList<TradeRequest> getTradeRequestsSentByMe() {
         return tradeRequestsSentByMe;
     }
