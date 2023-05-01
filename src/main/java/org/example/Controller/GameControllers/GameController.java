@@ -660,7 +660,8 @@ public class GameController {
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
-            for (Soldier s : k.getSoldiers()) {
+            for (int j = k.getSoldiers().size() - 1; j >= 0; j--) {
+                Soldier s = k.getSoldiers().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
@@ -669,18 +670,33 @@ public class GameController {
                     continue;
                 }
                 Tile targetTile = curTile;
-                for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++)
+                boolean check = false;
+                for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
                     targetTile = path.pollFirst();
+                    if (isTrapWorking(targetTile, s, k)) {
+                        check = true;
+                    }
+                }
                 if (targetTile == wishPlace){
                     s.setKingSaidToMove(false);
                 }
                 if (targetTile == curTile) continue;
                 curTile.removeSoldier(s);
-                targetTile.addSoldier(s);
+                if (!check) targetTile.addSoldier(s);
                 s.setXCoordinate(targetTile.getXCoordinate());
                 s.setYCoordinate(targetTile.getYCoordinate());
             }
         }
+    }
+
+    private static boolean isTrapWorking(Tile tile, Soldier soldier, Kingdom kingdom) {
+        Building building = tile.getBuilding();
+        if (building == null) return false;
+        if (building.getBuildingType() == BuildingType.KILLING_PIT) {
+            kingdom.getSoldiers().remove(soldier); //kill soldier
+            return true;
+        }
+        return false;
     }
 
     private static void checkPatrolUnits(){
