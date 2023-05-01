@@ -542,7 +542,7 @@ public class GameController {
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
             checkPatrolUnits();
-            //checkCows();
+            checkCows();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
@@ -554,7 +554,6 @@ public class GameController {
                     kingdom.setTax(0);
                 autoProducing(kingdom);
                 //check if a king died
-                //add from quarry to stockpile
             }
         }
         currentGame.nextTurn();
@@ -660,7 +659,7 @@ public class GameController {
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
-            for (Soldier s : k.getSoldiers()) {
+            for (Unit s : k.getUnits()) {
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
@@ -675,8 +674,8 @@ public class GameController {
                     s.setKingSaidToMove(false);
                 }
                 if (targetTile == curTile) continue;
-                curTile.removeSoldier(s);
-                targetTile.addSoldier(s);
+                curTile.removeUnit(s);
+                targetTile.addUnit(s);
                 s.setXCoordinate(targetTile.getXCoordinate());
                 s.setYCoordinate(targetTile.getYCoordinate());
             }

@@ -10,6 +10,8 @@ public class Unit {
     private Tile wishPlace;
     boolean isKingSaidToMove = false;
     private int cowStored;
+    private int speed;
+    private int health;
 
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
@@ -39,7 +41,10 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
+        owner.addUnit(this);
         this.unitType = unitType;
+        this.speed = unitType.getSpeed();
+        health = unitType.getHitPoint();
         wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
     }
 
@@ -47,10 +52,19 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
+        owner.addUnit(this);
     }
 
     public Kingdom getOwner() {
         return owner;
+    }
+
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void addToSpeed(int amount){
+        this.speed += amount;
     }
 
     public int getXCoordinate() {
@@ -75,5 +89,17 @@ public class Unit {
 
     public String cowToString() {
         return getUnitType().getName() + ": hp: " + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void subHealth(int hit) {
+        health -= hit;
+    }
+
+    public String toString() {
+        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
     }
 }

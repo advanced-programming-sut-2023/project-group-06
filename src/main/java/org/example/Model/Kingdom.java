@@ -20,6 +20,7 @@ public class Kingdom {
     private int maxPopulation = 9;
     private int fear = 0;
     private ArrayList<Soldier> soldiers = new ArrayList<>();
+    private ArrayList<Unit> units = new ArrayList<>();
     private ArrayList<Unit> cows = new ArrayList<>();
     private ArrayList<Building> buildings = new ArrayList<>();
     private ArrayList<Storage> resources = new ArrayList<>();
@@ -64,6 +65,10 @@ public class Kingdom {
 
     public ArrayList<Unit> getCows() {
         return cows;
+    }
+
+    public ArrayList<Unit> getUnits() {
+        return units;
     }
 
     public int getFoodRate() {
@@ -219,6 +224,10 @@ public class Kingdom {
 
     public void addSoldier(Soldier soldier) {
         this.soldiers.add(soldier);
+    }
+
+    public void addUnit(Unit unit){
+        this.units.add(unit);
     }
 
     public int getAvailableEngineers() {

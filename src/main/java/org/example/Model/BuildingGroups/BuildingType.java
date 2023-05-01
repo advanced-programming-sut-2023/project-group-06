@@ -29,8 +29,8 @@ public enum BuildingType {
     MARKET(300,0,3,ResourcesType.WOOD,5,1,0,false,"market",Building.class),
     OX_TETHER(100,0,1,ResourcesType.WOOD,5,1,0,true,"ox tether", Producers.class), //afsar gav
     PITCH_RIG(100,0,3,ResourcesType.WOOD,20,1,0,false,"pitch rig", Producers.class), //dakal ghir
-    QUARRY(300,0,3,ResourcesType.WOOD,20,3,0,false,"quarry", Producers.class), //maadan sang
-    STOCKPILE(500,0,1,null,0,0,0,false,"stockpile", Storage.class), //anbar
+    QUARRY(300,0,3,ResourcesType.WOOD,20,3,0,true,"quarry", Producers.class), //maadan sang
+    STOCKPILE(500,0,1,null,0,0,0,true,"stockpile", Storage.class), //anbar
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
