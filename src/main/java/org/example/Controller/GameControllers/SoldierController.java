@@ -79,6 +79,8 @@ public class SoldierController {
             soldier.setSaidToPatrol(true);
             soldier.setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
             soldier.setPatrolWishPlace2(currentGame.getTileByCoordinates(y2, x2));
+            soldier.setWishPlace(soldier.getPatrolWishPlace1());
+            soldier.setKingSaidToMove(true);
         }
         return Response.PATROL_SUCCESSFUL;
     }
