@@ -12,50 +12,55 @@ public class MapController {
     public static Game currentGame;
     public static int currentX;
     public static int currentY;
-    public static void showMapRow(int x, int y){
+    public static String showMapRow(int x, int y){
+        StringBuilder result = new StringBuilder();
         for(int i = 0; i < 60; i++)
-            System.out.print("-");
-        System.out.println("-");
+            result.append("-");
+        result.append("-\n");
         for(int i = 0; i < 15; i++){
             String tileColor = currentGame.getTileByCoordinates(y, x - 7 + i).getType().getColorNumber();
             if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForVisibleSoldiers(currentGame.currentPlayer()))
-                System.out.print("|" + "\u001B[" + tileColor + "m" + " S " + "\u001B[0m");
+                result.append("|" + "\u001B[").append(tileColor).append("m").append(" S ").append("\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForCows())
-                System.out.print("|" + "\u001B[" + tileColor + "m" + " C " + "\u001B[0m");
+                result.append("|" + "\u001B[").append(tileColor).append("m").append(" C ").append("\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
                 if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE &&
                         currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.ROCK &&
                         !(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() instanceof Trap &&
                                 currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getOwner() != GameController.currentPlayer &&
                                 !((Trap) currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding()).canBeSeenByEnemy()))
-                    System.out.print("|" + "\u001B[" + tileColor + "m" + " B " + "\u001B[0m");//instance of wall
-                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.TREE) System.out.print("|" + "\u001B[" + tileColor + "m" + " T " + "\u001B[0m");
-                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.ROCK) System.out.println("|" + "\u001B[" + tileColor + "m" + " R " + "\u001B[0m");
-                else System.out.print("|" + "\u001B[" + tileColor + "m" + "   " + "\u001B[0m");
+                    result.append("|" + "\u001B[").append(tileColor).append("m").append(" B ").append("\u001B[0m");
+                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.TREE) result.append("|" + "\u001B[").append(tileColor).append("m").append(" T ").append("\u001B[0m");
+                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.ROCK) result.append("|" + "\u001B[").append(tileColor).append("m").append(" R ").append("\u001B[0m");
+                else result.append("|" + "\u001B[").append(tileColor).append("m").append("   ").append("\u001B[0m");
             }
-            else System.out.print("|" + "\u001B[" + tileColor + "m" + "   " + "\u001B[0m");
+            else result.append("|" + "\u001B[").append(tileColor).append("m").append("   ").append("\u001B[0m");
         }
-        System.out.println("|");
+        result.append("|\n");
+        return result.toString();
     }
 
-    public static void showMap(int x, int y){
+    public static String showMap(int x, int y){
         currentX = x;
         currentY = y;
-        showMapRow(x, y - 2);
-        showMapRow(x, y - 1);
-        showMapRow(x, y);
-        showMapRow(x, y + 1);
-        showMapRow(x, y + 2);
+        StringBuilder result = new StringBuilder();
+        result.append(showMapRow(x, y - 2));
+        result.append(showMapRow(x, y - 1));
+        result.append(showMapRow(x, y));
+        result.append(showMapRow(x, y + 1));
+        result.append(showMapRow(x, y + 2));
         for(int i = 0; i < 60; i++)
-            System.out.print("-");
-        System.out.println("-");
+            result.append("-");
+        result.append("-\n");
+        return result.toString();
     }
 
-    public static void moveMap(String input){
+    public static String moveMap(String input){
         int left = 0;
         int right = 0;
         int up = 0;
         int down = 0;
+        String result = "";
         Matcher matcher;
         matcher = Pattern.compile("up").matcher(input);
         while(matcher.find())
@@ -85,12 +90,13 @@ public class MapController {
         int newX = currentX + right - left;
         int newY = currentY + down - up;
         if(newX < 7 || newX > GameController.currentGame.getMapWidth() - 8 || newY < 2 || newY > GameController.currentGame.getMapHeight() - 3)
-            System.out.println("Can't show the map outside the boundaries");
+            result += "Can't show the map outside the boundaries";
         else{
             currentX = newX;
             currentY = newY;
-            showMap(currentX, currentY);
+            result += showMap(currentX, currentY);
         }
+        return result;
     }
 
     public static String showDetails(Matcher matcher){
