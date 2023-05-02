@@ -151,7 +151,7 @@ public class GameController {
             return Response.INVALID_TYPE;
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        if(currentGame.getTileByCoordinates(y, x).getSoldiers().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.TEXTURE_UNDER_UNIT;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.SET_TEXTURE_UNDER_BUILDING;
@@ -179,7 +179,7 @@ public class GameController {
             for(int j = y1; j <= y2; j++){
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
                     return Response.SET_TEXTURE_UNDER_BUILDING;
-                if(currentGame.getTileByCoordinates(j, i).getSoldiers().size() > 0)
+                if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
                     return Response.TEXTURE_UNDER_UNIT;
             }
         }
@@ -282,8 +282,11 @@ public class GameController {
             currentPlayer.addToHappinessIncrease(2);
         if(buildingtype == BuildingType.CATHEDRAL)
             currentPlayer.addToHappinessIncrease(4);
-        if(buildingtype == BuildingType.HOVEL || buildingtype == BuildingType.SMALL_STONE_GATEHOUSE)
+        if(buildingtype == BuildingType.HOVEL || buildingtype == BuildingType.SMALL_STONE_GATEHOUSE) {
             currentPlayer.addToMaxPopulation(8);
+            if(buildingtype == BuildingType.SMALL_STONE_GATEHOUSE && currentPlayer.getTax() < 8)
+                currentPlayer.setTax(currentPlayer.getTax() + 1);
+        }
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
         return Response.DROP_BUILDING_SUCCESSFUL;
