@@ -11,6 +11,7 @@ import org.example.View.Response;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Deque;
 import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
@@ -80,7 +81,7 @@ public class SoldierController {
             soldier.setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
             soldier.setPatrolWishPlace2(currentGame.getTileByCoordinates(y2, x2));
             soldier.setWishPlace(soldier.getPatrolWishPlace1());
-            soldier.setKingSaidToMove(true);
+            soldier.setKingSaidToMove(false);
         }
         return Response.PATROL_SUCCESSFUL;
     }
@@ -97,10 +98,20 @@ public class SoldierController {
         //after select unit
     }
 
-    public static Response setUnitPosition(Matcher matcher){
-        return null;
-        //todo
-        //after select unit
+    public static Response setUnitState(Matcher matcher){
+        String stateString = matcher.group("state");
+        int state;
+        if(Objects.equals(stateString, "offensive"))
+            state = 2;
+        else if(Objects.equals(stateString, "standing"))
+            state = 1;
+        else if(Objects.equals(stateString, "defensive"))
+            state = 0;
+        else return Response.INVALID_STATE;
+        for(Soldier soldier : soldiers){
+            soldier.setState(state);
+        }
+        return Response.SET_STATE_SUCCESSFUL;
     }
 
     public static Response fireAtEnemy(Matcher matcher){

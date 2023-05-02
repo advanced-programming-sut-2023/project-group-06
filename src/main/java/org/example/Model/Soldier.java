@@ -5,17 +5,14 @@ import org.example.Controller.GameControllers.GameController;
 public class Soldier extends Unit {
     private int attackPower;
     private double defensePower;
-    private int speed;
     private int range;
     private int secondRange = 0;
     private int precision;
     private int delay;
-    private int health;
     private int state = 1; // 0 --> defensive   1 --> standing  2 --> offensive
     private boolean isCapableOfClimbing;
     private boolean canThrowLadders;
     private boolean canDigDitch;
-    private boolean visibility;
     private boolean hasOil = false;
     private boolean isFlammable = false;
     private boolean isArab = false;
@@ -27,8 +24,6 @@ public class Soldier extends Unit {
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
         owner.addSoldier(this);
-        health = unitType.getHitPoint();
-        speed = unitType.getSpeed();
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
@@ -77,20 +72,12 @@ public class Soldier extends Unit {
         return secondRange;
     }
 
-    public int getSpeed() {
-        return speed;
-    }
-
     public int getAttackPower() {
         return attackPower;
     }
 
-    public int getHealth() {
-        return health;
-    }
-
-    public void subHealth(int hit) {
-        health -= hit;
+    public void setState(int state) {
+        this.state = state;
     }
 
     public boolean isFlammable() {
@@ -112,12 +99,5 @@ public class Soldier extends Unit {
 
     public int getLastOiledTurn() {
         return lastOiledTurn;
-    }
-
-    public String toString() {
-        String output = getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
-        output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
-        return output;
-
     }
 }

@@ -42,7 +42,7 @@ public class GameController {
         int y = Integer.parseInt(yString);
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        else if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
                 currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() == currentPlayer){
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.MAIN_CASTLE)
                 return Response.CLEAR_MAIN_CASTLE;
@@ -60,6 +60,16 @@ public class GameController {
             else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.DRAWBRIDGE &&
                     ((Gate) currentGame.getTileByCoordinates(y, x).getBuilding()).isOpen())
                 return Response.CLOSE_THE_GATE_FIRST;
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.QUARRY)
+                currentPlayer.getQuarries().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.INN)
+                currentPlayer.getInns().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.ENGINEERS_GUILD)
+                currentPlayer.getEngineerGuilds().remove((Storage) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.STABLE)
+                currentPlayer.getStables().remove((Storage) currentGame.getTileByCoordinates(y, x).getBuilding());
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.OIL_SMELTER)
+                currentPlayer.getOilSmelter().remove((Producers) currentGame.getTileByCoordinates(y, x).getBuilding());
             int xCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getXCoordinate();
             int yCenter = currentGame.getTileByCoordinates(y, x).getBuilding().getYCoordinate();
             int size = (currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().getSize() - 1) / 2;
@@ -69,14 +79,14 @@ public class GameController {
                 }
             }
         }
-        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            if(soldier.getOwner() == currentPlayer){
-                currentGame.getTileByCoordinates(y, x).removeSoldier(soldier);
-                currentPlayer.getSoldiers().remove(soldier);
+        for(int i = 0; i < currentGame.getTileByCoordinates(y, x).getAllUnits().size(); i++){
+            Unit unit = currentGame.getTileByCoordinates(y, x).getAllUnits().get(i);
+            if(unit.getOwner() == currentPlayer){
+                currentGame.getTileByCoordinates(y, x).removeUnit(unit);
+                currentPlayer.removeUnit(unit);
                 currentPlayer.addToPopulation(-1);
             }
         }
-        //todo remove nonSoldier Units
         return Response.CLEAR_SUCCESSFUL;
     }
 
@@ -98,7 +108,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Building rock = new Building(null, BuildingType.ROCK, x, y, direction);
         currentGame.getTileByCoordinates(y, x).setBuilding(rock);
@@ -121,7 +131,7 @@ public class GameController {
             return Response.INVALID_GROUND;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.BUILDING_ALREADY_EXIST;
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.CANT_PUT_THIS_ON_TROOPS;
         Tree tree = new Tree(x, y, type);
         currentGame.getTileByCoordinates(y, x).setBuilding(tree);
@@ -141,7 +151,7 @@ public class GameController {
             return Response.INVALID_TYPE;
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        if(currentGame.getTileByCoordinates(y, x).getSoldiers().size() > 0)
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.TEXTURE_UNDER_UNIT;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.SET_TEXTURE_UNDER_BUILDING;
@@ -169,7 +179,7 @@ public class GameController {
             for(int j = y1; j <= y2; j++){
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
                     return Response.SET_TEXTURE_UNDER_BUILDING;
-                if(currentGame.getTileByCoordinates(j, i).getSoldiers().size() > 0)
+                if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
                     return Response.TEXTURE_UNDER_UNIT;
             }
         }
@@ -190,8 +200,6 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        if(currentGame.getTileByCoordinates(y, x).getUnits().size() > 0)
-            return Response.CANT_PUT_THIS_ON_TROOPS;
         if(buildingtype == null || buildingtype == BuildingType.TREE || buildingtype == BuildingType.ROCK)
             return Response.INVALID_TYPE;
         if(buildingtype.getBuildingClass() == Gate.class && direction == null)
@@ -204,11 +212,13 @@ public class GameController {
                 if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType()))
                     return Response.INVALID_GROUND;
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
-                    if(currentGame.getTileByCoordinates(j, i).getBuilding() instanceof Trap &&
+                    if (currentGame.getTileByCoordinates(j, i).getBuilding() instanceof Trap &&
                             currentGame.getTileByCoordinates(j, i).getBuilding().getOwner() != currentPlayer)
                         ((Trap) currentGame.getTileByCoordinates(j, i).getBuilding()).setCanBeSeenByEnemy(true);
                     return Response.BUILDING_ALREADY_EXIST;
                 }
+                if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
+                    return Response.CANT_PUT_THIS_ON_TROOPS;
             }
         }
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
@@ -283,16 +293,13 @@ public class GameController {
             currentPlayer.addToHappinessIncrease(2);
         if(buildingtype == BuildingType.CATHEDRAL)
             currentPlayer.addToHappinessIncrease(4);
-        if(buildingtype == BuildingType.HOVEL || buildingtype == BuildingType.SMALL_STONE_GATEHOUSE)
+        if(buildingtype == BuildingType.HOVEL || buildingtype == BuildingType.SMALL_STONE_GATEHOUSE) {
             currentPlayer.addToMaxPopulation(8);
+            if(buildingtype == BuildingType.SMALL_STONE_GATEHOUSE && currentPlayer.getTax() < 8)
+                currentPlayer.setTax(currentPlayer.getTax() + 1);
+        }
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
-
-        /*if(buildingtype == BuildingType.OX_TETHER) {
-            Soldier cow = new Soldier(x, y, currentPlayer, UnitType.COW);
-            currentPlayer.getSoldiers().add(cow);
-            ////bugs
-        }*/
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 
@@ -552,6 +559,7 @@ public class GameController {
             destroyDeadBodies(); // destroyDeadBodies
             moveUnits(); // moveUnits
             checkPatrolUnits();
+            checkCows();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
@@ -565,7 +573,6 @@ public class GameController {
                     kingdom.setTax(0);
                 autoProducing(kingdom);
                 //check if a king died
-                //add from quarry to stockpile
             }
         }
         currentGame.nextTurn();
@@ -671,8 +678,8 @@ public class GameController {
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
-            for (int j = k.getSoldiers().size() - 1; j >= 0; j--) {
-                Soldier s = k.getSoldiers().get(j);
+            for (int j = k.getUnits().size() - 1; j >= 0; j--) {
+                Unit s = k.getSoldiers().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
@@ -692,8 +699,8 @@ public class GameController {
                     s.setKingSaidToMove(false);
                 }
                 if (targetTile == curTile) continue;
-                curTile.removeSoldier(s);
-                if (!check) targetTile.addSoldier(s);
+                curTile.removeUnit(s);
+                if (!check) targetTile.addUnit(s);
                 s.setXCoordinate(targetTile.getXCoordinate());
                 s.setYCoordinate(targetTile.getYCoordinate());
             }
@@ -720,6 +727,51 @@ public class GameController {
                         soldier.switchPatrolPlaces();
                         soldier.setWishPlace(soldier.getPatrolWishPlace1());
                     }
+                }
+            }
+        }
+    }
+
+    private static void checkCows(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Unit cow : kingdom.getCows()){
+                Tile tile = cow.getWishPlace();
+                if(cow.getXCoordinate() == tile.getXCoordinate() && cow.getYCoordinate() == tile.getYCoordinate() &&
+                        tile.getBuilding() != null && tile.getBuilding().getBuildingType() != BuildingType.OX_TETHER) {
+                    if (tile.getBuilding().getBuildingType() == BuildingType.STOCKPILE) {
+                        kingdom.addStoneToStockpile(cow, (Storage) tile.getBuilding());
+                        Building building;
+                        if (cow.getCowStored() == 0) building = kingdom.getRandomQuarry();
+                        else building = kingdom.getRandomStockpile();
+                        if (building == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()));
+                    }
+                    else if (tile.getBuilding().getBuildingType() == BuildingType.QUARRY) {
+                        int cost = Math.min(((Producers) tile.getBuilding()).getStored(), 12 - cow.getCowStored());
+                        ((Producers) tile.getBuilding()).addToStored(-1 * cost);
+                        cow.addToStored(cost);
+                        Building building;
+                        if (cost == 0) building = kingdom.getRandomQuarry();
+                        else building = kingdom.getRandomStockpile();
+                        if (building == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()));
+                    }
+                }
+                else if(cow.getXCoordinate() == tile.getXCoordinate() && cow.getYCoordinate() == tile.getYCoordinate()){
+                    Building building1 = kingdom.getRandomStockpile();
+                    Building building2 = kingdom.getRandomQuarry();
+                    if(cow.getCowStored() == 0){
+                        if(building2 == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building2.getYCoordinate(), building2.getXCoordinate()));
+                    }
+                    else if(cow.getCowStored() == 12){
+                        if(building1 == null) return;
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building1.getYCoordinate(), building1.getXCoordinate()));
+                    }
+                    else if(building1 != null)
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building1.getYCoordinate(), building1.getXCoordinate()));
+                    else if(building2 != null)
+                        cow.setWishPlace(currentGame.getTileByCoordinates(building2.getYCoordinate(), building2.getXCoordinate()));
                 }
             }
         }
@@ -758,10 +810,6 @@ public class GameController {
             addToWealth = 0.2 * tax - 0.4;
         player.addToWealth((int)(addToWealth * player.getMaxPopulation()));
         player.addToHappiness(addToHappiness);
-    }
-
-    private static void computeWishPlacesCows(){
-
     }
 
     private static void autoProducing(Kingdom player){

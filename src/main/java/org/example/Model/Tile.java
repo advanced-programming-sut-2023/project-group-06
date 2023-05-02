@@ -45,9 +45,9 @@ public class Tile {
         return yCoordinate;
     }
 
-    public ArrayList<Unit> getUnits() {
-        return nonSoldierUnits;
-    }
+    //public ArrayList<Unit> getUnits() {
+     //   return nonSoldierUnits;
+    //}
 
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
@@ -83,6 +83,12 @@ public class Tile {
         this.building = building;
         if(building == null) return;
         if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType() == BuildingType.KILLING_PIT) height = 0;
+        if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
+        if(building.getBuildingType() == BuildingType.OX_TETHER){
+            Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getAllUnits().add(cow);
+            GameController.currentPlayer.getCows().add(cow);
+        }
         if (!type.CanBeCrossed()) return;
         if (building instanceof Towers || building instanceof Gate) height = 3;
         else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
@@ -96,6 +102,12 @@ public class Tile {
         allUnits.add(soldier);
     }
 
+    public void addUnit(Unit unit){
+        allUnits.add(unit);
+        if(unit instanceof Soldier)
+            soldiers.add((Soldier) unit);
+    }
+
     public void addToNonSoldierUnits(Unit unit) {
         this.nonSoldierUnits.add(unit);
         this.allUnits.add(unit);
@@ -107,6 +119,13 @@ public class Tile {
 
     public void removeSoldier(Soldier soldier) {
         this.soldiers.remove(soldier);
+        this.allUnits.remove(soldier);
+    }
+
+    public void removeUnit(Unit unit){
+        this.allUnits.remove(unit);
+        if(unit instanceof Soldier)
+            this.soldiers.remove((Soldier) unit);
     }
 
     public boolean existEnemyOnThisTile(Kingdom ourKingdom) {
@@ -131,6 +150,14 @@ public class Tile {
             }
         }
         return result;
+    }
+
+    public boolean checkForCows(){
+        for(Unit unit : this.allUnits){
+            if(unit.getUnitType() == UnitType.COW)
+                return true;
+        }
+        return false;
     }
 
     public String toString() {

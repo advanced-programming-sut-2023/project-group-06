@@ -27,10 +27,10 @@ public enum BuildingType {
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
     IRON_MINE(100,0,3,ResourcesType.WOOD,20,2,0,false,"iron mine", Producers.class),
     MARKET(300,0,3,ResourcesType.WOOD,5,1,0,false,"market",Building.class),
-    OX_TETHER(100,0,1,ResourcesType.WOOD,5,1,0,false,"ox tether", Storage.class), //afsar gav
+    OX_TETHER(100,0,1,ResourcesType.WOOD,5,1,0,true,"ox tether", Producers.class), //afsar gav
     PITCH_RIG(100,0,3,ResourcesType.WOOD,20,1,0,false,"pitch rig", Producers.class), //dakal ghir
-    QUARRY(300,0,3,ResourcesType.WOOD,20,3,0,false,"quarry", Producers.class), //maadan sang
-    STOCKPILE(500,0,1,null,0,0,0,false,"stockpile", Storage.class), //anbar
+    QUARRY(300,0,3,ResourcesType.WOOD,20,3,0,true,"quarry", Producers.class), //maadan sang
+    STOCKPILE(500,0,1,null,0,0,0,true,"stockpile", Storage.class), //anbar
     WOODCUTTERS(100,0,3,ResourcesType.WOOD,3,1,0,false,"woodcutter",Producers.class),
     HOVEL(100,0,3,ResourcesType.WOOD,6,0,0,false,"hovel",Building.class), //khane
     CHURCH(800,250,3,null,0,0,0,false,"church",Building.class), //kelisa
@@ -43,7 +43,7 @@ public enum BuildingType {
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Storage.class),
     SIEGE_TENT(100,0,1,null,0,0,1,false,"siege tent", Building.class), //chador mohasere
-    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,false,"stable", Storage.class),
+    STABLE(300,400,3,ResourcesType.WOOD,20,0,0,true,"stable", Storage.class),
     APPLE_ORCHARD(100,0,3,ResourcesType.WOOD,5,1,0,false,"apple orchard", Producers.class), //bagh sib
     DIARY_FARMER(100,0,3,ResourcesType.WOOD,10,1,0,false,"diary farmer", Producers.class), //labani
     HOPS_FARMER(100,0,3,ResourcesType.WOOD,15,1,0,false,"hops farmer", Producers.class), //mazrae jo

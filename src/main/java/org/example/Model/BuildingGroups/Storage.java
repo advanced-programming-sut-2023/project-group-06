@@ -1,5 +1,6 @@
 package org.example.Model.BuildingGroups;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.*;
 
 import java.util.ArrayList;
@@ -8,8 +9,6 @@ public class Storage extends Building{
     private int capacity;
     private int stored = 0;
     private ArrayList<Asset> assets = new ArrayList<>();
-//    private Unit cow = null;
-
 
     public ArrayList<Asset> getAssets() {
         return assets;

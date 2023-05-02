@@ -91,13 +91,13 @@ public enum Commands {
     //Soldier Menu Commands
     MOVE_UNITES_WITH_TYPE_SINA("(?=.* -x )(?=.* -y )(?=.* -t )^move unit to( -x (?<x>((-?\\d*)|(\\\"-?\\d*\\\")))| -y (?<y>((-?\\d*)|(\\\"-?\\d*\\\")))| -type (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))){3}$"),
     MOVE_UNITES_WITH_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>(((\"[^\"]*\")|\\S*)))$"),
+    MOVE_UNITES_WITHOUT_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     SHOW_SOLDIERS("^show soldiers$"),
     SHOW_HORSE("^show horses$"),
     PATROL("patrol unit -x1 (?<x1>(\\-)?\\d+) -y1 (?<y1>(\\-)?\\d+) -x2 (?<x2>(\\-)?\\d+) -y2 (?<y2>(\\-)?\\d+)"),
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
-    MOVE_UNITES_WITHOUT_TYPE("^move unit to -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
-    SHOW_BUILDINGS("^show buildings$")
-
+    SHOW_BUILDINGS("^show buildings$"),
+    SET_STATE("set -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -s (?<state>(((\\\"[^\\\"]*\\\")|\\S*)))"),
     ;
 
     private String regex;

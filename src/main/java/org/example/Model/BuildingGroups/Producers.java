@@ -1,5 +1,6 @@
 package org.example.Model.BuildingGroups;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.*;
 import org.example.View.Menu;
 import org.example.View.MenuType;
@@ -130,6 +131,11 @@ public class Producers extends Building{
                 resourcesInput = new Resources(5, ResourcesType.ALE);
                 assetOutput = new Asset(0);
                 capacity = 20;
+                break;
+            case OX_TETHER:
+                resourcesInput = new Resources(0, null);
+                assetOutput = new Asset(0);
+                capacity = 1;
                 break;
         }
     }
