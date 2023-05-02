@@ -1,6 +1,7 @@
 package org.example.Controller.GameControllers;
 
 import org.example.Model.*;
+import org.example.Model.BuildingGroups.Building;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -128,6 +129,15 @@ public class KingdomController {
         output += "all stables:";
         for (int i = 0; i < currentKingdom.getStables().size(); i++) {
             output += '\n' + currentKingdom.getStables().get(i).toString();
+        }
+        return output;
+    }
+
+    public static String showBuildings() {
+        String output = "all buildings:";
+        for (Building building : currentKingdom.getBuildings()) {
+            output += '\n' + building.toString();
+
         }
         return output;
     }
