@@ -691,7 +691,7 @@ public class GameController {
                 boolean check = false;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
                     targetTile = path.pollFirst();
-                    if (isTrapWorking(targetTile, s, k)) {
+                    if (s instanceof Soldier && isTrapWorking(targetTile, (Soldier) s, k)) {
                         check = true;
                     }
                 }

@@ -100,4 +100,10 @@ public class Soldier extends Unit {
     public int getLastOiledTurn() {
         return lastOiledTurn;
     }
+
+    public String toString() {
+        String output = getUnitType().getName() + ": hp: " + this.getHealth() + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
+        return output;
+    }
 }
