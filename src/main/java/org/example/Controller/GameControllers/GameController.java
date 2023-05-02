@@ -203,8 +203,12 @@ public class GameController {
             for(int j = y - size; j <= y + size; j++){
                 if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType()))
                     return Response.INVALID_GROUND;
-                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
+                    if(currentGame.getTileByCoordinates(j, i).getBuilding() instanceof Trap &&
+                            currentGame.getTileByCoordinates(j, i).getBuilding().getOwner() != currentPlayer)
+                        ((Trap) currentGame.getTileByCoordinates(j, i).getBuilding()).setCanBeSeenByEnemy(true);
                     return Response.BUILDING_ALREADY_EXIST;
+                }
             }
         }
         if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
