@@ -102,7 +102,7 @@ public class Soldier extends Unit {
     }
 
     public String toString() {
-        String output = getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        String output = getUnitType().getName() + ": hp: " + getHealth() + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
         output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
         return output;
     }

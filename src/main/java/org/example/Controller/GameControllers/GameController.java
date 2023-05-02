@@ -46,6 +46,8 @@ public class GameController {
                 currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() == currentPlayer){
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.MAIN_CASTLE)
                 return Response.CLEAR_MAIN_CASTLE;
+            if(x == currentPlayer.getKing().getXCoordinate() && y == currentPlayer.getKing().getYCoordinate())
+                return Response.CANT_REMOVE_THE_KING;
             currentPlayer.removeBuilding(currentGame.getTileByCoordinates(y, x).getBuilding());
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.GRANARY)
                 currentPlayer.getFoods().remove((Storage) (currentGame.getTileByCoordinates(y, x).getBuilding()));
@@ -91,8 +93,41 @@ public class GameController {
     }
 
     public static Response dropUnit(Matcher matcher){
-        return null;
-        //todo
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        String typeString = Controller.makeEntryValid(matcher.group("type"));
+        int count = Integer.parseInt(matcher.group("count"));
+        UnitType type = UnitType.getSoldierTypeByString(typeString);
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(type == null)
+            return Response.INVALID_TYPE;
+        if (count <= 0)
+            return Response.INVALID_COUNT;
+        if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed())
+            return Response.INVALID_GROUND;
+        if (type.getCost() * count > GameController.currentPlayer.getWealth())
+            return Response.NOT_ENOUGH_GOLD_UNIT;
+        int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
+        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
+        int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
+        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
+            return Response.NOT_ENOUGH_WEAPON_UNIT;
+        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
+            return Response.NOT_ENOUGH_PEASANT;
+        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && currentPlayer.getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
+        for (int i = 0; i < count; i++) {
+            Soldier soldier = new Soldier(x, y, currentPlayer, type);
+            GameController.currentGame.getTileByCoordinates(y, x).addSoldier(soldier);
+            if (type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) currentPlayer.takeHorseFromStable();
+        }
+        currentPlayer.addToWealth(-1 * type.getCost() * count);
+        if (type.getWeapon() != null) currentPlayer.useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        if (type.getWeapon2() != null) currentPlayer.useWeaponToCreateUnit(new Weapon(numberOfWeapons2Needed,type.getWeapon2()));
+        if(!type.isArab())
+            currentPlayer.addToPopulation(count);
+        return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
     public static Response dropRuck(Matcher matcher){
@@ -149,13 +184,27 @@ public class GameController {
         TileStructure type = TileStructure.getTileStructureByString(tileType);
         if(type == null)
             return Response.INVALID_TYPE;
-        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+        int size = 0;
+        if(type == TileStructure.SMALL_LAKE)
+            size = 1;
+        else if(type == TileStructure.BIG_LAKE)
+            size = 2;
+        if(x - size < 0 || x + size >= currentGame.getMapWidth() || y - size < 0 || y + size >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
-            return Response.TEXTURE_UNDER_UNIT;
-        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
-            return Response.SET_TEXTURE_UNDER_BUILDING;
-        currentGame.getTileByCoordinates(y, x).setType(type);
+        for(int i = x - size; i <= x + size; i++){
+            for(int j = y - size; j <= y + size; j++){
+                if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
+                    return Response.TEXTURE_UNDER_UNIT;
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
+                    if(currentGame.getTileByCoordinates(j, i).getBuilding().getBuildingType() == BuildingType.TREE)
+                        return Response.SET_TEXTURE_UNDER_TREE;
+                    if(currentGame.getTileByCoordinates(j, i).getBuilding().getBuildingType() == BuildingType.ROCK)
+                        return Response.SET_TEXTURE_UNDER_ROCK;
+                    return Response.SET_TEXTURE_UNDER_BUILDING;
+                }
+                currentGame.getTileByCoordinates(j, i).setType(type);
+            }
+        }
         return Response.SET_TEXTURE_SUCCESSFUL;
     }
 
@@ -171,14 +220,19 @@ public class GameController {
         int y1 = Integer.parseInt(y1String);
         int y2 = Integer.parseInt(y2String);
         TileStructure type = TileStructure.getTileStructureByString(tileType);
-        if(type == null)
+        if(type == null || type == TileStructure.SMALL_LAKE || type == TileStructure.BIG_LAKE)
             return Response.INVALID_TYPE;
         if(x1 > x2 || y1 > y2 || x1 < 0 || y1 < 0 || x2 >= currentGame.getMapWidth() || y2 >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         for(int i = x1; i <= x2; i++){
             for(int j = y1; j <= y2; j++){
-                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null)
+                if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
+                    if(currentGame.getTileByCoordinates(j, i).getBuilding().getBuildingType() == BuildingType.TREE)
+                        return Response.SET_TEXTURE_UNDER_TREE;
+                    if(currentGame.getTileByCoordinates(j, i).getBuilding().getBuildingType() == BuildingType.ROCK)
+                        return Response.SET_TEXTURE_UNDER_ROCK;
                     return Response.SET_TEXTURE_UNDER_BUILDING;
+                }
                 if(currentGame.getTileByCoordinates(j, i).getAllUnits().size() > 0)
                     return Response.TEXTURE_UNDER_UNIT;
             }
@@ -679,7 +733,7 @@ public class GameController {
         PathFinder pathFinder = new PathFinder(map);
         for (Kingdom k : currentGame.getKingdoms()) {
             for (int j = k.getUnits().size() - 1; j >= 0; j--) {
-                Unit s = k.getSoldiers().get(j);
+                Unit s = k.getUnits().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
@@ -691,7 +745,7 @@ public class GameController {
                 boolean check = false;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
                     targetTile = path.pollFirst();
-                    if (isTrapWorking(targetTile, s, k)) {
+                    if (isTrapWorking(targetTile, (Soldier) s, k)) {
                         check = true;
                     }
                 }
@@ -780,15 +834,7 @@ public class GameController {
     private static void computeFoods(Kingdom player){
         double rate = 1 + ((double)player.getFoodRate() / 2);
         int totalFoodUsage = (int)(rate * player.getMaxPopulation());
-        int newFoodDiversity = 0;
-        if(player.getFoodAmountByType(FoodType.CHEESE) > 0)
-            newFoodDiversity++;
-        if(player.getFoodAmountByType(FoodType.MEAT) > 0)
-            newFoodDiversity++;
-        if(player.getFoodAmountByType(FoodType.BREAD) > 0)
-            newFoodDiversity++;
-        if(player.getFoodAmountByType(FoodType.APPLES) > 0)
-            newFoodDiversity++;
+        int newFoodDiversity = player.getFoodDiversity();
         player.eatFoods(totalFoodUsage);
         player.addToHappiness(newFoodDiversity - 1);
         player.addToHappiness(player.getFoodRate() * 4);

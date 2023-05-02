@@ -177,6 +177,9 @@ public enum Response {
     DOGS_RELEASED("Dogs are released successfully!"),
     INVALID_STATE("Invalid state!"),
     SET_STATE_SUCCESSFUL("Set state successful!"),
+    CANT_REMOVE_THE_KING("You can't remove your king!"),
+    SET_TEXTURE_UNDER_TREE("You can't change the ground under a tree!"),
+    SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     ;
     public final String message;
 
