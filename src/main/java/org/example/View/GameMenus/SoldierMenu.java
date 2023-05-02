@@ -24,6 +24,8 @@ public class SoldierMenu extends Menu {
                 System.out.println(SoldierController.moveUnitWithoutType(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.PATROL)).find())
                 System.out.println(SoldierController.patrolUnit(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.SET_STATE)).find())
+                System.out.println(SoldierController.setUnitState(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;
