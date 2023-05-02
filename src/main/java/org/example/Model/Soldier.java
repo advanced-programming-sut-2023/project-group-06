@@ -71,4 +71,8 @@ public class Soldier extends Unit {
     public int getAttackPower() {
         return attackPower;
     }
+
+    public void setState(int state) {
+        this.state = state;
+    }
 }

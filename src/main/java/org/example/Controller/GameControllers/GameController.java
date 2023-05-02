@@ -286,12 +286,6 @@ public class GameController {
             currentPlayer.addToMaxPopulation(8);
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
-
-        /*if(buildingtype == BuildingType.OX_TETHER) {
-            Soldier cow = new Soldier(x, y, currentPlayer, UnitType.COW);
-            currentPlayer.getSoldiers().add(cow);
-            ////bugs
-        }*/
         return Response.DROP_BUILDING_SUCCESSFUL;
     }
 

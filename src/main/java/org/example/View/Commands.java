@@ -95,6 +95,7 @@ public enum Commands {
     SHOW_SOLDIERS("^show soldiers$"),
     SHOW_HORSE("^show horses$"),
     PATROL("patrol unit -x1 (?<x1>(\\-)?\\d+) -y1 (?<y1>(\\-)?\\d+) -x2 (?<x2>(\\-)?\\d+) -y2 (?<y2>(\\-)?\\d+)"),
+    SET_STATE("set -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -s (?<state>(((\\\"[^\\\"]*\\\")|\\S*)))"),
     ;
 
     private String regex;

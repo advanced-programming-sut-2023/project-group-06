@@ -151,6 +151,14 @@ public class Tile {
         return result;
     }
 
+    public boolean checkForCows(){
+        for(Unit unit : this.allUnits){
+            if(unit.getUnitType() == UnitType.COW)
+                return true;
+        }
+        return false;
+    }
+
     public String toString() {
         return "(" + this.getX() + this.getY() + this.getType() + this.getHeight() + ")";
     }
