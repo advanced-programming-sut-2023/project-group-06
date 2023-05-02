@@ -131,4 +131,12 @@ public class KingdomController {
         }
         return output;
     }
+
+    public static String showBuildings() {
+        String output = "all buildings:";
+        for (Building building : currentKingdom.getBuildings()) {
+            output += '\n' + building.toString();
+        }
+        return output;
+    }
 }

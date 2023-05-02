@@ -2,10 +2,7 @@ package org.example.Controller.GameControllers;
 
 import org.example.Controller.Controller;
 import org.example.Model.*;
-import org.example.Model.BuildingGroups.Building;
-import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.BuildingGroups.Producers;
-import org.example.Model.BuildingGroups.Storage;
+import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -96,7 +93,7 @@ public class BuildingController {
     private static Response createUnitBarracks(UnitType type, int count) {
         if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
-        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer") || type.getName().equals("oil engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer") || type.getName().equals("oil engineer") || type.getName().equals("dog")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
@@ -153,6 +150,7 @@ public class BuildingController {
         building.getOwner().payEngineer(count);
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.OIL_ENGINEER);
+            soldier.setHasOil(true);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
         }
         ((Producers) building).addToStored(-1 * count);
@@ -203,5 +201,49 @@ public class BuildingController {
         if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE
                 && !building.getBuildingType().getName().equals("small stone gatehouse")) return false;
         return true;
+
+    }
+
+    public static boolean isCagedWarDogs() {
+        return building.getBuildingType() == BuildingType.CAGED_WAR_DOGS;
+    }
+
+    public static Response releaseDogs() {
+        if (((Storage)building).getStored() == 0) return Response.NO_DOG_RELEASE;
+        String direction = "w";
+        int x = building.getXCoordinate();
+        int y = building.getYCoordinate();
+        int destinationX = directionX(x,direction);
+        int destinationY = directionY(y,direction);
+        Tile destination = GameController.currentGame.getTileByCoordinates(destinationY,destinationX);
+        Tile curTile = GameController.currentGame.getTileByCoordinates(y,x);
+        if (isDirectionOutOfBoundaries(direction,building.getYCoordinate(),building.getXCoordinate())) return Response.OUT_OF_BOUNDARIES;
+        if (destination.getBuilding() != null) return Response.CAGE_BLOCKED;
+        for (int i = GameController.currentGame.getTileByCoordinates(y,x).getSoldiers().size() - 1; i >= 0; i--) {
+            Soldier soldier = GameController.currentGame.getTileByCoordinates(y,x).getSoldiers().get(i);
+            curTile.removeSoldier(soldier);
+            destination.addSoldier(soldier);
+        }
+        return Response.DOGS_RELEASED;
+    }
+
+    private static boolean isDirectionOutOfBoundaries(String direction, int y, int x) {
+        if (direction.equals("n") && y <= 1) return true;
+        if (direction.equals("e") && x <= 1) return true;
+        if (direction.equals("w") && x + 2 >= GameController.currentGame.getMapWidth()) return true;
+        if (direction.equals("s") && y + 2 >= GameController.currentGame.getMapHeight()) return true;
+        return false;
+    }
+
+    private static int directionX(int x, String direction) {
+        if (direction.equals("e")) return x+2;
+        if (direction.equals("w")) return x-2;
+        return x;
+    }
+
+    private static int directionY(int y, String direction) {
+        if (direction.equals("n")) return y - 2;
+        if (direction.equals("s")) return y + 2;
+        return y;
     }
 }

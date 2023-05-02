@@ -162,10 +162,19 @@ public enum Response {
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
     NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
+    INAPPROPRIATE_UNIT("You can't do this action with this unit!"),
+    EMPTY_DIRECTION("Direction field can't be empty!"),
+    OUT_OF_BOUNDARIES("This direction is out of boundaries!"),
+    POUR_OIL("Poured oil successfully!"),
+    NO_OIL("None of the soldiers have oil to pour!"),
     CLOSE_THE_GATE_FIRST("Close The gate first!"),
     CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     PATROL_SUCCESSFUL("The unit will patrol between the places!"),
+    NO_ARMED_OIL_ENGINEER("No armed oil engineer exists in this tile!"),
+    NO_DOG_RELEASE("There is no dogs here to release!"),
+    CAGE_BLOCKED("Cage's door is blocked!"),
+    DOGS_RELEASED("Dogs are released successfully!"),
     INVALID_STATE("Invalid state!"),
     SET_STATE_SUCCESSFUL("Set state successful!"),
     ;
@@ -190,6 +199,7 @@ public enum Response {
         if (name.equals("resourceAmount")) return EMPTY_RESOURCE_AMOUNT;
         if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
         if (name.equals("id")) return EMPTY_ID;
+        if (name.equals("direction")) return EMPTY_DIRECTION;
         return null;
     }
 }

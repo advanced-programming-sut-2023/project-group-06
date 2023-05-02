@@ -50,6 +50,9 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.showSoldiers());
             else if (Commands.getMatcher(command,Commands.SHOW_HORSE).find())
                 System.out.println(KingdomController.showHorses());
+            else if (Commands.getMatcher(command,Commands.SHOW_BUILDINGS).find()) {
+                System.out.println(KingdomController.showBuildings());
+            }
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

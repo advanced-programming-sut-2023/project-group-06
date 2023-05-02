@@ -24,10 +24,14 @@ public class MapController {
                 System.out.print("|" + "\u001B[" + tileColor + "m" + " C " + "\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
                 if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE &&
-                        !(currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
-                                currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != GameController.currentPlayer))
+                        currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.ROCK &&
+                        !(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() instanceof Trap &&
+                                currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getOwner() != GameController.currentPlayer &&
+                                !((Trap) currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding()).canBeSeenByEnemy()))
                     System.out.print("|" + "\u001B[" + tileColor + "m" + " B " + "\u001B[0m");//instance of wall
-                else System.out.print("|" + "\u001B[" + tileColor + "m" + " T " + "\u001B[0m");
+                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.TREE) System.out.print("|" + "\u001B[" + tileColor + "m" + " T " + "\u001B[0m");
+                else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.ROCK) System.out.println("|" + "\u001B[" + tileColor + "m" + " R " + "\u001B[0m");
+                else System.out.print("|" + "\u001B[" + tileColor + "m" + "   " + "\u001B[0m");
             }
             else System.out.print("|" + "\u001B[" + tileColor + "m" + "   " + "\u001B[0m");
         }
@@ -108,14 +112,15 @@ public class MapController {
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
             if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.TREE &&
                     !(currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
-                            currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != GameController.currentPlayer))
+                            currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != GameController.currentPlayer &&
+                            !((Trap) currentGame.getTileByCoordinates(y, x).getBuilding()).canBeSeenByEnemy()))
                 buildingString = currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().toString().toLowerCase() + "\n";
-            else tree = true;
+            else if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.TREE) tree = true;
         }
         result += "buildings: " + buildingString;
         if(tree) {
             result += "there is a tree here!\n";
-            result += "resources: wood";
+            result += "resources: wood\n";
         }
         else result += "resources: " + currentGame.getTileByCoordinates(y, x).getType().getResource() + "\n";
         return result;

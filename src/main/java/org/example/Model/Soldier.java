@@ -3,20 +3,23 @@ package org.example.Model;
 import org.example.Controller.GameControllers.GameController;
 
 public class Soldier extends Unit {
-    int attackPower;
-    double defensePower;
-    int range;
-    int secondRange = 0;
-    int precision;
-    int delay;
-    int state = 1; // 0 --> defensive   1 --> standing  2 --> offensive
-    boolean isCapableOfClimbing;
-    boolean canThrowLadders;
-    boolean canDigDitch;
-    boolean isSaidToPatrol = false;
-    Tile patrolWishPlace1;
-    Tile patrolWishPlace2;
-    boolean isArab = false;
+    private int attackPower;
+    private double defensePower;
+    private int range;
+    private int secondRange = 0;
+    private int precision;
+    private int delay;
+    private int state = 1; // 0 --> defensive   1 --> standing  2 --> offensive
+    private boolean isCapableOfClimbing;
+    private boolean canThrowLadders;
+    private boolean canDigDitch;
+    private boolean hasOil = false;
+    private boolean isFlammable = false;
+    private boolean isArab = false;
+    private boolean isSaidToPatrol = false;
+    private Tile patrolWishPlace1;
+    private Tile patrolWishPlace2;
+    private int lastOiledTurn = -1;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -24,6 +27,7 @@ public class Soldier extends Unit {
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
+        isArab = unitType.isArab();
     }
 
     public void setSaidToPatrol(boolean saidToPatrol) {
@@ -74,5 +78,32 @@ public class Soldier extends Unit {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public boolean isFlammable() {
+        return isFlammable;
+    }
+
+    public void setFlammable(boolean flammable) {
+        isFlammable = flammable;
+        if (flammable) lastOiledTurn = GameController.currentGame.getNumberOfTurns();
+    }
+
+    public boolean isHasOil() {
+        return hasOil;
+    }
+
+    public void setHasOil(boolean hasOil) {
+        this.hasOil = hasOil;
+    }
+
+    public int getLastOiledTurn() {
+        return lastOiledTurn;
+    }
+
+    public String toString() {
+        String output = getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
+        return output;
     }
 }

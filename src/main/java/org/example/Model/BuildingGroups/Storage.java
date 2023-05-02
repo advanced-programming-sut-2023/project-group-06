@@ -45,6 +45,13 @@ public class Storage extends Building{
                 capacity = 4;
                 stored = 4;
                 break;
+            case CAGED_WAR_DOGS:
+                capacity = 4;
+                stored = 4;
+                break;
+            /*case OX_TETHER:
+                capacity = 1;
+                break;*/
         }
     }
 
