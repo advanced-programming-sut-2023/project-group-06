@@ -102,6 +102,7 @@ public enum Response {
     EMPTY_MAP_NAME("Map name can't be empty!"),
     SAVE_MAP_SUCCESSFUL("Map saved successfully!"),
     NEXT_TURN("turn %d : %s is now playing\n"),
+    WINNER("The winner is %s\n"),
     EMPTY_TYPE("type field can't be empty!"),
     EMPTY_COUNT("count field can't be empty!"),
     INVALID_SOLDIER_TYPE("Invalid soldier type!"),
@@ -158,7 +159,7 @@ public enum Response {
     NO_GATE_HERE("There is no gate here!"),
     MOVE_SUCCESSFUL("Move successful!"),
     CANT_GO_THERE("The unit can't go there!"),
-    NO_UNITS_WITH_THAT_TYPE("There are no units with that type here!"),
+    NO_UNITS_WITH_THAT_TYPE("You have no units with that type here!"),
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
     NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
@@ -177,6 +178,10 @@ public enum Response {
     NO_DOG_RELEASE("There is no dogs here to release!"),
     CAGE_BLOCKED("Cage's door is blocked!"),
     DOGS_RELEASED("Dogs are released successfully!"),
+    CANT_REMOVE_THE_KING("You can't remove your king!"),
+    SET_TEXTURE_UNDER_TREE("You can't change the ground under a tree!"),
+    SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
+    STOP_PATROL("The units will stop patrolling!"),
     ;
     public final String message;
 

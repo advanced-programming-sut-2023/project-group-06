@@ -235,6 +235,25 @@ public class Kingdom {
         }
     }
 
+    public boolean killCow(int count){
+        ArrayList<Unit> toKillCows = new ArrayList<>();
+        for(Unit unit : cows){
+            if(unit.getCowStored() == 0)
+                toKillCows.add(unit);
+        }
+        if(toKillCows.size() < count) return false;
+        else{
+            int killed = 0;
+            for(Unit cow : toKillCows){
+                this.removeUnit(cow);
+                this.cows.remove(cow);
+                killed++;
+                if(killed == count) break;
+            }
+        }
+        return true;
+    }
+
     public int wineUsage(){
         int amount = 0;
         for(Producers producers : inns)
@@ -364,16 +383,21 @@ public class Kingdom {
     }
 
     public int getFoodDiversity(){
-        int newFoodDiversity = 0;
-        if(getFoodAmountByType(FoodType.CHEESE) > 0)
-            newFoodDiversity++;
-        if(getFoodAmountByType(FoodType.MEAT) > 0)
-            newFoodDiversity++;
-        if(getFoodAmountByType(FoodType.BREAD) > 0)
-            newFoodDiversity++;
-        if(getFoodAmountByType(FoodType.APPLES) > 0)
-            newFoodDiversity++;
-        return newFoodDiversity;
+        int apple = 0;
+        int meat = 0;
+        int cheese = 0;
+        int bread = 0;
+        for (Building building : buildings) {
+            if(building.getBuildingType() == BuildingType.APPLE_ORCHARD)
+                apple = 1;
+            else if(building.getBuildingType() == BuildingType.BAKERY)
+                bread = 1;
+            else if(building.getBuildingType() == BuildingType.HUNTERS_POST)
+                meat = 1;
+            else if(building.getBuildingType() == BuildingType.DIARY_FARMER)
+                cheese = 1;
+        }
+        return apple + meat + cheese + bread;
     }
 
     public int taxEffectOnHappiness(int theTax){

@@ -17,12 +17,11 @@ public class MapMenu extends Menu {
             String command = scanner.nextLine();
             Matcher matcher;
             if(Commands.getMatcher(command, Commands.MOVE_MAP).find())
-                MapController.moveMap(command);
+                System.out.print(MapController.moveMap(command));
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_DETAILS)).find())
                 System.out.print(MapController.showDetails(matcher));
             else if(Commands.getMatcher(command, Commands.EXIT).find())
                 return null;
-            //show map command
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

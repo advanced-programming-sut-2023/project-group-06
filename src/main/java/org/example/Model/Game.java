@@ -30,12 +30,12 @@ public class Game {
     }
 
     public void initializeMap(int width, int height){
-        map = new Tile[width][height];
+        map = new Tile[height][width];
         mapHeight = height;
         mapWidth = width;
         for(int i = 0; i < width; i++){
             for(int j = 0; j < height; j++){
-                map[i][j] = new Tile(TileStructure.EARTH, i, j);
+                map[j][i] = new Tile(TileStructure.EARTH, i, j);
             }
         }
     }

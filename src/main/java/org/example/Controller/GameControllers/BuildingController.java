@@ -12,6 +12,7 @@ public class BuildingController {
 
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
+    //  HANDLE OIL
 
     public static Response createUnit(Matcher matcher) {
         matcher.find();
@@ -43,7 +44,7 @@ public class BuildingController {
         return response;
     }
 
-    public static Response repair() {
+    public static Response repair(){
         int x = building.getXCoordinate();
         int y = building.getYCoordinate();
         if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE)
@@ -123,7 +124,6 @@ public class BuildingController {
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
         if (type.getWeapon2() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
-
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 

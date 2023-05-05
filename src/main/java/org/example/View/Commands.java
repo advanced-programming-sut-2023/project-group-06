@@ -51,8 +51,6 @@ public enum Commands {
     START_THE_GAME("^let's play$"),
     ENTER_KINGDOM_MENU("^enter kingdom menu$"),
     ENTER_TRADE_MENU("^enter trade menu$"),
-    ENTER_MAP_MENU("^enter map menu$"),
-    ENTER_SHOP_MENU("^enter shop menu$"),
     DROP_BUILDING("dropbuilding -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -type (?<type>(((\"[^\"]*\")|\\S*)))( -d (?<direction>[nswer]))?"),
     SET_MAP_WIDTH_HEIGHT("width: (?<width>\\d+) height: (?<height>\\d+)"),
     CHOOSE_DEFAULT_MAP("map name: (?<mapName>(((\\\"[^\\\"]*\\\")|\\S*)))"),
@@ -64,6 +62,7 @@ public enum Commands {
     CLEAR_BLOCK("clear -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     DROP_ROCK("droprock -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])"),
     SELECT_BUILDING("select building -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
+    DROP_UNIT("dropunit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>((\\\"[^\\\"]*\\\")|\\S*)) -c (?<count>(\\-)?\\d+)"),
     SELECT_UNIT("^select unit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>((\\\"[^\\\"]*\\\")|\\S*))$"),
     //Map Menu Commands
     SHOW_MAP("show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
@@ -95,9 +94,10 @@ public enum Commands {
     SHOW_SOLDIERS("^show soldiers$"),
     SHOW_HORSE("^show horses$"),
     PATROL("patrol unit -x1 (?<x1>(\\-)?\\d+) -y1 (?<y1>(\\-)?\\d+) -x2 (?<x2>(\\-)?\\d+) -y2 (?<y2>(\\-)?\\d+)"),
+    SET_STATE("set -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -s (?<state>(((\\\"[^\\\"]*\\\")|\\S*)))"),
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
     SHOW_BUILDINGS("^show buildings$"),
-    SET_STATE("set -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -s (?<state>(((\\\"[^\\\"]*\\\")|\\S*)))"),
+    STOP_PATROL("^stop patrolling$"),
     ;
 
     private String regex;

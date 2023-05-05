@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Deque;
 import java.util.concurrent.Callable;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class SoldierController {
@@ -82,6 +83,16 @@ public class SoldierController {
             soldier.setKingSaidToMove(false);
         }
         return Response.PATROL_SUCCESSFUL;
+    }
+
+    public static Response stopPatrolling(){
+        for(Soldier soldier : soldiers){
+            if(soldier.isSaidToPatrol()) {
+                soldier.setSaidToPatrol(false);
+                soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+            }
+        }
+        return Response.STOP_PATROL;
     }
 
     public static Response throwLadder(){

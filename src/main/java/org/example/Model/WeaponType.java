@@ -5,9 +5,9 @@ import org.example.Model.BuildingGroups.BuildingType;
 public enum WeaponType {
     BOW(new Resources(2,ResourcesType.WOOD), BuildingType.FLETCHER,"bow"),
     CROSSBOW(new Resources(3,ResourcesType.WOOD), BuildingType.FLETCHER,"crossbow"),
-    SPEAR(new Resources(1,ResourcesType.WOOD), BuildingType.FLETCHER,"spear"),
+    SPEAR(new Resources(1,ResourcesType.WOOD), BuildingType.POLETURNER,"spear"),
     PIKE(new Resources(2,ResourcesType.WOOD), BuildingType.POLETURNER,"pike"),
-    MACE(new Resources(1,ResourcesType.IRON), BuildingType.POLETURNER,"mace"),
+    MACE(new Resources(1,ResourcesType.IRON), BuildingType.BLACKSMITH,"mace"),
     SWORDS(new Resources(1,ResourcesType.IRON), BuildingType.BLACKSMITH,"swords"),
     LEATHER_ARMOR(null, BuildingType.DIARY_FARMER,"leather armor"),
     METAL_ARMOR(new Resources(1,ResourcesType.IRON), BuildingType.ARMORER,"metal armor"),
