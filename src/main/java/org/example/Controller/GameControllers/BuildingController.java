@@ -12,7 +12,6 @@ public class BuildingController {
 
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
-    //  HANDLE OIL
 
     public static Response createUnit(Matcher matcher) {
         matcher.find();
@@ -198,7 +197,7 @@ public class BuildingController {
     private static Response createWeaponDiaryFarmer(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.DIARY_FARMER) return Response.WEAPON_BUILDING_MISMATCHING;
         building.getOwner().addAsset(new Weapon(count, type));
-        // todo whenever cow is handled remember to kill [count/3] cows!
+        if (!building.getOwner().killCow(count)) return Response.NOT_ENOUGH_COWS;
         return Response.WEAPON_CREATED;
     }
 
