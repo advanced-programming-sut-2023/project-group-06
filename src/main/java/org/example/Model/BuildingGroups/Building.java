@@ -104,7 +104,6 @@ public class Building {
 
     public String toString() {
         String output = ", x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
-        System.out.println(this.getBuildingType().getName());
         output += ", is it flammable? " + isFlammable;
         return output;
     }

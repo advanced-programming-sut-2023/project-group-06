@@ -13,7 +13,6 @@ public class Unit {
     private int cowStored;
     private int speed;
     private int health;
-
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
     }
@@ -45,7 +44,7 @@ public class Unit {
         owner.addUnit(this);
         this.unitType = unitType;
         this.speed = unitType.getSpeed();
-        health = unitType.getHitPoint();
+        this.health = unitType.getHitPoint();
         wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
     }
 
