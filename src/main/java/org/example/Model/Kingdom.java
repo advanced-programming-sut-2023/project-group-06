@@ -37,6 +37,7 @@ public class Kingdom {
     private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
     private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
+    private ArrayList<Equipment> equipments = new ArrayList<>();
     private User owner;
     private Soldier king;
     private Building mainCastle;
@@ -616,5 +617,13 @@ public class Kingdom {
                 amount -= cost;
             }
         }
+    }
+
+    public ArrayList<Equipment> getEquipments() {
+        return equipments;
+    }
+
+    public void addEquipment(Equipment equipment) {
+        this.equipments.add(equipment);
     }
 }
