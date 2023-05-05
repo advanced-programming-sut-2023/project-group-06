@@ -42,14 +42,18 @@ public class Storage extends Building{
                 capacity = 16;
                 break;
             case STABLE:
+            case CAGED_WAR_DOGS:
                 capacity = 4;
                 stored = 4;
                 break;
+                /*case OX_TETHER:
+                capacity = 1;
+                break;*/
         }
     }
 
     public String toString() {
-        return "capacity: " + capacity + ", stored: " + stored;
+        return super.toString() + ", capacity: " + capacity + ", stored: " + stored;
     }
 
     //todo remember to handle cows!

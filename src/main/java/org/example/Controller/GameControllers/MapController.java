@@ -28,8 +28,10 @@ public class MapController {
                         currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.ROCK &&
                         !(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() instanceof Trap &&
                                 currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getOwner() != GameController.currentPlayer &&
-                                !((Trap) currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding()).canBeSeenByEnemy()))
-                    result.append("|" + "\u001B[").append(tileColor).append("m").append(" B ").append("\u001B[0m");
+                                !((Trap) currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding()).canBeSeenByEnemy())) {
+                    if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.WALL) result.append("|" + "\u001B[").append(tileColor).append("m").append(" B ").append("\u001B[0m");
+                    else result.append("|" + "\u001B[").append(tileColor).append("m").append(" W ").append("\u001B[0m");
+                }
                 else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.TREE) result.append("|" + "\u001B[").append(tileColor).append("m").append(" T ").append("\u001B[0m");
                 else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() == BuildingType.ROCK) result.append("|" + "\u001B[").append(tileColor).append("m").append(" R ").append("\u001B[0m");
                 else result.append("|" + "\u001B[").append(tileColor).append("m").append("   ").append("\u001B[0m");
@@ -90,7 +92,7 @@ public class MapController {
         int newX = currentX + right - left;
         int newY = currentY + down - up;
         if(newX < 7 || newX > GameController.currentGame.getMapWidth() - 8 || newY < 2 || newY > GameController.currentGame.getMapHeight() - 3)
-            result += "Can't show the map outside the boundaries";
+            result += "Can't show the map outside the boundaries\n";
         else{
             currentX = newX;
             currentY = newY;

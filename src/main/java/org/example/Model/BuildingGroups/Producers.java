@@ -139,4 +139,12 @@ public class Producers extends Building{
                 break;
         }
     }
+
+    public String toString() {
+        if(this.getBuildingType() == BuildingType.QUARRY
+                || this.getBuildingType() == BuildingType.OIL_SMELTER
+                || this.getBuildingType() == BuildingType.INN)
+            return super.toString() + ", capacity: " + capacity + ", stored: " + stored;
+        else return super.toString();
+    }
 }
