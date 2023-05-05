@@ -213,6 +213,25 @@ public class Kingdom {
         }
     }
 
+    public boolean killCow(int count){
+        ArrayList<Unit> toKillCows = new ArrayList<>();
+        for(Unit unit : cows){
+            if(unit.getCowStored() == 0)
+                toKillCows.add(unit);
+        }
+        if(toKillCows.size() < count) return false;
+        else{
+            int killed = 0;
+            for(Unit cow : toKillCows){
+                this.removeUnit(cow);
+                this.cows.remove(cow);
+                killed++;
+                if(killed == count) break;
+            }
+        }
+        return true;
+    }
+
     public int wineUsage(){
         int amount = 0;
         for(Producers producers : inns)
