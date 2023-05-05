@@ -876,12 +876,13 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
-                    if(building.getBuildingType() == BuildingType.WOODCUTTERS){
-                        if(currentGame.getTrees().size() == 0)
-                            canPay = false;
-                        if(canPay)
-                            currentGame.cutTree();
-                    }
+//                    if(building.getBuildingType() == BuildingType.WOODCUTTERS){
+//                        if(currentGame.getTrees().size() == 0)
+//                            canPay = false;
+//                        if(canPay)
+//                            currentGame.cutTree();
+//                    }
+                    // todo uncomment
                     if(canPay) {
                         if(output1.getAmount() != 0) {
                             player.addAsset(output1);

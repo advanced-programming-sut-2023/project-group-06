@@ -173,6 +173,7 @@ public enum Response {
     SET_TEXTURE_UNDER_TREE("You can't change the ground under a tree!"),
     SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     STOP_PATROL("The units will stop patrolling!"),
+    NOT_ENOUGH_COWS("You don't have enough cows to do this!"),
     ;
     public final String message;
 
