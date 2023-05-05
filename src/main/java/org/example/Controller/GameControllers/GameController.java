@@ -598,6 +598,7 @@ public class GameController {
         int y = s.getYCoordinate();
         int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
         int attackPower = s.getAttackPower();
+        if (s.getUnitType() == UnitType.OIL_ENGINEER && !checkOilEngineerAttack(s)) return false;
         if(s.getUnitType().isArcherType() &&
                 currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
                 currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Towers)
@@ -617,11 +618,59 @@ public class GameController {
         if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
         if (squareOfDistance <= s.getRange() * s.getRange()) {
             s.setWishPlace(currentGame.getMap()[y][x]);
+            if (s.getUnitType() == UnitType.OIL_ENGINEER) {
+                for (Soldier soldier : currentGame.getTileByCoordinates(enemyY,enemyX).getSoldiers()) {
+                    soldier.setFlammable(true);
+                }
+                s.setHasOil(false);
+                return true;
+            }
             enemy.subHealth(attackPower);
             return true;
         }
         s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
         return true;
+    }
+
+    private static boolean checkOilEngineerAttack(Soldier s) {
+        int x = s.getXCoordinate();
+        int y = s.getYCoordinate();
+        int fightRange = 2;
+        if ((s.getState() == 0 && getNumberOfEnemiesInRange(s,fightRange) < 1) ||
+                (s.getState() == 1 && getNumberOfEnemiesInRange(s,fightRange) < 2) ||
+                (s.getState() == 2 && getNumberOfEnemiesInRange(s,fightRange) < 3)) return false;
+        if (!s.isHasOil()) return false;
+        return true;
+    }
+
+    private static int getNumberOfEnemiesInRange(Soldier soldier, int fightRange) {
+        int x = soldier.getXCoordinate();
+        int y = soldier.getYCoordinate();
+        Kingdom owner = soldier.getOwner();
+        int amount = 0;
+        for (int i = 1; i <= fightRange; i++) {
+            for (int j = 0; j <= i; j++) { // x+i-j, y+j
+                if (x + i - j >= currentGame.getMapWidth() || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x+i-j, y-j
+                if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y+j
+                if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y-j
+                if (x - i + j < 0 || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+        }
+        return amount;
     }
 
     private static void computeAttackDamageOnBuildings(Soldier s){

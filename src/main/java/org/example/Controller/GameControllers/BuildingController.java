@@ -12,12 +12,11 @@ public class BuildingController {
 
     // TODO
     //  KILLING COWS FOR LEATHER ARMOR
-    //  HANDLE OIL
 
-    public static Response createUnit(Matcher matcher){
+    public static Response createUnit(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"type","count"};
-        String nullGroupName = Controller.nullGroup(matcher,groupNames);
+        String[] groupNames = {"type", "count"};
+        String nullGroupName = Controller.nullGroup(matcher, groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
         int count;
         if (matcher.group("count") == null) count = 1;
@@ -31,22 +30,27 @@ public class BuildingController {
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
-        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER) return Response.NOT_ENOUGH_WEAPON_UNIT;
+        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
+            return Response.NOT_ENOUGH_WEAPON_UNIT;
         if (building.getBuildingType() == BuildingType.BARRACKS) response = createUnitBarracks(type, count);
-        else if (building.getBuildingType() == BuildingType.MERCENARY_POST) response = createUnitMercenaryPost(type, count);
-        else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD) response = createUnitEngineerGuild(type, count);
+        else if (building.getBuildingType() == BuildingType.MERCENARY_POST)
+            response = createUnitMercenaryPost(type, count);
+        else if (building.getBuildingType() == BuildingType.ENGINEERS_GUILD)
+            response = createUnitEngineerGuild(type, count);
         else if (building.getBuildingType() == BuildingType.CATHEDRAL) response = createUnitCathedral(type, count);
         else if (building.getBuildingType() == BuildingType.OIL_SMELTER) response = createUnitOilSmelter(type, count);
         else response = Response.CANT_CREATE_ANY_UNIT_IN_BUILDING;
         return response;
     }
 
-    public static Response repair(){
+    public static Response repair() {
         int x = building.getXCoordinate();
         int y = building.getYCoordinate();
-        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE
-                && !building.getBuildingType().getName().equals("small stone gatehouse")) return Response.NOT_REPAIRABLE;
-        if (existEnemyNearTile(y,x)) return Response.EXIST_ENEMY_NEAR_TILE;
+        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE)
+            return Response.NOT_REPAIRABLE;
+        if (building.getBuildingType().getResourcesPrice().getAmount() > building.getOwner().getResourceAmountByType(ResourcesType.STONE)) return Response.NOT_ENOUGH_RESOURCES;
+        building.getOwner().payResource(new Resources(building.getBuildingType().getResourcesPrice().getAmount(),ResourcesType.STONE));
+        if (existEnemyNearTile(y, x)) return Response.EXIST_ENEMY_NEAR_TILE;
         if (showBuildingHp() == building.getHitPoint()) return Response.FULL_HIT_POINT;
         building.setHitPoint(building.getBuildingType().getHitPoint());
         return Response.REPAIRED;
@@ -54,8 +58,8 @@ public class BuildingController {
 
     public static Response createWeapon(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"type","count"};
-        String nullGroupName = Controller.nullGroup(matcher,groupNames);
+        String[] groupNames = {"type", "count"};
+        String nullGroupName = Controller.nullGroup(matcher, groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
         int count;
         if (matcher.group("count") == null) count = 1;
@@ -67,18 +71,19 @@ public class BuildingController {
             if (building.getOwner().getResourceAmountByType(type.getResourcesPriceType()) < count * type.getResourcePriceAmount())
                 return Response.NOT_ENOUGH_RESOURCES_WEAPON;
             else {
-                if (building.getBuildingType() == BuildingType.FLETCHER) return createWeaponFletcher(type,count);
-                if (building.getBuildingType() == BuildingType.BLACKSMITH) return createWeaponBlacksmith(type,count);
-                if (building.getBuildingType() == BuildingType.POLETURNER) return createWeaponPoleturner(type,count);
-                if (building.getBuildingType() == BuildingType.ARMORER) return createWeaponArmorer(type,count);
+                if (building.getBuildingType() == BuildingType.FLETCHER) return createWeaponFletcher(type, count);
+                if (building.getBuildingType() == BuildingType.BLACKSMITH) return createWeaponBlacksmith(type, count);
+                if (building.getBuildingType() == BuildingType.POLETURNER) return createWeaponPoleturner(type, count);
+                if (building.getBuildingType() == BuildingType.ARMORER) return createWeaponArmorer(type, count);
             }
-        } else if (type.getBuildingType() == BuildingType.DIARY_FARMER) return createWeaponDiaryFarmer(type,count);
+        } else if (type.getBuildingType() == BuildingType.DIARY_FARMER) return createWeaponDiaryFarmer(type, count);
         return Response.CANT_CREATE_ANY_WEAPON_BUILDING;
     }
+
     private static boolean existEnemyNearTile(int y, int x) {
         for (int yy = y - 4; yy <= y + 4; y++) {
             for (int xx = x - 4; xx <= x + 4; xx++) {
-                if (existEnemyOnThisTile(yy,xx)) return true;
+                if (existEnemyOnThisTile(yy, xx)) return true;
             }
         }
         return false;
@@ -87,22 +92,24 @@ public class BuildingController {
     private static boolean existEnemyOnThisTile(int y, int x) {
         if (GameController.currentGame.getMapWidth() <= y || y < 0) return false;
         if (GameController.currentGame.getMapHeight() <= x || x < 0) return false;
-        return GameController.currentGame.getTileByCoordinates(y,x).existEnemyOnThisTile(building.getOwner());
+        return GameController.currentGame.getTileByCoordinates(y, x).existEnemyOnThisTile(building.getOwner());
     }
 
     private static Response createUnitBarracks(UnitType type, int count) {
         if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
-        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer") || type.getName().equals("oil engineer") || type.getName().equals("dog")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
-        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
+        if (type.isArab() || type.getName().equals("king") || type.getName().equals("engineer") || type.getName().equals("oil engineer") || type.getName().equals("dog"))
+            return Response.CANT_CREATE_UNIT_IN_BUILDING;
+        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && building.getOwner().getHorseNumber() < count)
+            return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).addSoldier(soldier);
             if (type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) building.getOwner().takeHorseFromStable();
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
-        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
+        if (type.getWeapon2() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
         building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
@@ -111,11 +118,12 @@ public class BuildingController {
         if (!type.isArab()) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).addSoldier(soldier);
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
-        int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
-        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
+        if (type.getWeapon2() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(count, type.getWeapon()));
+
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
@@ -123,7 +131,8 @@ public class BuildingController {
         if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
             return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
-        if (((Storage)building).getCapacity() - ((Storage)building).getStored() < count) return Response.NOT_ENOUGH_SPACE;
+        if (((Storage) building).getCapacity() - ((Storage) building).getStored() < count)
+            return Response.NOT_ENOUGH_SPACE;
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         ((Storage) building).addToStored(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
@@ -135,7 +144,7 @@ public class BuildingController {
         if (!type.getName().equals("black monk")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), type);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).addSoldier(soldier);
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
@@ -146,12 +155,12 @@ public class BuildingController {
             return Response.NOT_ENOUGH_PEASANT;
         if (!type.getName().equals("oil engineer")) return Response.CANT_CREATE_UNIT_IN_BUILDING;
         if (building.getOwner().getAvailableEngineers() < count) return Response.NOT_ENOUGH_ENGINEERS;
-        if (((Producers)building).getStored() < count) return Response.NOT_ENOUGH_OIL;
+        if (((Producers) building).getStored() < count) return Response.NOT_ENOUGH_OIL;
         building.getOwner().payEngineer(count);
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.OIL_ENGINEER);
             soldier.setHasOil(true);
-            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()).addSoldier(soldier);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).addSoldier(soldier);
         }
         ((Producers) building).addToStored(-1 * count);
         building.getOwner().addToWealth(-1 * type.getCost() * count);
@@ -160,35 +169,35 @@ public class BuildingController {
 
     private static Response createWeaponFletcher(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.FLETCHER) return Response.WEAPON_BUILDING_MISMATCHING;
-        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().addAsset(new Weapon(count, type));
         building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
         return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponPoleturner(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.POLETURNER) return Response.WEAPON_BUILDING_MISMATCHING;
-        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().addAsset(new Weapon(count, type));
         building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
         return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponBlacksmith(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.BLACKSMITH) return Response.WEAPON_BUILDING_MISMATCHING;
-        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().addAsset(new Weapon(count, type));
         building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
         return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponArmorer(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.ARMORER) return Response.WEAPON_BUILDING_MISMATCHING;
-        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().addAsset(new Weapon(count, type));
         building.getOwner().payResource(new Resources(count * type.getResourcePriceAmount(), type.getResourcesPriceType()));
         return Response.WEAPON_CREATED;
     }
 
     private static Response createWeaponDiaryFarmer(WeaponType type, int count) {
         if (type.getBuildingType() != BuildingType.DIARY_FARMER) return Response.WEAPON_BUILDING_MISMATCHING;
-        building.getOwner().addAsset(new Weapon(count,type));
+        building.getOwner().addAsset(new Weapon(count, type));
         // todo whenever cow is handled remember to kill [count/3] cows!
         return Response.WEAPON_CREATED;
     }
@@ -198,8 +207,7 @@ public class BuildingController {
     }
 
     public static boolean isCastleType() {
-        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE
-                && !building.getBuildingType().getName().equals("small stone gatehouse")) return false;
+        if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE) return false;
         return true;
 
     }
@@ -209,18 +217,19 @@ public class BuildingController {
     }
 
     public static Response releaseDogs() {
-        if (((Storage)building).getStored() == 0) return Response.NO_DOG_RELEASE;
+        if (((Storage) building).getStored() == 0) return Response.NO_DOG_RELEASE;
         String direction = "w";
         int x = building.getXCoordinate();
         int y = building.getYCoordinate();
-        int destinationX = directionX(x,direction);
-        int destinationY = directionY(y,direction);
-        Tile destination = GameController.currentGame.getTileByCoordinates(destinationY,destinationX);
-        Tile curTile = GameController.currentGame.getTileByCoordinates(y,x);
-        if (isDirectionOutOfBoundaries(direction,building.getYCoordinate(),building.getXCoordinate())) return Response.OUT_OF_BOUNDARIES;
+        int destinationX = directionX(x, direction);
+        int destinationY = directionY(y, direction);
+        Tile destination = GameController.currentGame.getTileByCoordinates(destinationY, destinationX);
+        Tile curTile = GameController.currentGame.getTileByCoordinates(y, x);
+        if (isDirectionOutOfBoundaries(direction, building.getYCoordinate(), building.getXCoordinate()))
+            return Response.OUT_OF_BOUNDARIES;
         if (destination.getBuilding() != null) return Response.CAGE_BLOCKED;
-        for (int i = GameController.currentGame.getTileByCoordinates(y,x).getSoldiers().size() - 1; i >= 0; i--) {
-            Soldier soldier = GameController.currentGame.getTileByCoordinates(y,x).getSoldiers().get(i);
+        for (int i = GameController.currentGame.getTileByCoordinates(y, x).getSoldiers().size() - 1; i >= 0; i--) {
+            Soldier soldier = GameController.currentGame.getTileByCoordinates(y, x).getSoldiers().get(i);
             curTile.removeSoldier(soldier);
             destination.addSoldier(soldier);
         }
@@ -236,8 +245,8 @@ public class BuildingController {
     }
 
     private static int directionX(int x, String direction) {
-        if (direction.equals("e")) return x+2;
-        if (direction.equals("w")) return x-2;
+        if (direction.equals("e")) return x + 2;
+        if (direction.equals("w")) return x - 2;
         return x;
     }
 
