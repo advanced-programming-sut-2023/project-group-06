@@ -102,7 +102,9 @@ public class BuildingController {
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
         if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        if (type.getWeapon2() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeapons2Needed,type.getWeapon2()));
         building.getOwner().addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
@@ -115,7 +117,9 @@ public class BuildingController {
         }
         building.getOwner().addToWealth(-1 * type.getCost() * count);
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
+        int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
         if (type.getWeapon() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
+        if (type.getWeapon2() != null) building.getOwner().useWeaponToCreateUnit(new Weapon(numberOfWeapons2Needed,type.getWeapon2()));
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 

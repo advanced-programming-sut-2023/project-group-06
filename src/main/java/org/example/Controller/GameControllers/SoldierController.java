@@ -86,6 +86,16 @@ public class SoldierController {
         return Response.PATROL_SUCCESSFUL;
     }
 
+    public static Response stopPatrolling(){
+        for(Soldier soldier : soldiers){
+            if(soldier.isSaidToPatrol()) {
+                soldier.setSaidToPatrol(false);
+                soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+            }
+        }
+        return Response.STOP_PATROL;
+    }
+
     public static Response throwLadder(){
         return null;
         //todo

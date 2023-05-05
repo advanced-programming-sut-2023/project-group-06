@@ -14,7 +14,6 @@ import java.util.regex.Matcher;
 public class GameController {
     public static Game currentGame;
     public static Kingdom currentPlayer;
-    //use make entry valid everywhere
 
     public static Response initializeMap(Matcher matcher){
         String widthString = matcher.group("width");
@@ -610,7 +609,8 @@ public class GameController {
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
             computeDamages(); // computeDamages
-            destroyDeadBodies(); // destroyDeadBodies
+            destroyDeadBodies(); // destroyDeadBodies  //destroy dead buildings
+            if(currentGame.getNumberOfPlayers() == 1) return Response.WINNER;
             moveUnits(); // moveUnits
             checkPatrolUnits();
             checkCows();
@@ -713,17 +713,24 @@ public class GameController {
     }
 
     private static void destroyDeadBodies() {
-        for (Kingdom k : currentGame.getKingdoms()) {
+        for (int j = 0; j < currentGame.getKingdoms().size(); j++) {
+            Kingdom k = currentGame.getKingdoms().get(j);
+            boolean isKingDead = false;
             for(int i = 0; i < k.getSoldiers().size(); i++){
                 if(k.getSoldiers().get(i).getHealth() <= 0){
                     Soldier soldier = k.getSoldiers().get(i);
                     //todo war caged dogs
                     currentPlayer.addToPopulation(-1);
                     currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-                    if(k.getSoldiers().get(i).getUnitType() == UnitType.KING) removeKingdom(k);
-                    else k.getSoldiers().remove(i);
+                    if(soldier.getUnitType() == UnitType.KING) isKingDead = true;
+                    k.getSoldiers().remove(i);
                     i--;
                 }
+            }
+            if(isKingDead) {
+                removeKingdom(k);
+                j--;
+                if(currentGame.getNumberOfPlayers() == 1) return;
             }
         }
     }
@@ -745,7 +752,7 @@ public class GameController {
                 boolean check = false;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
                     targetTile = path.pollFirst();
-                    if (isTrapWorking(targetTile, (Soldier) s, k)) {
+                    if (s instanceof Soldier && isTrapWorking(targetTile, (Soldier) s, k)) {
                         check = true;
                     }
                 }
@@ -841,11 +848,6 @@ public class GameController {
         player.addToHappiness(player.wineUsage());
     }
 
-    private static Response computeFears(Kingdom player){
-        return null;
-        //todo
-    }
-
     private static void computeTaxes(Kingdom player){
         int tax = player.getTax();
         double addToWealth = 0;
@@ -874,12 +876,12 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
-                    /*if(building.getBuildingType() == BuildingType.WOODCUTTERS){
+                    if(building.getBuildingType() == BuildingType.WOODCUTTERS){
                         if(currentGame.getTrees().size() == 0)
                             canPay = false;
                         if(canPay)
                             currentGame.cutTree();
-                    }*/
+                    }
                     if(canPay) {
                         if(output1.getAmount() != 0) {
                             player.addAsset(output1);
@@ -906,17 +908,16 @@ public class GameController {
     }
 
     private static void removeKingdom(Kingdom kingdom){
-        for(Soldier soldier : kingdom.getSoldiers())
-            currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-//        for(Unit unit : kingdom.getNonSoldierUnits())
-//            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeFromNonSoldierUnits(unit);
+        for(Unit unit : kingdom.getUnits())
+            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeUnit(unit);
         for(Building building : kingdom.getBuildings()) {
             int xCenter = building.getXCoordinate();
             int yCenter = building.getYCoordinate();
             int size = (building.getBuildingType().getSize() - 1) / 2;
             for (int i = xCenter - size; i <= xCenter + size; i++) {
-                for (int j = yCenter - size; j <= yCenter + size; j++)
+                for (int j = yCenter - size; j <= yCenter + size; j++) {
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
+                }
             }
         }
         currentGame.removeKingdom(kingdom);
@@ -931,6 +932,10 @@ public class GameController {
                 }
             }
         }
+    }
+
+    public void checkDelays(){
+        //todo
     }
 
     private static void resetOilState(Kingdom kingdom) {

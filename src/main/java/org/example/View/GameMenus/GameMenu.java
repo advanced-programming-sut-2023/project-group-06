@@ -153,15 +153,26 @@ public class GameMenu extends Menu {
                 System.out.println(GameController.setTextureMultipleTiles(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_BUILDING)).find())
                 System.out.println(GameController.dropBuilding(matcher).message);
-            else if (Commands.getMatcher(command, Commands.NEXT_TURN).find())
-                System.out.printf(GameController.nextTurn().message, GameController.currentGame.getNumberOfTurns(),
+            else if (Commands.getMatcher(command, Commands.NEXT_TURN).find()) {
+                String result = GameController.nextTurn().message;
+                if(result.startsWith("The winner")) {
+                    System.out.println("The game is finished");
+                    System.out.printf(result, GameController.currentGame.getPlayers().get(0).getUsername());
+                    System.out.println("Entered main menu");
+                    //todo upgrade the user
+                    return MenuType.MAIN_MENU;
+                }
+                System.out.printf(result, GameController.currentGame.getNumberOfTurns(),
                         GameController.currentPlayer.getOwner().getUsername());
+            }
             else if((matcher = Commands.getMatcher(command, Commands.CLEAR_BLOCK)).find())
                 System.out.println(GameController.clearBlock(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DROP_ROCK)).find())
                 System.out.println(GameController.dropRuck(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SET_THE_GATE)).find())
                 System.out.println(GameController.setTheGate(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.DROP_UNIT)).find())
+                System.out.println(GameController.dropUnit(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SELECT_BUILDING)).find()) {
                 String result = GameController.selectBuilding(matcher).message;
                 System.out.println(result);
