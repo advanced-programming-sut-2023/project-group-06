@@ -183,6 +183,10 @@ public enum Response {
     SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     STOP_PATROL("The units will stop patrolling!"),
     NOT_ENOUGH_COWS("You don't have enough cows to do this!"),
+    CANT_DIG_DITCH("This unit can't dig ditch!"),
+    DITCH_UNDER_BUILDING("Can't dig ditch under a building!"),
+    DITCH_UNDER_SOLDIERS("Can't dig ditch under units!"),
+    DIGGING("Let's dig!"),
     ;
     public final String message;
 

@@ -98,6 +98,7 @@ public enum Commands {
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
     SHOW_BUILDINGS("^show buildings$"),
     STOP_PATROL("^stop patrolling$"),
+    DIG_DITCH("^dig ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     ;
 
     private String regex;

@@ -19,7 +19,9 @@ public class MapController {
         result.append("-\n");
         for(int i = 0; i < 15; i++){
             String tileColor = currentGame.getTileByCoordinates(y, x - 7 + i).getType().getColorNumber();
-            if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForVisibleSoldiers(currentGame.currentPlayer()))
+            if(currentGame.getTileByCoordinates(y, x - 7 + i).isDitch())
+                result.append("|" + "\u001B[").append(tileColor).append("m").append(" D ").append("\u001B[0m");
+            else if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForVisibleSoldiers(currentGame.currentPlayer()))
                 result.append("|" + "\u001B[").append(tileColor).append("m").append(" S ").append("\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForCows())
                 result.append("|" + "\u001B[").append(tileColor).append("m").append(" C ").append("\u001B[0m");
@@ -40,6 +42,7 @@ public class MapController {
         }
         result.append("|\n");
         return result.toString();
+        //todo building should be prior to ditch
     }
 
     public static String showMap(int x, int y){

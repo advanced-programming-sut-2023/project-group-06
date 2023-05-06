@@ -102,9 +102,27 @@ public class SoldierController {
     }
 
     public static Response digDitch(Matcher matcher){
-        return null;
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(!soldiers.get(0).getUnitType().isCanDigDitch())
+            return Response.CANT_DIG_DITCH;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
+            return Response.DITCH_UNDER_BUILDING;
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
+            return Response.DITCH_UNDER_SOLDIERS;
+        for(Soldier soldier : soldiers){
+            soldier.setKingSaidToMove(true);
+            soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
+            soldier.setDitch(currentGame.getTileByCoordinates(y, x));
+        }
+        soldiers.get(0).getOwner().getDitches().add(currentGame.getTileByCoordinates(y, x));
+        currentGame.getTileByCoordinates(y, x).setDitchDelay(3);
+        return Response.DIGGING;
+    }
+
+    public static Response fillDitch(Matcher matcher){
         //todo
-        //after select unit
+        return null;
     }
 
     public static Response setUnitState(Matcher matcher){

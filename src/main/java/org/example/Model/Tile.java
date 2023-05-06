@@ -9,7 +9,6 @@ import org.example.Model.BuildingGroups.Towers;
 import java.util.ArrayList;
 
 public class Tile {
-    //todo handle nonSoldierUnits...
     private TileStructure type;
     private Building building;
     private int xCoordinate;
@@ -18,6 +17,8 @@ public class Tile {
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
     private ArrayList<Unit> allUnits = new ArrayList<>();
+    private boolean isDitch = false;
+    private int ditchDelay = 3;
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -27,6 +28,26 @@ public class Tile {
             height = -2;
         }
         else height = 0;
+    }
+
+    public boolean isDitch() {
+        return isDitch;
+    }
+
+    public void setDitchDelay(int ditchDelay) {
+        this.ditchDelay = ditchDelay;
+    }
+
+    public void subDitchDelay(){
+        this.ditchDelay -= 1;
+    }
+
+    public int getDitchDelay() {
+        return ditchDelay;
+    }
+
+    public void setDitch(boolean ditch) {
+        isDitch = ditch;
     }
 
     public TileStructure getType() {

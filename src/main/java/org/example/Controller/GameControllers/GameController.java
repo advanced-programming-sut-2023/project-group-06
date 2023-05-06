@@ -578,7 +578,9 @@ public class GameController {
     }
 
     private static void setGroundBack(Tile tile){
-        if(tile.getType().CanBeCrossed())
+        if(tile.isDitch())
+            tile.setHeight(-4);
+        else if(tile.getType().CanBeCrossed())
             tile.setHeight(0);
         else tile.setHeight(-2);
     }
@@ -616,6 +618,7 @@ public class GameController {
             moveUnits(); // moveUnits
             checkPatrolUnits();
             checkCows();
+            checkDitches();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
@@ -987,8 +990,42 @@ public class GameController {
         }
     }
 
-    public void checkDelays(){
-        //todo
+    private static void checkDelays(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Equipment equipment : kingdom.getEquipments()){
+                if(equipment.getDelay() > 0)
+                    equipment.subDelay(1);
+                else{
+                    //todo build it
+                }
+            }
+        }
+    }
+
+    private static void checkDitches(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Tile ditch : kingdom.getDitches()){
+                if(!ditch.isDitch()) {
+                    if (ditch.getDitchDelay() > 0) {
+                        boolean isSomeOneDigging = false;
+                        for (Soldier soldier : ditch.getSoldiers()) {
+                            if (soldier.getDitch() == ditch) {
+                                isSomeOneDigging = true;
+                                break;
+                            }
+                        }
+                        if (isSomeOneDigging) ditch.subDitchDelay();
+                    }
+                    else {
+                        ditch.setDitch(true);
+                        for(Soldier soldier : kingdom.getSoldiers())
+                            if(soldier.getDitch() == ditch) soldier.setDitch(null);
+                        ditch.setHeight(-4);
+                        //put soldiers somewhere else
+                    }
+                }
+            }
+        }
     }
 
     private static void resetOilState(Kingdom kingdom) {
