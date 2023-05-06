@@ -98,7 +98,6 @@ public enum Commands {
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
     SHOW_BUILDINGS("^show buildings$"),
     STOP_PATROL("^stop patrolling$"),
-
     ;
 
     private String regex;

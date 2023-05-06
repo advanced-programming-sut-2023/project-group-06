@@ -1,11 +1,14 @@
 package org.example.Model;
 
+import org.example.Controller.GameControllers.GameController;
+import org.example.Controller.PathFinder;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Producers;
 import org.example.Model.BuildingGroups.Storage;
 
 import java.util.ArrayList;
+import java.util.Deque;
 
 public class Kingdom {
 
@@ -34,6 +37,7 @@ public class Kingdom {
     private ArrayList<TradeRequest> tradeRequestsSentByMe = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
     private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
+    private ArrayList<Equipment> equipments = new ArrayList<>();
     private User owner;
     private Soldier king;
     private Building mainCastle;
@@ -195,6 +199,25 @@ public class Kingdom {
         if(nonEmptyStockpiles.size() == 0)
             return null;
         else return nonEmptyStockpiles.get((int) (Math.random() * nonEmptyStockpiles.size()));
+    }
+
+    public Producers getRandomOilSmelter(int y, int x) {
+        ArrayList<Producers> nonEmptyOilSmelters = new ArrayList<>();
+        for (Producers producers : oilSmelter) {
+            if (producers.getStored() > 0) nonEmptyOilSmelters.add(producers);
+        }
+        PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
+        Deque<Tile> path = null;
+        Producers destination = null;
+        for (Producers building : nonEmptyOilSmelters) {
+            path = pathFinder.findPath(GameController.currentGame.getTileByCoordinates(y,x),
+                    GameController.currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()));
+            if (path != null) {
+                destination = building;
+                break;
+            }
+        }
+        return destination;
     }
 
     public int getHorseNumber() {
@@ -594,5 +617,13 @@ public class Kingdom {
                 amount -= cost;
             }
         }
+    }
+
+    public ArrayList<Equipment> getEquipments() {
+        return equipments;
+    }
+
+    public void addEquipment(Equipment equipment) {
+        this.equipments.add(equipment);
     }
 }

@@ -172,16 +172,17 @@ public enum Response {
     CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     PATROL_SUCCESSFUL("The unit will patrol between the places!"),
+    INVALID_STATE("Invalid state!"),
+    SET_STATE_SUCCESSFUL("Set state successful!"),
     NO_ARMED_OIL_ENGINEER("No armed oil engineer exists in this tile!"),
     NO_DOG_RELEASE("There is no dogs here to release!"),
     CAGE_BLOCKED("Cage's door is blocked!"),
     DOGS_RELEASED("Dogs are released successfully!"),
-    INVALID_STATE("Invalid state!"),
-    SET_STATE_SUCCESSFUL("Set state successful!"),
     CANT_REMOVE_THE_KING("You can't remove your king!"),
     SET_TEXTURE_UNDER_TREE("You can't change the ground under a tree!"),
     SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     STOP_PATROL("The units will stop patrolling!"),
+    NOT_ENOUGH_COWS("You don't have enough cows to do this!"),
     ;
     public final String message;
 

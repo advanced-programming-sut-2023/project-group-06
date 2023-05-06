@@ -137,6 +137,7 @@ public class KingdomController {
         String output = "all buildings:";
         for (Building building : currentKingdom.getBuildings()) {
             output += '\n' + building.toString();
+
         }
         return output;
     }

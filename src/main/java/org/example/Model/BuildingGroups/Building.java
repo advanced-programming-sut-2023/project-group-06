@@ -103,8 +103,7 @@ public class Building {
     }
 
     public String toString() {
-        String output = this.getBuildingType().getName();
-        output += ", x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
+        String output = "x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
         output += ", is it flammable? " + isFlammable;
         return output;
     }

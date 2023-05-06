@@ -2,15 +2,14 @@ package org.example.Controller.GameControllers;
 
 import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
+import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
-import org.example.Model.Game;
-import org.example.Model.Soldier;
-import org.example.Model.Tile;
-import org.example.Model.UnitType;
+import org.example.Model.BuildingGroups.Producers;
 import org.example.View.Response;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Deque;
 import java.util.concurrent.Callable;
 import java.util.Objects;
@@ -162,20 +161,15 @@ public class SoldierController {
         Building thisBuilding;
         if ((thisBuilding = currentGame.getTileByCoordinates(destinationY,destinationX).getBuilding()) != null && thisBuilding.getOwner() != currentGame.currentPlayer())
             thisBuilding.setFlammable(true);
-        PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
-        Deque<Tile> path = null;
-        Tile destination = null;
-        for (Building building : currentGame.currentPlayer().getOilSmelter()) {
-            path = pathFinder.findPath(currentGame.getTileByCoordinates(y,x),currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate()));
-            if (path != null) {
-                destination = currentGame.getTileByCoordinates(building.getYCoordinate(),building.getXCoordinate());
-                break;
-            }
-        }
+        Producers destinationBuilding = soldiers.get(0).getOwner().getRandomOilSmelter(y,x);
+        destinationY = destinationBuilding.getYCoordinate();
+        destinationX = destinationBuilding.getXCoordinate();
+        Tile destination = currentGame.getTileByCoordinates(destinationY,destinationX);
         for (Soldier soldier : soldiers) {
             soldier.setHasOil(false);
             if (destination == null) destination = currentGame.getTileByCoordinates(y,x);
             soldier.setWishPlace(destination);
+            soldier.setKingSaidToMove(true);
         }
         return Response.POUR_OIL;
     }
