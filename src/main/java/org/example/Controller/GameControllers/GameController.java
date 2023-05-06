@@ -255,7 +255,8 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        if(buildingtype == null || buildingtype == BuildingType.TREE || buildingtype == BuildingType.ROCK)
+        if(buildingtype == null || buildingtype == BuildingType.TREE ||
+                buildingtype == BuildingType.ROCK || buildingtype == BuildingType.STAIR)
             return Response.INVALID_TYPE;
         if(buildingtype.getBuildingClass() == Gate.class && direction == null)
             return Response.ENTER_DIRECTION;
@@ -356,6 +357,46 @@ public class GameController {
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
         return Response.DROP_BUILDING_SUCCESSFUL;
+    }
+
+    public static Response dropStair(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String direction = Controller.makeEntryValid(matcher.group("direction"));
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        if(direction == null)
+            return Response.ENTER_DIRECTION;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!BuildingType.checkGround(BuildingType.STAIR, currentGame.getTileByCoordinates(y, x).getType()))
+            return Response.INVALID_GROUND;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
+            if (currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
+                    currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != currentPlayer)
+                ((Trap) currentGame.getTileByCoordinates(y, x).getBuilding()).setCanBeSeenByEnemy(true);
+            return Response.BUILDING_ALREADY_EXIST;
+        }
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
+            return Response.CANT_PUT_THIS_ON_TROOPS;
+        int stairDirection = getDirection(direction);
+        int frontX = x;
+        int frontY = y;
+        if(stairDirection % 2 == 0) frontY += stairDirection - 1;
+        else frontX += 2 - stairDirection;
+        if(currentGame.getTileByCoordinates(frontY, frontX).getBuilding() == null ||
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() == BuildingType.DRAWBRIDGE ||
+                (currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() != BuildingType.WALL &&
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getClass() != Gate.class))
+            return Response.BUILD_STAIR_NEAR_WALL;
+        Building stair = new Building(currentPlayer, BuildingType.STAIR, x, y, stairDirection);
+        for(int i = x ; i <= x ; i++){
+            for(int j = y ; j <= y ; j++){
+                currentGame.getTileByCoordinates(j, i).setBuilding(stair);
+            }
+        }
+        currentPlayer.getBuildings().add(stair);
+        return Response.DROP_STAIR_SUCCESSFUL;
     }
 
     public static Response putMainCastle(Matcher matcher){
@@ -531,6 +572,27 @@ public class GameController {
         if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
             currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(0);
             currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+            ArrayList<Soldier> soldiersOnGate = new ArrayList<>();
+            if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
+                currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
+                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(0);
+                soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers());
+                soldiersOnGate.addAll(currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).getSoldiers());
+            }
+            //frontY - y + x0
+            //frontX - x + y0
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(y, x).getSoldiers());
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).getSoldiers());
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(frontY, frontX).getSoldiers());
+            for(Soldier soldier : soldiersOnGate){
+                Tile place = currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate());
+                Tile target = currentGame.getTileByCoordinates(soldier.getYCoordinate() + frontX - x,
+                        soldier.getXCoordinate() + frontY - y);
+                place.removeSoldier(soldier);
+                target.addSoldier(soldier);
+                soldier.setYCoordinate(target.getYCoordinate());
+                soldier.setXCoordinate(target.getXCoordinate());
+            }
         }
         else {
             if (3 * frontX - 2 * x < 0 || 3 * frontX - 2 * x >= currentGame.getMapWidth() ||
@@ -561,6 +623,10 @@ public class GameController {
         if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
             currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(3);
             currentGame.getTileByCoordinates(frontY, frontX).setHeight(3);
+            if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
+                currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(3);
+                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(3);
+            }
         }
         else{
             if(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
@@ -924,7 +990,7 @@ public class GameController {
 
     private static void autoProducing(Kingdom player){
         for(Building building : player.getBuildings()){
-            if(/*building.getBuildingType().getBuildingClass() == Producers.class*/building instanceof Producers){
+            if(building instanceof Producers){
                 ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
@@ -1082,6 +1148,21 @@ public class GameController {
                 }
             }
         }
+    }
+
+    public static Response removeDitch(Matcher matcher){
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!currentPlayer.getDitches().contains(currentGame.getTileByCoordinates(y, x)))
+            return Response.YOU_HAVE_NO_DITCH_THERE;
+        currentGame.getTileByCoordinates(y, x).setDitch(false);
+        setGroundBack(currentGame.getTileByCoordinates(y, x));
+        currentGame.getDitches().remove(currentGame.getTileByCoordinates(y, x));
+        currentPlayer.getDitches().remove(currentGame.getTileByCoordinates(y, x));
+        currentGame.getTileByCoordinates(y, x).setDitchDelay(3);
+        return Response.DITCH_REMOVED;
     }
 
     public static Tile getAdjacentCell(Tile tile, Unit soldier){

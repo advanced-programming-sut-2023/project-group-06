@@ -4,6 +4,7 @@ import org.example.Model.Kingdom;
 
 public class Gate extends Building{
     boolean isOpen = false;
+    Kingdom flag;
 
     public boolean isOpen() {
         return isOpen;

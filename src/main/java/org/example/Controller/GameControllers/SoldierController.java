@@ -34,10 +34,10 @@ public class SoldierController {
         if(type == null)
             return Response.INVALID_TYPE;
         //check for the target tile todo
-        if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
+        /*if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
                 (currentGame.getTileByCoordinates(y, x).getBuilding() != null
                         && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
-            return Response.CANT_GO_THERE;
+            return Response.CANT_GO_THERE;*/
         int number = 0;
         for(Unit unit : soldiers){
             if(unit.getUnitType() == type) {
@@ -162,6 +162,20 @@ public class SoldierController {
             ((Soldier) soldier).setState(state);
         }
         return Response.SET_STATE_SUCCESSFUL;
+    }
+
+    public static Response stopDigging(){
+        boolean wereTheyAboutToDig = false;
+        for(Unit unit : soldiers){
+            if(unit.getUnitType() != UnitType.ENGINEER){
+                if(((Soldier) unit).getDitch() != null){
+                    wereTheyAboutToDig = true;
+                    ((Soldier) unit).setDitch(null);
+                }
+            }
+        }
+        if(!wereTheyAboutToDig) return Response.THESE_UNITS_WERE_NOT_ABOUT_TO_DIG;
+        return Response.STOP_DIGGING;
     }
 
     public static Response fireAtEnemy(Matcher matcher){

@@ -196,6 +196,12 @@ public enum Response {
     THIS_UNIT_CANT_PATROL("Engineers are not suitable for patrolling!"),
     ENGINEERS_CANT_DIG("Engineers can't dig!"),
     YOU_CANT_SET_STATE_FOR_ENGINEERS("You can't set state for an engineer!"),
+    THESE_UNITS_WERE_NOT_ABOUT_TO_DIG("These units were not about to dig!"),
+    STOP_DIGGING("They will stop digging!"),
+    YOU_HAVE_NO_DITCH_THERE("You have dug no ditch in there!"),
+    DITCH_REMOVED("Ditch removed successfully!"),
+    BUILD_STAIR_NEAR_WALL("You must build the stair toward a wall or gate!"),
+    DROP_STAIR_SUCCESSFUL("Drop stair successful!"),
     ;
     public final String message;
 
