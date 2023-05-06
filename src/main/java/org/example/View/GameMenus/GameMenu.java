@@ -159,7 +159,9 @@ public class GameMenu extends Menu {
                     System.out.println("The game is finished");
                     System.out.printf(result, GameController.currentGame.getPlayers().get(0).getUsername());
                     System.out.println("Entered main menu");
-                    //todo upgrade the user
+                    GameController.currentGame.getPlayers().get(0).addHighScore(10000 +
+                            GameController.currentGame.getKingdoms().get(0).getHappiness() +
+                            GameController.currentGame.getKingdoms().get(0).getMaxPopulation());
                     return MenuType.MAIN_MENU;
                 }
                 System.out.printf(result, GameController.currentGame.getNumberOfTurns(),

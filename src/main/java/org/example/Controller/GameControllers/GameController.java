@@ -77,6 +77,7 @@ public class GameController {
             for(int i = xCenter - size; i <= xCenter + size; i++){
                 for(int j = yCenter - size; j <= yCenter + size; j++){
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
+                    setGroundBack(currentGame.getTileByCoordinates(j, i));
                 }
             }
         }
@@ -615,7 +616,7 @@ public class GameController {
             checkPatrolUnits();
             checkCows();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
-                kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
+                kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
                 armOilEngineers(kingdom);
                 resetOilState(kingdom);
@@ -733,6 +734,11 @@ public class GameController {
                 if(currentGame.getNumberOfPlayers() == 1) return;
             }
         }
+    }
+
+    private static void destroyDeadBuildings(){
+        //todo
+        //setGroundBack()
     }
 
     private static void moveUnits() {
@@ -896,12 +902,6 @@ public class GameController {
         TradeController.currentPlayer = currentPlayer;
     }
 
-    private static Response endGame(){
-        return null;
-        //todo
-        //set all static fields inside controllers equal to zero
-    }
-
     public static Response terminateTheGame(){
         return null;
         //todo
@@ -920,6 +920,8 @@ public class GameController {
                 }
             }
         }
+        int highScore = kingdom.getMaxPopulation() + kingdom.getHappiness();
+        kingdom.getOwner().addHighScore(highScore);
         currentGame.removeKingdom(kingdom);
     }
 
