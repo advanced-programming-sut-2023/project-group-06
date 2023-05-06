@@ -1215,7 +1215,7 @@ public class GameController {
             path = pathFinder.findPath(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()), tile);
             if (path == null) return false;
         }
-        return tile.getBuilding() == null && !tile.isDitch();
+        return true;
     }
 
     private static void resetOilState(Kingdom kingdom) {
