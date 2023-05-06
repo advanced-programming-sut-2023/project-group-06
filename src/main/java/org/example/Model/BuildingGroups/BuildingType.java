@@ -55,7 +55,7 @@ public enum BuildingType {
     MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
     STAIR(100, 0, 1, null, 0, 0, 0, false, "stair", null),
-    WALL(100, 0, 1, null, 0, 0, 0, false, "wall", null),
+    WALL(100, 0, 1, null, 0, 0, 0, false, "wall", Towers.class),
     BRIDGE(1, 0, 1, null, 0, 0, 0, true, "bridge", null),
     ;
     private int size;
