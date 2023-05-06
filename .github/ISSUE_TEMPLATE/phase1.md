@@ -315,5 +315,15 @@ assignees: Arman17Babaei
   2. [x] در حال انجام
   3. [x] تمام شده
   </div>
+</details>  
+<details>
+  <summary> هندل کردن خندق و تونل </summary>
+
+  <div dir="ltr" align='right'>
+
+  1. [x] شروع نشده
+  2. [x] در حال انجام
+  3. [ ] تمام شده
+  </div>
 </details>
 </div>
