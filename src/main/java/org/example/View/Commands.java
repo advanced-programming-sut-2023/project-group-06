@@ -98,6 +98,7 @@ public enum Commands {
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
     SHOW_BUILDINGS("^show buildings$"),
     STOP_PATROL("^stop patrolling$"),
+    BUILD_EQUIPMENT("^build equipment -q (?<equipmentName>(((\\\"[^\\\"]*\\\")|\\S*)))$")
     ;
 
     private String regex;

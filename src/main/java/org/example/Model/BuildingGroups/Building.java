@@ -1,6 +1,7 @@
 package org.example.Model.BuildingGroups;
 
 import org.example.Controller.GameControllers.GameController;
+import org.example.Model.EquipmentType;
 import org.example.Model.Kingdom;
 import org.example.Model.Resources;
 import org.example.Model.Tile;
@@ -16,6 +17,8 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
+    private boolean isOnFire = false;
+    private EquipmentType equipmentType = null;
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -33,6 +36,14 @@ public class Building {
         this.hitPoint = buildingType.getHitPoint();
     }
 
+    public EquipmentType getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(EquipmentType equipmentType) {
+        this.equipmentType = equipmentType;
+    }
+
     public int getDelay() {
         return delay;
     }
@@ -41,8 +52,8 @@ public class Building {
         this.delay = delay;
     }
 
-    public void addDelay(int delay){
-        this.delay += delay;
+    public void subDelay(){
+        this.delay -= 1;
     }
 
     public int getHitPoint() {

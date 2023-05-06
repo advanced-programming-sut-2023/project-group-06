@@ -183,6 +183,11 @@ public enum Response {
     SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     STOP_PATROL("The units will stop patrolling!"),
     NOT_ENOUGH_COWS("You don't have enough cows to do this!"),
+    EMPTY_EQUIPMENT_NAME("Equipment name's field can't be empty!"),
+    INVALID_EQUIPMENT("There is no equipment with this name!"),
+    NOT_ENOUGH_GOLD_EQUIPMENT("You don't have enough gold to build this equipment!"),
+    NOT_ENOUGH_ENGINEERS_EQUIPMENT("You don't have enough engineers to build this equipment!"),
+    EQUIPMENT_BUILT("Equipment built successfully!"),
     ;
     public final String message;
 
@@ -206,6 +211,7 @@ public enum Response {
         if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
         if (name.equals("id")) return EMPTY_ID;
         if (name.equals("direction")) return EMPTY_DIRECTION;
+        if (name.equals("equipmentName")) return EMPTY_EQUIPMENT_NAME;
         return null;
     }
 }

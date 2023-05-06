@@ -4,15 +4,16 @@ import org.example.Controller.GameControllers.GameController;
 import org.example.Model.BuildingGroups.Building;
 
 public class Unit {
-    private int XCoordinate;
-    private int YCoordinate;
-    private Kingdom owner;
-    private UnitType unitType;
-    private Tile wishPlace;
-    boolean isKingSaidToMove = false;
-    private int cowStored;
-    private int speed;
-    private int health;
+    protected int XCoordinate;
+    protected int YCoordinate;
+    protected Kingdom owner;
+    protected UnitType unitType;
+    protected Tile wishPlace;
+    protected boolean isKingSaidToMove = false;
+    protected int cowStored;
+    protected int speed;
+    protected int health;
+    protected boolean isAvailable = true;
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
     }
@@ -46,6 +47,7 @@ public class Unit {
         this.speed = unitType.getSpeed();
         this.health = unitType.getHitPoint();
         wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
+        if (unitType == UnitType.ENGINEER) owner.addEngineer(this);
     }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner) {
@@ -99,7 +101,18 @@ public class Unit {
         health -= hit;
     }
 
+    public boolean isAvailable() {
+        return isAvailable;
+    }
+
+    public void setAvailable(boolean available) {
+        isAvailable = available;
+    }
+
     public String toString() {
-        return getUnitType().getName() + ": hp: " + health + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        String output = getUnitType().getName() + ": hp: " + health + ", owner: "
+                + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        if (this.unitType == UnitType.ENGINEER) output += ", is available? " + isAvailable;
+        return output;
     }
 }

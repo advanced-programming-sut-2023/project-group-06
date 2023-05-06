@@ -22,6 +22,7 @@ public class Kingdom {
     private int population = 0;
     private int maxPopulation = 9;
     private int fear = 0;
+    private ArrayList<Unit> engineers = new ArrayList<>();
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> units = new ArrayList<>();
     private ArrayList<Unit> cows = new ArrayList<>();
@@ -286,6 +287,30 @@ public class Kingdom {
         return totalEngineers;
     }
 
+    public void payEngineer(int count, int y, int x) {
+        int amount = count;
+        for (Storage storage : engineerGuilds) {
+            if (storage.getStored() > 0) {
+                int payment = Math.min(amount, storage.getStored());
+                storage.addToStored(-1 * payment);
+                amount -= payment;
+                int cnt = 0;
+                int i = 0;
+                while (cnt < payment) {
+                    Tile tile = GameController.currentGame.getTileByCoordinates(storage.getYCoordinate(),storage.getXCoordinate());
+                    if (tile.getAllUnits().get(i).getUnitType() == UnitType.ENGINEER && tile.getAllUnits().get(i).isAvailable()) {
+                        cnt++;
+                        tile.getAllUnits().get(i).setWishPlace(GameController.currentGame.getTileByCoordinates(y,x));
+                        tile.getAllUnits().get(i).setAvailable(false);
+                        tile.getAllUnits().get(i).setKingSaidToMove(true);
+                    }
+                    i++;
+                }
+            }
+            if (amount == 0) break;
+        }
+    }
+
     public void payEngineer(int count) {
         int amount = count;
         for (Storage storage : engineerGuilds) {
@@ -293,6 +318,17 @@ public class Kingdom {
                 int payment = Math.min(amount, storage.getStored());
                 storage.addToStored(-1 * payment);
                 amount -= payment;
+                int cnt = 0;
+                Tile tile = GameController.currentGame.getTileByCoordinates(storage.getYCoordinate(),storage.getXCoordinate());
+                int i = tile.getAllUnits().size() - 1;
+                while (cnt < payment) {
+                    if (tile.getAllUnits().get(i).getUnitType() == UnitType.ENGINEER && tile.getAllUnits().get(i).isAvailable()) {
+                        cnt++;
+                        units.remove(tile.getAllUnits().get(i));
+                        tile.removeUnit(tile.getAllUnits().get(i));
+                    }
+                    i--;
+                }
             }
             if (amount == 0) break;
         }
@@ -625,5 +661,13 @@ public class Kingdom {
 
     public void addEquipment(Equipment equipment) {
         this.equipments.add(equipment);
+    }
+
+    public ArrayList<Unit> getEngineers() {
+        return engineers;
+    }
+
+    public void addEngineer(Unit engineer) {
+        this.engineers.add(engineer);
     }
 }
