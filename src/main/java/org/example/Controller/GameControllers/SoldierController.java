@@ -177,11 +177,10 @@ public class SoldierController {
     }
 
     public static Response pourOil(Matcher matcher){
-        /*boolean check = true;
-        for (Soldier soldier : soldiers) if (soldier.getUnitType() != UnitType.OIL_ENGINEER) check = false;
+        boolean check = soldiers.get(0).getUnitType() == UnitType.OIL_ENGINEER;
         if (!check) return Response.INAPPROPRIATE_UNIT;
         check = false;
-        for (Soldier soldier : soldiers) if (soldier.isHasOil()) check = true;
+        for (Unit soldier : soldiers) if (((Soldier) soldier).isHasOil()) check = true;
         if (!check) return Response.NO_OIL;
         String[] groupNames = {"direction"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
@@ -206,12 +205,12 @@ public class SoldierController {
         destinationY = destinationBuilding.getYCoordinate();
         destinationX = destinationBuilding.getXCoordinate();
         Tile destination = currentGame.getTileByCoordinates(destinationY,destinationX);
-        for (Soldier soldier : soldiers) {
-            soldier.setHasOil(false);
+        for (Unit soldier : soldiers) {
+            ((Soldier) soldier).setHasOil(false);
             if (destination == null) destination = currentGame.getTileByCoordinates(y,x);
             soldier.setWishPlace(destination);
             soldier.setKingSaidToMove(true);
-        }*/
+        }
         return Response.POUR_OIL;
     }
 
