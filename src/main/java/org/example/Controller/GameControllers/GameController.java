@@ -506,20 +506,22 @@ public class GameController {
         if(x < 0 || y < 0 || x >= currentGame.getMapWidth() || y >= currentGame.getMapHeight())
             return Response.INVALID_INPUT;
         UnitType type = UnitType.getSoldierTypeByString(typeString);
-        ArrayList<Soldier> soldiers = new ArrayList<>();
-        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            if(soldier.getOwner() == currentPlayer && soldier.getUnitType() == type)
-                soldiers.add(soldier);
+        if(type == null || type == UnitType.COW || type == UnitType.DOG)
+            return Response.INVALID_TYPE;
+        ArrayList<Unit> units = new ArrayList<>();
+        for(Unit unit : currentGame.getTileByCoordinates(y, x).getAllUnits()){
+            if(unit.getOwner() == currentPlayer && unit.getUnitType() == type)
+                units.add(unit);
         }
-        if(soldiers.size() == 0)
+        if(units.size() == 0)
             return Response.NO_UNITS_WITH_THAT_TYPE;
-        for(Soldier soldier : soldiers) {
-            if(soldier.isSaidToPatrol()) {
-                soldier.setSaidToPatrol(false);
-                soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+        /*for(Unit unit : units) {
+            if(unit instanceof Soldier && ((Soldier) unit).isSaidToPatrol()) {
+                ((Soldier) unit).setSaidToPatrol(false);
+                unit.setWishPlace(currentGame.getTileByCoordinates(unit.getYCoordinate(), unit.getXCoordinate()));
             }
-        }
-        SoldierController.soldiers = soldiers;
+        }*/
+        SoldierController.soldiers = units;
         SoldierController.currentGame = currentGame;
         return Response.SELECT_SOLDIER_SUCCESSFUL;
     }
@@ -1082,7 +1084,7 @@ public class GameController {
         }
     }
 
-    public static Tile getAdjacentCell(Tile tile, Soldier soldier){
+    public static Tile getAdjacentCell(Tile tile, Unit soldier){
         int x = tile.getXCoordinate();
         int y = tile.getYCoordinate();
         if(tile.isDitch()){
@@ -1125,7 +1127,7 @@ public class GameController {
         return null;
     }
 
-    private static boolean checkTile(Tile tile, Soldier soldier){
+    private static boolean checkTile(Tile tile, Unit soldier){
         if(soldier != null){
             PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
             Deque<Tile> path = null;

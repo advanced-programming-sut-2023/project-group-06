@@ -192,7 +192,10 @@ public enum Response {
     THERE_IS_NO_DITCH("There is no ditch in there!"),
     CANT_FILL_DITCH("This unit can't fill ditch!"),
     THE_UNIT_CANT_GO_THERE("The unit can't go there!"),
-    FILLING("Let's fill the ditch"),
+    FILLING("Let's fill the ditch!"),
+    THIS_UNIT_CANT_PATROL("Engineers are not suitable for patrolling!"),
+    ENGINEERS_CANT_DIG("Engineers can't dig!"),
+    YOU_CANT_SET_STATE_FOR_ENGINEERS("You can't set state for an engineer!"),
     ;
     public final String message;
 

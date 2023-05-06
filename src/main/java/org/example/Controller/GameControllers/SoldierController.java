@@ -16,7 +16,7 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 
 public class SoldierController {
-    public static ArrayList<Soldier> soldiers;
+    public static ArrayList<Unit> soldiers;
     public static Game currentGame;
 
     public static Response moveUnitWithType(Matcher matcher){
@@ -39,11 +39,11 @@ public class SoldierController {
                         && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
             return Response.CANT_GO_THERE;
         int number = 0;
-        for(Soldier soldier : soldiers){
-            if(soldier.getUnitType() == type) {
+        for(Unit unit : soldiers){
+            if(unit.getUnitType() == type) {
                 number++;
-                soldier.setKingSaidToMove(true);
-                soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
+                unit.setKingSaidToMove(true);
+                unit.setWishPlace(currentGame.getTileByCoordinates(y, x));
             }
         }
         if(number == 0)
@@ -62,7 +62,7 @@ public class SoldierController {
                         && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
             return Response.CANT_GO_THERE;
         int number = 0;
-        for(Soldier soldier : soldiers){
+        for(Unit soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
         }
@@ -75,20 +75,22 @@ public class SoldierController {
         int y1 = Integer.parseInt(matcher.group("y1"));
         int y2 = Integer.parseInt(matcher.group("y2"));
         //todo check target places
-        for(Soldier soldier : soldiers){
-            soldier.setSaidToPatrol(true);
-            soldier.setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
-            soldier.setPatrolWishPlace2(currentGame.getTileByCoordinates(y2, x2));
-            soldier.setWishPlace(soldier.getPatrolWishPlace1());
+        if(soldiers.get(0).getUnitType() == UnitType.ENGINEER)
+            return Response.THIS_UNIT_CANT_PATROL;
+        for(Unit soldier : soldiers){
+            ((Soldier) soldier).setSaidToPatrol(true);
+            ((Soldier) soldier).setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
+            ((Soldier) soldier).setPatrolWishPlace2(currentGame.getTileByCoordinates(y2, x2));
+            soldier.setWishPlace(((Soldier) soldier).getPatrolWishPlace1());
             soldier.setKingSaidToMove(false);
         }
         return Response.PATROL_SUCCESSFUL;
     }
 
     public static Response stopPatrolling(){
-        for(Soldier soldier : soldiers){
-            if(soldier.isSaidToPatrol()) {
-                soldier.setSaidToPatrol(false);
+        for(Unit soldier : soldiers){
+            if(((Soldier) soldier).isSaidToPatrol()) {
+                ((Soldier) soldier).setSaidToPatrol(false);
                 soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
             }
         }
@@ -116,10 +118,10 @@ public class SoldierController {
                 currentGame.getTileByCoordinates(y, x).getType() != TileStructure.GRASS &&
                 currentGame.getTileByCoordinates(y, x).getType() != TileStructure.MEADOW)
             return Response.CANT_DIG_HERE;
-        for(Soldier soldier : soldiers){
+        for(Unit soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
-            soldier.setDitch(currentGame.getTileByCoordinates(y, x));
+            ((Soldier) soldier).setDitch(currentGame.getTileByCoordinates(y, x));
         }
         soldiers.get(0).getOwner().getDitches().add(currentGame.getTileByCoordinates(y, x));
         currentGame.getTileByCoordinates(y, x).setDitchDelay(3);
@@ -136,10 +138,10 @@ public class SoldierController {
         Tile adjacent = GameController.getAdjacentCell(currentGame.getTileByCoordinates(y, x), soldiers.get(0));
         if(adjacent == null)
             return Response.THE_UNIT_CANT_GO_THERE;
-        for(Soldier soldier : soldiers){
+        for(Unit soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(adjacent);
-            soldier.setFill(currentGame.getTileByCoordinates(y, x));
+            ((Soldier) soldier).setFill(currentGame.getTileByCoordinates(y, x));
         }
         return Response.FILLING;
     }
@@ -147,6 +149,8 @@ public class SoldierController {
     public static Response setUnitState(Matcher matcher){
         String stateString = matcher.group("state");
         int state;
+        if(soldiers.get(0).getUnitType() == UnitType.ENGINEER)
+            return Response.YOU_CANT_SET_STATE_FOR_ENGINEERS;
         if(Objects.equals(stateString, "offensive"))
             state = 2;
         else if(Objects.equals(stateString, "standing"))
@@ -154,8 +158,8 @@ public class SoldierController {
         else if(Objects.equals(stateString, "defensive"))
             state = 0;
         else return Response.INVALID_STATE;
-        for(Soldier soldier : soldiers){
-            soldier.setState(state);
+        for(Unit soldier : soldiers){
+            ((Soldier) soldier).setState(state);
         }
         return Response.SET_STATE_SUCCESSFUL;
     }
@@ -173,7 +177,7 @@ public class SoldierController {
     }
 
     public static Response pourOil(Matcher matcher){
-        boolean check = true;
+        /*boolean check = true;
         for (Soldier soldier : soldiers) if (soldier.getUnitType() != UnitType.OIL_ENGINEER) check = false;
         if (!check) return Response.INAPPROPRIATE_UNIT;
         check = false;
@@ -207,7 +211,7 @@ public class SoldierController {
             if (destination == null) destination = currentGame.getTileByCoordinates(y,x);
             soldier.setWishPlace(destination);
             soldier.setKingSaidToMove(true);
-        }
+        }*/
         return Response.POUR_OIL;
     }
 

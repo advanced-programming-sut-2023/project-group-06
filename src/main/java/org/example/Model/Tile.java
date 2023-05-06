@@ -185,6 +185,14 @@ public class Tile {
         return false;
     }
 
+    public boolean checkForEngineers(){
+        for(Unit unit : this.allUnits){
+            if(unit.getUnitType() == UnitType.ENGINEER)
+                return true;
+        }
+        return false;
+    }
+
     public String toString() {
         return "(" + this.getX() + this.getY() + this.getType() + this.getHeight() + ")";
     }
