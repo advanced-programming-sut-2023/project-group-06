@@ -1018,14 +1018,92 @@ public class GameController {
                     }
                     else {
                         ditch.setDitch(true);
-                        for(Soldier soldier : kingdom.getSoldiers())
-                            if(soldier.getDitch() == ditch) soldier.setDitch(null);
                         ditch.setHeight(-4);
-                        //put soldiers somewhere else
+                        for(Soldier soldier : kingdom.getSoldiers()) {
+                            if (soldier.getDitch() == ditch) {
+                                soldier.setDitch(null);
+                                if (soldier.getYCoordinate() == ditch.getYCoordinate() && soldier.getXCoordinate() == ditch.getXCoordinate()) {
+                                    Tile adjacent = getAdjacentCell(ditch, null);
+                                    ditch.removeSoldier(soldier);
+                                    if (adjacent != null) {
+                                        adjacent.addSoldier(soldier);
+                                        soldier.setXCoordinate(adjacent.getXCoordinate());
+                                        soldier.setYCoordinate(adjacent.getYCoordinate());
+                                    }
+                                    else kingdom.removeUnit(soldier);
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+
+    private static void checkToFillDitches(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Tile ditch : kingdom.getDitches()){
+                if(ditch.isDitch()){
+                    int x = ditch.getXCoordinate();
+                    int y = ditch.getYCoordinate();/*
+                    if(y > 0) currentGame.getTileByCoordinates(y - 1, x);*/
+                    //todo
+                }
+            }
+        }
+    }
+
+    public static Tile getAdjacentCell(Tile tile, Soldier soldier){
+        int x = tile.getXCoordinate();
+        int y = tile.getYCoordinate();
+        if(tile.isDitch()){
+            if(y > 0 && checkTile(currentGame.getTileByCoordinates(y - 1, x), soldier))
+                return currentGame.getTileByCoordinates(y - 1, x);
+            if(y < currentGame.getMapHeight() - 1 && checkTile(currentGame.getTileByCoordinates(y + 1, x), soldier))
+                return currentGame.getTileByCoordinates(y + 1, x);
+            if(x > 0 && checkTile(currentGame.getTileByCoordinates(y, x - 1), soldier))
+                return currentGame.getTileByCoordinates(y, x - 1);
+            if(x < currentGame.getMapWidth() - 1 && checkTile(currentGame.getTileByCoordinates(y, x + 1), soldier))
+                return currentGame.getTileByCoordinates(y, x + 1);
+        }
+        else if(tile.getBuilding() != null){
+            int size = (tile.getBuilding().getBuildingType().getSize() - 1) / 2;
+            if(y > size){
+                for(int i = x - size; i <= x + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(y - size - 1, i), soldier))
+                        return currentGame.getTileByCoordinates(y - size - 1, i);
+                }
+            }
+            if(y < currentGame.getMapHeight() - size - 1){
+                for(int i = x - size; i <= x + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(y + size + 1, i), soldier))
+                        return currentGame.getTileByCoordinates(y + size + 1, i);
+                }
+            }
+            if(x > size){
+                for(int i = y - size; i <= y + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(i, x - size - 1), soldier))
+                        return currentGame.getTileByCoordinates(i, x - size - 1);
+                }
+            }
+            if(x < currentGame.getMapWidth() - size - 1){
+                for(int i = y - size; i <= y + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(i, y + size + 1), soldier))
+                        return currentGame.getTileByCoordinates(i, y + size + 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean checkTile(Tile tile, Soldier soldier){
+        if(soldier != null){
+            PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
+            Deque<Tile> path = null;
+            path = pathFinder.findPath(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()), tile);
+            if (path == null) return false;
+        }
+        return tile.getBuilding() == null && !tile.isDitch();
     }
 
     private static void resetOilState(Kingdom kingdom) {

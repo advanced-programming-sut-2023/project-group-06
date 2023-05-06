@@ -187,6 +187,12 @@ public enum Response {
     DITCH_UNDER_BUILDING("Can't dig ditch under a building!"),
     DITCH_UNDER_SOLDIERS("Can't dig ditch under units!"),
     DIGGING("Let's dig!"),
+    THERE_IS_ALREADY_DITCH("There is already a ditch in here!"),
+    CANT_DIG_HERE("You can't dig in here!"),
+    THERE_IS_NO_DITCH("There is no ditch in there!"),
+    CANT_FILL_DITCH("This unit can't fill ditch!"),
+    THE_UNIT_CANT_GO_THERE("The unit can't go there!"),
+    FILLING("Let's fill the ditch"),
     ;
     public final String message;
 

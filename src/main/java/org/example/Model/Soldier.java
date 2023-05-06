@@ -21,6 +21,7 @@ public class Soldier extends Unit {
     private Tile patrolWishPlace2;
     private int lastOiledTurn = -1;
     private Tile ditch;
+    private Tile fill;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -29,6 +30,14 @@ public class Soldier extends Unit {
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
+    }
+
+    public Tile getFill() {
+        return fill;
+    }
+
+    public void setFill(Tile fill) {
+        this.fill = fill;
     }
 
     public Tile getDitch() {

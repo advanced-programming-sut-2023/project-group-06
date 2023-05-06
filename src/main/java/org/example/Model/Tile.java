@@ -18,6 +18,7 @@ public class Tile {
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
     private ArrayList<Unit> allUnits = new ArrayList<>();
     private boolean isDitch = false;
+    private boolean isToFill = false;
     private int ditchDelay = 3;
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {

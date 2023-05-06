@@ -110,6 +110,12 @@ public class SoldierController {
             return Response.DITCH_UNDER_BUILDING;
         if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
             return Response.DITCH_UNDER_SOLDIERS;
+        if(currentGame.getTileByCoordinates(y, x).isDitch())
+            return Response.THERE_IS_ALREADY_DITCH;
+        if(currentGame.getTileByCoordinates(y, x).getType() != TileStructure.EARTH &&
+                currentGame.getTileByCoordinates(y, x).getType() != TileStructure.GRASS &&
+                currentGame.getTileByCoordinates(y, x).getType() != TileStructure.MEADOW)
+            return Response.CANT_DIG_HERE;
         for(Soldier soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
@@ -121,8 +127,21 @@ public class SoldierController {
     }
 
     public static Response fillDitch(Matcher matcher){
-        //todo
-        return null;
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(!currentGame.getTileByCoordinates(y, x).isDitch())
+            return Response.THERE_IS_NO_DITCH;
+        if(!soldiers.get(0).getUnitType().isCanDigDitch())
+            return Response.CANT_FILL_DITCH;
+        Tile adjacent = GameController.getAdjacentCell(currentGame.getTileByCoordinates(y, x), soldiers.get(0));
+        if(adjacent == null)
+            return Response.THE_UNIT_CANT_GO_THERE;
+        for(Soldier soldier : soldiers){
+            soldier.setKingSaidToMove(true);
+            soldier.setWishPlace(adjacent);
+            soldier.setFill(currentGame.getTileByCoordinates(y, x));
+        }
+        return Response.FILLING;
     }
 
     public static Response setUnitState(Matcher matcher){
