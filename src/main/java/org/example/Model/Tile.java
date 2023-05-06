@@ -43,6 +43,10 @@ public class Tile {
         this.ditchDelay -= 1;
     }
 
+    public void addDitchDelay(){
+        this.ditchDelay++;
+    }
+
     public int getDitchDelay() {
         return ditchDelay;
     }

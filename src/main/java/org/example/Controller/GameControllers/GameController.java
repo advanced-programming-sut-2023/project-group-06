@@ -619,6 +619,7 @@ public class GameController {
             checkPatrolUnits();
             checkCows();
             checkDitches();
+            checkToFillDitches();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
@@ -1019,6 +1020,7 @@ public class GameController {
                     else {
                         ditch.setDitch(true);
                         ditch.setHeight(-4);
+                        currentGame.getDitches().add(ditch);
                         for(Soldier soldier : kingdom.getSoldiers()) {
                             if (soldier.getDitch() == ditch) {
                                 soldier.setDitch(null);
@@ -1041,13 +1043,40 @@ public class GameController {
     }
 
     private static void checkToFillDitches(){
-        for(Kingdom kingdom : currentGame.getKingdoms()){
-            for(Tile ditch : kingdom.getDitches()){
-                if(ditch.isDitch()){
-                    int x = ditch.getXCoordinate();
-                    int y = ditch.getYCoordinate();/*
-                    if(y > 0) currentGame.getTileByCoordinates(y - 1, x);*/
-                    //todo
+        for(int i = 0; i < currentGame.getDitches().size(); i++){
+            Tile ditch = currentGame.getDitches().get(i);
+            if(ditch.getDitchDelay() < 3) {
+                int x = ditch.getXCoordinate();
+                int y = ditch.getYCoordinate();
+                boolean isToFill = false;
+                ArrayList<Soldier> allSoldiersAround = new ArrayList<>();
+                if (y > 0)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y - 1, x).getSoldiers());
+                if (y < currentGame.getMapHeight() - 1)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y + 1, x).getSoldiers());
+                if (x > 0)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y, x - 1).getSoldiers());
+                if (x < currentGame.getMapWidth() - 1)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y, x + 1).getSoldiers());
+                for (Soldier soldier : allSoldiersAround) {
+                    if (soldier.getFill() == ditch) {
+                        isToFill = true;
+                        break;
+                    }
+                }
+                if (isToFill) ditch.addDitchDelay();
+            }
+            else{
+                ditch.setDitch(false);
+                setGroundBack(ditch);
+                currentGame.getDitches().remove(ditch);
+                for(Kingdom kingdom : currentGame.getKingdoms()){
+                    kingdom.getDitches().remove(ditch);
+                    for(Soldier soldier : kingdom.getSoldiers()){
+                        if(soldier.getFill() == ditch){
+                            soldier.setFill(null);
+                        }
+                    }
                 }
             }
         }

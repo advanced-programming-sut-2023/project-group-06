@@ -99,6 +99,7 @@ public enum Commands {
     SHOW_BUILDINGS("^show buildings$"),
     STOP_PATROL("^stop patrolling$"),
     DIG_DITCH("^dig ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    FILL_DITCH("^fill the ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     ;
 
     private String regex;

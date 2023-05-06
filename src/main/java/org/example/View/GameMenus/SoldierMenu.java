@@ -32,6 +32,8 @@ public class SoldierMenu extends Menu {
                 System.out.println(SoldierController.stopPatrolling().message);
             else if((matcher = Commands.getMatcher(command, Commands.DIG_DITCH)).find())
                 System.out.println(SoldierController.digDitch(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.FILL_DITCH)).find())
+                System.out.println(SoldierController.fillDitch(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;
