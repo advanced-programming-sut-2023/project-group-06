@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 public class GameController {
     public static Game currentGame;
     public static Kingdom currentPlayer;
+    //use make entry valid everywhere
 
     public static Response initializeMap(Matcher matcher){
         String widthString = matcher.group("width");
@@ -340,7 +341,7 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
-        currentPlayer.payEngineer(buildingtype.getEngineerPrice());
+        currentPlayer.payEngineer(buildingtype.getEngineerPrice(), building.getYCoordinate(), building.getXCoordinate());
         currentPlayer.addToPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
@@ -608,6 +609,9 @@ public class GameController {
 
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
+            armOilEngineers();
+            resetOilState();
+            checkFireDamage();
             computeDamages(); // computeDamages
             destroyDeadBodies(); // destroyDeadBodies  //destroy dead buildings
             if(currentGame.getNumberOfPlayers() == 1) return Response.WINNER;
@@ -617,8 +621,7 @@ public class GameController {
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
                 computeFoods(kingdom);
-                armOilEngineers(kingdom);
-                resetOilState(kingdom);
+                checkDelays(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
                 //computeFears
@@ -652,6 +655,7 @@ public class GameController {
         int y = s.getYCoordinate();
         int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
         int attackPower = s.getAttackPower();
+        if (s.getUnitType() == UnitType.OIL_ENGINEER && !checkOilEngineerAttack(s)) return false;
         if(s.getUnitType().isArcherType() &&
                 currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
                 currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Towers)
@@ -671,11 +675,63 @@ public class GameController {
         if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
         if (squareOfDistance <= s.getRange() * s.getRange()) {
             s.setWishPlace(currentGame.getMap()[y][x]);
+            if (s.getUnitType() == UnitType.OIL_ENGINEER) {
+                for (Soldier soldier : currentGame.getTileByCoordinates(enemyY,enemyX).getSoldiers()) {
+                    soldier.setFlammable(true);
+                }
+                s.setHasOil(false);
+                return true;
+            } else if (s.getUnitType() == UnitType.SLAVE || s.getUnitType() == UnitType.FIRE_THROWER) {
+                for (Soldier soldier : currentGame.getTileByCoordinates(enemyY,enemyX).getSoldiers()) {
+                    if (soldier.isFlammable()) soldier.addToFireDamageEachTurn(s.getUnitType().getAttackPower());
+                }
+            }
             enemy.subHealth(attackPower);
             return true;
         }
         s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
         return true;
+    }
+
+    private static boolean checkOilEngineerAttack(Soldier s) {
+        int x = s.getXCoordinate();
+        int y = s.getYCoordinate();
+        int fightRange = 2;
+        if ((s.getState() == 0 && getNumberOfEnemiesInRange(s,fightRange) < 1) ||
+                (s.getState() == 1 && getNumberOfEnemiesInRange(s,fightRange) < 2) ||
+                (s.getState() == 2 && getNumberOfEnemiesInRange(s,fightRange) < 3)) return false;
+        if (!s.isHasOil()) return false;
+        return true;
+    }
+
+    private static int getNumberOfEnemiesInRange(Soldier soldier, int fightRange) {
+        int x = soldier.getXCoordinate();
+        int y = soldier.getYCoordinate();
+        Kingdom owner = soldier.getOwner();
+        int amount = 0;
+        for (int i = 1; i <= fightRange; i++) {
+            for (int j = 0; j <= i; j++) { // x+i-j, y+j
+                if (x + i - j >= currentGame.getMapWidth() || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x+i-j, y-j
+                if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x + i - j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y+j
+                if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
+                for (Soldier e : currentGame.getMap()[y + j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+            for (int j = 0; j <= i; j++) { // x-i+j, y-j
+                if (x - i + j < 0 || y - j < 0) continue;
+                for (Soldier e : currentGame.getMap()[y - j][x - i + j].getSoldiers())
+                    if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
+            }
+        }
+        return amount;
     }
 
     private static void computeAttackDamageOnBuildings(Soldier s){
@@ -924,28 +980,55 @@ public class GameController {
         currentGame.removeKingdom(kingdom);
     }
 
-    private static void armOilEngineers(Kingdom kingdom) {
-        for (Producers oilSmelter : kingdom.getOilSmelter()) {
-            for (Soldier soldier : currentGame.getTileByCoordinates(oilSmelter.getYCoordinate(),oilSmelter.getXCoordinate()).getSoldiers()) {
-                if (soldier.getUnitType() == UnitType.OIL_ENGINEER && soldier.getOwner() == kingdom && !soldier.isHasOil() && oilSmelter.getStored() > 0) {
-                    oilSmelter.addToStored(-1);
-                    soldier.setHasOil(true);
+    private static void armOilEngineers() {
+        for (Kingdom kingdom : currentGame.getKingdoms()) {
+            for (Producers oilSmelter : kingdom.getOilSmelter()) {
+                for (Soldier soldier : currentGame.getTileByCoordinates(oilSmelter.getYCoordinate(), oilSmelter.getXCoordinate()).getSoldiers()) {
+                    if (soldier.getUnitType() == UnitType.OIL_ENGINEER && soldier.getOwner() == kingdom && !soldier.isHasOil() && oilSmelter.getStored() > 0) {
+                        oilSmelter.addToStored(-1);
+                        soldier.setHasOil(true);
+                    }
                 }
             }
         }
     }
 
-    public void checkDelays(){
-        //todo
+    private static void checkDelays(Kingdom kingdom){
+        for (int i = kingdom.getBuildings().size() - 1; i >= 0; i--) {
+            Building siegeTent = kingdom.getBuildings().get(i);
+            if (siegeTent.getBuildingType() == BuildingType.SIEGE_TENT) {
+                if (siegeTent.getDelay() == 0) {
+                    int x = siegeTent.getXCoordinate();
+                    int y = siegeTent.getYCoordinate();
+                    EquipmentType equipmentType = siegeTent.getEquipmentType();
+                    Tile tile = currentGame.getTileByCoordinates(y,x);
+                    tile.setBuilding(null);
+                    kingdom.removeBuilding(siegeTent);
+                    Equipment equipment = new Equipment(equipmentType,kingdom,x,y);
+                } else siegeTent.subDelay();
+            }
+        }
     }
 
-    private static void resetOilState(Kingdom kingdom) {
-        int difference = 5;
-        for (Building building : kingdom.getBuildings()) {
-            if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference) building.setFlammable(false);
+    private static void resetOilState() {
+        for (Kingdom kingdom : currentGame.getKingdoms()) {
+            int difference = 5;
+            for (Building building : kingdom.getBuildings()) {
+                if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference)
+                    building.setFlammable(false);
+            }
+            for (Soldier soldier : kingdom.getSoldiers()) {
+                if (currentGame.getNumberOfTurns() - soldier.getLastOiledTurn() >= difference)
+                    soldier.setFlammable(false);
+            }
         }
-        for (Soldier soldier : kingdom.getSoldiers()) {
-            if (currentGame.getNumberOfTurns() - soldier.getLastOiledTurn() >= difference) soldier.setFlammable(false);
+    }
+
+    private static void checkFireDamage() {
+        for (Kingdom kingdom : currentGame.getKingdoms()) {
+            for (Soldier soldier : kingdom.getSoldiers()) {
+                soldier.subHealth(soldier.getFireDamageEachTurn());
+            }
         }
     }
 }

@@ -4,6 +4,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Producers;
 import org.example.View.Response;
 
@@ -180,9 +181,29 @@ public class SoldierController {
     }
 
     public static Response buildEquipment(Matcher matcher){
-        return null;
-        //todo
-        //after select person
+        matcher.find(); String nullGroupName;
+        if ((nullGroupName = Controller.nullGroup(matcher,"equipmentName")) != null)
+            return Response.getEmptyResponseByName(nullGroupName);
+        EquipmentType equipmentType = EquipmentType.getEquipmentTypeByString(matcher.group("equipmentName"));
+        if (equipmentType == null) return Response.INVALID_EQUIPMENT;
+        int availableEngineers = 0;
+        for (Unit engineer : soldiers) {
+            if (engineer.isAvailable()) availableEngineers++;
+        }
+        if (soldiers.get(0).getOwner().getWealth() < equipmentType.getCost()) return Response.NOT_ENOUGH_GOLD_EQUIPMENT;
+        if (availableEngineers < equipmentType.getEngineerPrice()) return Response.NOT_ENOUGH_ENGINEERS_EQUIPMENT;
+        Building siegeTent = new Building(soldiers.get(0).getOwner(), BuildingType.SIEGE_TENT,soldiers.get(0).getXCoordinate(),soldiers.get(0).getYCoordinate());
+        siegeTent.setDelay(equipmentType.getDelay());
+        siegeTent.setEquipmentType(equipmentType);
+        soldiers.get(0).getOwner().addToWealth(-1 * equipmentType.getCost());
+        for (Unit engineer : soldiers) {
+            if (availableEngineers == 0) break;
+            if (engineer.isAvailable()) {
+                engineer.setAvailable(false);
+                availableEngineers--;
+            }
+        }
+        return Response.EQUIPMENT_BUILT;
     }
 
     public static Response disband(){

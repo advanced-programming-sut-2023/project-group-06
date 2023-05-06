@@ -133,6 +133,10 @@ public class BuildingController {
         if (((Storage) building).getCapacity() - ((Storage) building).getStored() < count)
             return Response.NOT_ENOUGH_SPACE;
         building.getOwner().addToWealth(-1 * type.getCost() * count);
+        for (int i = 0; i < count; i++) {
+            Unit engineer = new Unit(building.getXCoordinate(),building.getYCoordinate(),building.getOwner(),UnitType.ENGINEER);
+            GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).addUnit(engineer);
+        }
         ((Storage) building).addToStored(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }

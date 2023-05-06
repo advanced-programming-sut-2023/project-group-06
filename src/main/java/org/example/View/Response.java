@@ -163,17 +163,31 @@ public enum Response {
     NOT_ENOUGH_HORSES("You don't have enough horses to create these units!"),
     NOT_ENOUGH_SPACE("You don't have enough space to do this!"),
     NOT_ENOUGH_OIL("You don't have enough oil  to do this!"),
+    INAPPROPRIATE_UNIT("You can't do this action with this unit!"),
+    EMPTY_DIRECTION("Direction field can't be empty!"),
+    OUT_OF_BOUNDARIES("This direction is out of boundaries!"),
+    POUR_OIL("Poured oil successfully!"),
+    NO_OIL("None of the soldiers have oil to pour!"),
     CLOSE_THE_GATE_FIRST("Close The gate first!"),
     CANT_PUT_THIS_ON_TROOPS("You can't put this on units!"),
     DROP_ROCK_SUCCESSFUL("Drop rock successful!"),
     PATROL_SUCCESSFUL("The unit will patrol between the places!"),
     INVALID_STATE("Invalid state!"),
     SET_STATE_SUCCESSFUL("Set state successful!"),
+    NO_ARMED_OIL_ENGINEER("No armed oil engineer exists in this tile!"),
+    NO_DOG_RELEASE("There is no dogs here to release!"),
+    CAGE_BLOCKED("Cage's door is blocked!"),
+    DOGS_RELEASED("Dogs are released successfully!"),
     CANT_REMOVE_THE_KING("You can't remove your king!"),
     SET_TEXTURE_UNDER_TREE("You can't change the ground under a tree!"),
     SET_TEXTURE_UNDER_ROCK("You can't change the ground under a rock!"),
     STOP_PATROL("The units will stop patrolling!"),
     NOT_ENOUGH_COWS("You don't have enough cows to do this!"),
+    EMPTY_EQUIPMENT_NAME("Equipment name's field can't be empty!"),
+    INVALID_EQUIPMENT("There is no equipment with this name!"),
+    NOT_ENOUGH_GOLD_EQUIPMENT("You don't have enough gold to build this equipment!"),
+    NOT_ENOUGH_ENGINEERS_EQUIPMENT("You don't have enough engineers to build this equipment!"),
+    EQUIPMENT_BUILT("Equipment built successfully!"),
     ;
     public final String message;
 
@@ -196,6 +210,8 @@ public enum Response {
         if (name.equals("resourceAmount")) return EMPTY_RESOURCE_AMOUNT;
         if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
         if (name.equals("id")) return EMPTY_ID;
+        if (name.equals("direction")) return EMPTY_DIRECTION;
+        if (name.equals("equipmentName")) return EMPTY_EQUIPMENT_NAME;
         return null;
     }
 }

@@ -116,8 +116,8 @@ public class KingdomController {
 
     public static String showSoldiers() {
         String output = "all soldiers";
-        for (int i = 0; i < currentKingdom.getSoldiers().size(); i++) {
-            output += "\n" + currentKingdom.getSoldiers().get(i).toString();
+        for (int i = 0; i < currentKingdom.getUnits().size(); i++) {
+            output += "\n" + currentKingdom.getUnits().get(i).toString();
         }
         for(Unit unit : currentKingdom.getCows())
             output += "\n" + unit.cowToString();
