@@ -19,14 +19,19 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
-    private int tunnelDelay = 6;
+    private int tunnelDelay;
     private ArrayList<Soldier> tunnelers = new ArrayList<>();
+    private ArrayList<Soldier> ladderMen = new ArrayList<>();
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.owner = owner;
         this.buildingType = buildingType;
         this.hitPoint = buildingType.getHitPoint();
+        if(buildingType == BuildingType.WALL) tunnelDelay = 4;
+        if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
+        if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
+        if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
     }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){
@@ -36,6 +41,14 @@ public class Building {
         this.buildingType = buildingType;
         this.direction = direction;
         this.hitPoint = buildingType.getHitPoint();
+        if(buildingType == BuildingType.WALL) tunnelDelay = 4;
+        if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
+        if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
+        if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
+    }
+
+    public ArrayList<Soldier> getLadderMen() {
+        return ladderMen;
     }
 
     public int getTunnelDelay() {

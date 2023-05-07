@@ -205,6 +205,11 @@ public enum Response {
     DIG_TUNNEL_UNDER_BUILDING("You must dig tunnel under a building!"),
     CANT_DIG_TUNNEL("This unit can't dig tunnel!"),
     DIG_TUNNEL("Give me my shovel!"),
+    DIG_UNDER_THIS_TYPE("You can't dig under this type of building!"),
+    PUT_LADDER_NEXT_TO_WALL("You must put ladder next to a wall!"),
+    LADDER_MAN("This unit doesn't have ladder!"),
+    OUT_OF_LADDER("These units are out of ladder!"),
+    LETS_PUT_LADDER("Let's put the ladder!"),
     ;
     public final String message;
 

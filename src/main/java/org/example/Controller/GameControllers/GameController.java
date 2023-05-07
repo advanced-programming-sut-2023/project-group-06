@@ -508,7 +508,7 @@ public class GameController {
                         currentGame.getTileByCoordinates(y, x - 1).getBuilding().getOwner() == currentPlayer);
     }
 
-    private static int getDirection(String directionString){
+    public static int getDirection(String directionString){
         int direction = 0;
         switch (directionString){
             case "e":
@@ -1215,8 +1215,7 @@ public class GameController {
         return null;
     }
 
-    private static boolean isTunnelerAdjacentToBuilding(Soldier soldier){
-        Building building = soldier.getTunnel();
+    private static boolean isTunnelerAdjacentToBuilding(Soldier soldier, Building building){
         int size = (building.getBuildingType().getSize() - 1) / 2;
         if((soldier.getYCoordinate() == building.getYCoordinate() - size - 1 ||
                 soldier.getYCoordinate() == building.getYCoordinate() + size + 1) &&
@@ -1243,7 +1242,7 @@ public class GameController {
         for(Kingdom kingdom : currentGame.getKingdoms()){
             for(Soldier soldier : kingdom.getSoldiers()){
                 if(soldier.getUnitType() == UnitType.TUNNELER && soldier.getTunnel() != null){
-                    if(isTunnelerAdjacentToBuilding(soldier)){
+                    if(isTunnelerAdjacentToBuilding(soldier, soldier.getTunnel())){
                         Building target = soldier.getTunnel();
                         if(target.getTunnelDelay() > 0)
                             target.subTunnelDelay();
@@ -1256,6 +1255,19 @@ public class GameController {
                             }
                             destroyBuilding(target);
                         }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkLadders(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Soldier soldier : kingdom.getSoldiers()){
+                if(soldier.getUnitType() == UnitType.LADDER_MAN && soldier.getLadder() != null){
+                    if(isTunnelerAdjacentToBuilding(soldier, soldier.getLadder())){
+                        Building target = soldier.getLadder();
+                        //
                     }
                 }
             }

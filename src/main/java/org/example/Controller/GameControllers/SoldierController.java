@@ -248,6 +248,11 @@ public class SoldierController {
                 currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.TREE ||
                 currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.ROCK)
             return Response.DIG_TUNNEL_UNDER_BUILDING;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.WALL &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.STAIR &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.LOOKOUT_TOWER &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.DEFENSE_TURRET)
+            return Response.DIG_UNDER_THIS_TYPE;
         Building building = currentGame.getTileByCoordinates(y, x).getBuilding();
         Tile center = currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate());
         Tile adjacent = GameController.getAdjacentCell(center, soldiers.get(0));
@@ -260,6 +265,39 @@ public class SoldierController {
             soldier.setWishPlace(adjacent);
         }
         return Response.DIG_TUNNEL;
+    }
+
+    public static Response putLadder(Matcher matcher){
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        String directionString = Controller.makeEntryValid(matcher.group("direction"));
+        int direction = GameController.getDirection(directionString);
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(soldiers.get(0).getUnitType() != UnitType.LADDER_MAN)
+            return Response.LADDER_MAN;
+        Soldier ladderMan = null;
+        for(Unit soldier : soldiers){
+            if(((Soldier) soldier).isHasLadder()) {
+                ladderMan = ((Soldier) soldier);
+                break;
+            }
+        }
+        if(ladderMan == null) return Response.OUT_OF_LADDER;
+        int frontX = x;
+        int frontY = y;
+        if(direction % 2 == 0) frontY += direction - 1;
+        else frontX += 2 - direction;
+        if(currentGame.getTileByCoordinates(frontY, frontX).getBuilding() == null ||
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() != BuildingType.WALL)
+            return Response.PUT_LADDER_NEXT_TO_WALL;
+        Building building = currentGame.getTileByCoordinates(frontY, frontX).getBuilding();
+        ladderMan.setLadder(building);
+        building.getLadderMen().add(ladderMan);
+        ladderMan.setLadder(building);
+        ladderMan.setKingSaidToMove(true);
+        ladderMan.setWishPlace(currentGame.getTileByCoordinates(y, x));
+        return Response.LETS_PUT_LADDER;
     }
 
     public static Response buildEquipment(Matcher matcher){

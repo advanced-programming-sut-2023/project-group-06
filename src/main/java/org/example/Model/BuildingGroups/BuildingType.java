@@ -54,8 +54,8 @@ public enum BuildingType {
     GRANARY(500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
     MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
-    STAIR(100, 0, 1, null, 0, 0, 0, true, "stair", null),
-    WALL(100, 0, 1, null, 0, 0, 0, true, "wall", null),
+    STAIR(100, 0, 1, null, 0, 0, 0, true, "stair", Towers.class),
+    WALL(100, 0, 1, null, 0, 0, 0, true, "wall", Towers.class),
     BRIDGE(1, 0, 1, null, 0, 0, 0, true, "bridge", null),
     ;
     private int size;

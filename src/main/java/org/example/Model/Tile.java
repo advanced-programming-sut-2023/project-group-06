@@ -71,10 +71,6 @@ public class Tile {
         return yCoordinate;
     }
 
-    //public ArrayList<Unit> getUnits() {
-     //   return nonSoldierUnits;
-    //}
-
     public ArrayList<Soldier> getSoldiers() {
         return soldiers;
     }
