@@ -4,6 +4,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Producers;
 import org.example.View.Response;
 
@@ -74,9 +75,13 @@ public class SoldierController {
         int x2 = Integer.parseInt(matcher.group("x2"));
         int y1 = Integer.parseInt(matcher.group("y1"));
         int y2 = Integer.parseInt(matcher.group("y2"));
-        //todo check target places
         if(soldiers.get(0).getUnitType() == UnitType.ENGINEER)
             return Response.THIS_UNIT_CANT_PATROL;
+        if(x1 < 0 || x1 >= currentGame.getMapWidth() || y1 < 0 || y1 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(x2 < 0 || x2 >= currentGame.getMapWidth() || y2 < 0 || y2 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        //todo check target places
         for(Unit soldier : soldiers){
             ((Soldier) soldier).setSaidToPatrol(true);
             ((Soldier) soldier).setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
@@ -108,6 +113,8 @@ public class SoldierController {
         int y = Integer.parseInt(matcher.group("y"));
         if(!soldiers.get(0).getUnitType().isCanDigDitch())
             return Response.CANT_DIG_DITCH;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.DITCH_UNDER_BUILDING;
         if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
@@ -135,6 +142,8 @@ public class SoldierController {
             return Response.THERE_IS_NO_DITCH;
         if(!soldiers.get(0).getUnitType().isCanDigDitch())
             return Response.CANT_FILL_DITCH;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
         Tile adjacent = GameController.getAdjacentCell(currentGame.getTileByCoordinates(y, x), soldiers.get(0));
         if(adjacent == null)
             return Response.THE_UNIT_CANT_GO_THERE;
@@ -229,9 +238,28 @@ public class SoldierController {
     }
 
     public static Response digTunnel(Matcher matcher){
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(soldiers.get(0).getUnitType() != UnitType.TUNNELER)
+            return Response.CANT_DIG_TUNNEL;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() == null ||
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.TREE ||
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.ROCK)
+            return Response.DIG_TUNNEL_UNDER_BUILDING;
+        Building building = currentGame.getTileByCoordinates(y, x).getBuilding();
+        Tile center = currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate());
+        Tile adjacent = GameController.getAdjacentCell(center, soldiers.get(0));
+        if(adjacent == null)
+            return Response.THE_UNIT_CANT_GO_THERE;
+        for(Unit soldier : soldiers){
+            building.getTunnelers().add((Soldier) soldier);
+            ((Soldier) soldier).setTunnel(building);
+            soldier.setKingSaidToMove(true);
+            soldier.setWishPlace(adjacent);
+        }
         return null;
-        //todo
-        //after select person
     }
 
     public static Response buildEquipment(Matcher matcher){

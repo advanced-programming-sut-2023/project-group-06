@@ -1,6 +1,7 @@
 package org.example.Model;
 
 import org.example.Controller.GameControllers.GameController;
+import org.example.Model.BuildingGroups.Building;
 
 public class Soldier extends Unit {
     private int attackPower;
@@ -22,6 +23,7 @@ public class Soldier extends Unit {
     private int lastOiledTurn = -1;
     private Tile ditch;
     private Tile fill;
+    private Building tunnel;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -30,6 +32,14 @@ public class Soldier extends Unit {
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
+    }
+
+    public Building getTunnel() {
+        return tunnel;
+    }
+
+    public void setTunnel(Building tunnel) {
+        this.tunnel = tunnel;
     }
 
     public Tile getFill() {

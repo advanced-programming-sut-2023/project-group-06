@@ -202,6 +202,8 @@ public enum Response {
     DITCH_REMOVED("Ditch removed successfully!"),
     BUILD_STAIR_NEAR_WALL("You must build the stair toward a wall or gate!"),
     DROP_STAIR_SUCCESSFUL("Drop stair successful!"),
+    DIG_TUNNEL_UNDER_BUILDING("You must dig tunnel under a building!"),
+    CANT_DIG_TUNNEL("This unit can't dig tunnel!"),
     ;
     public final String message;
 

@@ -3,7 +3,10 @@ package org.example.Model.BuildingGroups;
 import org.example.Controller.GameControllers.GameController;
 import org.example.Model.Kingdom;
 import org.example.Model.Resources;
+import org.example.Model.Soldier;
 import org.example.Model.Tile;
+
+import java.util.ArrayList;
 
 public class Building {
     private int xCoordinate;
@@ -16,6 +19,8 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
+    private int tunnelDelay;
+    private ArrayList<Soldier> tunnelers = new ArrayList<>();
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -31,6 +36,14 @@ public class Building {
         this.buildingType = buildingType;
         this.direction = direction;
         this.hitPoint = buildingType.getHitPoint();
+    }
+
+    public int getTunnelDelay() {
+        return tunnelDelay;
+    }
+
+    public void subTunnelDelay(){
+        this.tunnelDelay--;
     }
 
     public int getDelay() {
@@ -100,6 +113,10 @@ public class Building {
 
     public int getLastOiledTurn() {
         return lastOiledTurn;
+    }
+
+    public ArrayList<Soldier> getTunnelers() {
+        return tunnelers;
     }
 
     public String toString() {
