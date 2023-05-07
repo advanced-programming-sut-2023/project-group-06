@@ -20,6 +20,8 @@ public class Soldier extends Unit {
     private Tile patrolWishPlace1;
     private Tile patrolWishPlace2;
     private int lastOiledTurn = -1;
+    private Tile ditch;
+    private Tile fill;
     private int fireDamageEachTurn = 0;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
@@ -29,6 +31,22 @@ public class Soldier extends Unit {
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
+    }
+
+    public Tile getFill() {
+        return fill;
+    }
+
+    public void setFill(Tile fill) {
+        this.fill = fill;
+    }
+
+    public Tile getDitch() {
+        return ditch;
+    }
+
+    public void setDitch(Tile ditch) {
+        this.ditch = ditch;
     }
 
     public void setSaidToPatrol(boolean saidToPatrol) {

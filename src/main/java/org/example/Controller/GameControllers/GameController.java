@@ -78,6 +78,7 @@ public class GameController {
             for(int i = xCenter - size; i <= xCenter + size; i++){
                 for(int j = yCenter - size; j <= yCenter + size; j++){
                     currentGame.getTileByCoordinates(j, i).setBuilding(null);
+                    setGroundBack(currentGame.getTileByCoordinates(j, i));
                 }
             }
         }
@@ -254,7 +255,8 @@ public class GameController {
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         BuildingType buildingtype = BuildingType.getBuildingTypeByString(type);
-        if(buildingtype == null || buildingtype == BuildingType.TREE || buildingtype == BuildingType.ROCK)
+        if(buildingtype == null || buildingtype == BuildingType.TREE ||
+                buildingtype == BuildingType.ROCK || buildingtype == BuildingType.STAIR)
             return Response.INVALID_TYPE;
         if(buildingtype.getBuildingClass() == Gate.class && direction == null)
             return Response.ENTER_DIRECTION;
@@ -341,7 +343,7 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
-        currentPlayer.payEngineer(buildingtype.getEngineerPrice(), building.getYCoordinate(), building.getXCoordinate());
+        currentPlayer.payEngineer(buildingtype.getEngineerPrice());
         currentPlayer.addToPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
@@ -355,6 +357,46 @@ public class GameController {
         if(buildingtype == BuildingType.BIG_STONE_GATEHOUSE)
             currentPlayer.addToMaxPopulation(10);
         return Response.DROP_BUILDING_SUCCESSFUL;
+    }
+
+    public static Response dropStair(Matcher matcher){
+        String xString = matcher.group("x");
+        String yString = matcher.group("y");
+        String direction = Controller.makeEntryValid(matcher.group("direction"));
+        int x = Integer.parseInt(xString);
+        int y = Integer.parseInt(yString);
+        if(direction == null)
+            return Response.ENTER_DIRECTION;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!BuildingType.checkGround(BuildingType.STAIR, currentGame.getTileByCoordinates(y, x).getType()))
+            return Response.INVALID_GROUND;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() != null) {
+            if (currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Trap &&
+                    currentGame.getTileByCoordinates(y, x).getBuilding().getOwner() != currentPlayer)
+                ((Trap) currentGame.getTileByCoordinates(y, x).getBuilding()).setCanBeSeenByEnemy(true);
+            return Response.BUILDING_ALREADY_EXIST;
+        }
+        if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
+            return Response.CANT_PUT_THIS_ON_TROOPS;
+        int stairDirection = getDirection(direction);
+        int frontX = x;
+        int frontY = y;
+        if(stairDirection % 2 == 0) frontY += stairDirection - 1;
+        else frontX += 2 - stairDirection;
+        if(currentGame.getTileByCoordinates(frontY, frontX).getBuilding() == null ||
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() == BuildingType.DRAWBRIDGE ||
+                (currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() != BuildingType.WALL &&
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getClass() != Gate.class))
+            return Response.BUILD_STAIR_NEAR_WALL;
+        Building stair = new Building(currentPlayer, BuildingType.STAIR, x, y, stairDirection);
+        for(int i = x ; i <= x ; i++){
+            for(int j = y ; j <= y ; j++){
+                currentGame.getTileByCoordinates(j, i).setBuilding(stair);
+            }
+        }
+        currentPlayer.getBuildings().add(stair);
+        return Response.DROP_STAIR_SUCCESSFUL;
     }
 
     public static Response putMainCastle(Matcher matcher){
@@ -505,20 +547,22 @@ public class GameController {
         if(x < 0 || y < 0 || x >= currentGame.getMapWidth() || y >= currentGame.getMapHeight())
             return Response.INVALID_INPUT;
         UnitType type = UnitType.getSoldierTypeByString(typeString);
-        ArrayList<Soldier> soldiers = new ArrayList<>();
-        for(Soldier soldier : currentGame.getTileByCoordinates(y, x).getSoldiers()){
-            if(soldier.getOwner() == currentPlayer && soldier.getUnitType() == type)
-                soldiers.add(soldier);
+        if(type == null || type == UnitType.COW || type == UnitType.DOG)
+            return Response.INVALID_TYPE;
+        ArrayList<Unit> units = new ArrayList<>();
+        for(Unit unit : currentGame.getTileByCoordinates(y, x).getAllUnits()){
+            if(unit.getOwner() == currentPlayer && unit.getUnitType() == type)
+                units.add(unit);
         }
-        if(soldiers.size() == 0)
+        if(units.size() == 0)
             return Response.NO_UNITS_WITH_THAT_TYPE;
-        for(Soldier soldier : soldiers) {
-            if(soldier.isSaidToPatrol()) {
-                soldier.setSaidToPatrol(false);
-                soldier.setWishPlace(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()));
+        /*for(Unit unit : units) {
+            if(unit instanceof Soldier && ((Soldier) unit).isSaidToPatrol()) {
+                ((Soldier) unit).setSaidToPatrol(false);
+                unit.setWishPlace(currentGame.getTileByCoordinates(unit.getYCoordinate(), unit.getXCoordinate()));
             }
-        }
-        SoldierController.soldiers = soldiers;
+        }*/
+        SoldierController.soldiers = units;
         SoldierController.currentGame = currentGame;
         return Response.SELECT_SOLDIER_SUCCESSFUL;
     }
@@ -528,6 +572,27 @@ public class GameController {
         if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
             currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(0);
             currentGame.getTileByCoordinates(frontY, frontX).setHeight(0);
+            ArrayList<Soldier> soldiersOnGate = new ArrayList<>();
+            if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
+                currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
+                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(0);
+                soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers());
+                soldiersOnGate.addAll(currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).getSoldiers());
+            }
+            //frontY - y + x0
+            //frontX - x + y0
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(y, x).getSoldiers());
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).getSoldiers());
+            soldiersOnGate.addAll(currentGame.getTileByCoordinates(frontY, frontX).getSoldiers());
+            for(Soldier soldier : soldiersOnGate){
+                Tile place = currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate());
+                Tile target = currentGame.getTileByCoordinates(soldier.getYCoordinate() + frontX - x,
+                        soldier.getXCoordinate() + frontY - y);
+                place.removeSoldier(soldier);
+                target.addSoldier(soldier);
+                soldier.setYCoordinate(target.getYCoordinate());
+                soldier.setXCoordinate(target.getXCoordinate());
+            }
         }
         else {
             if (3 * frontX - 2 * x < 0 || 3 * frontX - 2 * x >= currentGame.getMapWidth() ||
@@ -558,6 +623,10 @@ public class GameController {
         if(gate.getBuildingType() != BuildingType.DRAWBRIDGE) {
             currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).setHeight(3);
             currentGame.getTileByCoordinates(frontY, frontX).setHeight(3);
+            if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
+                currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(3);
+                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(3);
+            }
         }
         else{
             if(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers().size() > 0 ||
@@ -577,7 +646,9 @@ public class GameController {
     }
 
     private static void setGroundBack(Tile tile){
-        if(tile.getType().CanBeCrossed())
+        if(tile.isDitch())
+            tile.setHeight(-4);
+        else if(tile.getType().CanBeCrossed())
             tile.setHeight(0);
         else tile.setHeight(-2);
     }
@@ -618,8 +689,10 @@ public class GameController {
             moveUnits(); // moveUnits
             checkPatrolUnits();
             checkCows();
+            checkDitches();
+            checkToFillDitches();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
-                kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());//inn ........
+                kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
                 checkDelays(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
@@ -791,6 +864,11 @@ public class GameController {
         }
     }
 
+    private static void destroyDeadBuildings(){
+        //todo
+        //setGroundBack()
+    }
+
     private static void moveUnits() {
         Tile[][] map = currentGame.getMap();
         PathFinder pathFinder = new PathFinder(map);
@@ -918,7 +996,7 @@ public class GameController {
 
     private static void autoProducing(Kingdom player){
         for(Building building : player.getBuildings()){
-            if(/*building.getBuildingType().getBuildingClass() == Producers.class*/building instanceof Producers){
+            if(building instanceof Producers){
                 ResourcesType InputType = ((Producers) building).getResourcesInput().getType();
                 int InputAmount = ((Producers) building).getResourcesInput().getAmount();
                 Asset output1 = ((Producers) building).getAssetOutput();
@@ -953,12 +1031,6 @@ public class GameController {
         TradeController.currentPlayer = currentPlayer;
     }
 
-    private static Response endGame(){
-        return null;
-        //todo
-        //set all static fields inside controllers equal to zero
-    }
-
     public static Response terminateTheGame(){
         return null;
         //todo
@@ -977,6 +1049,8 @@ public class GameController {
                 }
             }
         }
+        int highScore = kingdom.getMaxPopulation() + kingdom.getHappiness();
+        kingdom.getOwner().addHighScore(highScore);
         currentGame.removeKingdom(kingdom);
     }
 
@@ -993,7 +1067,7 @@ public class GameController {
         }
     }
 
-    private static void checkDelays(Kingdom kingdom){
+    private static void checkDelays(Kingdom kingdom) {
         for (int i = kingdom.getBuildings().size() - 1; i >= 0; i--) {
             Building siegeTent = kingdom.getBuildings().get(i);
             if (siegeTent.getBuildingType() == BuildingType.SIEGE_TENT) {
@@ -1001,13 +1075,160 @@ public class GameController {
                     int x = siegeTent.getXCoordinate();
                     int y = siegeTent.getYCoordinate();
                     EquipmentType equipmentType = siegeTent.getEquipmentType();
-                    Tile tile = currentGame.getTileByCoordinates(y,x);
+                    Tile tile = currentGame.getTileByCoordinates(y, x);
                     tile.setBuilding(null);
                     kingdom.removeBuilding(siegeTent);
-                    Equipment equipment = new Equipment(equipmentType,kingdom,x,y);
+                    Equipment equipment = new Equipment(equipmentType, kingdom, x, y);
                 } else siegeTent.subDelay();
             }
         }
+    }
+
+    private static void checkDitches(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Tile ditch : kingdom.getDitches()){
+                if(!ditch.isDitch()) {
+                    if (ditch.getDitchDelay() > 0) {
+                        boolean isSomeOneDigging = false;
+                        for (Soldier soldier : ditch.getSoldiers()) {
+                            if (soldier.getDitch() == ditch) {
+                                isSomeOneDigging = true;
+                                break;
+                            }
+                        }
+                        if (isSomeOneDigging) ditch.subDitchDelay();
+                    }
+                    else {
+                        ditch.setDitch(true);
+                        ditch.setHeight(-4);
+                        currentGame.getDitches().add(ditch);
+                        for(Soldier soldier : kingdom.getSoldiers()) {
+                            if (soldier.getDitch() == ditch) {
+                                soldier.setDitch(null);
+                                if (soldier.getYCoordinate() == ditch.getYCoordinate() && soldier.getXCoordinate() == ditch.getXCoordinate()) {
+                                    Tile adjacent = getAdjacentCell(ditch, null);
+                                    ditch.removeSoldier(soldier);
+                                    if (adjacent != null) {
+                                        adjacent.addSoldier(soldier);
+                                        soldier.setXCoordinate(adjacent.getXCoordinate());
+                                        soldier.setYCoordinate(adjacent.getYCoordinate());
+                                    }
+                                    else kingdom.removeUnit(soldier);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void checkToFillDitches(){
+        for(int i = 0; i < currentGame.getDitches().size(); i++){
+            Tile ditch = currentGame.getDitches().get(i);
+            if(ditch.getDitchDelay() < 3) {
+                int x = ditch.getXCoordinate();
+                int y = ditch.getYCoordinate();
+                boolean isToFill = false;
+                ArrayList<Soldier> allSoldiersAround = new ArrayList<>();
+                if (y > 0)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y - 1, x).getSoldiers());
+                if (y < currentGame.getMapHeight() - 1)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y + 1, x).getSoldiers());
+                if (x > 0)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y, x - 1).getSoldiers());
+                if (x < currentGame.getMapWidth() - 1)
+                    allSoldiersAround.addAll(currentGame.getTileByCoordinates(y, x + 1).getSoldiers());
+                for (Soldier soldier : allSoldiersAround) {
+                    if (soldier.getFill() == ditch) {
+                        isToFill = true;
+                        break;
+                    }
+                }
+                if (isToFill) ditch.addDitchDelay();
+            }
+            else{
+                ditch.setDitch(false);
+                setGroundBack(ditch);
+                currentGame.getDitches().remove(ditch);
+                for(Kingdom kingdom : currentGame.getKingdoms()){
+                    kingdom.getDitches().remove(ditch);
+                    for(Soldier soldier : kingdom.getSoldiers()){
+                        if(soldier.getFill() == ditch){
+                            soldier.setFill(null);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static Response removeDitch(Matcher matcher){
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(!currentPlayer.getDitches().contains(currentGame.getTileByCoordinates(y, x)))
+            return Response.YOU_HAVE_NO_DITCH_THERE;
+        currentGame.getTileByCoordinates(y, x).setDitch(false);
+        setGroundBack(currentGame.getTileByCoordinates(y, x));
+        currentGame.getDitches().remove(currentGame.getTileByCoordinates(y, x));
+        currentPlayer.getDitches().remove(currentGame.getTileByCoordinates(y, x));
+        currentGame.getTileByCoordinates(y, x).setDitchDelay(3);
+        return Response.DITCH_REMOVED;
+    }
+
+    public static Tile getAdjacentCell(Tile tile, Unit soldier){
+        int x = tile.getXCoordinate();
+        int y = tile.getYCoordinate();
+        if(tile.isDitch()){
+            if(y > 0 && checkTile(currentGame.getTileByCoordinates(y - 1, x), soldier))
+                return currentGame.getTileByCoordinates(y - 1, x);
+            if(y < currentGame.getMapHeight() - 1 && checkTile(currentGame.getTileByCoordinates(y + 1, x), soldier))
+                return currentGame.getTileByCoordinates(y + 1, x);
+            if(x > 0 && checkTile(currentGame.getTileByCoordinates(y, x - 1), soldier))
+                return currentGame.getTileByCoordinates(y, x - 1);
+            if(x < currentGame.getMapWidth() - 1 && checkTile(currentGame.getTileByCoordinates(y, x + 1), soldier))
+                return currentGame.getTileByCoordinates(y, x + 1);
+        }
+        else if(tile.getBuilding() != null){
+            int size = (tile.getBuilding().getBuildingType().getSize() - 1) / 2;
+            if(y > size){
+                for(int i = x - size; i <= x + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(y - size - 1, i), soldier))
+                        return currentGame.getTileByCoordinates(y - size - 1, i);
+                }
+            }
+            if(y < currentGame.getMapHeight() - size - 1){
+                for(int i = x - size; i <= x + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(y + size + 1, i), soldier))
+                        return currentGame.getTileByCoordinates(y + size + 1, i);
+                }
+            }
+            if(x > size){
+                for(int i = y - size; i <= y + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(i, x - size - 1), soldier))
+                        return currentGame.getTileByCoordinates(i, x - size - 1);
+                }
+            }
+            if(x < currentGame.getMapWidth() - size - 1){
+                for(int i = y - size; i <= y + size; i++){
+                    if(checkTile(currentGame.getTileByCoordinates(i, y + size + 1), soldier))
+                        return currentGame.getTileByCoordinates(i, y + size + 1);
+                }
+            }
+        }
+        return null;
+    }
+
+    private static boolean checkTile(Tile tile, Unit soldier){
+        if(soldier != null){
+            PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
+            Deque<Tile> path = null;
+            path = pathFinder.findPath(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()), tile);
+            if (path == null) return false;
+        }
+        return true;
     }
 
     private static void resetOilState() {

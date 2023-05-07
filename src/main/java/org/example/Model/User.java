@@ -129,6 +129,10 @@ public class User implements Comparable<User> {
         this.highScore = highScore;
     }
 
+    public void addHighScore(int highScore){
+        this.highScore += highScore;
+    }
+
     public int getRank() {
         return Data.getUserRank(this);
     }

@@ -65,8 +65,8 @@ public enum Commands {
     DROP_UNIT("dropunit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>((\\\"[^\\\"]*\\\")|\\S*)) -c (?<count>(\\-)?\\d+)"),
     SELECT_UNIT("^select unit -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -t (?<type>((\\\"[^\\\"]*\\\")|\\S*))$"),
     //Map Menu Commands
-    SHOW_MAP("show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
-    MOVE_MAP("map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*"),
+    SHOW_MAP("^show map -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    MOVE_MAP("^map(( up( (?<up>\\d+))?)|( right( (?<right>\\d+))?)|( down( (?<down>\\d+))?)|( left( (?<left>\\d+))?))*$"),
     SHOW_DETAILS("show details -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)"),
     SAVE_MAP("save map -name (?<name>(((\"[^\"]*\")|\\S*)))"),
     CREATE_UNIT("(?!.* -t .* -t .*)(?=.* -t )^create unit( -t (?<type>(((\\\"[^\\\"]*\\\")|\\S*)))| -c (?<count>((-?\\d*)|(\\\"-?\\d*\\\")))){1,2}$"),
@@ -98,7 +98,11 @@ public enum Commands {
     POUR_OIL("^pour oil -d (?<direction>[nswer])$"),
     SHOW_BUILDINGS("^show buildings$"),
     STOP_PATROL("^stop patrolling$"),
-    BUILD_EQUIPMENT("^build equipment -q (?<equipmentName>(((\\\"[^\\\"]*\\\")|\\S*)))$")
+    DIG_DITCH("^dig ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    FILL_DITCH("^fill the ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    STOP_DIGGING("^stop digging$"),
+    REMOVE_DITCH("^remove the ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
+    DROP_STAIR("^drop stair -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])$"),
     ;
 
     private String regex;

@@ -49,9 +49,9 @@ public class BuildingController {
         if (building.getBuildingType().getResourcesPrice().getType() != ResourcesType.STONE)
             return Response.NOT_REPAIRABLE;
         if (building.getBuildingType().getResourcesPrice().getAmount() > building.getOwner().getResourceAmountByType(ResourcesType.STONE)) return Response.NOT_ENOUGH_RESOURCES;
-        building.getOwner().payResource(new Resources(building.getBuildingType().getResourcesPrice().getAmount(),ResourcesType.STONE));
         if (existEnemyNearTile(y, x)) return Response.EXIST_ENEMY_NEAR_TILE;
         if (showBuildingHp() == building.getHitPoint()) return Response.FULL_HIT_POINT;
+        building.getOwner().payResource(new Resources(building.getBuildingType().getResourcesPrice().getAmount(),ResourcesType.STONE));
         building.setHitPoint(building.getBuildingType().getHitPoint());
         return Response.REPAIRED;
     }
