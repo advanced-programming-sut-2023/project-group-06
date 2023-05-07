@@ -37,7 +37,7 @@ public class SoldierMenu extends Menu {
             else if(Commands.getMatcher(command, Commands.STOP_DIGGING).find())
                 System.out.println(SoldierController.stopDigging().message);
             else if ((matcher = Commands.getMatcher(command, Commands.BUILD_EQUIPMENT)).find())
-                System.out.println(SoldierController.buildEquipment(matcher));
+                System.out.println(SoldierController.buildEquipment(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;

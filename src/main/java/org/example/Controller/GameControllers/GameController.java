@@ -343,7 +343,7 @@ public class GameController {
         }
         currentPlayer.getBuildings().add(building);
         currentPlayer.addToWealth(-1 * buildingtype.getGoldPrice());
-        currentPlayer.payEngineer(buildingtype.getEngineerPrice());
+        currentPlayer.payEngineer(buildingtype.getEngineerPrice(), building.getYCoordinate(), building.getXCoordinate());
         currentPlayer.addToPopulation(buildingtype.getWorkerPrice() + buildingtype.getEngineerPrice());
         if(buildingtype == BuildingType.CHURCH)
             currentPlayer.addToHappinessIncrease(2);
@@ -886,7 +886,7 @@ public class GameController {
                 boolean check = false;
                 for(int i = 0; i <= s.getSpeed() && !path.isEmpty(); i++) {
                     targetTile = path.pollFirst();
-                    if (s instanceof Soldier && isTrapWorking(targetTile, (Soldier) s, k)) {
+                    if (isTrapWorking(targetTile, s, k)) {
                         check = true;
                     }
                 }
@@ -902,11 +902,12 @@ public class GameController {
         }
     }
 
-    private static boolean isTrapWorking(Tile tile, Soldier soldier, Kingdom kingdom) {
+    private static boolean isTrapWorking(Tile tile, Unit unit, Kingdom kingdom) {
+        if (unit instanceof Equipment) return false;
         Building building = tile.getBuilding();
         if (building == null) return false;
         if (building.getBuildingType() == BuildingType.KILLING_PIT) {
-            kingdom.getSoldiers().remove(soldier); //kill soldier
+            kingdom.getSoldiers().remove(unit); //kill soldier
             ((Trap)building).setCanBeSeenByEnemy(true);
             return true;
         }
@@ -1077,6 +1078,14 @@ public class GameController {
                     EquipmentType equipmentType = siegeTent.getEquipmentType();
                     Tile tile = currentGame.getTileByCoordinates(y, x);
                     tile.setBuilding(null);
+                    int cnt = 0;
+                    for (Unit unit : currentGame.getTileByCoordinates(siegeTent.getYCoordinate(),siegeTent.getXCoordinate()).getAllUnits()) {
+                        if (cnt == equipmentType.getEngineerPrice()) break;
+                        if (unit.getUnitType() == UnitType.ENGINEER && !unit.isAvailable()) {
+                            unit.setAvailable(true);
+                            cnt++;
+                        }
+                    }
                     kingdom.removeBuilding(siegeTent);
                     Equipment equipment = new Equipment(equipmentType, kingdom, x, y);
                 } else siegeTent.subDelay();

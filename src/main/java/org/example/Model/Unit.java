@@ -54,6 +54,7 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
+        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
         owner.addUnit(this);
     }
 

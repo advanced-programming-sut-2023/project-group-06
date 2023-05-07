@@ -59,4 +59,10 @@ public class Equipment extends Unit {
     public double getPrecision() {
         return precision;
     }
+    public String toString() {
+        String output = getEquipmentType().getName() + ": hp: " + health + ", owner: "
+                + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+        if (this.unitType == UnitType.ENGINEER) output += ", is available? " + isAvailable;
+        return output;
+    }
 }

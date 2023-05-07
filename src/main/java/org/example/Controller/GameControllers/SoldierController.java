@@ -236,10 +236,10 @@ public class SoldierController {
     }
 
     public static Response buildEquipment(Matcher matcher){
-        matcher.find(); String nullGroupName;
+        String nullGroupName;
         if ((nullGroupName = Controller.nullGroup(matcher,"equipmentName")) != null)
             return Response.getEmptyResponseByName(nullGroupName);
-        EquipmentType equipmentType = EquipmentType.getEquipmentTypeByString(matcher.group("equipmentName"));
+        EquipmentType equipmentType = EquipmentType.getEquipmentTypeByString(Controller.makeEntryValid(matcher.group("equipmentName")));
         if (equipmentType == null) return Response.INVALID_EQUIPMENT;
         int availableEngineers = 0;
         for (Unit engineer : soldiers) {
@@ -247,7 +247,10 @@ public class SoldierController {
         }
         if (soldiers.get(0).getOwner().getWealth() < equipmentType.getCost()) return Response.NOT_ENOUGH_GOLD_EQUIPMENT;
         if (availableEngineers < equipmentType.getEngineerPrice()) return Response.NOT_ENOUGH_ENGINEERS_EQUIPMENT;
+        if (GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).getBuilding() != null) return Response.BUILDING_ALREADY_EXIST;
         Building siegeTent = new Building(soldiers.get(0).getOwner(), BuildingType.SIEGE_TENT,soldiers.get(0).getXCoordinate(),soldiers.get(0).getYCoordinate());
+        siegeTent.getOwner().getBuildings().add(siegeTent);
+        GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).setBuilding(siegeTent);
         siegeTent.setDelay(equipmentType.getDelay());
         siegeTent.setEquipmentType(equipmentType);
         soldiers.get(0).getOwner().addToWealth(-1 * equipmentType.getCost());
