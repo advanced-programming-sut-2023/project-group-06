@@ -135,6 +135,8 @@ public class Kingdom {
         this.units.remove(unit);
         if(unit instanceof Soldier)
             this.soldiers.remove((Soldier) unit);
+        if (unit instanceof Equipment)
+            this.equipments.remove((Equipment) unit);
     }
 
     public User getOwner() {

@@ -758,6 +758,7 @@ public class GameController {
                 for (Soldier soldier : currentGame.getTileByCoordinates(enemyY,enemyX).getSoldiers()) {
                     if (soldier.isFlammable()) soldier.addToFireDamageEachTurn(s.getUnitType().getAttackPower());
                 }
+                return true;
             }
             enemy.subHealth(attackPower);
             return true;
@@ -765,6 +766,40 @@ public class GameController {
         s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
         return true;
     }
+
+    private static boolean attackDamageOfEquipment(Equipment e) {
+        int x = e.getXCoordinate();
+        int y = e.getYCoordinate();
+        int fightRange = 15;
+        int attackPower = e.getDamage();
+        Soldier enemy = (Soldier) findNearestEnemyToEquipment(e, fightRange); //todo
+        if (enemy == null) return false;
+        int enemyX = enemy.getXCoordinate();
+        int enemyY = enemy.getYCoordinate();
+        attackPower += (int) (((double)e.getOwner().getFear() / 20) * attackPower);
+        attackPower -= (int) ((double)attackPower * enemy.getUnitType().getDefensePower());
+        if(Math.random() < e.getUnitType().getPrecision())
+            attackPower = 20;
+        //check for the enemy's defenses ( like portable shield?)
+        //defend range of towers
+        //what if the enemy is on a tower and the soldier on ground?
+        int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
+        if (squareOfDistance <= e.getRange() * e.getRange()) {
+            e.setWishPlace(currentGame.getMap()[y][x]);
+
+            enemy.subHealth(attackPower);
+            return true;
+        }
+        e.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
+        return true;
+    }
+
+    private static Object findNearestEnemyToEquipment(Equipment equipment, int fightRange) {
+        return null;
+        //todo
+    }
+
+
 
     private static boolean checkOilEngineerAttack(Soldier s) {
         int x = s.getXCoordinate();
@@ -845,14 +880,14 @@ public class GameController {
         for (int j = 0; j < currentGame.getKingdoms().size(); j++) {
             Kingdom k = currentGame.getKingdoms().get(j);
             boolean isKingDead = false;
-            for(int i = 0; i < k.getSoldiers().size(); i++){
-                if(k.getSoldiers().get(i).getHealth() <= 0){
-                    Soldier soldier = k.getSoldiers().get(i);
+            for(int i = 0; i < k.getUnits().size(); i++){
+                if(k.getUnits().get(i).getHealth() <= 0){
+                    Unit unit = k.getUnits().get(i);
                     //todo war caged dogs
                     currentPlayer.addToPopulation(-1);
-                    currentGame.getTileByCoordinates(soldier.getYCoordinate(),soldier.getXCoordinate()).removeSoldier(soldier);
-                    if(soldier.getUnitType() == UnitType.KING) isKingDead = true;
-                    k.getSoldiers().remove(i);
+                    currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeUnit(unit);
+                    if(unit.getUnitType() == UnitType.KING) isKingDead = true;
+                    k.removeUnit(unit);
                     i--;
                 }
             }
@@ -903,11 +938,12 @@ public class GameController {
     }
 
     private static boolean isTrapWorking(Tile tile, Unit unit, Kingdom kingdom) {
-        if (unit instanceof Equipment) return false;
         Building building = tile.getBuilding();
         if (building == null) return false;
         if (building.getBuildingType() == BuildingType.KILLING_PIT) {
-            kingdom.getSoldiers().remove(unit); //kill soldier
+            if (unit instanceof Soldier) kingdom.getSoldiers().remove(unit);
+            if (unit instanceof Equipment) kingdom.getEquipments().remove(unit);
+            kingdom.getUnits().remove(unit); //kill unit
             ((Trap)building).setCanBeSeenByEnemy(true);
             return true;
         }
@@ -1076,6 +1112,7 @@ public class GameController {
                     int x = siegeTent.getXCoordinate();
                     int y = siegeTent.getYCoordinate();
                     EquipmentType equipmentType = siegeTent.getEquipmentType();
+                    if (equipmentType == null) continue;
                     Tile tile = currentGame.getTileByCoordinates(y, x);
                     tile.setBuilding(null);
                     int cnt = 0;
@@ -1088,9 +1125,19 @@ public class GameController {
                     }
                     kingdom.removeBuilding(siegeTent);
                     Equipment equipment = new Equipment(equipmentType, kingdom, x, y);
+                    applyEquipmentAbility(equipment);
                 } else siegeTent.subDelay();
             }
         }
+    }
+
+    private static void applyEquipmentAbility(Equipment equipment) {
+        int y = equipment.getYCoordinate();
+        int x = equipment.getXCoordinate();
+        if (equipment.getEquipmentType() == EquipmentType.SIEGE_TOWER)
+            currentGame.getTileByCoordinates(y,x).setHeight(1);
+        else if (equipment.getEquipmentType() == EquipmentType.PORTABLE_SHIELD)
+            currentGame.getTileByCoordinates(y,x).setEquipment(equipment);
     }
 
     private static void checkDitches(){

@@ -20,6 +20,7 @@ public class Tile {
     private boolean isDitch = false;
     private boolean isToFill = false;
     private int ditchDelay = 3;
+    private Equipment equipment = null;
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -129,6 +130,8 @@ public class Tile {
 
     public void addUnit(Unit unit){
         allUnits.add(unit);
+        unit.setXCoordinate(this.getXCoordinate());
+        unit.setYCoordinate(this.getYCoordinate());
         if(unit instanceof Soldier)
             soldiers.add((Soldier) unit);
     }
@@ -191,6 +194,14 @@ public class Tile {
                 return true;
         }
         return false;
+    }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
     }
 
     public String toString() {
