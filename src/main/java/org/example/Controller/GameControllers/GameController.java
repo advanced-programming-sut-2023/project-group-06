@@ -59,6 +59,7 @@ public class GameController {
                 currentGame.getTileByCoordinates(y, x).removeUnit(unit);
                 currentPlayer.removeUnit(unit);
                 currentPlayer.addToPopulation(-1);
+                i--;
             }
         }
         return Response.CLEAR_SUCCESSFUL;
@@ -692,6 +693,7 @@ public class GameController {
             checkPatrolUnits();
             checkCows();
             checkDitches();
+            checkTunnelers();
             checkToFillDitches();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());

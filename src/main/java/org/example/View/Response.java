@@ -204,6 +204,7 @@ public enum Response {
     DROP_STAIR_SUCCESSFUL("Drop stair successful!"),
     DIG_TUNNEL_UNDER_BUILDING("You must dig tunnel under a building!"),
     CANT_DIG_TUNNEL("This unit can't dig tunnel!"),
+    DIG_TUNNEL("Give me my shovel!"),
     ;
     public final String message;
 

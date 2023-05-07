@@ -19,7 +19,7 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
-    private int tunnelDelay;
+    private int tunnelDelay = 6;
     private ArrayList<Soldier> tunnelers = new ArrayList<>();
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;

@@ -259,7 +259,7 @@ public class SoldierController {
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(adjacent);
         }
-        return null;
+        return Response.DIG_TUNNEL;
     }
 
     public static Response buildEquipment(Matcher matcher){

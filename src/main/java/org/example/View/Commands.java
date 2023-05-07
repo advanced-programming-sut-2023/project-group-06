@@ -103,6 +103,7 @@ public enum Commands {
     STOP_DIGGING("^stop digging$"),
     REMOVE_DITCH("^remove the ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     DROP_STAIR("^drop stair -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])$"),
+    DIG_TUNNEL("^dig tunnel at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     ;
 
     private String regex;
