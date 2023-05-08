@@ -4,6 +4,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.*;
+import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.ArrayList;
@@ -1429,12 +1430,6 @@ public class GameController {
             }
         }
     }
-
-    private static void checkFireDamage() {
-        for (Kingdom kingdom : currentGame.getKingdoms()) {
-            for (Unit unit : kingdom.getUnits()) {
-                unit.subHealth(unit.getFireDamageEachTurn());
-            }
     private static void checkTunnelers(){
         for(Kingdom kingdom : currentGame.getKingdoms()){
             for(Soldier soldier : kingdom.getSoldiers()){
@@ -1459,20 +1454,6 @@ public class GameController {
                         //
                     }
                 }
-            }
-        }
-    }
-
-    private static void resetOilState() {
-        for (Kingdom kingdom : currentGame.getKingdoms()) {
-            int difference = 5;
-            for (Building building : kingdom.getBuildings()) {
-                if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference)
-                    building.setFlammable(false);
-            }
-            for (Soldier soldier : kingdom.getSoldiers()) {
-                if (currentGame.getNumberOfTurns() - soldier.getLastOiledTurn() >= difference)
-                    soldier.setFlammable(false);
             }
         }
     }

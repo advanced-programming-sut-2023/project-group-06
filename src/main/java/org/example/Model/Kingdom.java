@@ -677,12 +677,4 @@ public class Kingdom {
     public void addEquipment(Equipment equipment) {
         this.equipments.add(equipment);
     }
-
-    public ArrayList<Unit> getEngineers() {
-        return engineers;
-    }
-
-    public void addEngineer(Unit engineer) {
-        this.engineers.add(engineer);
-    }
 }
