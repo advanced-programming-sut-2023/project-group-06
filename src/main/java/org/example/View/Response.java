@@ -216,6 +216,16 @@ public enum Response {
     NOT_ENOUGH_ENGINEERS_EQUIPMENT("You don't have enough engineers to build this equipment!"),
     EQUIPMENT_BUILT("Equipment built successfully!"),
     EXIST_PORTABLE_SHIELD("There is a portables shield here already!"),
+    CANT_DISBAND_KING("You can't disband your king!"),
+    DISBAND_SUCCESSFUL("Disband successful!"),
+    EMPTY_X("X field can't be empty!"),
+    EMPTY_Y("Y field can't be empty!"),
+    NO_ENEMY_ON_THIS_TILE("There is no enemy on this tile!"),
+    LETS_ATTACK("Let's attack!"),
+    ARCHER_TYPE("This unit is not archer type!"),
+    NOT_IN_RANGE("The enemy is not in range!"),
+    NO_LADDER("There is no ladder here!"),
+    THROW_LADDER("Throw ladder successful"),
     ;
     public final String message;
 
@@ -240,6 +250,8 @@ public enum Response {
         if (name.equals("id")) return EMPTY_ID;
         if (name.equals("direction")) return EMPTY_DIRECTION;
         if (name.equals("equipmentName")) return EMPTY_EQUIPMENT_NAME;
+        if (name.equals("x")) return EMPTY_X;
+        if (name.equals("y")) return EMPTY_Y;
         return null;
     }
 }

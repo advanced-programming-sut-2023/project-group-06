@@ -104,7 +104,12 @@ public enum Commands {
     REMOVE_DITCH("^remove the ditch at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
     DROP_STAIR("^drop stair -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])$"),
     DIG_TUNNEL("^dig tunnel at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+)$"),
-    BUILD_EQUIPMENT("^build equipment -q (?<equipmentName>(((\\\"[^\\\"]*\\\")|\\S*)))$")
+    BUILD_EQUIPMENT("^build equipment -q (?<equipmentName>(((\\\"[^\\\"]*\\\")|\\S*)))$"),
+    ATTACK_ENEMY("^attack -e (?<x>((-?\\d*)|(\\\"-?\\d*\\\"))) (?<y>((-?\\d*)|(\\\"-?\\d*\\\")))$"),
+    ATTACK("(?=.* -x )(?=.* -y )^attack(( -x (?<x>((-?\\d*)|(\\\"-?\\d*\\\"))))|( -y (?<y>((-?\\d*)|(\\\"-?\\d*\\\"))))){2}$"),
+    PUT_LADDER("^put ladder at -x (?<x>(\\-)?\\d+) -y (?<y>(\\-)?\\d+) -d (?<direction>[nswer])$"),
+    THROW_LADDER("^throw ladders out"),
+    DISBAND("^disband unit$"),
     ;
 
     private String regex;

@@ -10,9 +10,6 @@ import java.util.regex.Matcher;
 public class BuildingController {
     public static Building building;
 
-    // TODO
-    //  KILLING COWS FOR LEATHER ARMOR
-
     public static Response createUnit(Matcher matcher) {
         matcher.find();
         String[] groupNames = {"type", "count"};

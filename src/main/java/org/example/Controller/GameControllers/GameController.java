@@ -718,19 +718,15 @@ public class GameController {
                 checkDelays(kingdom);
                 if (kingdom.getTotalFoodAmount() == 0)
                     kingdom.setFoodRate(-2);
-                //computeFears
                 computeTaxes(kingdom);
                 if (kingdom.getWealth() == 0)
                     kingdom.setTax(0);
                 autoProducing(kingdom);
-                //check if a king died
             }
         }
         currentGame.nextTurn();
         currentPlayer = currentGame.currentPlayer();
-        //initialize some fields
         return Response.NEXT_TURN;
-        //todo
     }
 
     private static void computeDamages() {
@@ -754,12 +750,15 @@ public class GameController {
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
         int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
+        int range = s.getRange();
         int attackPower = s.getAttackPower();
         if (s.getUnitType() == UnitType.OIL_ENGINEER && !checkOilEngineerAttack(s)) return false;
         if(s.getUnitType().isArcherType() &&
                 currentGame.getTileByCoordinates(y, x).getBuilding() != null &&
-                currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Towers)
+                currentGame.getTileByCoordinates(y, x).getBuilding() instanceof Towers) {
             fightRange += ((Towers) currentGame.getTileByCoordinates(y, x).getBuilding()).getFireRange();
+            range += ((Towers) currentGame.getTileByCoordinates(y, x).getBuilding()).getFireRange();
+        }
         Unit enemy = findNearestEnemyTo(s, fightRange);
         if (enemy == null) return false;
         int enemyX = enemy.getXCoordinate();
@@ -778,7 +777,7 @@ public class GameController {
         //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
         if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
-        if (squareOfDistance <= s.getRange() * s.getRange()) {
+        if (squareOfDistance <= range * range) {
             s.setWishPlace(currentGame.getMap()[y][x]);
             if (s.getUnitType() == UnitType.OIL_ENGINEER) {
                 for (Unit unit : currentGame.getTileByCoordinates(enemyY,enemyX).getAllUnits()) {
@@ -807,7 +806,7 @@ public class GameController {
         int fightRange = 15;
         int attackPower = e.getDamage();
         if (e.getEquipmentType() == EquipmentType.FIRE_BALLISTA) return getAttackDamageOfFireBallista(e);
-        Building enemy = findNearestEnemyToBuilding(e, fightRange); //todo
+        Building enemy = findNearestEnemyToBuilding(e, fightRange);
         if (enemy == null) return false;
         int enemyX = enemy.getXCoordinate();
         int enemyY = enemy.getYCoordinate();
@@ -992,7 +991,6 @@ public class GameController {
             for(int i = 0; i < k.getUnits().size(); i++){
                 if(k.getUnits().get(i).getHealth() <= 0){
                     Unit unit = k.getUnits().get(i);
-                    //todo war caged dogs
                     currentPlayer.addToPopulation(-1);
                     currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeUnit(unit);
                     if(unit.getUnitType() == UnitType.KING) isKingDead = true;
@@ -1012,13 +1010,11 @@ public class GameController {
         for (Kingdom kingdom : currentGame.getKingdoms()) {
             for (int i = kingdom.getBuildings().size() - 1; i >= 0; i--) {
                 Building building = kingdom.getBuildings().get(i);
-                if (building.getHitPoint() < 0) {
-                    //todo destroy from tile
-                    kingdom.removeBuilding(building);
+                if (building.getHitPoint() <= 0) {
+                    destroyBuilding(building);
                 }
             }
         }
-        //todo setGroundBack
     }
 
     private static void moveUnits() {
@@ -1183,11 +1179,6 @@ public class GameController {
 
     public static void initializeTradeController() {
         TradeController.currentPlayer = currentPlayer;
-    }
-
-    public static Response terminateTheGame(){
-        return null;
-        //todo
     }
 
     private static void removeKingdom(Kingdom kingdom){
@@ -1449,9 +1440,17 @@ public class GameController {
         for(Kingdom kingdom : currentGame.getKingdoms()){
             for(Soldier soldier : kingdom.getSoldiers()){
                 if(soldier.getUnitType() == UnitType.LADDER_MAN && soldier.getLadder() != null){
-                    if(isTunnelerAdjacentToBuilding(soldier, soldier.getLadder())){
+                    int x1 = soldier.getXCoordinate();
+                    int y1 = soldier.getYCoordinate();
+                    if(x1 == soldier.getWishPlace().getXCoordinate() && y1 == soldier.getWishPlace().getYCoordinate()){
                         Building target = soldier.getLadder();
-                        //
+                        int direction = 0;
+                        if(x1 == target.getXCoordinate())
+                            direction = target.getXCoordinate() - x1 + 2;
+                        else if(y1 == target.getYCoordinate())
+                            direction = y1 - target.getYCoordinate() + 1;
+                        if((((Towers) target).lather & (1 << direction)) == 0)
+                            ((Towers) target).lather |= (1 << direction);
                     }
                 }
             }

@@ -44,7 +44,6 @@ public class MapController {
         }
         result.append("|\n");
         return result.toString();
-        //todo building should be prior to ditch
     }
 
     public static String showMap(int x, int y){

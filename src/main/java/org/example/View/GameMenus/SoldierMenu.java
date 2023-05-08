@@ -40,6 +40,16 @@ public class SoldierMenu extends Menu {
                 System.out.println(SoldierController.buildEquipment(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.DIG_TUNNEL)).find())
                 System.out.println(SoldierController.digTunnel(matcher).message);
+            else if ((matcher = Commands.getMatcher(command, Commands.ATTACK_ENEMY)).find())
+                System.out.println(SoldierController.attack(matcher).message);
+            else if ((matcher = Commands.getMatcher(command, Commands.ATTACK)).find())
+                System.out.println(SoldierController.fireAtEnemy(matcher).message);
+            else if ((matcher = Commands.getMatcher(command, Commands.PUT_LADDER)).find())
+                System.out.println(SoldierController.putLadder(matcher).message);
+            else if (Commands.getMatcher(command, Commands.THROW_LADDER).find())
+                System.out.println(SoldierController.throwLadder().message);
+            else if (Commands.getMatcher(command, Commands.DISBAND).find())
+                System.out.println(SoldierController.disband().message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;

@@ -6,6 +6,7 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Producers;
+import org.example.Model.BuildingGroups.Towers;
 import org.example.View.Response;
 
 import java.util.ArrayDeque;
@@ -15,6 +16,9 @@ import java.util.Deque;
 import java.util.concurrent.Callable;
 import java.util.Objects;
 import java.util.regex.Matcher;
+
+import static org.example.View.Response.NO_LADDER;
+import static org.example.View.Response.THROW_LADDER;
 
 public class SoldierController {
     public static ArrayList<Unit> soldiers;
@@ -34,11 +38,8 @@ public class SoldierController {
             return Response.INVALID_COORDINATES;
         if(type == null)
             return Response.INVALID_TYPE;
-        //check for the target tile todo
-        /*if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
-                (currentGame.getTileByCoordinates(y, x).getBuilding() != null
-                        && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
-            return Response.CANT_GO_THERE;*/
+        if(currentGame.getTileByCoordinates(y, x).getHeight() <= -2)
+            return Response.CANT_GO_THERE;
         int number = 0;
         for(Unit unit : soldiers){
             if(unit.getUnitType() == type) {
@@ -57,7 +58,8 @@ public class SoldierController {
         int y = Integer.parseInt(matcher.group("y"));
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        //check for the target tile todo
+        if(currentGame.getTileByCoordinates(y, x).getHeight() <= -2)
+            return Response.CANT_GO_THERE;
         if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
                 (currentGame.getTileByCoordinates(y, x).getBuilding() != null
                         && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
@@ -81,7 +83,10 @@ public class SoldierController {
             return Response.INVALID_COORDINATES;
         if(x2 < 0 || x2 >= currentGame.getMapWidth() || y2 < 0 || y2 >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
-        //todo check target places
+        if(currentGame.getTileByCoordinates(y1, x1).getHeight() <= -2)
+            return Response.CANT_GO_THERE;
+        if(currentGame.getTileByCoordinates(y2, x2).getHeight() <= -2)
+            return Response.CANT_GO_THERE;
         for(Unit soldier : soldiers){
             ((Soldier) soldier).setSaidToPatrol(true);
             ((Soldier) soldier).setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
@@ -103,9 +108,15 @@ public class SoldierController {
     }
 
     public static Response throwLadder(){
-        return null;
-        //todo
-        //after select unit
+        if(currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding() != null
+                || currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding().getBuildingType() != BuildingType.WALL)
+            return NO_LADDER;
+        Building building = currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding();
+        for(int i = 0; i < 4; i++){
+            if((((Towers) building).lather & (1 << i)) == 0)
+                ((Towers) building).lather |= (1 << i);
+        }
+        return THROW_LADDER;
     }
 
     public static Response digDitch(Matcher matcher){
@@ -188,15 +199,55 @@ public class SoldierController {
     }
 
     public static Response fireAtEnemy(Matcher matcher){
-        return null;
-        //todo
-        //after select person
+        String nullGroup;
+        if ((nullGroup = Controller.nullGroup(matcher, "x", "y")) != null) return Response.getEmptyResponseByName(nullGroup);
+        int x = Integer.parseInt(Controller.makeEntryValid(matcher.group("x")));
+        int y = Integer.parseInt(Controller.makeEntryValid(matcher.group("y")));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if (!soldiers.get(0).getUnitType().isArcherType()) return Response.ARCHER_TYPE;
+        Soldier archer = (Soldier) soldiers.get(0);
+        int range = archer.getUnitType().getRange();
+        if (currentGame.getTileByCoordinates(archer.getYCoordinate(), archer.getXCoordinate()).getBuilding() != null
+                && currentGame.getTileByCoordinates(archer.getYCoordinate(), archer.getXCoordinate()).getBuilding().getBuildingType().getBuildingClass() == Towers.class)
+            range += ((Towers) currentGame.getTileByCoordinates(archer.getYCoordinate(), archer.getXCoordinate()).getBuilding()).getFireRange();
+        int squareOfDistance = (x - archer.getXCoordinate()) * (x - archer.getXCoordinate()) + (y - archer.getYCoordinate()) * (y - archer.getYCoordinate());
+        if (squareOfDistance > range * range || squareOfDistance < archer.getUnitType().getSecondRange() * archer.getUnitType().getSecondRange())
+            return Response.NOT_IN_RANGE;
+        int attackPower = archer.getUnitType().getAttackPower();
+        if (!currentGame.getTileByCoordinates(y,x).existEnemyOnThisTile(soldiers.get(0).getOwner())) return Response.NO_ENEMY_ON_THIS_TILE;
+        attackPower += (int) (((double)archer.getOwner().getFear() / 20) * attackPower);
+        if (currentGame.getTileByCoordinates(y, x).getEquipment() != null) {
+            int attackPowerToShield = Math.min(currentGame.getTileByCoordinates(y, x).getEquipment().getHealth(),attackPower);
+            currentGame.getTileByCoordinates(y, x).getEquipment().subHealth(attackPowerToShield);
+            attackPower -= attackPowerToShield;
+        }
+        Unit unit = null;
+        for (Unit unit1 : currentGame.getTileByCoordinates(y, x).getAllUnits()) {
+            if (unit1.getOwner() != archer.getOwner()) {
+                unit = unit1;
+                break;
+            }
+        }
+        attackPower -= (int) ((double)attackPower * unit.getUnitType().getDefensePower());
+        if(Math.random() < archer.getUnitType().getPrecision())
+            attackPower = 20;
+        unit.subHealth(attackPower);
+        return Response.LETS_ATTACK;
     }
 
     public static Response attack(Matcher matcher){
-        return null;
-        //todo
-        //after select person
+        String nullGroup;
+        if ((nullGroup = Controller.nullGroup(matcher, "x", "y")) != null) return Response.getEmptyResponseByName(nullGroup);
+        int x = Integer.parseInt(Controller.makeEntryValid(matcher.group("x")));
+        int y = Integer.parseInt(Controller.makeEntryValid(matcher.group("y")));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if (!currentGame.getTileByCoordinates(y,x).existEnemyOnThisTile(soldiers.get(0).getOwner())) return Response.NO_ENEMY_ON_THIS_TILE;
+        for (Unit unit : soldiers) {
+            unit.setWishPlace(currentGame.getTileByCoordinates(y, x));
+        }
+        return Response.LETS_ATTACK;
     }
 
     public static Response pourOil(Matcher matcher){
@@ -333,9 +384,13 @@ public class SoldierController {
     }
 
     public static Response disband(){
-        return null;
-        //todo
-        //after select persson
+        if (soldiers.get(0).getUnitType() == UnitType.KING) return Response.CANT_DISBAND_KING;
+        for (Unit unit : soldiers) {
+            currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeUnit(unit);
+            unit.getOwner().addToPopulation(-1);
+            unit.getOwner().removeUnit(unit);
+        }
+        return Response.DISBAND_SUCCESSFUL;
     }
 
     private static boolean isDirectionOutOfBoundaries(String direction, int y, int x) {

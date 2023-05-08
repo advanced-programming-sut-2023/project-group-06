@@ -14,7 +14,7 @@ public class Controller {
     public static User currentUser;
     public static MenuType currentMenu;
     public static void run(Scanner scanner){
-        Data.loadData("src/main/java/org/example/Model/data.json");
+        Data.loadData("src/main/java/org/example/Model/Data.json");
         if (Data.isStayLoggedIn()) currentMenu = MenuType.MAIN_MENU;
         else currentMenu = MenuType.START_MENU;
         while (true) {
