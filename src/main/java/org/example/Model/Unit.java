@@ -14,6 +14,10 @@ public class Unit {
     protected int speed;
     protected int health;
     protected boolean isAvailable = true;
+    private boolean isFlammable = false;
+    private int lastOiledTurn = -1;
+    private int fireDamageEachTurn = 0;
+
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
     }
@@ -54,6 +58,7 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
+        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
         owner.addUnit(this);
     }
 
@@ -107,6 +112,28 @@ public class Unit {
 
     public void setAvailable(boolean available) {
         isAvailable = available;
+    }
+    public boolean isFlammable() {
+        return isFlammable;
+    }
+    public int getLastOiledTurn() {
+        return lastOiledTurn;
+    }
+
+    public int getFireDamageEachTurn() {
+        return fireDamageEachTurn;
+    }
+
+    public void addToFireDamageEachTurn(int fireDamageEachTurn) {
+        this.fireDamageEachTurn += fireDamageEachTurn;
+    }
+    public void resetFireDamageEachTurn() {
+        this.fireDamageEachTurn = 0;
+    }
+
+    public void setFlammable(boolean flammable) {
+        isFlammable = flammable;
+        if (flammable) lastOiledTurn = GameController.currentGame.getNumberOfTurns();
     }
 
     public String toString() {

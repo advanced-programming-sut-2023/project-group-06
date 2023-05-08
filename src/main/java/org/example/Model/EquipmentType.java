@@ -36,8 +36,9 @@ public enum EquipmentType {
 
     public static EquipmentType getEquipmentTypeByString(String name) {
         for (EquipmentType equipmentType : EquipmentType.values()) {
-            if (equipmentType.name == name) return equipmentType;
+            if (equipmentType.name.equals(name)) return equipmentType;
         }
+        System.out.println(name);
         return null;
     }
 
@@ -75,5 +76,9 @@ public enum EquipmentType {
 
     public int getCost() {
         return cost;
+    }
+
+    public String getName() {
+        return name;
     }
 }

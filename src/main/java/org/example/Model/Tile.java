@@ -9,7 +9,6 @@ import org.example.Model.BuildingGroups.Towers;
 import java.util.ArrayList;
 
 public class Tile {
-    //todo handle nonSoldierUnits...
     private TileStructure type;
     private Building building;
     private int xCoordinate;
@@ -18,6 +17,10 @@ public class Tile {
     private ArrayList<Soldier> soldiers = new ArrayList<>();
     private ArrayList<Unit> nonSoldierUnits = new ArrayList<>();
     private ArrayList<Unit> allUnits = new ArrayList<>();
+    private boolean isDitch = false;
+    private boolean isToFill = false;
+    private int ditchDelay = 3;
+    private Equipment equipment = null;
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -27,6 +30,30 @@ public class Tile {
             height = -2;
         }
         else height = 0;
+    }
+
+    public boolean isDitch() {
+        return isDitch;
+    }
+
+    public void setDitchDelay(int ditchDelay) {
+        this.ditchDelay = ditchDelay;
+    }
+
+    public void subDitchDelay(){
+        this.ditchDelay -= 1;
+    }
+
+    public void addDitchDelay(){
+        this.ditchDelay++;
+    }
+
+    public int getDitchDelay() {
+        return ditchDelay;
+    }
+
+    public void setDitch(boolean ditch) {
+        isDitch = ditch;
     }
 
     public TileStructure getType() {
@@ -82,7 +109,7 @@ public class Tile {
     public void setBuilding(Building building) {
         this.building = building;
         if(building == null) return;
-        if(building.getBuildingType() == BuildingType.BRIDGE) height = 0;
+        if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType() == BuildingType.KILLING_PIT) height = 0;
         if(building.getBuildingType() == BuildingType.OX_TETHER){
             Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getAllUnits().add(cow);
@@ -103,6 +130,8 @@ public class Tile {
 
     public void addUnit(Unit unit){
         allUnits.add(unit);
+        unit.setXCoordinate(this.getXCoordinate());
+        unit.setYCoordinate(this.getYCoordinate());
         if(unit instanceof Soldier)
             soldiers.add((Soldier) unit);
     }
@@ -157,6 +186,22 @@ public class Tile {
                 return true;
         }
         return false;
+    }
+
+    public boolean checkForEngineers(){
+        for(Unit unit : this.allUnits){
+            if(unit.getUnitType() == UnitType.ENGINEER)
+                return true;
+        }
+        return false;
+    }
+
+    public Equipment getEquipment() {
+        return equipment;
+    }
+
+    public void setEquipment(Equipment equipment) {
+        this.equipment = equipment;
     }
 
     public String toString() {

@@ -39,6 +39,7 @@ public class Kingdom {
     private ArrayList<TradeRequest> tradeRequestsAcceptedByMe = new ArrayList<>();
     private ArrayList<TradeRequest> allTradeRequestsSentToMe = new ArrayList<>();
     private ArrayList<Equipment> equipments = new ArrayList<>();
+    private ArrayList<Tile> ditches = new ArrayList<>();
     private User owner;
     private Soldier king;
     private Building mainCastle;
@@ -66,6 +67,10 @@ public class Kingdom {
                 this.getFoodAmountByType(FoodType.CHEESE) +
                 this.getFoodAmountByType(FoodType.MEAT) +
                 this.getFoodAmountByType(FoodType.BREAD);
+    }
+
+    public ArrayList<Tile> getDitches() {
+        return ditches;
     }
 
     public ArrayList<Unit> getCows() {
@@ -130,6 +135,8 @@ public class Kingdom {
         this.units.remove(unit);
         if(unit instanceof Soldier)
             this.soldiers.remove((Soldier) unit);
+        if (unit instanceof Equipment)
+            this.equipments.remove((Equipment) unit);
     }
 
     public User getOwner() {

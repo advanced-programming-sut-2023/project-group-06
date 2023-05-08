@@ -42,7 +42,7 @@ public enum BuildingType {
     OIL_SMELTER(300,100,3,ResourcesType.IRON,10,0,1,true,"oil smelter", Producers.class), //karkhane zob
     PITCH_DITCH(300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Storage.class),
-    SIEGE_TENT(100,0,1,null,0,0,1,false,"siege tent", Building.class), //chador mohasere
+    SIEGE_TENT(100,0,1,null,0,0,0,false,"siege tent", Building.class), //chador mohasere
     STABLE(300,400,3,ResourcesType.WOOD,20,0,0,true,"stable", Storage.class),
     APPLE_ORCHARD(100,0,3,ResourcesType.WOOD,5,1,0,false,"apple orchard", Producers.class), //bagh sib
     DIARY_FARMER(100,0,3,ResourcesType.WOOD,10,1,0,false,"diary farmer", Producers.class), //labani
@@ -54,8 +54,8 @@ public enum BuildingType {
     GRANARY(500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
     MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
-    STAIR(100, 0, 1, null, 0, 0, 0, false, "stair", null),
-    WALL(100, 0, 1, null, 0, 0, 0, false, "wall", Towers.class),
+    STAIR(100, 0, 1, null, 0, 0, 0, true, "stair", null),
+    WALL(100, 0, 1, null, 0, 0, 0, true, "wall", null),
     BRIDGE(1, 0, 1, null, 0, 0, 0, true, "bridge", null),
     ;
     private int size;

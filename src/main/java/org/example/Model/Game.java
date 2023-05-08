@@ -12,6 +12,7 @@ public class Game {
     private ArrayList<Kingdom> kingdoms = new ArrayList<>();
     private ArrayList<TradeRequest> tradeRequests = new ArrayList<>();
     private ArrayList<Tree> trees = new ArrayList<>();
+    private ArrayList<Tile> ditches = new ArrayList<>();
     private int turnIndex = 0;
     private int numberOfTurns = 1;
 
@@ -140,5 +141,9 @@ public class Game {
     public void removeKingdom(Kingdom kingdom){
         this.kingdoms.remove(kingdom);
         this.numberOfPlayers--;
+    }
+
+    public ArrayList<Tile> getDitches() {
+        return ditches;
     }
 }

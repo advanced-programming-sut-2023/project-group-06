@@ -26,12 +26,18 @@ public class SoldierMenu extends Menu {
                 System.out.println(SoldierController.patrolUnit(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SET_STATE)).find())
                 System.out.println(SoldierController.setUnitState(matcher).message);
-            else if((matcher = Commands.getMatcher(command, Commands.POUR_OIL)).find())
+            else if ((matcher = Commands.getMatcher(command, Commands.POUR_OIL)).find())
                 System.out.println(SoldierController.pourOil(matcher).message);
             else if(Commands.getMatcher(command, Commands.STOP_PATROL).find())
                 System.out.println(SoldierController.stopPatrolling().message);
+            else if((matcher = Commands.getMatcher(command, Commands.DIG_DITCH)).find())
+                System.out.println(SoldierController.digDitch(matcher).message);
+            else if((matcher = Commands.getMatcher(command, Commands.FILL_DITCH)).find())
+                System.out.println(SoldierController.fillDitch(matcher).message);
+            else if(Commands.getMatcher(command, Commands.STOP_DIGGING).find())
+                System.out.println(SoldierController.stopDigging().message);
             else if ((matcher = Commands.getMatcher(command, Commands.BUILD_EQUIPMENT)).find())
-                System.out.println(SoldierController.buildEquipment(matcher));
+                System.out.println(SoldierController.buildEquipment(matcher).message);
             else System.out.println(Response.INVALID_COMMAND.message);
         }
         return null;

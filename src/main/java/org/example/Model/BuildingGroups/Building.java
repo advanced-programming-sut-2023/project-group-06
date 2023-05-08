@@ -17,7 +17,7 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
-    private boolean isOnFire = false;
+    private int fireDamageEachTurn = 0;
     private EquipmentType equipmentType = null;
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
@@ -112,10 +112,15 @@ public class Building {
     public int getLastOiledTurn() {
         return lastOiledTurn;
     }
+    public void addToFireDamageEachTurn(int fireDamageEachTurn) {
+        this.fireDamageEachTurn += fireDamageEachTurn;
+    }
+    public void resetFireDamageEachTurn() {
+        this.fireDamageEachTurn = 0;
+    }
 
     public String toString() {
-        String output = this.getBuildingType().getName();
-        output += ", x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
+        String output = "x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
         output += ", is it flammable? " + isFlammable;
         return output;
     }
