@@ -20,6 +20,9 @@ public class Soldier extends Unit {
     private Tile patrolWishPlace2;
     private Tile ditch;
     private Tile fill;
+    private Building ladder;
+    private Building tunnel;
+    private boolean hasLadder = false;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -28,6 +31,31 @@ public class Soldier extends Unit {
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
+        if(unitType == UnitType.LADDER_MAN) hasLadder = true;
+    }
+
+    public Building getLadder() {
+        return ladder;
+    }
+
+    public void setLadder(Building ladder) {
+        this.ladder = ladder;
+    }
+
+    public boolean isHasLadder() {
+        return hasLadder;
+    }
+
+    public void setHasLadder(boolean hasLadder) {
+        this.hasLadder = hasLadder;
+    }
+
+    public Building getTunnel() {
+        return tunnel;
+    }
+
+    public void setTunnel(Building tunnel) {
+        this.tunnel = tunnel;
     }
 
     public Tile getFill() {

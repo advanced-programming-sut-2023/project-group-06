@@ -75,9 +75,13 @@ public class SoldierController {
         int x2 = Integer.parseInt(matcher.group("x2"));
         int y1 = Integer.parseInt(matcher.group("y1"));
         int y2 = Integer.parseInt(matcher.group("y2"));
-        //todo check target places
         if(soldiers.get(0).getUnitType() == UnitType.ENGINEER)
             return Response.THIS_UNIT_CANT_PATROL;
+        if(x1 < 0 || x1 >= currentGame.getMapWidth() || y1 < 0 || y1 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(x2 < 0 || x2 >= currentGame.getMapWidth() || y2 < 0 || y2 >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        //todo check target places
         for(Unit soldier : soldiers){
             ((Soldier) soldier).setSaidToPatrol(true);
             ((Soldier) soldier).setPatrolWishPlace1(currentGame.getTileByCoordinates(y1, x1));
@@ -109,6 +113,8 @@ public class SoldierController {
         int y = Integer.parseInt(matcher.group("y"));
         if(!soldiers.get(0).getUnitType().isCanDigDitch())
             return Response.CANT_DIG_DITCH;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
         if(currentGame.getTileByCoordinates(y, x).getBuilding() != null)
             return Response.DITCH_UNDER_BUILDING;
         if(currentGame.getTileByCoordinates(y, x).getAllUnits().size() > 0)
@@ -136,6 +142,8 @@ public class SoldierController {
             return Response.THERE_IS_NO_DITCH;
         if(!soldiers.get(0).getUnitType().isCanDigDitch())
             return Response.CANT_FILL_DITCH;
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
         Tile adjacent = GameController.getAdjacentCell(currentGame.getTileByCoordinates(y, x), soldiers.get(0));
         if(adjacent == null)
             return Response.THE_UNIT_CANT_GO_THERE;
@@ -230,9 +238,66 @@ public class SoldierController {
     }
 
     public static Response digTunnel(Matcher matcher){
-        return null;
-        //todo
-        //after select person
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(soldiers.get(0).getUnitType() != UnitType.TUNNELER)
+            return Response.CANT_DIG_TUNNEL;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding() == null ||
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.TREE ||
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() == BuildingType.ROCK)
+            return Response.DIG_TUNNEL_UNDER_BUILDING;
+        if(currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.WALL &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.STAIR &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.LOOKOUT_TOWER &&
+                currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType() != BuildingType.DEFENSE_TURRET)
+            return Response.DIG_UNDER_THIS_TYPE;
+        Building building = currentGame.getTileByCoordinates(y, x).getBuilding();
+        Tile center = currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate());
+        Tile adjacent = GameController.getAdjacentCell(center, soldiers.get(0));
+        if(adjacent == null)
+            return Response.THE_UNIT_CANT_GO_THERE;
+        for(Unit soldier : soldiers){
+            building.getTunnelers().add((Soldier) soldier);
+            ((Soldier) soldier).setTunnel(building);
+            soldier.setKingSaidToMove(true);
+            soldier.setWishPlace(adjacent);
+        }
+        return Response.DIG_TUNNEL;
+    }
+
+    public static Response putLadder(Matcher matcher){
+        int x = Integer.parseInt(matcher.group("x"));
+        int y = Integer.parseInt(matcher.group("y"));
+        String directionString = Controller.makeEntryValid(matcher.group("direction"));
+        int direction = GameController.getDirection(directionString);
+        if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
+            return Response.INVALID_COORDINATES;
+        if(soldiers.get(0).getUnitType() != UnitType.LADDER_MAN)
+            return Response.LADDER_MAN;
+        Soldier ladderMan = null;
+        for(Unit soldier : soldiers){
+            if(((Soldier) soldier).isHasLadder()) {
+                ladderMan = ((Soldier) soldier);
+                break;
+            }
+        }
+        if(ladderMan == null) return Response.OUT_OF_LADDER;
+        int frontX = x;
+        int frontY = y;
+        if(direction % 2 == 0) frontY += direction - 1;
+        else frontX += 2 - direction;
+        if(currentGame.getTileByCoordinates(frontY, frontX).getBuilding() == null ||
+                currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() != BuildingType.WALL)
+            return Response.PUT_LADDER_NEXT_TO_WALL;
+        Building building = currentGame.getTileByCoordinates(frontY, frontX).getBuilding();
+        ladderMan.setLadder(building);
+        building.getLadderMen().add(ladderMan);
+        ladderMan.setLadder(building);
+        ladderMan.setKingSaidToMove(true);
+        ladderMan.setWishPlace(currentGame.getTileByCoordinates(y, x));
+        return Response.LETS_PUT_LADDER;
     }
 
     public static Response buildEquipment(Matcher matcher){

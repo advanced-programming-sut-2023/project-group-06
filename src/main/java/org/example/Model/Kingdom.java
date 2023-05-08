@@ -50,6 +50,14 @@ public class Kingdom {
         this.owner = owner;
     }
 
+    public ArrayList<Unit> getEngineers() {
+        return engineers;
+    }
+
+    public void addEngineer(Unit engineer){
+        this.engineers.add(engineer);
+    }
+
     public void addToHappinessIncrease(int amount){
         this.happinessIncrease += amount;
     }

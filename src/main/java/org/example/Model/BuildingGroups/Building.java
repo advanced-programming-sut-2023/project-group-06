@@ -4,7 +4,10 @@ import org.example.Controller.GameControllers.GameController;
 import org.example.Model.EquipmentType;
 import org.example.Model.Kingdom;
 import org.example.Model.Resources;
+import org.example.Model.Soldier;
 import org.example.Model.Tile;
+
+import java.util.ArrayList;
 
 public class Building {
     private int xCoordinate;
@@ -17,14 +20,21 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
-    private int fireDamageEachTurn = 0;
     private EquipmentType equipmentType = null;
+    private int tunnelDelay;
+    private ArrayList<Soldier> tunnelers = new ArrayList<>();
+    private ArrayList<Soldier> ladderMen = new ArrayList<>();
+    private int fireDamageEachTurn = 0;
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
         this.owner = owner;
         this.buildingType = buildingType;
         this.hitPoint = buildingType.getHitPoint();
+        if(buildingType == BuildingType.WALL) tunnelDelay = 4;
+        if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
+        if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
+        if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
     }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){
@@ -34,6 +44,22 @@ public class Building {
         this.buildingType = buildingType;
         this.direction = direction;
         this.hitPoint = buildingType.getHitPoint();
+        if(buildingType == BuildingType.WALL) tunnelDelay = 4;
+        if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
+        if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
+        if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
+    }
+
+    public ArrayList<Soldier> getLadderMen() {
+        return ladderMen;
+    }
+
+    public int getTunnelDelay() {
+        return tunnelDelay;
+    }
+
+    public void subTunnelDelay(){
+        this.tunnelDelay--;
     }
 
     public EquipmentType getEquipmentType() {
@@ -117,6 +143,10 @@ public class Building {
     }
     public void resetFireDamageEachTurn() {
         this.fireDamageEachTurn = 0;
+    }
+
+    public ArrayList<Soldier> getTunnelers() {
+        return tunnelers;
     }
 
     public String toString() {
