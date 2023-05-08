@@ -48,12 +48,12 @@ public class PathFinder {
                         continue;
                     }
                     Building b = map[i][j].getBuilding();
-                    if (b != null && b.getBuildingType().getBuildingClass() == Towers.class) {
+                    if (b != null && b instanceof Towers) {
                         f2 |= (1 << k);
                         if ((((Towers) b).lather & (1 << k)) != 0) f1 |= (1 << k);
                     }
                     b = map[ii][jj].getBuilding();
-                    if (b != null && b.getBuildingType().getBuildingClass() == Towers.class) {
+                    if (b != null && b instanceof Towers) {
                         f2 |= (1 << k);
                         if ((((Towers) b).lather & (1 << ((k + 2) % 4))) != 0) f1 |= (1 << k);
                     }
