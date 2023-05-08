@@ -1,0 +1,16 @@
+{
+  "stayLoggedIn": true,
+  "currentUsername": "Mammad",
+  "users": [
+    {
+      "username": "Mammad",
+      "password": "3900ef1f249bda65ab110cadda2c79aed97a95c5d3b89ade6b5e201d1c7be721",
+      "nickname": "moban",
+      "email": "mobin@gmail.com",
+      "slogan": "Keep friends close and enemies guessing.",
+      "questionIndex": 1,
+      "answerToQuestion": "795e77a144ea84eceb1eced5f2de769200767da1c0d864f3738b418ec912564a",
+      "highScore": 0
+    }
+  ]
+}
