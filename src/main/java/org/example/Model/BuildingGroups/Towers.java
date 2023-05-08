@@ -3,6 +3,13 @@ package org.example.Model.BuildingGroups;
 import org.example.Model.Kingdom;
 
 public class Towers extends Building{
+    /*
+         0
+       3 x 1
+         2
+    haveLather(i) : lather & (1 << i) != 0
+    */
+    public int lather;
     int fireRange;
     int defendRange;
 

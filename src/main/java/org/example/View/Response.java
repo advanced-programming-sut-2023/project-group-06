@@ -210,6 +210,11 @@ public enum Response {
     LADDER_MAN("This unit doesn't have ladder!"),
     OUT_OF_LADDER("These units are out of ladder!"),
     LETS_PUT_LADDER("Let's put the ladder!"),
+    EMPTY_EQUIPMENT_NAME("Equipment name's field can't be empty!"),
+    INVALID_EQUIPMENT("There is no equipment with this name!"),
+    NOT_ENOUGH_GOLD_EQUIPMENT("You don't have enough gold to build this equipment!"),
+    NOT_ENOUGH_ENGINEERS_EQUIPMENT("You don't have enough engineers to build this equipment!"),
+    EQUIPMENT_BUILT("Equipment built successfully!"),
     ;
     public final String message;
 
@@ -233,6 +238,7 @@ public enum Response {
         if (name.equals("resourceType")) return EMPTY_RESOURCE_TYPE;
         if (name.equals("id")) return EMPTY_ID;
         if (name.equals("direction")) return EMPTY_DIRECTION;
+        if (name.equals("equipmentName")) return EMPTY_EQUIPMENT_NAME;
         return null;
     }
 }

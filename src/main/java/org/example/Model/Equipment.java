@@ -1,39 +1,27 @@
 package org.example.Model;
 
-public class Equipment {
-    private int health;
+public class Equipment extends Unit {
     private int damage;
     private int engineerPrice;
     private EquipmentType equipmentType;
-    private Kingdom owner;
     private int delay;
-    private int x;
-    private int y;
     private int range;
     private boolean doesAttackSoldiers;
-    private int speed;
     private double precision;
+    private int cost;
 
     public Equipment(EquipmentType equipmentType, Kingdom owner, int x, int y) {
+        super(x,y,owner);
         this.equipmentType = equipmentType;
-        this.owner = owner;
-        this.x = x;
-        this.y = y;
-        speed = equipmentType.getSpeed();
+        super.speed = equipmentType.getSpeed();
         range = equipmentType.getRange();
         doesAttackSoldiers = equipmentType.isDoesAttackSoldiers();
-        health = equipmentType.getHealth();
+        super.health = equipmentType.getHealth();
         damage = equipmentType.getDamage();
         engineerPrice = equipmentType.getEngineerPrice();
         precision = equipmentType.getPrecision();
-    }
-
-    public int getHealth() {
-        return health;
-    }
-
-    public void subHealth(int health) {
-        this.health -= health;
+        cost = equipmentType.getCost();
+        owner.addEquipment(this);
     }
 
     public void resetHealth() {
@@ -52,10 +40,6 @@ public class Equipment {
         return equipmentType;
     }
 
-    public Kingdom getOwner() {
-        return owner;
-    }
-
     public int getDelay() {
         return delay;
     }
@@ -64,32 +48,12 @@ public class Equipment {
         this.delay -= delay;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
-
     public int getRange() {
         return range;
     }
 
     public boolean doesAttackSoldiers() {
         return doesAttackSoldiers;
-    }
-
-    public int getSpeed() {
-        return speed;
     }
 
     public double getPrecision() {

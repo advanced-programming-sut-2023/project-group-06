@@ -1,6 +1,7 @@
 package org.example.Model.BuildingGroups;
 
 import org.example.Controller.GameControllers.GameController;
+import org.example.Model.EquipmentType;
 import org.example.Model.Kingdom;
 import org.example.Model.Resources;
 import org.example.Model.Soldier;
@@ -19,6 +20,8 @@ public class Building {
     private int direction;
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
+    private boolean isOnFire = false;
+    private EquipmentType equipmentType = null;
     private int tunnelDelay;
     private ArrayList<Soldier> tunnelers = new ArrayList<>();
     private ArrayList<Soldier> ladderMen = new ArrayList<>();
@@ -51,6 +54,14 @@ public class Building {
         return ladderMen;
     }
 
+    public EquipmentType getEquipmentType() {
+        return equipmentType;
+    }
+
+    public void setEquipmentType(EquipmentType equipmentType) {
+        this.equipmentType = equipmentType;
+    }
+
     public int getTunnelDelay() {
         return tunnelDelay;
     }
@@ -67,8 +78,8 @@ public class Building {
         this.delay = delay;
     }
 
-    public void addDelay(int delay){
-        this.delay += delay;
+    public void subDelay(){
+        this.delay -= 1;
     }
 
     public int getHitPoint() {
@@ -133,7 +144,8 @@ public class Building {
     }
 
     public String toString() {
-        String output = "x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
+        String output = this.getBuildingType().getName();
+        output += ", x: " + xCoordinate + ", y: " + yCoordinate + ", type: " + getBuildingType().getName() + ", hp: " + hitPoint;
         output += ", is it flammable? " + isFlammable;
         return output;
     }

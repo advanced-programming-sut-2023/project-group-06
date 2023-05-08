@@ -21,6 +21,7 @@ public class Soldier extends Unit {
     private Tile patrolWishPlace1;
     private Tile patrolWishPlace2;
     private int lastOiledTurn = -1;
+    private int fireDamageEachTurn = 0;
     private Tile ditch;
     private Tile fill;
     private Building ladder;
@@ -147,6 +148,18 @@ public class Soldier extends Unit {
     public int getLastOiledTurn() {
         return lastOiledTurn;
     }
+
+    public int getFireDamageEachTurn() {
+        return fireDamageEachTurn;
+    }
+
+    public void addToFireDamageEachTurn(int fireDamageEachTurn) {
+        this.fireDamageEachTurn += fireDamageEachTurn;
+    }
+    public void resetFireDamageEachTurn() {
+        this.fireDamageEachTurn = 0;
+    }
+
 
     public String toString() {
         String output = getUnitType().getName() + ": hp: " + getHealth() + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();

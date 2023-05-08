@@ -152,7 +152,7 @@ public class Controller {
         else return entry;
     }
 
-    public static String nullGroup(Matcher matcher, String[] groupNames) {
+    public static String nullGroup(Matcher matcher, String... groupNames) {
         for (int i = 0; i < groupNames.length; i++) {
             if (matcher.group(groupNames[i]) == null) continue;
             if (makeEntryValid(matcher.group(groupNames[i])).isEmpty()) return groupNames[i];
