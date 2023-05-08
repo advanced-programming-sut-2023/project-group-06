@@ -208,9 +208,9 @@ public class SoldierController {
         if (isDirectionOutOfBoundaries(direction,y,x)) return Response.OUT_OF_BOUNDARIES;
         int destinationX = directionX(x,direction);
         int destinationY = directionY(y,direction);
-        for (Soldier soldier : currentGame.getTileByCoordinates(destinationY,destinationX).getSoldiers()) {
-            if (soldier.getOwner() != currentGame.currentPlayer()) {
-                soldier.setFlammable(true);
+        for (Unit unit : currentGame.getTileByCoordinates(destinationY,destinationX).getAllUnits()) {
+            if (!(unit instanceof Equipment) && unit.getOwner() != currentGame.currentPlayer()) {
+                unit.setFlammable(true);
             }
         }
         Building thisBuilding;
@@ -247,7 +247,10 @@ public class SoldierController {
         }
         if (soldiers.get(0).getOwner().getWealth() < equipmentType.getCost()) return Response.NOT_ENOUGH_GOLD_EQUIPMENT;
         if (availableEngineers < equipmentType.getEngineerPrice()) return Response.NOT_ENOUGH_ENGINEERS_EQUIPMENT;
-        if (GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).getBuilding() != null) return Response.BUILDING_ALREADY_EXIST;
+        if (GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).getBuilding() != null)
+            return Response.BUILDING_ALREADY_EXIST;
+        if (GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).getEquipment() != null)
+            return Response.EXIST_PORTABLE_SHIELD;
         Building siegeTent = new Building(soldiers.get(0).getOwner(), BuildingType.SIEGE_TENT,soldiers.get(0).getXCoordinate(),soldiers.get(0).getYCoordinate());
         siegeTent.getOwner().getBuildings().add(siegeTent);
         GameController.currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(),soldiers.get(0).getXCoordinate()).setBuilding(siegeTent);

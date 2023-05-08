@@ -207,6 +207,7 @@ public enum Response {
     NOT_ENOUGH_GOLD_EQUIPMENT("You don't have enough gold to build this equipment!"),
     NOT_ENOUGH_ENGINEERS_EQUIPMENT("You don't have enough engineers to build this equipment!"),
     EQUIPMENT_BUILT("Equipment built successfully!"),
+    EXIST_PORTABLE_SHIELD("There is a portables shield here already!"),
     ;
     public final String message;
 

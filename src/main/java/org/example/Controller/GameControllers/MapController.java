@@ -117,7 +117,8 @@ public class MapController {
         result += "ground structure: " + currentGame.getTileByCoordinates(y, x).getType().toString().toLowerCase() + "\n";
         result += "-soldiers:" + '\n';
         for (Soldier soldier : currentGame.getTileByCoordinates(y,x).getSoldiers()) {
-            if(!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != currentGame.currentPlayer() && GameController.findNearestEnemyTo(soldier, 4) == null))
+            if(!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != currentGame.currentPlayer()
+                    && GameController.findNearestEnemyTo(soldier, 4) == null))
                 result += soldier.toString() + '\n';
         }
         result += "-engineers:\n";

@@ -14,15 +14,12 @@ public class Soldier extends Unit {
     private boolean canThrowLadders;
     private boolean canDigDitch;
     private boolean hasOil = false;
-    private boolean isFlammable = false;
     private boolean isArab = false;
     private boolean isSaidToPatrol = false;
     private Tile patrolWishPlace1;
     private Tile patrolWishPlace2;
-    private int lastOiledTurn = -1;
     private Tile ditch;
     private Tile fill;
-    private int fireDamageEachTurn = 0;
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
@@ -99,15 +96,6 @@ public class Soldier extends Unit {
         this.state = state;
     }
 
-    public boolean isFlammable() {
-        return isFlammable;
-    }
-
-    public void setFlammable(boolean flammable) {
-        isFlammable = flammable;
-        if (flammable) lastOiledTurn = GameController.currentGame.getNumberOfTurns();
-    }
-
     public boolean isHasOil() {
         return hasOil;
     }
@@ -116,25 +104,10 @@ public class Soldier extends Unit {
         this.hasOil = hasOil;
     }
 
-    public int getLastOiledTurn() {
-        return lastOiledTurn;
-    }
-
-    public int getFireDamageEachTurn() {
-        return fireDamageEachTurn;
-    }
-
-    public void addToFireDamageEachTurn(int fireDamageEachTurn) {
-        this.fireDamageEachTurn += fireDamageEachTurn;
-    }
-    public void resetFireDamageEachTurn() {
-        this.fireDamageEachTurn = 0;
-    }
-
 
     public String toString() {
         String output = getUnitType().getName() + ": hp: " + getHealth() + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
-        output += ", is it flammable? " + isFlammable + ", has it oil? " + hasOil;
+        output += ", is it flammable? " + isFlammable() + ", has it oil? " + hasOil;
         return output;
     }
 }
