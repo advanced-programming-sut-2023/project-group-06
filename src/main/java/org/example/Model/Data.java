@@ -68,7 +68,7 @@ public class Data {
     /* saveDate:
     true: everything is ok
     false: error
-    put address = "src/main/java/org/example/Model/data.json" in the method */
+    put address = "src/main/java/org/example/Model/Data.json" in the method */
     public static boolean saveData(String address) {
         JsonObject root = new JsonObject();
         root.addProperty("stayLoggedIn", stayLoggedIn);
@@ -104,7 +104,7 @@ public class Data {
     /* loadDate:
     true : everything is ok
     false: error
-    put address = "src/main/java/org/example/Model/data.json" in the method */
+    put address = "src/main/java/org/example/Model/Data.json" in the method */
     public static boolean loadData(String address) {
         File input = new File(address);
         try {
@@ -131,7 +131,6 @@ public class Data {
                 String currentUsername = rootObject.get("currentUsername").getAsString();
                 currentUser = getUserByName(currentUsername);
             }
-
             return true;
         } catch (FileNotFoundException e) {
             return false;

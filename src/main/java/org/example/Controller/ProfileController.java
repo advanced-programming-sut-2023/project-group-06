@@ -22,8 +22,7 @@ public class ProfileController {
 
     public static Response changeNickname(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"nickname"};
-        String nullGroup = Controller.nullGroup(matcher, groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "nickname");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String nickname = Controller.makeEntryValid(matcher.group("nickname"));
         if (Data.getCurrentUser().getNickname().equals(nickname)) return Response.SAME_NICKNAME;
@@ -33,8 +32,7 @@ public class ProfileController {
 
     public static Response changePassword(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"newPassword", "oldPassword"};
-        String nullGroup = Controller.nullGroup(matcher, groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "newPassword", "oldPassword");
         if (nullGroup != null) return Response.getEmptyResponseByName("password");
         String newPassword = Controller.makeEntryValid(matcher.group("newPassword"));
         String oldPassword = Controller.makeEntryValid(matcher.group("oldPassword"));
@@ -56,8 +54,7 @@ public class ProfileController {
 
     public static Response changeEmail(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"email"};
-        String nullGroup = Controller.nullGroup(matcher, groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "email");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String email = Controller.makeEntryValid(matcher.group("email").toLowerCase());
         if (Data.getCurrentUser().getEmail().equals(email)) return Response.SAME_EMAIL;
@@ -69,8 +66,7 @@ public class ProfileController {
 
     public static Response changeSlogan(Matcher matcher) {
         matcher.find();
-        String[] groupNames = {"slogan"};
-        String nullGroup = Controller.nullGroup(matcher, groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "slogan");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String slogan = Controller.makeEntryValid(matcher.group("slogan"));
         if ((!Data.getCurrentUser().getSlogan().equals("")) && Data.getCurrentUser().getSlogan().equals(slogan))
