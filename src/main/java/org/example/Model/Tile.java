@@ -111,9 +111,9 @@ public class Tile {
             GameController.currentPlayer.getCows().add(cow);
         }
         if (!type.CanBeCrossed()) return;
-        if (building instanceof Towers || building instanceof Gate) height = 3;
-        else if (building.getBuildingType() == BuildingType.STAIR) height = 1;
+        if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
+        else if (building instanceof Towers || building instanceof Gate) height = 3;
         else if(building.getBuildingType().isCanYouEnterIt()) height = 0;
         else height = -2;
     }

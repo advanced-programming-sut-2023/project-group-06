@@ -97,6 +97,18 @@ public class GameController {
                 setGroundBack(currentGame.getTileByCoordinates(j, i));
             }
         }
+        for(Soldier soldier1 : building.getTunnelers()){
+            soldier1.setTunnel(null);
+            soldier1.setWishPlace(currentGame.getTileByCoordinates(soldier1.getYCoordinate(),
+                    soldier1.getXCoordinate()));
+            soldier1.setKingSaidToMove(false);
+        }
+        for(Soldier soldier1 : building.getLadderMen()){
+            soldier1.setLadder(null);
+            soldier1.setWishPlace(currentGame.getTileByCoordinates(soldier1.getYCoordinate(),
+                    soldier1.getXCoordinate()));
+            soldier1.setKingSaidToMove(false);
+        }
     }
 
     public static Response dropUnit(Matcher matcher){
@@ -581,9 +593,9 @@ public class GameController {
             ArrayList<Soldier> soldiersOnGate = new ArrayList<>();
             if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
                 currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(0);
-                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(0);
+                currentGame.getTileByCoordinates(3 * y - 2 * frontY, 3 * x - 2 * frontX).setHeight(0);
                 soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers());
-                soldiersOnGate.addAll(currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).getSoldiers());
+                soldiersOnGate.addAll(currentGame.getTileByCoordinates(3 * y - 2 * frontY, 3 * x - 2 * frontX).getSoldiers());
             }
             //frontY - y + x0
             //frontX - x + y0
@@ -631,7 +643,7 @@ public class GameController {
             currentGame.getTileByCoordinates(frontY, frontX).setHeight(3);
             if(gate.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE){
                 currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setHeight(3);
-                currentGame.getTileByCoordinates(3 * y - frontY, 3 * x - frontX).setHeight(3);
+                currentGame.getTileByCoordinates(3 * y - 2 * frontY, 3 * x - 2 * frontX).setHeight(3);
             }
         }
         else{
@@ -686,6 +698,7 @@ public class GameController {
 
     public static Response nextTurn(){
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
+            System.out.println(currentGame.getTileByCoordinates(29, 17).getHeight() + "  " + currentGame.getTileByCoordinates(29, 18).getHeight() + "   " + currentGame.getTileByCoordinates(29, 19).getHeight());
             computeDamages(); // computeDamages
             destroyDeadBodies(); // destroyDeadBodies  //destroy dead buildings
             if(currentGame.getNumberOfPlayers() == 1) return Response.WINNER;
@@ -1246,15 +1259,7 @@ public class GameController {
                         Building target = soldier.getTunnel();
                         if(target.getTunnelDelay() > 0)
                             target.subTunnelDelay();
-                        else {
-                            for(Soldier soldier1 : target.getTunnelers()){
-                                soldier1.setTunnel(null);
-                                soldier1.setWishPlace(currentGame.getTileByCoordinates(soldier1.getYCoordinate(),
-                                        soldier1.getXCoordinate()));
-                                soldier1.setKingSaidToMove(false);
-                            }
-                            destroyBuilding(target);
-                        }
+                        else destroyBuilding(target);
                     }
                 }
             }
