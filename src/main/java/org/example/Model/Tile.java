@@ -5,6 +5,7 @@ import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Gate;
 import org.example.Model.BuildingGroups.Towers;
+import org.example.View.Graphics.SuperImage;
 
 import java.util.ArrayList;
 
@@ -21,6 +22,11 @@ public class Tile {
     private boolean isToFill = false;
     private int ditchDelay = 3;
     private Equipment equipment = null;
+    private SuperImage img;
+
+    public SuperImage getImg() {
+        return img;
+    }
 
     public Tile(TileStructure type, int xCoordinate, int yCoordinate) {
         this.type = type;
@@ -30,6 +36,7 @@ public class Tile {
             height = -2;
         }
         else height = 0;
+        this.img = type.getSuperImage();
     }
 
     public boolean isDitch() {

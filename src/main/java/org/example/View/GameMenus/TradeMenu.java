@@ -5,8 +5,6 @@ import org.example.View.Commands;
 import org.example.View.Menu;
 import org.example.View.MenuType;
 import org.example.View.Response;
-
-import javax.swing.*;
 import java.util.Scanner;
 
 public class TradeMenu extends Menu {
