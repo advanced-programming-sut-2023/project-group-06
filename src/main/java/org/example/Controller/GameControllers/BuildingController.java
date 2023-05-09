@@ -230,6 +230,7 @@ public class BuildingController {
         if (destination.getBuilding() != null) return Response.CAGE_BLOCKED;
         for (int i = GameController.currentGame.getTileByCoordinates(y, x).getSoldiers().size() - 1; i >= 0; i--) {
             Soldier soldier = GameController.currentGame.getTileByCoordinates(y, x).getSoldiers().get(i);
+            soldier.setState(2);
             curTile.removeSoldier(soldier);
             destination.addSoldier(soldier);
         }

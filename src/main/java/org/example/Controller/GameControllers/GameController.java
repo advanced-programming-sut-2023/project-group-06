@@ -712,6 +712,7 @@ public class GameController {
             checkDitches();
             checkTunnelers();
             checkToFillDitches();
+            checkLadders();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
@@ -791,7 +792,6 @@ public class GameController {
                     if (!(unit instanceof Equipment) && unit.isFlammable() && s.getOwner() != unit.getOwner())
                         unit.addToFireDamageEachTurn(s.getUnitType().getAttackPower());
                 }
-                return true;
             }
             enemy.subHealth(attackPower);
             return true;
@@ -811,7 +811,7 @@ public class GameController {
         int enemyX = enemy.getXCoordinate();
         int enemyY = enemy.getYCoordinate();
         attackPower += (int) (((double)e.getOwner().getFear() / 20) * attackPower);
-        if(Math.random() < e.getUnitType().getPrecision())
+        if(Math.random() < e.getEquipmentType().getPrecision())
             attackPower = 20;
         //check for the enemy's defenses ( like portable shield?)
         //defend range of towers
@@ -849,6 +849,7 @@ public class GameController {
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
         int fightRange = 2;
+        System.out.println("++++" + getNumberOfEnemiesInRange(s,fightRange));
         if ((s.getState() == 0 && getNumberOfEnemiesInRange(s,fightRange) < 1) ||
                 (s.getState() == 1 && getNumberOfEnemiesInRange(s,fightRange) < 2) ||
                 (s.getState() == 2 && getNumberOfEnemiesInRange(s,fightRange) < 3)) return false;
@@ -867,7 +868,7 @@ public class GameController {
                 for (Unit e : currentGame.getMap()[y + j][x + i - j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
             }
-            for (int j = 0; j <= i; j++) { // x+i-j, y-j
+            for (int j = 1; j <= i; j++) { // x+i-j, y-j
                 if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
                 for (Unit e : currentGame.getMap()[y - j][x + i - j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
@@ -877,7 +878,7 @@ public class GameController {
                 for (Unit e : currentGame.getMap()[y + j][x - i + j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
             }
-            for (int j = 0; j <= i; j++) { // x-i+j, y-j
+            for (int j = 1; j <= i; j++) { // x-i+j, y-j
                 if (x - i + j < 0 || y - j < 0) continue;
                 for (Unit e : currentGame.getMap()[y - j][x - i + j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
@@ -895,6 +896,7 @@ public class GameController {
     }
 
     public static Unit findNearestEnemyTo(Unit s, int fightRange) {
+        //todo there is no way to attack a building equipment
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
         Kingdom owner = s.getOwner();
@@ -903,8 +905,6 @@ public class GameController {
         for (Unit e : currentGame.getMap()[y][x].getAllUnits()) {
             if (enemy == null && e.getOwner() != owner && e.getHealth() > 0) {
                 enemy = e;
-                if ((s instanceof Equipment || !s.getUnitType().isArcherType()) && pathFinder.findPath(currentGame.getTileByCoordinates(y,x),
-                        currentGame.getTileByCoordinates(e.getYCoordinate(),e.getXCoordinate())) == null) enemy = null;
             }
         }
         for (int i = 1; i <= fightRange; i++) {
@@ -950,7 +950,7 @@ public class GameController {
                 }
             }
         }
-        return null;
+        return enemy;
     }
 
     public static Building findNearestEnemyToBuilding(Unit unit, int fightRange) {
@@ -1215,7 +1215,7 @@ public class GameController {
     private static void checkDelays(Kingdom kingdom) {
         for (int i = kingdom.getBuildings().size() - 1; i >= 0; i--) {
             Building siegeTent = kingdom.getBuildings().get(i);
-            if (siegeTent.getBuildingType() == BuildingType.SIEGE_TENT) {
+            if (siegeTent.getBuildingType() == BuildingType.SIEGE_TENT && siegeTent.getEquipmentType() != null) {
                 if (siegeTent.getDelay() == 0) {
                     int x = siegeTent.getXCoordinate();
                     int y = siegeTent.getYCoordinate();
@@ -1233,6 +1233,7 @@ public class GameController {
                     }
                     kingdom.removeBuilding(siegeTent);
                     Equipment equipment = new Equipment(equipmentType, kingdom, x, y);
+                    tile.addUnit(equipment);
                     applyEquipmentAbility(equipment);
                 } else siegeTent.subDelay();
             }

@@ -192,6 +192,13 @@ public class Tile {
         return false;
     }
 
+    public boolean checkForEquipment() {
+        for (Unit unit : this.allUnits) {
+            if (unit instanceof Equipment) return true;
+        }
+        return false;
+    }
+
     public Equipment getEquipment() {
         return equipment;
     }

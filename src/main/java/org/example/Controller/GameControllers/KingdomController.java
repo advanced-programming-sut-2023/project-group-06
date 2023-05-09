@@ -120,7 +120,7 @@ public class KingdomController {
             output += "\n" + currentKingdom.getUnits().get(i).toString();
         }
         for(Unit unit : currentKingdom.getCows())
-            output += "\n" + unit.cowToString();
+            output += "\n" + unit.toString();
         return output;
     }
 
