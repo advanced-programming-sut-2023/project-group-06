@@ -48,9 +48,14 @@ public class PathFinder {
                         continue;
                     }
                     Building b = map[i][j].getBuilding();
-                    if (b != null && b.getBuildingType().getBuildingClass() == Towers.class) {
+                    if (b != null && b instanceof Towers) {
                         f2 |= (1 << k);
-                        if ((((Towers) b).lather & (1 << (k + 2) % 4)) != 0) f1 |= (1 << k);
+                        if ((((Towers) b).lather & (1 << k)) != 0) f1 |= (1 << k);
+                    }
+                    b = map[ii][jj].getBuilding();
+                    if (b != null && b instanceof Towers) {
+                        f2 |= (1 << k);
+                        if ((((Towers) b).lather & (1 << ((k + 2) % 4))) != 0) f1 |= (1 << k);
                     }
                 }
                 graph0[i][j] = f0;
@@ -74,6 +79,7 @@ public class PathFinder {
     public Deque<Tile> findPath(Tile start, Tile end) {
         return findPath(start, end, 0);
     }
+
     public Deque<Tile> findPath(Tile start, Tile end, int mode) {
         int[][] graph = mode == 0 ? graph0 : mode == 1 ? graph1 : graph2;
         resetParent();
