@@ -46,20 +46,10 @@ public class Storage extends Building{
                 capacity = 4;
                 stored = 4;
                 break;
-                /*case OX_TETHER:
-                capacity = 1;
-                break;*/
         }
     }
 
     public String toString() {
         return super.toString() + ", capacity: " + capacity + ", stored: " + stored;
     }
-
-    //todo remember to handle cows!
-    // and if you want to handle ox tether in storages remember to fix any possible storage issue in kingdom
-
-//    public Unit getCow() {
-//        return cow;
-//    }
 }

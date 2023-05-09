@@ -16,7 +16,7 @@ public enum UnitType {
     BLACK_MONK(200, 100, 0.15, 1, 1, 0, 10, 0.2, 0, null, null, false, false, false, "black monk", false),
 
     ARCHER_BOW(200, 100, 0.12, 3, 11, 5, 75, 0.3, 0, WeaponType.BOW, null, false, false, true, "archer bow", true),
-    SLAVE(50, 10, 0, 3, 1, 0, 5, 0, 4, null, null, false, true, true, "slave", false),
+    SLAVE(50, 20, 0, 3, 1, 0, 5, 0, 4, null, null, false, true, true, "slave", false),
     SLINGER(100, 30, 0.1, 3, 2, 0, 12, 0.2, 0, null, null, false, false, true, "slinger", true),
     ASSASSIN(400, 300, 0.3, 2, 3, 0, 100, 0, 0, null, null, true, false, true, "assassin", false),
     HORSE_ARCHER(300, 120, 0.2, 5, 8, 3, 60, 0.5, 0, WeaponType.BOW, null, false, false, true, "horse archer", true),

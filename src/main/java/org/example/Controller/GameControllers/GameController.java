@@ -134,8 +134,9 @@ public class GameController {
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
         if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
             return Response.NOT_ENOUGH_WEAPON_UNIT;
-        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
-            return Response.NOT_ENOUGH_PEASANT;
+//        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
+//            return Response.NOT_ENOUGH_PEASANT;
+        //todo uncomment
         if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && currentPlayer.getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(x, y, currentPlayer, type);
@@ -145,8 +146,7 @@ public class GameController {
         currentPlayer.addToWealth(-1 * type.getCost() * count);
         if (type.getWeapon() != null) currentPlayer.useWeaponToCreateUnit(new Weapon(numberOfWeaponsNeeded,type.getWeapon()));
         if (type.getWeapon2() != null) currentPlayer.useWeaponToCreateUnit(new Weapon(numberOfWeapons2Needed,type.getWeapon2()));
-        if(!type.isArab())
-            currentPlayer.addToPopulation(count);
+        currentPlayer.addToPopulation(count);
         return Response.UNIT_CREATED_SUCCESSFULLY;
     }
 
@@ -827,18 +827,20 @@ public class GameController {
     }
 
     private static boolean getAttackDamageOfFireBallista(Equipment e) {
-        int x = e.getXCoordinate();
-        int y = e.getYCoordinate();
         int fightRange = 15;
         int attackPower = e.getDamage();
         Unit enemy = findNearestEnemyTo(e, fightRange);
         if (enemy == null) return false;
         int enemyX = enemy.getXCoordinate();
         int enemyY = enemy.getYCoordinate();
+        attackPower += (int) (((double)e.getOwner().getFear() / 20) * attackPower);
+        if(Math.random() < e.getEquipmentType().getPrecision())
+            attackPower = 20;
         for (Unit unit : currentGame.getTileByCoordinates(enemyY,enemyX).getAllUnits()) {
-            if (unit.isFlammable() && !(unit instanceof Equipment) && unit.getOwner() != e.getOwner()) {
-                unit.addToFireDamageEachTurn(e.getDamage());
+            if (unit.isFlammable() && unit.getOwner() != e.getOwner()) {
+                unit.addToFireDamageEachTurn(attackPower);
             }
+            if (unit.getOwner() != e.getOwner()) unit.subHealth(attackPower);
         }
         return true;
     }
@@ -873,12 +875,12 @@ public class GameController {
                 for (Unit e : currentGame.getMap()[y - j][x + i - j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
             }
-            for (int j = 0; j <= i; j++) { // x-i+j, y+j
+            for (int j = 0; j < i; j++) { // x-i+j, y+j
                 if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
                 for (Unit e : currentGame.getMap()[y + j][x - i + j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
             }
-            for (int j = 1; j <= i; j++) { // x-i+j, y-j
+            for (int j = 1; j < i; j++) { // x-i+j, y-j
                 if (x - i + j < 0 || y - j < 0) continue;
                 for (Unit e : currentGame.getMap()[y - j][x - i + j].getAllUnits())
                     if (e.getOwner() != soldier.getOwner() && e.getHealth() > 0) amount++;
@@ -896,7 +898,7 @@ public class GameController {
     }
 
     public static Unit findNearestEnemyTo(Unit s, int fightRange) {
-        //todo there is no way to attack a building equipment
+        //todo remove comments
         //System.out.println("?????   " + s);
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();

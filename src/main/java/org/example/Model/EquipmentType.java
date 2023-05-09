@@ -4,8 +4,8 @@ public enum EquipmentType {
     PORTABLE_SHIELD(200,0,1,1,0,false,0,0,20,"portable shield"),
     BATTERING_RAM(300,500,4,2,1,false,1,0,50,"battering ram"),
     SIEGE_TOWER(400,0,4,2,0,false,0,0,150,"siege tower"),
-    CATAPULT(600,250,2,1,12,false,1,0.2,75,"catapult"), //manjenigh moteharek
-    TREBUCHET(800,400,3,3,15,false,0,0,100,"trebuchet"), //manjenigh sabet
+    CATAPULT(600,250,2,1,5,false,1,0.2,75,"catapult"), //manjenigh moteharek
+    TREBUCHET(800,400,3,3,8,false,0,0,100,"trebuchet"), //manjenigh sabet
     FIRE_BALLISTA(500,400,2,2,5,true,2,0,100,"fire ballista") //sang andaz atashin
 
 
