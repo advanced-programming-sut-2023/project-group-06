@@ -21,7 +21,7 @@ public class LoginController {
         if (!Data.getUserByName(username).isPasswordCorrect(password)) return Response.WRONG_PASSWORD;
         Data.setStayLoggedIn(stayLoggedIn);
         Data.setCurrentUser(Data.getUserByName(username));
-        Data.saveData("src/main/java/org/example/Model/data.json");
+        Data.saveData("src/main/java/org/example/Model/Data.json");
         return Response.LOGIN_SUCCESSFUL;
     }
     public static Response forgotPassword(Matcher matcher, String answer) {

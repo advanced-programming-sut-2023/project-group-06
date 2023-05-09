@@ -69,7 +69,7 @@ public class SignUpController {
             Data.removeUser(Data.getUserByName(username));
             return Response.CAPTCHA_WRONG;
         }
-        Data.saveData("src/main/java/org/example/Model/data.json");
+        Data.saveData("src/main/java/org/example/Model/Data.json");
         return Response.USER_CREATED;
     }
 
@@ -99,7 +99,5 @@ public class SignUpController {
         }
         return randomPassword;
     }
-
-
 
 }

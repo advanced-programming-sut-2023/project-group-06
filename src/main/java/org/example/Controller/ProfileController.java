@@ -1,18 +1,16 @@
 package org.example.Controller;
 
-import org.example.Main;
 import org.example.Model.Data;
-import org.example.Model.User;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
 
 public class ProfileController {
 
-    public static Response changeUsername(Matcher matcher){
+    public static Response changeUsername(Matcher matcher) {
         matcher.find();
-        String [] groupNames = {"username"};
-        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        String[] groupNames = {"username"};
+        String nullGroup = Controller.nullGroup(matcher, groupNames);
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String username = Controller.makeEntryValid(matcher.group("username"));
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
@@ -22,10 +20,9 @@ public class ProfileController {
         return Response.USERNAME_CHANGE;
     }
 
-    public static Response changeNickname(Matcher matcher){
+    public static Response changeNickname(Matcher matcher) {
         matcher.find();
-        String [] groupNames = {"nickname"};
-        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "nickname");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String nickname = Controller.makeEntryValid(matcher.group("nickname"));
         if (Data.getCurrentUser().getNickname().equals(nickname)) return Response.SAME_NICKNAME;
@@ -33,10 +30,9 @@ public class ProfileController {
         return Response.NICKNAME_CHANGE;
     }
 
-    public static Response changePassword(Matcher matcher){
+    public static Response changePassword(Matcher matcher) {
         matcher.find();
-        String [] groupNames = {"newPassword","oldPassword"};
-        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "newPassword", "oldPassword");
         if (nullGroup != null) return Response.getEmptyResponseByName("password");
         String newPassword = Controller.makeEntryValid(matcher.group("newPassword"));
         String oldPassword = Controller.makeEntryValid(matcher.group("oldPassword"));
@@ -52,14 +48,13 @@ public class ProfileController {
 
     public static Response confirmReEnteredPassword(String oldPassword, String newPassword, String reEnteredPassword) {
         if (!newPassword.equals(reEnteredPassword)) return Response.PASSWORD_CONFIRMATION;
-        if (!Data.getCurrentUser().changePassword(newPassword,oldPassword)) return Response.INCORRECT_OLD_PASSWORD;
+        if (!Data.getCurrentUser().changePassword(newPassword, oldPassword)) return Response.INCORRECT_OLD_PASSWORD;
         return Response.PASSWORD_CHANGE;
     }
 
-    public static Response changeEmail(Matcher matcher){
+    public static Response changeEmail(Matcher matcher) {
         matcher.find();
-        String [] groupNames = {"email"};
-        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "email");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String email = Controller.makeEntryValid(matcher.group("email").toLowerCase());
         if (Data.getCurrentUser().getEmail().equals(email)) return Response.SAME_EMAIL;
@@ -69,13 +64,13 @@ public class ProfileController {
         return Response.EMAIL_CHANGE;
     }
 
-    public static Response changeSlogan(Matcher matcher){
+    public static Response changeSlogan(Matcher matcher) {
         matcher.find();
-        String [] groupNames = {"slogan"};
-        String nullGroup = Controller.nullGroup(matcher,groupNames);
+        String nullGroup = Controller.nullGroup(matcher, "slogan");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String slogan = Controller.makeEntryValid(matcher.group("slogan"));
-        if ((!Data.getCurrentUser().getSlogan().equals("")) && Data.getCurrentUser().getSlogan().equals(slogan)) return Response.SAME_SLOGAN;
+        if ((!Data.getCurrentUser().getSlogan().equals("")) && Data.getCurrentUser().getSlogan().equals(slogan))
+            return Response.SAME_SLOGAN;
         Data.getCurrentUser().setSlogan(slogan);
         return Response.SLOGAN_CHANGE;
     }
@@ -99,10 +94,10 @@ public class ProfileController {
         return Data.getCurrentUser().getSlogan();
     }
 
-    public static String showInfo(){
+    public static String showInfo() {
         String slogan = Data.getCurrentUser().getSlogan();
         if (slogan == null) slogan = "";
-        return  "username: " + Data.getCurrentUser().getUsername() + '\n' +
+        return "username: " + Data.getCurrentUser().getUsername() + '\n' +
                 "nickname: " + Data.getCurrentUser().getNickname() + '\n' +
                 "email: " + Data.getCurrentUser().getEmail() + '\n' +
                 "slogan: " + slogan + '\n' +
