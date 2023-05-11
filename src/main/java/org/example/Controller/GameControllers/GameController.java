@@ -735,8 +735,9 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for (Soldier s : k.getSoldiers()) {
                 if (!s.isKingSaidToMove()) {
-                    if (!computeAttackDamageOfSoldier(s))
+                    if (!computeAttackDamageOfSoldier(s)) {
                         computeAttackDamageOnBuildings(s);
+                    }
                 }
             }
             for (Equipment equipment : k.getEquipments()) {
@@ -765,20 +766,22 @@ public class GameController {
         int enemyX = enemy.getXCoordinate();
         int enemyY = enemy.getYCoordinate();
         attackPower += (int) (((double)s.getOwner().getFear() / 20) * attackPower);
+        if (!(enemy instanceof Equipment)) attackPower -= (int) ((double)attackPower * enemy.getUnitType().getDefensePower());
+        if(Math.random() < s.getUnitType().getPrecision())
+            attackPower = 20;
         if (currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment() != null) {
             int attackPowerToShield = Math.min(currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().getHealth(),attackPower);
             currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
             attackPower -= attackPowerToShield;
         }
-        if (!(enemy instanceof Equipment)) attackPower -= (int) ((double)attackPower * enemy.getUnitType().getDefensePower());
-        if(Math.random() < s.getUnitType().getPrecision())
-            attackPower = 20;
         //check for the enemy's defenses ( like portable shield?)
         //defend range of towers
         //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
         if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
-        if (squareOfDistance <= range * range) {
+        Tile hostTile = currentGame.getTileByCoordinates(y, x);
+        Tile enemyTile = currentGame.getTileByCoordinates(enemyY, enemyX);
+        if (squareOfDistance <= range * range && (enemyTile.getHeight() == hostTile.getHeight() || s.getUnitType().isArcherType())) {
             s.setWishPlace(currentGame.getMap()[y][x]);
             if (s.getUnitType() == UnitType.OIL_ENGINEER) {
                 for (Unit unit : currentGame.getTileByCoordinates(enemyY,enemyX).getAllUnits()) {
@@ -813,6 +816,11 @@ public class GameController {
         attackPower += (int) (((double)e.getOwner().getFear() / 20) * attackPower);
         if(Math.random() < e.getEquipmentType().getPrecision())
             attackPower = 20;
+        if (currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment() != null) {
+            int attackPowerToShield = Math.min(currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().getHealth(),attackPower);
+            currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
+            attackPower -= attackPowerToShield;
+        }
         //check for the enemy's defenses ( like portable shield?)
         //defend range of towers
         //what if the enemy is on a tower and the soldier on ground?
@@ -894,7 +902,27 @@ public class GameController {
         int fightRange = s.getState() * (s.getUnitType().isArab() ? 7 : 5);
         Building enemy = findNearestEnemyToBuilding(s, fightRange);
         if (enemy == null) return;
-        if (enemy.isFlammable()) enemy.addToFireDamageEachTurn(s.getAttackPower());
+        int attackPower = s.getAttackPower();
+        attackPower += (int) (((double)s.getOwner().getFear() / 20) * attackPower);
+        if(Math.random() < s.getUnitType().getPrecision())
+            attackPower = 20;
+        //check for the enemy's defenses ( like portable shield?)
+        //defend range of towers
+        //what if the enemy is on a tower and the soldier on ground?
+        int x = s.getXCoordinate();
+        int y = s.getYCoordinate();
+        int enemyX = enemy.getXCoordinate();
+        int enemyY = enemy.getYCoordinate();
+        int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
+        Tile enemyTile = currentGame.getTileByCoordinates(enemyY, enemyX);
+        Tile hostTile = currentGame.getTileByCoordinates(y, x);
+        if (squareOfDistance <= s.getRange() * s.getRange() && (enemyTile.getHeight() == hostTile.getHeight() || (!enemyTile.getType().isBlue() && enemyTile.getHeight() == -2 && hostTile.getHeight() == 0))) {
+            s.setWishPlace(currentGame.getMap()[y][x]);
+            if (enemy.isFlammable())
+                enemy.addToFireDamageEachTurn(attackPower);
+            return;
+        }
+        s.setWishPlace(getAdjacentCell(currentGame.getTileByCoordinates(enemyY, enemyX), s));
     }
 
     public static Unit findNearestEnemyTo(Unit s, int fightRange) {
@@ -971,22 +999,22 @@ public class GameController {
             for (int j = 0; j <= i; j++) { // x+i-j, y+j
                 if (x + i - j >= currentGame.getMapWidth() || y + j >= currentGame.getMapHeight()) continue;
                 building = currentGame.getTileByCoordinates(y + j, x + i - j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0) return building;
+                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
             }
             for (int j = 0; j <= i; j++) { // x+i-j, y-j
                 if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
                 building = currentGame.getTileByCoordinates(y - j, x + i - j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0) return building;
+                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
             }
             for (int j = 0; j <= i; j++) { // x-i+j, y+j
                 if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
                 building = currentGame.getTileByCoordinates(y + j, x - i + j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0) return building;
+                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
             }
             for (int j = 0; j <= i; j++) { // x-i+j, y-j
                 if (x - i + j < 0 || y - j < 0) continue;
                 building = currentGame.getTileByCoordinates(y - j, x - i + j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0) return building;
+                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
             }
         }
         return null;
