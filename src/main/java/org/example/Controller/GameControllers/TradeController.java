@@ -35,7 +35,8 @@ public class TradeController {
     public static String tradeList(){
         String output = "All of trades sent to you which hasn't been accepted yet:";
         for (int i = currentPlayer.getAllTradeRequestsSentToMe().size() - 1; i >= 0; i--) {
-            if (output != null) output += '\n' + showTradeRequestsSentToMeByIndex(i);
+            String addOutput = showTradeRequestsSentToMeByIndex(i);
+            if (addOutput != null) output += '\n' + addOutput;
         }
         return output;
     }
@@ -63,31 +64,56 @@ public class TradeController {
         return Response.TRADE_REQUEST_ACCEPTED;
     }
 
+    public static Response rejectTrade(Matcher matcher) {
+        matcher.find();
+        String[] groupNames = {"message","id"};
+        String nullGroupName = Controller.nullGroup(matcher,groupNames);
+        if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
+        int id = Integer.parseInt(Controller.makeEntryValid(matcher.group("id")));
+        String message = Controller.makeEntryValid(matcher.group("message"));
+        if (currentPlayer.getTradeRequestsNotAcceptedByMeById(id) == null) return Response.TRADE_REQUEST_NOT_SENT;
+        TradeRequest tradeRequest = currentPlayer.getTradeRequestSentToMeById(id);
+        tradeRequest.setRejected(true);
+        int thisTurn = GameController.currentGame.getNumberOfTurns();
+        tradeRequest.setRejectTurn(thisTurn);
+        tradeRequest.setRejectMessage(message);
+        currentPlayer.removeFromTradeRequestsSentToMeById(id);
+        return Response.TRADE_REQUEST_REJECTED;
+    }
+
     private static String showTradeRequestsSentByMeByIndex(int index) {
         String output = "";
         int size = currentPlayer.getTradeRequestsSentByMe().size();
+        if (size <= index) return null;
         int id = currentPlayer.getTradeRequestsSentByMe().get(index).getId();
         String destinationUsername = currentPlayer.getTradeRequestsSentByMe().get(index).getSentToWho().getOwner().getUsername();
         String resourceType = currentPlayer.getTradeRequestsSentByMe().get(index).getResources().getType().getName();
         int resourceAmount = currentPlayer.getTradeRequestsSentByMe().get(index).getResources().getAmount();
         String message = currentPlayer.getTradeRequestsSentByMe().get(index).getMessage();
         String acceptedMessage = currentPlayer.getTradeRequestsSentByMe().get(index).getAcceptMessage();
+        String rejectedMessage = currentPlayer.getTradeRequestsSentByMe().get(index).getRejectMessage();
         int offerTurn = currentPlayer.getTradeRequestsSentByMe().get(index).getOfferTurn();
         int acceptTurn = currentPlayer.getTradeRequestsSentByMe().get(index).getAcceptTurn();
+        int rejectTurn = currentPlayer.getTradeRequestsSentByMe().get(index).getRejectTurn();
         String spaces = '\n' + "    ";
         output += (size - index) + "." + spaces + "Id: " + id + spaces + "Sent to who: " + destinationUsername + spaces +
                 "Resource Type: " + resourceType + spaces + "Resource amount: " + resourceAmount + spaces + "Message: " + message +
                 spaces + "This trade was sent in round " + offerTurn;
-        if (!currentPlayer.getTradeRequestsSentByMe().get(index).isAccepted()) output += spaces + "This trade has not been accepted yet!";
-        else output += spaces + "This trade has been accepted by kingdom " + destinationUsername + " in round " + acceptTurn + spaces
+        if (currentPlayer.getTradeRequestsSentByMe().get(index).isAccepted())
+        output += spaces + "This trade has been accepted by kingdom " + destinationUsername + " in round " + acceptTurn + spaces
                 + "Accept message: " + acceptedMessage;
+        else if (currentPlayer.getTradeRequestsSentByMe().get(index).isRejected())
+        output += spaces + "This trade has been rejected by kingdom " + destinationUsername + " in round " + rejectTurn + spaces
+                + "Reject message: " + rejectedMessage;
+        else  output += spaces + "This trade has not been rejected nor accepted yet!";
         return output;
     }
 
     private static String showTradeRequestsSentToMeByIndex(int index) {
         String output = "";
-        if (currentPlayer.getAllTradeRequestsSentToMe().get(index).isAccepted()) return null;
         int size = currentPlayer.getAllTradeRequestsSentToMe().size();
+        if (size <= index) return null;
+        if (currentPlayer.getAllTradeRequestsSentToMe().get(index).isAccepted()) return null;
         int id = currentPlayer.getAllTradeRequestsSentToMe().get(index).getId();
         String sourceUsername = currentPlayer.getAllTradeRequestsSentToMe().get(index).getOwner().getOwner().getUsername();
         String resourceType = currentPlayer.getAllTradeRequestsSentToMe().get(index).getResources().getType().getName();
@@ -106,6 +132,7 @@ public class TradeController {
     private static String showTradeRequestsAcceptedByMeByIndex(int index) {
         String output = "";
         int size = currentPlayer.getTradeRequestsAcceptedByMe().size();
+        if (size <= index) return null;
         int id = currentPlayer.getTradeRequestsAcceptedByMe().get(index).getId();
         String sourceUsername = currentPlayer.getTradeRequestsAcceptedByMe().get(index).getOwner().getOwner().getUsername();
         String resourceType = currentPlayer.getTradeRequestsAcceptedByMe().get(index).getResources().getType().getName();
@@ -126,11 +153,13 @@ public class TradeController {
     public static String tradeHistory(){
         String output = "Trade requests sent by me:" + '\n';
         for (int i = currentPlayer.getTradeRequestsSentByMe().size() - 1; i >= 0 ; i--) {
-            output += showTradeRequestsSentByMeByIndex(i) + '\n';
+            String addOutput = showTradeRequestsSentByMeByIndex(i);
+            if (addOutput != null) output += '\n' + addOutput;
         }
-        output += "Trade requests accepted by me:";
+        output += '\n' + "Trade requests accepted by me:";
         for (int i = currentPlayer.getTradeRequestsAcceptedByMe().size() - 1; i >= 0; i--) {
-            output += '\n' + showTradeRequestsAcceptedByMeByIndex(i);
+            String addOutput = showTradeRequestsAcceptedByMeByIndex(i);
+            if (addOutput != null) output += '\n' + addOutput;
         }
         return output;
     }

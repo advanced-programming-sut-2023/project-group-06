@@ -13,7 +13,10 @@ public class TradeRequest {
     private Kingdom sentToWho = null;
     private int acceptTurn = -1;
     private String acceptMessage;
+    private String rejectMessage;
     private boolean isNotified = false;
+    private boolean isRejected = false;
+    private int rejectTurn = -1;
 
     public TradeRequest(Resources resources, int price, String message, int id, Kingdom owner,
                         Kingdom sentToWho, int offerTurn) {
@@ -114,5 +117,29 @@ public class TradeRequest {
 
     public void setNotified(boolean notified) {
         isNotified = notified;
+    }
+
+    public boolean isRejected() {
+        return isRejected;
+    }
+
+    public void setRejected(boolean rejected) {
+        isRejected = rejected;
+    }
+
+    public int getRejectTurn() {
+        return rejectTurn;
+    }
+
+    public void setRejectTurn(int rejectTurn) {
+        this.rejectTurn = rejectTurn;
+    }
+
+    public String getRejectMessage() {
+        return rejectMessage;
+    }
+
+    public void setRejectMessage(String rejectMessage) {
+        this.rejectMessage = rejectMessage;
     }
 }

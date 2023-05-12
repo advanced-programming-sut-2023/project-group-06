@@ -419,6 +419,13 @@ public class Kingdom {
         return null;
     }
 
+    public void removeFromTradeRequestsSentToMeById(int id) {
+        for (int i = allTradeRequestsSentToMe.size() - 1; i >= 0; i--) {
+            TradeRequest tradeRequest = allTradeRequestsSentToMe.get(i);
+            if (tradeRequest.getId() == id) allTradeRequestsSentToMe.remove(i);
+        }
+    }
+
     public Food getFoodByTypeFromStorage(Storage storage, FoodType type){
         for(Asset asset : storage.getAssets()){
             if(((Food)asset).getType() == type)
