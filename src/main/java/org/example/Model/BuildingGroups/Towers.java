@@ -37,6 +37,10 @@ public class Towers extends Building{
         }
     }
 
+    public Towers(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){
+        super(owner, buildingType, xCoordinate, yCoordinate, direction);
+    }
+
     public int getDefendRange() {
         return defendRange;
     }

@@ -408,7 +408,7 @@ public class GameController {
                 (currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getBuildingType() != BuildingType.WALL &&
                 currentGame.getTileByCoordinates(frontY, frontX).getBuilding().getClass() != Gate.class))
             return Response.BUILD_STAIR_NEAR_WALL;
-        Building stair = new Building(currentPlayer, BuildingType.STAIR, x, y, stairDirection);
+        Building stair = new Towers(currentPlayer, BuildingType.STAIR, x, y, stairDirection);
         for(int i = x ; i <= x ; i++){
             for(int j = y ; j <= y ; j++){
                 currentGame.getTileByCoordinates(j, i).setBuilding(stair);
@@ -712,6 +712,7 @@ public class GameController {
             checkDitches();
             checkTunnelers();
             checkToFillDitches();
+            checkLadders();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
@@ -842,8 +843,6 @@ public class GameController {
         }
         return true;
     }
-
-
 
     private static boolean checkOilEngineerAttack(Soldier s) {
         int x = s.getXCoordinate();
@@ -1442,15 +1441,20 @@ public class GameController {
                 if(soldier.getUnitType() == UnitType.LADDER_MAN && soldier.getLadder() != null){
                     int x1 = soldier.getXCoordinate();
                     int y1 = soldier.getYCoordinate();
-                    if(x1 == soldier.getWishPlace().getXCoordinate() && y1 == soldier.getWishPlace().getYCoordinate()){
+                    if(x1 == soldier.getWishPlace().getXCoordinate() && y1 == soldier.getWishPlace().getYCoordinate()
+                            && isTunnelerAdjacentToBuilding(soldier, soldier.getLadder())){
                         Building target = soldier.getLadder();
                         int direction = 0;
                         if(x1 == target.getXCoordinate())
                             direction = target.getXCoordinate() - x1 + 2;
                         else if(y1 == target.getYCoordinate())
                             direction = y1 - target.getYCoordinate() + 1;
-                        if((((Towers) target).lather & (1 << direction)) == 0)
+                        if((((Towers) target).lather & (1 << direction)) == 0) {
                             ((Towers) target).lather |= (1 << direction);
+                            //soldier.setLadder(null);
+                            //todo remove the ladder from soldier
+                            //todo do this for all soldiers
+                        }
                     }
                 }
             }
