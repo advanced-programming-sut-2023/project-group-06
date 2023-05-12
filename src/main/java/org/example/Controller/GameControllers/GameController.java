@@ -1060,7 +1060,8 @@ public class GameController {
                 Unit s = k.getUnits().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
-                int mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
+                int mode = 0;
+                if (s.getUnitType() != null) mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace, mode);
                 if (path == null) {
                     s.setKingSaidToMove(false);
