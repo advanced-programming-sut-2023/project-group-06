@@ -116,7 +116,8 @@ public class GameController {
         int x = Integer.parseInt(matcher.group("x"));
         int y = Integer.parseInt(matcher.group("y"));
         String typeString = Controller.makeEntryValid(matcher.group("type"));
-        int count = Integer.parseInt(matcher.group("count"));
+        String countStr = matcher.group("count");
+        int count = countStr == null ? 1 : Integer.parseInt(countStr);
         UnitType type = UnitType.getSoldierTypeByString(typeString);
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
