@@ -608,12 +608,6 @@ public class GameController {
         }
         if(units.size() == 0)
             return Response.NO_UNITS_WITH_THAT_TYPE;
-        /*for(Unit unit : units) {
-            if(unit instanceof Soldier && ((Soldier) unit).isSaidToPatrol()) {
-                ((Soldier) unit).setSaidToPatrol(false);
-                unit.setWishPlace(currentGame.getTileByCoordinates(unit.getYCoordinate(), unit.getXCoordinate()));
-            }
-        }*/
         SoldierController.soldiers = units;
         SoldierController.currentGame = currentGame;
         return Response.SELECT_SOLDIER_SUCCESSFUL;
