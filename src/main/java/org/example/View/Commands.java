@@ -52,8 +52,8 @@ public enum Commands {
     ENTER_KINGDOM_MENU("^enter kingdom menu$"),
     ENTER_TRADE_MENU("^enter trade menu$"),
     DROP_BUILDING("(?!.* -x .* -x )(?!.* -y .* -y )(?!.* -type .* -type )(?!.* -d .* -d )(?=.* -x )(?=.* -y )(?=.* -type )" +
-            "^dropbuilding( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))| -type (?<type>(\\\"[^\\\"]*\\\")|\\S*)" +
-            "| -d (?<diraction>[nswer])){3,4}$"),
+            "^dropbuilding( -x (?<x>(-?\\d*)|(\\\"-?\\\\d*\\\"))| " +
+            "-y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))| -type (?<type>(\\\"[^\\\\\\\"]*\\\")|\\S*)| -d (?<direction>[nswer])){3,4}$"),
     SET_MAP_WIDTH_HEIGHT("(?=.*width: )(?=.*height: )^(width: (?<width>\\d+)\\s*|height: (?<height>\\d+)\\s*){2}$"),
     CHOOSE_DEFAULT_MAP("map name: (?<mapName>(((\\\"[^\\\"]*\\\")|\\S*)))"),
     DROP_TREE("(?=.* -x )(?=.* -y )(?=.* -type )^droptree( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))| -type (?<type>(\\\"[^\\\"]*\\\")|\\S*)){3}$"),
@@ -84,6 +84,8 @@ public enum Commands {
             "|( -m (?<message>(((\\\"[^\\\"]*\\\")|\\S*))))|( -p (?<price>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
             "|( -u (?<username>(((\\\"[^\\\"]*\\\")|\\S*))))){5}$"),
     ACCEPT_TRADE_REQUEST("(?=.* -m )(?=.* -i )^trade accept(( -i (?<id>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
+            "|( -m (?<message>(((\\\"[^\\\"]*\\\")|\\S*))))){2}$"),
+    REJECT_TRADE_REQUEST("(?=.* -m )(?=.* -i )^trade reject(( -i (?<id>((-?\\d*)|(\\\"-?\\d*\\\"))))" +
             "|( -m (?<message>(((\\\"[^\\\"]*\\\")|\\S*))))){2}$"),
     TRADE_LIST("^trade list$"),
     TRADE_HISTORY("^trade history$"),

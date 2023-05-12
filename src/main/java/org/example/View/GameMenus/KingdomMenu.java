@@ -32,8 +32,10 @@ public class KingdomMenu extends Menu {
                 System.out.println(KingdomController.setTaxRate(matcher).message);
             else if((matcher = Commands.getMatcher(command, Commands.SET_FEAR_RATE)).find())
                 System.out.println(KingdomController.setFearRate(matcher).message);
-            else if(Commands.getMatcher(command, Commands.EXIT).find())
+            else if(Commands.getMatcher(command, Commands.EXIT).find()) {
+                System.out.println("Kingdom menu closed successfully!");
                 return null;
+            }
             else if(Commands.getMatcher(command,Commands.SHOW_RESOURCES).find())
                 System.out.println(KingdomController.showResources());
             else if (Commands.getMatcher(command,Commands.SHOW_WEAPONS).find())

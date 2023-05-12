@@ -20,8 +20,10 @@ public class MapMenu extends Menu {
                 System.out.print(MapController.moveMap(command));
             else if((matcher = Commands.getMatcher(command, Commands.SHOW_DETAILS)).find())
                 System.out.print(MapController.showDetails(matcher));
-            else if(Commands.getMatcher(command, Commands.EXIT).find())
+            else if(Commands.getMatcher(command, Commands.EXIT).find()) {
+                System.out.println("Map menu closed successfully!");
                 return null;
+            }
             else System.out.println(Response.INVALID_COMMAND.message);
         }
     }

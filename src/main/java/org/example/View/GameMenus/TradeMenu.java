@@ -28,7 +28,9 @@ public class TradeMenu extends Menu {
                 System.out.println(TradeController.tradeList());
             } else if (Commands.getMatcher(command,Commands.TRADE_HISTORY).find()) {
                 System.out.println(TradeController.tradeHistory());
-            } else System.out.println(Response.INVALID_COMMAND.message);
+            } else if (Commands.getMatcher(command, Commands.REJECT_TRADE_REQUEST).find()) {
+                System.out.println(TradeController.rejectTrade(Commands.getMatcher(command, Commands.REJECT_TRADE_REQUEST)).message);
+            }else System.out.println(Response.INVALID_COMMAND.message);
         }
     }
 }

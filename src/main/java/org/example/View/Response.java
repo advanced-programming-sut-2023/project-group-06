@@ -148,6 +148,7 @@ public enum Response {
     NOT_ENOUGH_RESOURCE_TRADE("You don't have enough resources to accept this trade!"),
     TRADE_REQUEST_OWNER("You can't accept a trade request from yourself!"),
     TRADE_REQUEST_ACCEPTED("You accepted this trade request successfully!"),
+    TRADE_REQUEST_REJECTED("You rejected trade request successfully!"),
     NO_KINGDOM_USERNAME("No kingdom exists with this username!"),
     KINGDOM_YOURSELF("You can't send a trade to yourself!"),
     GATE_OPEN("The gate is opened!"),
