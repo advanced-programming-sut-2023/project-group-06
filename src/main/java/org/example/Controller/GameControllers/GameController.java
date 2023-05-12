@@ -427,7 +427,8 @@ public class GameController {
         if(directionString == null)
             return Response.ENTER_DIRECTION;
         int direction = getDirection(directionString);
-        //check the colors
+        if(!checkColorValid(color))
+            return Response.INVALID_COLOR;
         int x = Integer.parseInt(xString);
         int y = Integer.parseInt(yString);
         if(x - 1 < 0 || x + 1 >= currentGame.getMapWidth() || y - 1 < 0 || y + 1 >= currentGame.getMapHeight())
@@ -468,6 +469,7 @@ public class GameController {
         currentGame.getTileByCoordinates(newY, newX).setBuilding(stockPile);
         currentPlayer.getBuildings().add(stockPile);
         currentPlayer.getResources().add(stockPile);
+        currentPlayer.setColor(color);
         return Response.DROP_MAIN_CASTLE_SUCCESSFUL;
     }
 
@@ -539,6 +541,22 @@ public class GameController {
                 break;
         }
         return direction;
+    }
+
+    private static boolean checkColorValid(String color){
+        if(!(Objects.equals(color, "blue") || Objects.equals(color, "red")
+                || Objects.equals(color, "green") || Objects.equals(color, "yellow")
+                || Objects.equals(color, "purple") || Objects.equals(color, "gray")
+                || Objects.equals(color, "orange") || Objects.equals(color, "pink")))
+            return false;
+        boolean repeated = false;
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            if(Objects.equals(kingdom.getColor(), color)){
+                repeated = true;
+                break;
+            }
+        }
+        return !repeated;
     }
 
     public static Response selectBuilding(Matcher matcher){
@@ -1060,7 +1078,8 @@ public class GameController {
                 Unit s = k.getUnits().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
-                int mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
+                int mode = 0;
+                if(!(s instanceof Equipment)) mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace, mode);
                 if (path == null) {
                     s.setKingSaidToMove(false);

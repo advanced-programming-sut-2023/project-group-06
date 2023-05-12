@@ -226,6 +226,7 @@ public enum Response {
     NOT_IN_RANGE("The enemy is not in range!"),
     NO_LADDER("There is no ladder here!"),
     THROW_LADDER("Throw ladder successful"),
+    INVALID_COLOR("You can't choose this color!"),
     ;
     public final String message;
 
