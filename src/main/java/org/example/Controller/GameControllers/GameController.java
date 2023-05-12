@@ -755,6 +755,7 @@ public class GameController {
             checkTunnelers();
             checkToFillDitches();
             checkLadders();
+            checkGates();
             for(Kingdom kingdom : currentGame.getKingdoms()) {
                 kingdom.addToHappiness(kingdom.getHappinessIncrease() - kingdom.getFear());
                 computeFoods(kingdom);
@@ -1270,6 +1271,35 @@ public class GameController {
                             player.addAsset(output1);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    private static void checkGates(){
+        for(Kingdom kingdom : currentGame.getKingdoms()){
+            for(Building building : kingdom.getBuildings()){
+                if((building.getBuildingType() == BuildingType.SMALL_STONE_GATEHOUSE
+                        || building.getBuildingType() == BuildingType.BIG_STONE_GATEHOUSE) && !((Gate) building).isOpen()){
+                    boolean isEnemyOnTheGate = false;
+                    int x = building.getXCoordinate();
+                    int y = building.getYCoordinate();
+                    int frontX = x;
+                    int frontY = y;
+                    if(building.getDirection() % 2 == 0) frontY += building.getDirection() - 1;
+                    else frontX += 2 - building.getDirection();
+                    int size = (building.getBuildingType().getSize() - 1) / 2;
+                    for(int i = x - size; i <= x + size; i++){
+                        for(int j = y - size; j <= y + size; j++){
+                            for(Soldier soldier : currentGame.getTileByCoordinates(j, i).getSoldiers()){
+                                if(soldier.getOwner() != building.getOwner()){
+                                    isEnemyOnTheGate = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(isEnemyOnTheGate) openTheGate((Gate) building, x, y, frontX, frontY);
                 }
             }
         }
