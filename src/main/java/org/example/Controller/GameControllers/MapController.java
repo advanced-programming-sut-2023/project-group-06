@@ -154,7 +154,6 @@ public class MapController {
     public static Response saveMap(String name) {
         currentGame = GameController.currentGame;
         System.out.println(name);
-        // if (name == null) return Response.EMPTY_MAP_NAME;
         System.out.println(currentGame.getMap() == null);
         Data.saveMap(name, currentGame.getMap());
         return Response.SAVE_MAP_SUCCESSFUL;

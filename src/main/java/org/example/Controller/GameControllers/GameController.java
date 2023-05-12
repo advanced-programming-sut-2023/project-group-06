@@ -15,7 +15,6 @@ import java.util.regex.Matcher;
 public class GameController {
     public static Game currentGame;
     public static Kingdom currentPlayer;
-    //use make entry valid everywhere
 
     public static Response initializeMap(Matcher matcher){
         String widthString = matcher.group("width");
@@ -149,18 +148,10 @@ public class GameController {
             return Response.INVALID_COUNT;
         if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed())
             return Response.INVALID_GROUND;
-//        if (type.getCost() * count > GameController.currentPlayer.getWealth())
-//            return Response.NOT_ENOUGH_GOLD_UNIT;
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
-//        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
-//            return Response.NOT_ENOUGH_WEAPON_UNIT;
-//        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
-//            return Response.NOT_ENOUGH_PEASANT;
-        //todo uncomment
-//        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && currentPlayer.getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(x, y, currentPlayer, type);
             GameController.currentGame.getTileByCoordinates(y, x).addSoldier(soldier);
@@ -640,8 +631,6 @@ public class GameController {
                 soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).getSoldiers());
                 soldiersOnGate.addAll(currentGame.getTileByCoordinates(3 * y - 2 * frontY, 3 * x - 2 * frontX).getSoldiers());
             }
-            //frontY - y + x0
-            //frontX - x + y0
             soldiersOnGate.addAll(currentGame.getTileByCoordinates(y, x).getSoldiers());
             soldiersOnGate.addAll(currentGame.getTileByCoordinates(2 * y - frontY, 2 * x - frontX).getSoldiers());
             soldiersOnGate.addAll(currentGame.getTileByCoordinates(frontY, frontX).getSoldiers());
@@ -700,7 +689,6 @@ public class GameController {
             currentGame.getTileByCoordinates(2 * frontY - y, 2 * frontX - x).setBuilding(null);
             setGroundBack(currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x));
             currentGame.getTileByCoordinates(3 * frontY - 2 * y, 3 * frontX - 2 * x).setBuilding(null);
-            //getTileByCoordinates(frontX, frontY)
         }
         gate.setTheDoor();
         return Response.GATE_CLOSE;
@@ -744,11 +732,11 @@ public class GameController {
             armOilEngineers();
             resetOilState();
             checkFireDamage();
-            computeDamages(); // computeDamages
-            destroyDeadBodies(); // destroyDeadBodies  //destroy dead buildings
+            computeDamages();
+            destroyDeadBodies();
             destroyDeadBuildings();
             if(currentGame.getNumberOfPlayers() == 1) return Response.WINNER;
-            moveUnits(); // moveUnits
+            moveUnits();
             checkPatrolUnits();
             checkCows();
             checkDitches();
@@ -774,7 +762,6 @@ public class GameController {
     }
 
     private static void computeDamages() {
-        // compute unit attack damages
         for (Kingdom k : currentGame.getKingdoms()) {
             for (Soldier s : k.getSoldiers()) {
                 if (!s.isKingSaidToMove()) {
@@ -817,9 +804,6 @@ public class GameController {
             currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
             attackPower -= attackPowerToShield;
         }
-        //check for the enemy's defenses ( like portable shield?)
-        //defend range of towers
-        //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
         Tile hostTile = currentGame.getTileByCoordinates(y, x);
         Tile enemyTile = currentGame.getTileByCoordinates(enemyY, enemyX);
@@ -865,9 +849,6 @@ public class GameController {
             currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
             attackPower -= attackPowerToShield;
         }
-        //check for the enemy's defenses ( like portable shield?)
-        //defend range of towers
-        //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
         if (squareOfDistance <= e.getRange() * e.getRange()) {
             e.setWishPlace(currentGame.getMap()[y][x]);
@@ -947,9 +928,6 @@ public class GameController {
         attackPower += (int) (((double)s.getOwner().getFear() / 20) * attackPower);
         if(Math.random() < s.getUnitType().getPrecision())
             attackPower = 20;
-        //check for the enemy's defenses ( like portable shield?)
-        //defend range of towers
-        //what if the enemy is on a tower and the soldier on ground?
         int x = s.getXCoordinate();
         int y = s.getYCoordinate();
         int enemyX = enemy.getXCoordinate();
@@ -1239,13 +1217,12 @@ public class GameController {
                         if(canPay)
                             player.payResource(((Producers) building).getResourcesInput());
                     }
-//                    if(building.getBuildingType() == BuildingType.WOODCUTTERS){
-//                        if(currentGame.getTrees().size() == 0)
-//                            canPay = false;
-//                        if(canPay)
-//                            currentGame.cutTree();
-//                    }
-                    // todo uncomment
+                    if(building.getBuildingType() == BuildingType.WOODCUTTERS){
+                        if(currentGame.getTrees().size() == 0)
+                            canPay = false;
+                        if(canPay)
+                            currentGame.cutTree();
+                    }
                     if(canPay) {
                         if(output1.getAmount() != 0) {
                             player.addAsset(output1);
@@ -1272,7 +1249,7 @@ public class GameController {
                     for(int i = x - size; i <= x + size; i++){
                         for(int j = y - size; j <= y + size; j++){
                             for(Soldier soldier : currentGame.getTileByCoordinates(j, i).getSoldiers()){
-                                if(soldier.getOwner() != building.getOwner()){
+                                if(soldier.getOwner() != kingdom){
                                     isEnemyOnTheGate = true;
                                     break;
                                 }

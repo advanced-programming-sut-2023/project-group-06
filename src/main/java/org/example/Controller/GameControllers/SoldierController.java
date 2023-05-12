@@ -25,12 +25,6 @@ public class SoldierController {
     public static Game currentGame;
 
     public static Response moveUnitWithType(Matcher matcher){
-        /*matcher.find();
-        String[] groupNames = {"type","x","y"};
-        String nullGroupName = Controller.nullGroup(matcher,groupNames);
-        if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
-        if(matcher.group("x") == null || matcher.group("y") == null)
-            return Response.INVALID_INPUT;*/
         int x = Integer.parseInt(matcher.group("x"));
         int y = Integer.parseInt(matcher.group("y"));
         UnitType type = UnitType.getSoldierTypeByString(Controller.makeEntryValid(matcher.group("type")));
@@ -59,11 +53,7 @@ public class SoldierController {
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         if(currentGame.getTileByCoordinates(y, x).getHeight() <= -2)
-            return Response.CANT_GO_THERE;/*
-        if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
-                (currentGame.getTileByCoordinates(y, x).getBuilding() != null
-                        && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
-            return Response.CANT_GO_THERE;*/
+            return Response.CANT_GO_THERE;
         for(Unit soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
