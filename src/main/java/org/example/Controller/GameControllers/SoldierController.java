@@ -59,12 +59,11 @@ public class SoldierController {
         if(x < 0 || x >= currentGame.getMapWidth() || y < 0 || y >= currentGame.getMapHeight())
             return Response.INVALID_COORDINATES;
         if(currentGame.getTileByCoordinates(y, x).getHeight() <= -2)
-            return Response.CANT_GO_THERE;
+            return Response.CANT_GO_THERE;/*
         if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed() ||
                 (currentGame.getTileByCoordinates(y, x).getBuilding() != null
                         && !currentGame.getTileByCoordinates(y, x).getBuilding().getBuildingType().isCanYouEnterIt()))
-            return Response.CANT_GO_THERE;
-        int number = 0;
+            return Response.CANT_GO_THERE;*/
         for(Unit soldier : soldiers){
             soldier.setKingSaidToMove(true);
             soldier.setWishPlace(currentGame.getTileByCoordinates(y, x));
@@ -108,14 +107,18 @@ public class SoldierController {
     }
 
     public static Response throwLadder(){
-        if(currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding() != null
+        if(currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding() == null
                 || currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding().getBuildingType() != BuildingType.WALL)
             return NO_LADDER;
         Building building = currentGame.getTileByCoordinates(soldiers.get(0).getYCoordinate(), soldiers.get(0).getXCoordinate()).getBuilding();
+        boolean isThere = false;
         for(int i = 0; i < 4; i++){
-            if((((Towers) building).lather & (1 << i)) == 0)
-                ((Towers) building).lather |= (1 << i);
+            if((((Towers) building).lather & (1 << i)) == (1 << i)) {
+                ((Towers) building).lather ^= (1 << i);
+                isThere = true;
+            }
         }
+        if(!isThere) return NO_LADDER;
         return THROW_LADDER;
     }
 

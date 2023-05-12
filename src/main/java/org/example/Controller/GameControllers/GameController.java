@@ -284,7 +284,8 @@ public class GameController {
             return Response.INVALID_COORDINATES;
         for(int i = x - size; i <= x + size; i++){
             for(int j = y - size; j <= y + size; j++){
-                if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType()))
+                if(!BuildingType.checkGround(buildingtype, currentGame.getTileByCoordinates(j, i).getType())
+                        || currentGame.getTileByCoordinates(j, i).isDitch())
                     return Response.INVALID_GROUND;
                 if(currentGame.getTileByCoordinates(j, i).getBuilding() != null) {
                     if (currentGame.getTileByCoordinates(j, i).getBuilding() instanceof Trap &&
@@ -1059,7 +1060,8 @@ public class GameController {
                 Unit s = k.getUnits().get(j);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
-                Deque<Tile> path = pathFinder.findPath(curTile, wishPlace);
+                int mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
+                Deque<Tile> path = pathFinder.findPath(curTile, wishPlace, mode);
                 if (path == null) {
                     s.setKingSaidToMove(false);
                     continue;
@@ -1456,6 +1458,7 @@ public class GameController {
             }
         }
     }
+
     private static void checkTunnelers(){
         for(Kingdom kingdom : currentGame.getKingdoms()){
             for(Soldier soldier : kingdom.getSoldiers()){
@@ -1482,14 +1485,13 @@ public class GameController {
                         Building target = soldier.getLadder();
                         int direction = 0;
                         if(x1 == target.getXCoordinate())
-                            direction = target.getXCoordinate() - x1 + 2;
-                        else if(y1 == target.getYCoordinate())
                             direction = y1 - target.getYCoordinate() + 1;
+                        else if(y1 == target.getYCoordinate())
+                            direction = target.getXCoordinate() - x1 + 2;
                         if((((Towers) target).lather & (1 << direction)) == 0) {
                             ((Towers) target).lather |= (1 << direction);
-                            //soldier.setLadder(null);
-                            //todo remove the ladder from soldier
-                            //todo do this for all soldiers
+                            soldier.setLadder(null);
+                            soldier.setHasLadder(false);
                         }
                     }
                 }

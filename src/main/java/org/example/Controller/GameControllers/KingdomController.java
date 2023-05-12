@@ -2,6 +2,7 @@ package org.example.Controller.GameControllers;
 
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.Towers;
 import org.example.View.Response;
 
 import java.util.regex.Matcher;
@@ -137,7 +138,7 @@ public class KingdomController {
         String output = "all buildings:";
         for (Building building : currentKingdom.getBuildings()) {
             output += '\n' + building.toString();
-
+            /*if(building instanceof Towers) output += " " + ((Towers) building).lather;*/
         }
         return output;
     }
