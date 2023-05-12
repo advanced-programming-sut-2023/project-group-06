@@ -44,10 +44,19 @@ public class Kingdom {
     private Soldier king;
     private Building mainCastle;
     private int happinessIncrease;
+    private String color;
 
     public Kingdom(User owner) {
         this.wealth = 500;
         this.owner = owner;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public ArrayList<Unit> getEngineers() {
