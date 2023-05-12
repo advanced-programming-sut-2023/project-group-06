@@ -25,6 +25,8 @@ public class MapController {
                 result.append("|" + "\u001B[").append(tileColor).append("m").append(" E ").append("\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).checkForCows())
                 result.append("|" + "\u001B[").append(tileColor).append("m").append(" C ").append("\u001B[0m");
+            else if (currentGame.getTileByCoordinates(y, x - 7 + i).checkForEquipment())
+                result.append("|" + "\u001B[").append(tileColor).append("m").append(" Q ").append("\u001B[0m");
             else if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding() != null) {
                 if(currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.TREE &&
                         currentGame.getTileByCoordinates(y, x - 7 + i).getBuilding().getBuildingType() != BuildingType.ROCK &&
@@ -123,6 +125,11 @@ public class MapController {
         result += "-engineers:\n";
         for (Unit unit : currentGame.getTileByCoordinates(y, x).getAllUnits()){
             if(unit.getUnitType() == UnitType.ENGINEER)
+                result += unit.toString() + '\n';
+        }
+        result += "-equipments:\n";
+        for (Unit unit : currentGame.getTileByCoordinates(y, x).getAllUnits()){
+            if(unit instanceof Equipment)
                 result += unit.toString() + '\n';
         }
         String buildingString = "empty\n";

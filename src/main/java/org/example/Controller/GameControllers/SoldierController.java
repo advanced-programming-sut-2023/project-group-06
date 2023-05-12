@@ -373,6 +373,7 @@ public class SoldierController {
         siegeTent.setDelay(equipmentType.getDelay());
         siegeTent.setEquipmentType(equipmentType);
         soldiers.get(0).getOwner().addToWealth(-1 * equipmentType.getCost());
+        availableEngineers = equipmentType.getEngineerPrice();
         for (Unit engineer : soldiers) {
             if (availableEngineers == 0) break;
             if (engineer.isAvailable()) {

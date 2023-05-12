@@ -296,8 +296,8 @@ public class Kingdom {
 
     public int getAvailableEngineers() {
         int totalEngineers = 0;
-        for (Storage storage : engineerGuilds) {
-            totalEngineers += storage.getStored();
+        for (Unit engineer : engineers) {
+            if (engineer.isAvailable()) totalEngineers++;
         }
         return totalEngineers;
     }

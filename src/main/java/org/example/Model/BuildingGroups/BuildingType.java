@@ -11,8 +11,8 @@ public enum BuildingType {
     ROCK(100, 0, 1, null, 0, 0, 0, false, "rock",Gate.class),
     SMALL_STONE_GATEHOUSE(1000,0,3,ResourcesType.STONE,0,0,0,true,"small stone gatehouse",Gate.class),
     BIG_STONE_GATEHOUSE(2000,0,5,ResourcesType.STONE,20,0,0,true,"big stone gatehouse", Gate.class),
-    KEEP(0,0,7,null,0,0,0,true,"keep", Towers.class), //maghar
-    DRAWBRIDGE(0,0,1,ResourcesType.WOOD,10,0,0,true,"drawbridge", Gate.class), //pol moteharek
+    KEEP(1,0,7,null,0,0,0,true,"keep", Towers.class), //maghar
+    DRAWBRIDGE(1,0,1,ResourcesType.WOOD,10,0,0,true,"drawbridge", Gate.class), //pol moteharek
     LOOKOUT_TOWER(1300,0,3,ResourcesType.STONE,10,0,0,true,"lookout tower", Towers.class), // borje didbani
     PERIMETER_TOWER(1000,0,3,ResourcesType.STONE,10,0,0,true,"perimeter tower", Towers.class), // borj mohiti
     DEFENSE_TURRET(1200,0,3,ResourcesType.STONE,15,0,0,true,"defense turret", Towers.class), //borjak defaei
@@ -22,7 +22,7 @@ public enum BuildingType {
     BARRACKS(500,0,3,ResourcesType.STONE,15,0,0,true,"barracks", Building.class), // sarbaz khane
     MERCENARY_POST(500,0,3,ResourcesType.WOOD,10,0,0,true,"mercenary post", Building.class), //sarbaz khane mozdooran
     ENGINEERS_GUILD(500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Storage.class), // senf mohandesan
-    KILLING_PIT(0,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
+    KILLING_PIT(1,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
     INN(300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
     MILL(300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
     IRON_MINE(100,0,3,ResourcesType.WOOD,20,2,0,false,"iron mine", Producers.class),
@@ -52,7 +52,7 @@ public enum BuildingType {
     BAKERY(300,0,3,ResourcesType.WOOD,10,1,0,false,"bakery", Producers.class),
     BREWER(300,0,3,ResourcesType.WOOD,10,1,0,false,"brewer", Producers.class), //abjo sazi
     GRANARY(500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
-    MAIN_CASTLE(0, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
+    MAIN_CASTLE(1, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
     STAIR(100, 0, 1, null, 0, 0, 0, true, "stair", Towers.class),
     WALL(100, 0, 1, null, 0, 0, 0, true, "wall", Towers.class),

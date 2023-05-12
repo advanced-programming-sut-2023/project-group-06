@@ -94,10 +94,6 @@ public class Unit {
         return unitType;
     }
 
-    public String cowToString() {
-        return getUnitType().getName() + ": hp: " + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
-    }
-
     public int getHealth() {
         return health;
     }
@@ -138,7 +134,7 @@ public class Unit {
 
     public String toString() {
         String output = getUnitType().getName() + ": hp: " + health + ", owner: "
-                + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
+                + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate() + ", wishPlace: " + wishPlace + ", fireDamageTaken: " + fireDamageEachTurn;
         if (this.unitType == UnitType.ENGINEER) output += ", is available? " + isAvailable;
         return output;
     }

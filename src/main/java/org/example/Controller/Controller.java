@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Controller.GameControllers.GameController;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.*;
@@ -186,10 +187,5 @@ public class Controller {
 
     protected static boolean isValidEmail(String email) {
         return Pattern.compile("^\\w+([\\.]?\\w+)*@\\w+([\\.]?\\w+)*(\\.\\w+)+$").matcher(email).find();
-    }
-
-    public void makeError(String s) {
-        System.out.println(s);
-        int[] a = new int[-1];
     }
 }
