@@ -77,7 +77,7 @@ public class PathFinder {
     }
 
     public Deque<Tile> findPath(Tile start, Tile end) {
-        return findPath(start, end, 0);
+        return findPath(start, end, 1);
     }
 
     public Deque<Tile> findPath(Tile start, Tile end, int mode) {
@@ -89,7 +89,8 @@ public class PathFinder {
             return dq;
         }
         if (end.getY() * width + end.getX() < start.getY() * width + end.getX())
-            return reversePath(findPath(end, start));
+            return reversePath(findPath(end, start, mode));
+
         int si = start.getY();
         int sj = start.getX();
         int ei = end.getY();

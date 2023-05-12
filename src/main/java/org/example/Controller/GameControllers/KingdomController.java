@@ -138,7 +138,7 @@ public class KingdomController {
         String output = "all buildings:";
         for (Building building : currentKingdom.getBuildings()) {
             output += '\n' + building.toString();
-            /*if(building instanceof Towers) output += " " + ((Towers) building).lather;*/
+            if(building instanceof Towers) output += " " + ((Towers) building).lather;
         }
         return output;
     }

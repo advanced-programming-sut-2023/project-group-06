@@ -98,6 +98,28 @@ public class GameController {
                 setGroundBack(currentGame.getTileByCoordinates(j, i));
             }
         }
+        if (building.getBuildingType() == BuildingType.DRAWBRIDGE && ((Gate)building).isOpen()) {
+            int x1 = 0;
+            int y1 = 0;
+            switch (building.getDirection()) {
+                case 0:
+                    y1 = -1;
+                    break;
+                case 1:
+                    x1 = 1;
+                    break;
+                case 2:
+                    y1 = 1;
+                    break;
+                case 3:
+                    x1 = -1;
+                    break;
+            }
+            for (int i = 1; i < 4; i++) {
+                currentGame.getTileByCoordinates(yCenter + i * y1, xCenter + i * x1).setBuilding(null);
+                setGroundBack(currentGame.getTileByCoordinates(yCenter + i * y1, xCenter + i * x1));
+            }
+        }
         for(Soldier soldier1 : building.getTunnelers()){
             soldier1.setTunnel(null);
             soldier1.setWishPlace(currentGame.getTileByCoordinates(soldier1.getYCoordinate(),
@@ -126,18 +148,18 @@ public class GameController {
             return Response.INVALID_COUNT;
         if(!currentGame.getTileByCoordinates(y, x).getType().CanBeCrossed())
             return Response.INVALID_GROUND;
-        if (type.getCost() * count > GameController.currentPlayer.getWealth())
-            return Response.NOT_ENOUGH_GOLD_UNIT;
+//        if (type.getCost() * count > GameController.currentPlayer.getWealth())
+//            return Response.NOT_ENOUGH_GOLD_UNIT;
         int numberOfWeapons = (type.getWeapon() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon()) : 0;
         int numberOfWeaponsNeeded = (type.getWeapon() != null) ? count : 0;
         int numberOfWeapons2 = (type.getWeapon2() != null) ? GameController.currentPlayer.getWeaponAmountByType(type.getWeapon2()) : 0;
         int numberOfWeapons2Needed = (type.getWeapon2() != null) ? count : 0;
-        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
-            return Response.NOT_ENOUGH_WEAPON_UNIT;
+//        if ((numberOfWeaponsNeeded > numberOfWeapons || numberOfWeapons2Needed > numberOfWeapons2) && type != UnitType.OIL_ENGINEER)
+//            return Response.NOT_ENOUGH_WEAPON_UNIT;
 //        if (GameController.currentPlayer.getMaxPopulation() - GameController.currentPlayer.getPopulation() - GameController.currentPlayer.getAvailableEngineers() < count)
 //            return Response.NOT_ENOUGH_PEASANT;
         //todo uncomment
-        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && currentPlayer.getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
+//        if ((type == UnitType.KNIGHT || type == UnitType.HORSE_ARCHER) && currentPlayer.getHorseNumber() < count) return Response.NOT_ENOUGH_HORSES;
         for (int i = 0; i < count; i++) {
             Soldier soldier = new Soldier(x, y, currentPlayer, type);
             GameController.currentGame.getTileByCoordinates(y, x).addSoldier(soldier);
@@ -787,7 +809,7 @@ public class GameController {
         attackPower += (int) (((double)s.getOwner().getFear() / 20) * attackPower);
         if (!(enemy instanceof Equipment)) attackPower -= (int) ((double)attackPower * enemy.getUnitType().getDefensePower());
         if(Math.random() < s.getUnitType().getPrecision())
-            attackPower = 20;
+            attackPower = 10;
         if (currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment() != null) {
             int attackPowerToShield = Math.min(currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().getHealth(),attackPower);
             currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
@@ -797,10 +819,12 @@ public class GameController {
         //defend range of towers
         //what if the enemy is on a tower and the soldier on ground?
         int squareOfDistance = (x - enemyX) * (x - enemyX) + (y - enemyY) * (y - enemyY);
-        if (squareOfDistance < s.getSecondRange() * s.getSecondRange()) return false;
         Tile hostTile = currentGame.getTileByCoordinates(y, x);
         Tile enemyTile = currentGame.getTileByCoordinates(enemyY, enemyX);
+        int secondRange = (hostTile.getHeight() != enemyTile.getHeight()) ? 0 : s.getSecondRange();
+        if (squareOfDistance < secondRange * secondRange) attackPower = attackPower / 2;
         if (squareOfDistance <= range * range && (enemyTile.getHeight() == hostTile.getHeight() || s.getUnitType().isArcherType())) {
+            System.out.println("/////// " + enemyTile + "    " + hostTile);
             s.setWishPlace(currentGame.getMap()[y][x]);
             if (s.getUnitType() == UnitType.OIL_ENGINEER) {
                 for (Unit unit : currentGame.getTileByCoordinates(enemyY,enemyX).getAllUnits()) {
@@ -816,8 +840,10 @@ public class GameController {
                 }
             }
             enemy.subHealth(attackPower);
+            System.out.println("s.name: " + s + "enemy.name: " + enemy + ",+++attackPower:" + attackPower);
             return true;
         }
+        System.out.println("++++");
         s.setWishPlace(currentGame.getMap()[enemyY][enemyX]);
         return true;
     }
@@ -834,7 +860,7 @@ public class GameController {
         int enemyY = enemy.getYCoordinate();
         attackPower += (int) (((double)e.getOwner().getFear() / 20) * attackPower);
         if(Math.random() < e.getEquipmentType().getPrecision())
-            attackPower = 20;
+            attackPower = 10;
         if (currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment() != null) {
             int attackPowerToShield = Math.min(currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().getHealth(),attackPower);
             currentGame.getTileByCoordinates(enemyY,enemyX).getEquipment().subHealth(attackPowerToShield);
@@ -937,6 +963,7 @@ public class GameController {
             s.setWishPlace(currentGame.getMap()[y][x]);
             if (enemy.isFlammable())
                 enemy.addToFireDamageEachTurn(attackPower);
+            enemy.addHitPoint(-1 * attackPower);
             return;
         }
         s.setWishPlace(getAdjacentCell(currentGame.getTileByCoordinates(enemyY, enemyX), s));
@@ -1003,7 +1030,9 @@ public class GameController {
         Tile enemyTile = currentGame.getTileByCoordinates(enemy.getYCoordinate(), enemy.getXCoordinate());
         //System.out.println(curTile + " " + enemyTile);
         //System.out.println(pathFinder.findPath(curTile, enemyTile) == null);
-        if (pathFinder.findPath(curTile, enemyTile) == null) return false;
+        int mode = 0;
+        if(!(unit instanceof Equipment)) mode = unit.getUnitType() == UnitType.ASSASSIN ? 2 : unit.getUnitType().isCanClimb() ? 1 : 0;
+        if (pathFinder.findPath(curTile, enemyTile, mode) == null) return false;
         return true;
     }
     public static Building findNearestEnemyToBuilding(Unit unit, int fightRange) {
@@ -1011,30 +1040,37 @@ public class GameController {
         int y = unit.getYCoordinate();
         Kingdom owner = unit.getOwner();
         Building building = currentGame.getTileByCoordinates(y, x).getBuilding();
-        if (building != null && building.getOwner() != owner && building.getHitPoint() > 0) return building;
+        if (building != null && building.getOwner() != owner && isBuildingEnemyValid(building)) return building;
         for (int i = 1; i <= fightRange; i++) {
             for (int j = 0; j <= i; j++) { // x+i-j, y+j
                 if (x + i - j >= currentGame.getMapWidth() || y + j >= currentGame.getMapHeight()) continue;
                 building = currentGame.getTileByCoordinates(y + j, x + i - j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
+                if (building != null && building.getOwner() != owner && isBuildingEnemyValid(building)) return building;
             }
             for (int j = 0; j <= i; j++) { // x+i-j, y-j
                 if (x + i - j >= currentGame.getMapWidth() || y - j < 0) continue;
                 building = currentGame.getTileByCoordinates(y - j, x + i - j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
+                if (building != null && building.getOwner() != owner && isBuildingEnemyValid(building)) return building;
             }
             for (int j = 0; j <= i; j++) { // x-i+j, y+j
                 if (x - i + j < 0 || y + j >= currentGame.getMapHeight()) continue;
                 building = currentGame.getTileByCoordinates(y + j, x - i + j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
+                if (building != null && building.getOwner() != owner && isBuildingEnemyValid(building)) return building;
             }
             for (int j = 0; j <= i; j++) { // x-i+j, y-j
                 if (x - i + j < 0 || y - j < 0) continue;
                 building = currentGame.getTileByCoordinates(y - j, x - i + j).getBuilding();
-                if (building != null && building.getOwner() != owner && building.getHitPoint() > 0 && !(building instanceof  Trap)) return building;
+                if (building != null && building.getOwner() != owner && isBuildingEnemyValid(building)) return building;
             }
         }
         return null;
+    }
+
+    private static boolean isBuildingEnemyValid(Building building) {
+        if (building.getHitPoint() <= 0) return false;
+        if (building instanceof  Trap) return false;
+        if (building.getBuildingType() == BuildingType.BRIDGE) return false;
+        return true;
     }
 
     private static void destroyDeadBodies() {
@@ -1081,6 +1117,12 @@ public class GameController {
                 int mode = 0;
                 if(!(s instanceof Equipment)) mode = s.getUnitType() == UnitType.ASSASSIN ? 2 : s.getUnitType().isCanClimb() ? 1 : 0;
                 Deque<Tile> path = pathFinder.findPath(curTile, wishPlace, mode);
+                if (s.getUnitType().isCanClimb()) {
+                    System.out.println("......" + mode);
+                    System.out.println(s);
+                    System.out.println(path);
+                }
+
                 if (path == null) {
                     s.setKingSaidToMove(false);
                     continue;
@@ -1458,7 +1500,9 @@ public class GameController {
         if(soldier != null){
             PathFinder pathFinder = new PathFinder(GameController.currentGame.getMap());
             Deque<Tile> path = null;
-            path = pathFinder.findPath(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()), tile);
+            int mode = 0;
+            if(!(soldier instanceof Equipment)) mode = soldier.getUnitType() == UnitType.ASSASSIN ? 2 : soldier.getUnitType().isCanClimb() ? 1 : 0;
+            path = pathFinder.findPath(currentGame.getTileByCoordinates(soldier.getYCoordinate(), soldier.getXCoordinate()), tile, mode);
             if (path == null) return false;
         }
         return true;
