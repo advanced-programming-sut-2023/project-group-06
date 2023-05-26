@@ -32,6 +32,7 @@ public enum Response {
     EMPTY_EMAIL("Email field can't be empty!"),
     EMPTY_USERNAME("Username field can't be empty!"),
     EMPTY_PASSWORD("Password field can't be empty!"),
+    PASSWORD_GOOD("You can choose this password!"),
     EMPTY_NICKNAME("Nickname field can't be empty!"),
     EMPTY_SLOGAN("Slogan field can't be empty!"),
     EMPTY_QUESTION_NUMBER("Question number field can't be empty!"),

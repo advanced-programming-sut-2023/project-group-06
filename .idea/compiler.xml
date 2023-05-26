@@ -6,11 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="project-group-06" />
+        <module name="AP.Project" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="project-group-06" target="11" />
+      <module name="AP.Project" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

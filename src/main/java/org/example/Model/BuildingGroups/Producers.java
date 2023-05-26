@@ -1,9 +1,6 @@
 package org.example.Model.BuildingGroups;
 
-import org.example.Controller.GameControllers.GameController;
 import org.example.Model.*;
-import org.example.View.Menu;
-import org.example.View.MenuType;
 
 public class Producers extends Building{
     Resources resourcesInput;
@@ -14,7 +11,7 @@ public class Producers extends Building{
     int capacity;
     int stored;
     boolean isClickable;
-    MenuType menuType = null;
+//    MenuType menuType = null;
 
     public Resources getResourcesInput() {
         return resourcesInput;

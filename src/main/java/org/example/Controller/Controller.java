@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import javafx.stage.Stage;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.*;
@@ -12,16 +13,7 @@ import java.util.regex.Pattern;
 
 public class Controller {
     public static User currentUser;
-    public static MenuType currentMenu;
-    public static void run(Scanner scanner){
-        Data.loadData("src/main/java/org/example/Model/Data.json");
-        if (Data.isStayLoggedIn()) currentMenu = MenuType.MAIN_MENU;
-        else currentMenu = MenuType.START_MENU;
-        while (true) {
-            currentMenu = currentMenu.menu.run(scanner);
-            if(currentMenu == null) break;
-        }
-    }
+//    public static MenuType currentMenu;
 
     private static String theLastCaptcha;
     public static String getCaptcha(){
@@ -160,31 +152,40 @@ public class Controller {
         return null;
     }
 
-    protected static boolean isUsernameValid(String username) {
+    public static Response isPasswordValid(String password) {
+        if (!Controller.isLongPassword(password)) return Response.SHORT_PASSWORD;
+        if (!Controller.containCapitalLetter(password)) return Response.PASSWORD_CAPITAL;
+        if (!Controller.containLowercaseLetter(password)) return Response.PASSWORD_LOWER;
+        if (!Controller.containNumber(password)) return Response.PASSWORD_NUMBER;
+        if (!Controller.containSymbol(password)) return Response.PASSWORD_SYMBOL;
+        return Response.PASSWORD_GOOD;
+    }
+
+    public static boolean isUsernameValid(String username) {
         return !Pattern.compile("\\W").matcher(username).find();
     }
 
-    protected static boolean isLongPassword(String password) {
+    public static boolean isLongPassword(String password) {
         return (password.length() >= 6);
     }
 
-    protected static boolean containCapitalLetter(String word) {
+    public static boolean containCapitalLetter(String word) {
         return Pattern.compile("[A-Z]").matcher(word).find();
     }
 
-    protected static boolean containLowercaseLetter(String word) {
+    public static boolean containLowercaseLetter(String word) {
         return Pattern.compile("[a-z]").matcher(word).find();
     }
 
-    protected static boolean containSymbol(String word) {
+    public static boolean containSymbol(String word) {
         return Pattern.compile("\\W").matcher(word).find();
     }
 
-    protected static boolean containNumber(String word) {
+    public static boolean containNumber(String word) {
         return Pattern.compile("\\d").matcher(word).find();
     }
 
-    protected static boolean isValidEmail(String email) {
+    public static boolean isValidEmail(String email) {
         return Pattern.compile("^\\w+([\\.]?\\w+)*@\\w+([\\.]?\\w+)*(\\.\\w+)+$").matcher(email).find();
     }
 
