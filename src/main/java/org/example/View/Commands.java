@@ -60,7 +60,7 @@ public enum Commands {
     SET_TEXTURE_ONE_TILE("(?=.* -x )(?=.* -y )(?=.* -t )^settexture( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))| -t (?<type>(\\\"[^\\\"]*\\\")|\\S*)){3}$"),
     SET_TEXTURE_MULTIPLE_TILES("(?=.* -x1 )(?=.* -y1 )(?=.* -x2 )(?=.* -y2 )(?=.* -t )^settexture( -x1 (?<x1>(-?\\d*)|(\\\"-?\\d*\\\"))| -y1 (?<y1>(-?\\d*)|(\\\"-?\\d*\\\"))| -x2 (?<x2>(-?\\d*)|(\\\"-?\\d*\\\"))| -y2 (?<y2>(-?\\d*)|(\\\"-?\\d*\\\"))| -t (?<type>(\\\"[^\\\"]*\\\")|\\S*)){5}$"),
     PUT_MAIN_CASTLE("(?=.* -x )(?=.* -y )(?=.* -color )(?=.* -d )^main castle( -x (?<x>(\\-)?\\d+)| -y (?<y>(\\-)?\\d+)| -color (?<color>(((\"[^\"]*\")|\\S*)))| -d (?<direction>[nswer])){4}$"),
-    NEXT_TURN("next turn"),
+    NEXT_TURN("^next turn$"),
     CLEAR_BLOCK("(?=.* -x )(?=.* -y )^clear( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))){2}$"),
     DROP_ROCK("(?=.* -x )(?=.* -y )(?=.* -d )^droprock( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))| -d (?<direction>[nswer])){3}$"),
     SELECT_BUILDING("(?=.* -x )(?=.* -y )^select building( -x (?<x>(-?\\d*)|(\\\"-?\\d*\\\"))| -y (?<y>(-?\\d*)|(\\\"-?\\d*\\\"))){2}$"),

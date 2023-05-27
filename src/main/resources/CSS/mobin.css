@@ -1,0 +1,131 @@
+.button{
+    -fx-min-width: 100;
+    -fx-max-width: 100;
+    -fx-background-color:
+            #3c7fb1,
+            linear-gradient(#fafdfe, #e8f5fc),
+            linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 30,20,10;
+    -fx-padding: 3 30 3 30;
+    -fx-text-fill: black;
+    -fx-font-size: 10px;
+    -fx-cursor: HAND;
+}
+
+.button2{
+    -fx-min-width: 70;
+    -fx-max-width: 70;
+    -fx-background-color:
+            #3c7fb1,
+            linear-gradient(#fafdfe, #e8f5fc),
+            linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 30,20,10;
+    -fx-text-fill: black;
+    -fx-font-size: 13px;
+    -fx-padding: 5, 5, 5, 5;
+}
+
+.button3{
+    -fx-min-width: 100;
+    -fx-max-width: 100;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 4 30 4 30;
+    -fx-text-fill: #e7fce2;
+    -fx-font-size: 15px;
+    -fx-background-color: #0f2d94;
+}
+
+.not-rounded-button{
+    -fx-min-width: 150;
+    -fx-max-width: 150;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+    -fx-border-color: black;
+    -fx-background-radius: 0,0,0;
+}
+
+TextField{
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+    -fx-font-family: "Arial";
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-highlight-fill: derive(-fx-control-inner-background,-20%);
+    -fx-highlight-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: transparent;
+    -fx-background-color: #e7fce2;
+    -fx-background-insets: 0;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #3c7901;
+    -fx-border-width: 1;
+    -fx-border-insets: 0 0 1 0;
+    -fx-cursor: text;
+}
+
+PasswordField{
+    -fx-max-width: 300;
+    -fx-min-width: 300;
+    -fx-font-family: "Arial";
+    -fx-font-size: 13px;
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-highlight-fill: derive(-fx-control-inner-background,-20%);
+    -fx-highlight-text-fill: -fx-text-inner-color;
+    -fx-prompt-text-fill: transparent;
+    -fx-background-color: #dbeed6;
+    -fx-background-insets: 0;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-color: #3c7901;
+    -fx-border-width: 1;
+    -fx-border-insets: 0 0 1 0;
+    -fx-cursor: text;
+}
+
+.text-input {
+    -fx-prompt-text-fill: #108bd7;
+}
+
+#label{
+    -fx-font-size: 32px;
+    -fx-font-family: "Arial Black";
+    -fx-fill: #818181;
+    -fx-effect: innershadow( three-pass-box , rgba(0,0,0,0.7) , 6, 0.0 , 0 , 2 );
+}
+
+ImageView {
+    -fx-cursor: HAND;
+}
+
+.invisible {
+    -fx-font-size: 15px;
+    -fx-font-family: "Times New Roman";
+    -fx-pref-width: 128;
+    visibility: false;
+}
+
+.invisible1 {
+    -fx-font-size: 15px;
+    -fx-font-family: "Times New Roman";
+    -fx-pref-width: 195;
+    visibility: false;
+}
+
+.invisible2 {
+    -fx-font-size: 15px;
+    -fx-font-family: "Times New Roman";
+    -fx-min-width: 230;
+    -fx-max-width: 230;
+    /*visibility: false;*/
+}
+
+.password {
+    -fx-max-width: 272;
+    -fx-min-width: 272;
+}
+
+

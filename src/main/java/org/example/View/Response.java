@@ -2,6 +2,7 @@ package org.example.View;
 
 public enum Response {
     INVALID_INPUT("Invalid input!"),
+    INVALID_USERNAME("username not found!"),
     THERE_IS_NO_BUILDING_HERE("There is no building here!"),
     YOU_CANT_SELECT_THIS_BUILDING("You can't select this building!"),
     SELECT_BUILDING_SUCCESSFUL("Select building successful!"),

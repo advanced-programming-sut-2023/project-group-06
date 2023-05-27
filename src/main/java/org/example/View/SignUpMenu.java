@@ -11,6 +11,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
 import org.example.Controller.SignUpController;
+import org.example.Model.Data;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -46,6 +47,7 @@ public class SignUpMenu extends Application {
             "I am a man of fortune, and I must seek my fortune.", "Keep friends close and enemies guessing.",
             "I don’t need to get a life, I am a gamer I have lots of lives.", "Gamer zone, Be careful", "Eat-Sleep-Play-Repeat", "Life is a game, Play to win",
             "Escape Reality & Play Games.", "Do not disturb, I am Gaming.", "Games the only legal place to kill stupids."};
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -88,13 +90,14 @@ public class SignUpMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        Data.loadData("src/main/java/org/example/Model/Data.json");
         this.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
         stage.show();
     }
-    
+
     public void initialize() {
         passwordPasswordField.textProperty().addListener((observable, oldPassword, newPassword) -> {
             Response response;
@@ -127,15 +130,16 @@ public class SignUpMenu extends Application {
             if (!Controller.isUsernameValid(newUsername)) {
                 usernameError.setText(Response.INVALID_USERNAME_FORMAT.message);
                 usernameError.setStyle("-fx-text-fill: RED");
-            }
-            else usernameError.setText("");
+            } else usernameError.setText("");
         }));
     }
+
     public static String randomSlogan() {
-        String slogan = allRandomSlogans[(int)(Math.random() * 16)];
+        String slogan = allRandomSlogans[(int) (Math.random() * 16)];
         System.out.println("Your slogan is: " + slogan);
         return slogan;
     }
+
     public static String randomPassword(Scanner scanner) {
         String password = SignUpController.passwordGenerator();
         System.out.println("Your random password is: " + password + '\n' +
@@ -145,7 +149,7 @@ public class SignUpMenu extends Application {
         return password;
     }
 
-    public static String getCaptcha(Scanner scanner, String captcha){
+    public static String getCaptcha(Scanner scanner, String captcha) {
         System.out.println(captcha);
         String input = scanner.nextLine();
         return input;
@@ -170,11 +174,11 @@ public class SignUpMenu extends Application {
         passwordStackPane.getChildren().get(0).toFront();
         passwordStackPane.getChildren().get(0).setVisible(false);
         passwordStackPane.getChildren().get(1).setVisible(true);
-        ((TextField)passwordStackPane.getChildren().get(1)).setText(((TextField)passwordStackPane.getChildren().get(0)).getText());
+        ((TextField) passwordStackPane.getChildren().get(1)).setText(((TextField) passwordStackPane.getChildren().get(0)).getText());
         passwordConfirmationStackPane.getChildren().get(0).toFront();
         passwordConfirmationStackPane.getChildren().get(0).setVisible(false);
         passwordConfirmationStackPane.getChildren().get(1).setVisible(true);
-        ((TextField)passwordConfirmationStackPane.getChildren().get(1)).setText(((TextField)passwordConfirmationStackPane.getChildren().get(0)).getText());
+        ((TextField) passwordConfirmationStackPane.getChildren().get(1)).setText(((TextField) passwordConfirmationStackPane.getChildren().get(0)).getText());
         passwordToggle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/eye" + ((passwordToggle.isSelected()) ? "Show" : "Hide") + ".png").toExternalForm()))
                 , null, null)));

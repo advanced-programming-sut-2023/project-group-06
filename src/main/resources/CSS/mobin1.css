@@ -1,0 +1,67 @@
+.profile-label {
+    -fx-pref-width: 80;
+    -fx-pref-height: 40;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: #dec40a;
+    -fx-text-fill: #fffdfd;
+    -fx-padding: 6, 5, 5, 5;
+}
+
+.profile-label1 {
+    -fx-pref-width: 85;
+    -fx-pref-height: 40;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: #de0a3b;
+    -fx-text-fill: #fffdfd;
+    -fx-padding: 6, 5, 5, 5;
+}
+
+.profile-label2 {
+    -fx-pref-width: 60;
+    -fx-pref-height: 40;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: #0a34de;
+    -fx-text-fill: #fffdfd;
+    -fx-padding: 9, 5, 5, 7;
+}
+
+.profile-label3 {
+    -fx-pref-width: 80;
+    -fx-pref-height: 40;
+    -fx-font-size: 16px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-background-color: #dec40a;
+    -fx-text-fill: #fffdfd;
+    -fx-padding: 6, 5, 5, 5;
+}
+
+.profile-button {
+    -fx-background-color: #2196F3;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.profile-button:hover {
+    -fx-background-color: #1976D2;
+}
+
+.text-input2 {
+    -fx-background-color: #F5F5F5;
+    -fx-border-color: #BDBDBD;
+    -fx-border-width: 1px;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+.text-input2 focus {
+    -fx-background-color: white;
+    -fx-border-color: #2196F3;
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.View.ProfileMenu"
+            prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/mobin1.css">
+    <center>
+        <VBox fx:id="profileMenu" alignment="CENTER" spacing="10">
+            <HBox>
+                <ImageView fx:id="avatarImage" fitWidth="100" fitHeight="100" preserveRatio="true" smooth="true">
+                </ImageView>
+                <Label fx:id="usernameLabel" text="Username" styleClass="profile-label"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Password" styleClass="profile-label"/>
+                <PasswordField fx:id="passwordField" promptText="Enter new password"/>
+                <Button text="Change" styleClass="profile-button"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Nickname" styleClass="profile-label1"/>
+                <TextField fx:id="nicknameField" promptText="Enter nickname"/>
+                <Button text="Save" styleClass="profile-button"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Gmail" styleClass="profile-label2"/>
+                <TextField fx:id="gmailField" promptText="Enter gmail"/>
+                <Button text="Save" styleClass="profile-button"/>
+            </HBox>
+            <Label fx:id="sloganLabel" text="Slogan" styleClass="profile-label3"/>
+        </VBox>
+    </center>
+</BorderPane>

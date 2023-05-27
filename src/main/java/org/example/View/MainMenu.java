@@ -3,6 +3,7 @@ package org.example.View;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import org.example.Controller.MainController;
+import org.example.Model.Data;
 
 import java.util.Objects;
 import java.util.Scanner;
@@ -34,6 +35,6 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        Data.loadData("src/main/java/org/example/Model/Data.json");
     }
 }

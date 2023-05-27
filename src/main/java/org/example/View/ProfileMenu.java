@@ -1,6 +1,15 @@
 package org.example.View;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
@@ -9,7 +18,17 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu extends Application {
+    public VBox profileMenu;
+    public ImageView avatarImage;
+    public Label usernameLabel;
+    public PasswordField passwordField;
+    public TextField nicknameField;
+    public TextField gmailField;
+    public Label sloganLabel;
     ProfileController profileController;
+    private Scene scene;
+    private Stage stage;
+    private BorderPane borderPane;
 
 //    public MenuType run(Scanner scanner) {
 //        while (true) {
@@ -54,6 +73,10 @@ public class ProfileMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-
+        this.stage = stage;
+        borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml"));
+        scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.show();
     }
 }
