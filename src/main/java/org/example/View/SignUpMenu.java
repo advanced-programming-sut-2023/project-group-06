@@ -8,7 +8,9 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.example.Controller.Controller;
 import org.example.Controller.SignUpController;
 import org.example.Model.Data;
@@ -95,6 +97,7 @@ public class SignUpMenu extends Application {
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
+//        stage.setFullScreen(true);
         stage.show();
     }
 
@@ -132,6 +135,40 @@ public class SignUpMenu extends Application {
                 usernameError.setStyle("-fx-text-fill: RED");
             } else usernameError.setText("");
         }));
+        String defaultString = "---";
+        sloganChoiceBox.getItems().add(defaultString);
+        sloganChoiceBox.setValue(defaultString);
+        sloganChoiceBox.getItems().add("random slogan");
+        sloganChoiceBox.setMaxWidth(50);
+        sloganChoiceBox.setMinWidth(50);
+        sloganChoiceBox.setMaxHeight(20);
+        sloganChoiceBox.setConverter(new StringConverter() {
+            @Override
+            public String toString(Object o) {
+                if (!(o instanceof String)) return null;
+                String s = (String) o;
+                String finalString = "";
+                int j = 0;
+                for (int i = 0; i < s.length(); i++) {
+                    j++;
+                    if (s.charAt(i) == ' ' && j >= 20) {
+                        finalString += '\n';
+                        j = 0;
+                    } else {
+                        finalString += s.charAt(i);
+                    }
+                }
+                return finalString;
+            }
+
+            @Override
+            public Object fromString(String s) {
+                return null;
+            }
+        });
+        for (String string : allRandomSlogans) {
+            sloganChoiceBox.getItems().add(string);
+        }
     }
 
     public static String randomSlogan() {
@@ -156,15 +193,37 @@ public class SignUpMenu extends Application {
     }
 
     public void randomPassword(ActionEvent actionEvent) {
+        passwordTextField.setText(SignUpController.passwordGenerator());
+        passwordPasswordField.setText(SignUpController.passwordGenerator());
     }
 
     public void wantSlogan(ActionEvent actionEvent) {
+        if (wantSlogan.isSelected()) {
+            slogan.setVisible(true);
+            sloganChoiceBox.setVisible(true);
+        } else {
+            slogan.setVisible(false);
+            sloganChoiceBox.setVisible(false);
+        }
     }
 
     public void sloganChoiceBoxAction(ActionEvent actionEvent) {
+        String slogan = (sloganChoiceBox.getValue().toString().equals("random"))
+                ? allRandomSlogans[(int)(Math.random() * 16)] : sloganChoiceBox.getValue().toString();
+        if (sloganChoiceBox.getValue().equals("---")) return;
+        this.slogan.setText(slogan);
     }
 
     public void register(ActionEvent actionEvent) {
+        String username = this.username.getText();
+        String password = (passwordToggle.isSelected()) ? passwordTextField.getText() : passwordPasswordField.getText();
+        String passwordConfirmation = (passwordToggle.isSelected()) ? passwordConfirmationTextField.getText() :
+                passwordConfirmationPasswordField.getText();
+        String slogan = this.slogan.getText();
+        String email = this.email.getText();
+        String nickname = this.nickname.getText();
+        System.out.println(SignUpController.createUser(Translator.getMatcherByGroups(Translator.CREATE_USER, username, password,
+                passwordConfirmation, nickname, email, slogan)).message);
     }
 
     public void haveAccount(ActionEvent actionEvent) {

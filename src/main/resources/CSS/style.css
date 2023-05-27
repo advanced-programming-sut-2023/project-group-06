@@ -112,3 +112,8 @@ ImageView {
     -fx-max-width: 168;
     -fx-min-width: 168;
 }
+
+.slogan {
+    -fx-min-width: 182;
+    -fx-max-width: 182;
+}
