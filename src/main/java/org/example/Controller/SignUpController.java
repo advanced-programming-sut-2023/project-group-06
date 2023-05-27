@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpController {
-    public static Response createUser(Matcher matcher, Scanner scanner){
+    public static Response createUser(Matcher matcher){
         matcher.find();
         String[] groupNames = {"username","nickname","password","email","slogan"};
         boolean isSloganRandom = false; boolean isPasswordRandom = false;
@@ -45,10 +45,6 @@ public class SignUpController {
         if (Data.getUserByEmail(email) != null) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
         if (isSloganRandom) slogan = SignUpMenu.randomSlogan();
-        if (isPasswordRandom) {
-            password = SignUpMenu.randomPassword(scanner);
-            if (password == null) return Response.PASSWORD_CONFIRMATION;
-        }
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
