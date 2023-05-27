@@ -14,6 +14,8 @@ import javafx.stage.Stage;
 import org.example.Controller.LoginController;
 import org.example.Model.Data;
 
+import java.util.regex.Matcher;
+
 public class LoginMenu extends Application {
     public TextField username;
     public StackPane passwordStackPane;
@@ -28,6 +30,7 @@ public class LoginMenu extends Application {
     public Button back;
     public Button changePassword;
     public Label incorrectAnswer;
+    public Label loginResult;
     LoginController loginController;
     private BorderPane borderPane;
     private Scene scene;
@@ -117,6 +120,8 @@ public class LoginMenu extends Application {
             answerTheQuestion.setTextFill(Color.RED);
         }
         else{
+            answerTheQuestion.setText("answer the question:");
+            answerTheQuestion.setTextFill(Color.BLACK);
             question.setVisible(true);
             answer.setVisible(true);
             changePassword.setVisible(true);
@@ -126,22 +131,25 @@ public class LoginMenu extends Application {
     }
 
     public void login(MouseEvent mouseEvent) throws Exception {
-        Response response = LoginController.loginUser(null);
+        Matcher matcher = Translator.getMatcherByGroups(
+                Translator.LOGIN_USER, "username", "password", "stayLoggedIn");
         String usernameText = username.getText();
         if (LoginController.setLastLoginAttempt(usernameText, (System.currentTimeMillis() / 1000L))) {
-            Response response1 = LoginController.loginUser(null);
-            /*System.out.println(response1.message);*/ // TODO: 2023-05-27
+            Response response1 = LoginController.loginUser(matcher);
+            loginResult.setVisible(true);
+            loginResult.setText(response1.message);
             if (response1 == Response.LOGIN_SUCCESSFUL) {
+                loginResult.setTextFill(Color.GREEN);
                 LoginController.resetLoginAttempts(usernameText);
                 new MainMenu().start(stage);
             }
-        }/* else {
+        } else {
             long lastLoginAttempt = LoginController.getLastLoginAttempt(usernameText);
             long currentTime = System.currentTimeMillis() / 1000L;
-            System.out.printf(Response.TRY_AGAIN_LATER.message,
+            /*System.out.printf(Response.TRY_AGAIN_LATER.message,
                     lastLoginAttempt + LoginController.getNumberOfLoginAttempts(username) * 5 - currentTime);
-            System.out.println();
-        }*/
+            System.out.println();*/ // TODO: 2023-05-27
+        }
     }
 
     public void back(MouseEvent mouseEvent) {

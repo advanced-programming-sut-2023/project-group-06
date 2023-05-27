@@ -11,7 +11,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.View.LoginMenu"
-            prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/mobin.css">
+            prefHeight="600.0" prefWidth="600.0" stylesheets="@../CSS/mobin.css">
 
     <center>
         <VBox alignment="CENTER" spacing="10">
@@ -39,6 +39,7 @@
                 <Button fx:id="login" text="login" styleClass="button3" onMouseClicked="#login"/>
                 <Button fx:id="back" text="back" styleClass="button3" onMouseClicked="#back"/>
             </HBox>
+            <Label fx:id="loginResult" styleClass="invisible3"/>
         </VBox>
     </center>
 </BorderPane>

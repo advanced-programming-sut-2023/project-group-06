@@ -123,6 +123,14 @@ ImageView {
     /*visibility: false;*/
 }
 
+.invisible3 {
+    -fx-font-size: 15px;
+    -fx-font-family: "Times New Roman";
+    /*-fx-pref-width: 200;*/
+    visibility: false;
+    -fx-text-fill: red;
+}
+
 .password {
     -fx-max-width: 272;
     -fx-min-width: 272;
