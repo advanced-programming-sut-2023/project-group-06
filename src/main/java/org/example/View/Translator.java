@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public enum Translator {
-    CREATE_USER("username", "password", "passwordConfirmation", "nickname", "email", "slogan");
+    CREATE_USER("username", "password", "passwordConfirmation", "nickname", "email", "slogan"),
+
     ;
 
     private String[] groupNames;
