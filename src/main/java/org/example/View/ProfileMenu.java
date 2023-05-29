@@ -128,6 +128,7 @@ public class ProfileMenu extends Application {
                 usernameError.setStyle("-fx-text-fill: RED");
             } else usernameError.setText("");
         });
+        ////
     }
 
     public void changeUsername(MouseEvent mouseEvent) {
