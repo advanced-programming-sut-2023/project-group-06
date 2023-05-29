@@ -11,7 +11,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.View.LoginMenu"
-            prefHeight="600.0" prefWidth="600.0" stylesheets="@../CSS/mobin.css">
+            stylesheets="@../CSS/mobin.css">
 
     <center>
         <VBox alignment="CENTER" spacing="10">

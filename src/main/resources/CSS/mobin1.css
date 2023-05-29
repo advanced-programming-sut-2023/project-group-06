@@ -1,5 +1,5 @@
 .profile-label {
-    -fx-pref-width: 80;
+    -fx-pref-width: 82;
     -fx-pref-height: 40;
     -fx-font-size: 16px;
     -fx-background-radius: 10;
@@ -21,7 +21,7 @@
 }
 
 .profile-label2 {
-    -fx-pref-width: 60;
+    -fx-pref-width: 65;
     -fx-pref-height: 40;
     -fx-font-size: 16px;
     -fx-background-radius: 10;
@@ -37,8 +37,23 @@
     -fx-font-size: 16px;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-background-color: #dec40a;
+    -fx-background-color: #36f378;
     -fx-text-fill: #fffdfd;
+    -fx-padding: 15, 5, 5, 7;
+    /*
+    7ef1a6
+    56f38d
+     */
+}
+
+.profile-label0 {
+    -fx-pref-width: 150;
+    -fx-pref-height: 40;
+    -fx-font-size: 18px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    /*-fx-background-color: #dec40a;
+    -fx-text-fill: #fffdfd;*/
     -fx-padding: 6, 5, 5, 5;
 }
 
@@ -64,4 +79,27 @@
 .text-input2 focus {
     -fx-background-color: white;
     -fx-border-color: #2196F3;
+}
+
+.Label{
+    -fx-pref-width: 300;
+    -fx-pref-height: 35;
+    -fx-font-size: 20px;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #0f2d94;
+    -fx-background-color: #eefffa;
+    /*-fx-text-fill: #fffdfd;*/
+    -fx-padding: 6, 5, 5, 5;
+}
+
+.TextField {
+    -fx-pref-width: 300;
+    -fx-pref-height: 30;
+    -fx-font-size: 15px;
+    -fx-background-radius: 10;
+    -fx-border-color: #a62bb9;
+    -fx-border-radius: 10;
+    -fx-background-color: transparent;
+    -fx-padding: 6, 4, 4, 4;
 }

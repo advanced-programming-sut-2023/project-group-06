@@ -3,13 +3,16 @@ package org.example.View;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.ImagePattern;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
@@ -20,11 +23,26 @@ import java.util.regex.Matcher;
 public class ProfileMenu extends Application {
     public VBox profileMenu;
     public ImageView avatarImage;
-    public Label usernameLabel;
     public PasswordField passwordField;
     public TextField nicknameField;
     public TextField gmailField;
     public Label sloganLabel;
+    public Label userPassword;
+    public Label userNickname;
+    public Label UserGmail;
+    public Label userUsername;
+    public TextField usernameTextField;
+    public TextField passwordTextField;
+    public TextField nicknameTextField;
+    public TextField gmailTextField;
+    public Button changeUsername;
+    public Button saveUsername;
+    public Button changePassword;
+    public Button savePassword;
+    public Button changeNickName;
+    public Button saveNickName;
+    public Button changeGmail;
+    public Button saveGmail;
     ProfileController profileController;
     private Scene scene;
     private Stage stage;
@@ -76,7 +94,65 @@ public class ProfileMenu extends Application {
         this.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml"));
         scene = new Scene(borderPane);
+        /*Screen screen = Screen.getPrimary();
+        double screenWidth = screen.getBounds().getWidth();
+        double screenHeight = screen.getBounds().getHeight();
+        *//*stage.setWidth(screenWidth);
+        stage.setHeight(screenHeight);*/
+        /*borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource(
+                        "/images/background1.jpg").toString())), null, null)));*/
+        stage.setFullScreen(true);
         stage.setScene(scene);
         stage.show();
+    }
+
+    public void initialize(){
+        /*usernameTextField.textProperty().addListener((observable, oldText, newText) -> {
+            if (!Controller.isUsernameValid(newText)) {
+                usernameError.setText(Response.INVALID_USERNAME_FORMAT.message);
+                usernameError.setStyle("-fx-text-fill: RED");
+            } else usernameError.setText("");
+        });*/
+    }
+
+    public void changeUsername(MouseEvent mouseEvent) {
+        usernameTextField.setVisible(true);
+        userUsername.setVisible(false);
+        changeUsername.setVisible(false);
+        saveUsername.setVisible(true);
+    }
+
+    public void changePassword(MouseEvent mouseEvent) {
+        passwordTextField.setVisible(true);
+        userPassword.setVisible(false);
+        changePassword.setVisible(false);
+        savePassword.setVisible(true);
+    }
+
+    public void changeNickName(MouseEvent mouseEvent) {
+        nicknameTextField.setVisible(true);
+        userNickname.setVisible(false);
+        changeNickName.setVisible(false);
+        saveNickName.setVisible(true);
+    }
+
+    public void changeGmail(MouseEvent mouseEvent) {
+        gmailTextField.setVisible(true);
+        UserGmail.setVisible(false);
+        changeGmail.setVisible(false);
+        saveGmail.setVisible(true);
+    }
+
+    public void saveUsername(MouseEvent mouseEvent) {
+    }
+
+    public void saveNickName(MouseEvent mouseEvent) {
+    }
+
+    public void savePassword(MouseEvent mouseEvent) {
+    }
+
+    public void saveGmail(MouseEvent mouseEvent) {
     }
 }

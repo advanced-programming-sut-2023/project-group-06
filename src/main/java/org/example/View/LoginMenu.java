@@ -90,9 +90,9 @@ public class LoginMenu extends Application {
         Data.loadData("src/main/java/org/example/Model/Data.json");
         this.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/LoginMenu.fxml"));
-        //borderPane.setBackground(new Background(setBackGround("1.jpg", 600, 400)));
         scene = new Scene(borderPane);
         stage.setScene(scene);
+        stage.setFullScreen(true);
         stage.show();
     }
 
