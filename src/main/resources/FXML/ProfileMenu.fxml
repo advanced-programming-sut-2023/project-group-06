@@ -13,7 +13,7 @@
             fx:controller="org.example.View.ProfileMenu"
             stylesheets="@../CSS/mobin1.css">
     <center>
-        <VBox fx:id="profileMenu" alignment="CENTER" spacing="30">
+        <VBox fx:id="profileMenu" alignment="CENTER" spacing="6">
             <HBox alignment="CENTER" spacing="30">
                 <Label text="username" styleClass="profile-label"/>
                 <StackPane>
@@ -25,6 +25,7 @@
                     <Button text="Save!!" styleClass="profile-button" onMouseClicked="#saveUsername" visible="false" fx:id="saveUsername"/>
                 </StackPane>
             </HBox>
+            <Label fx:id="usernameError"/>
             <HBox alignment="CENTER" spacing="30">
                 <Label text="Password" styleClass="profile-label"/>
                 <StackPane>
@@ -36,6 +37,7 @@
                     <Button text="Save!!" styleClass="profile-button" onMouseClicked="#savePassword" visible="false" fx:id="savePassword"/>
                 </StackPane>
             </HBox>
+            <Label/>
             <HBox alignment="CENTER" spacing="30">
                 <Label text="Nickname" styleClass="profile-label1"/>
                 <StackPane>
@@ -47,6 +49,7 @@
                     <Button text="Save!!" styleClass="profile-button" onMouseClicked="#saveNickName" visible="false" fx:id="saveNickName"/>
                 </StackPane>
             </HBox>
+            <Label fx:id="nicknameError"/>
             <HBox alignment="CENTER" spacing="30">
                 <Label text="Email" styleClass="profile-label2"/>
                 <StackPane>
@@ -58,6 +61,7 @@
                     <Button text="Save!!" styleClass="profile-button" onMouseClicked="#saveGmail" visible="false" fx:id="saveGmail"/>
                 </StackPane>
             </HBox>
+            <Label fx:id="emailError"/>
             <Label fx:id="sloganLabel" text="Slogan" styleClass="profile-label3"/>
         </VBox>
     </center>

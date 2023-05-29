@@ -7,6 +7,11 @@ import java.util.regex.Pattern;
 public enum Translator {
     CREATE_USER("username", "password", "passwordConfirmation", "nickname", "email", "slogan"),
     LOGIN_USER("username", "password", "stayLoggedIn"),
+    CHANGE_USERNAME("username"),
+    CHANGE_NICKNAME("nickname"),
+    CHANGE_PASSWORD("oldPassword", "newPassword"),
+    CHANGE_EMAIL("email"),
+    CHANGE_SLOGAN("slogan"),
     ;
 
     private String[] groupNames;

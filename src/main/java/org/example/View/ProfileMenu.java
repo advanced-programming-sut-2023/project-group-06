@@ -2,16 +2,15 @@ package org.example.View;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
@@ -43,6 +42,9 @@ public class ProfileMenu extends Application {
     public Button saveNickName;
     public Button changeGmail;
     public Button saveGmail;
+    public Label usernameError;
+    public Label nicknameError;
+    public Label emailError;
     ProfileController profileController;
     private Scene scene;
     private Stage stage;
@@ -107,13 +109,25 @@ public class ProfileMenu extends Application {
         stage.show();
     }
 
+    private void setThePain(){
+        Image avatarImage = new Image(ProfileMenu.class.getResource("/Images/background1.jpg").toString());
+        ImageView imageView = new ImageView(avatarImage);
+        Circle circle = new Circle(imageView.getFitWidth() / 2, imageView.getFitHeight() / 2
+                , Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2);
+        imageView.setClip(circle);
+        VBox vBox = new VBox();
+        vBox.setAlignment(Pos.TOP_LEFT);
+        vBox.getChildren().add(imageView);
+        borderPane.getChildren().add(vBox);
+    }
+
     public void initialize(){
-        /*usernameTextField.textProperty().addListener((observable, oldText, newText) -> {
+        usernameTextField.textProperty().addListener((observable, oldText, newText) -> {
             if (!Controller.isUsernameValid(newText)) {
                 usernameError.setText(Response.INVALID_USERNAME_FORMAT.message);
                 usernameError.setStyle("-fx-text-fill: RED");
             } else usernameError.setText("");
-        });*/
+        });
     }
 
     public void changeUsername(MouseEvent mouseEvent) {
@@ -145,14 +159,77 @@ public class ProfileMenu extends Application {
     }
 
     public void saveUsername(MouseEvent mouseEvent) {
+        Response response = ProfileController.changeUsername(Translator.getMatcherByGroups(
+                Translator.CHANGE_USERNAME, usernameTextField.getText()));
+        Alert alert;
+        if(response != Response.USERNAME_CHANGE){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change Info Failed!");
+        }
+        else{
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change username was successful");
+            changeUsername.setVisible(true);
+            saveUsername.setVisible(false);
+            usernameTextField.setVisible(false);
+            userUsername.setVisible(true);
+            userUsername.setText(usernameTextField.getText());
+        }
+        alert.showAndWait();
     }
 
     public void saveNickName(MouseEvent mouseEvent) {
+        Response response = ProfileController.changeNickname(Translator.getMatcherByGroups(
+                Translator.CHANGE_NICKNAME, nicknameTextField.getText()));
+        Alert alert;
+        if(response != Response.NICKNAME_CHANGE){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change Info Failed!");
+        }
+        else{
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change nickname was successful");
+            changeNickName.setVisible(true);
+            saveNickName.setVisible(false);
+            nicknameTextField.setVisible(false);
+            userNickname.setVisible(true);
+            userNickname.setText(nicknameTextField.getText());
+        }
+        alert.showAndWait();
     }
 
     public void savePassword(MouseEvent mouseEvent) {
     }
 
     public void saveGmail(MouseEvent mouseEvent) {
+        Response response = ProfileController.changeEmail(Translator.getMatcherByGroups(
+                Translator.CHANGE_EMAIL, gmailTextField.getText()));
+        Alert alert;
+        if(response != Response.EMAIL_CHANGE){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change Info Failed!");
+        }
+        else{
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change email was successful");
+            changeGmail.setVisible(true);
+            saveGmail.setVisible(false);
+            gmailTextField.setVisible(false);
+            UserGmail.setVisible(true);
+            UserGmail.setText(nicknameTextField.getText());
+        }
+        alert.showAndWait();
     }
 }
