@@ -96,28 +96,20 @@ public class ProfileMenu extends Application {
         this.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml"));
         scene = new Scene(borderPane);
-        /*Screen screen = Screen.getPrimary();
-        double screenWidth = screen.getBounds().getWidth();
-        double screenHeight = screen.getBounds().getHeight();
-        *//*stage.setWidth(screenWidth);
-        stage.setHeight(screenHeight);*/
-        /*borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource(
-                        "/images/background1.jpg").toString())), null, null)));*/
         stage.setFullScreen(true);
+        setThePain();
         stage.setScene(scene);
         stage.show();
     }
 
     private void setThePain(){
-        Image avatarImage = new Image(ProfileMenu.class.getResource("/Images/background1.jpg").toString());
-        ImageView imageView = new ImageView(avatarImage);
-        Circle circle = new Circle(imageView.getFitWidth() / 2, imageView.getFitHeight() / 2
-                , Math.min(imageView.getFitWidth(), imageView.getFitHeight()) / 2);
-        imageView.setClip(circle);
         VBox vBox = new VBox();
-        vBox.setAlignment(Pos.TOP_LEFT);
-        vBox.getChildren().add(imageView);
+        vBox.setLayoutX(100);
+        vBox.setLayoutY(100);
+        Circle circle = new Circle(120);
+        circle.setFill(new ImagePattern(new Image(ProfileMenu.class.getResource(
+                "/Images/background1.jpg").toString()))); // TODO: 2023-05-30
+        vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
     }
 

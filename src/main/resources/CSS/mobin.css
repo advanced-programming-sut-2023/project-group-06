@@ -136,4 +136,30 @@ ImageView {
     -fx-min-width: 272;
 }
 
+.button4{
+    -fx-min-width: 250;
+    -fx-max-width: 250;
+    -fx-background-insets: 0,1,2;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 4 30 4 30;
+    -fx-text-fill: #e7fce2;
+    -fx-font-size: 18px;
+    -fx-background-color: #0f2d94;
+}
 
+.invisible4 {
+    -fx-font-size: 20px;
+    -fx-font-family: "Times New Roman";
+    -fx-pref-width: 250;
+    visibility: false;
+    -fx-text-fill: #11fa11;
+}
+
+.invisible5 {
+    -fx-font-size: 20px;
+    -fx-font-family: "Times New Roman";
+    -fx-pref-width: 200;
+    visibility: false;
+    -fx-text-fill: #11fa11;
+}

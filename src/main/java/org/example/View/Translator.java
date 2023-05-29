@@ -12,6 +12,7 @@ public enum Translator {
     CHANGE_PASSWORD("oldPassword", "newPassword"),
     CHANGE_EMAIL("email"),
     CHANGE_SLOGAN("slogan"),
+    START_GAME("username2", "username3", "username4", "username5", "username6", "username7", "username8"),
     ;
 
     private String[] groupNames;
