@@ -69,6 +69,7 @@ public class MainMenu extends Application {
         scene = new Scene(borderPane);
         stage.setFullScreen(true);
         setThePain();
+        /*scene.setCursor();*/
         stage.setScene(scene);
         stage.show();
     }

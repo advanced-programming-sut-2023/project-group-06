@@ -1,6 +1,7 @@
 package org.example.View;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -111,6 +112,33 @@ public class ProfileMenu extends Application {
                 "/Images/background1.jpg").toString()))); // TODO: 2023-05-30
         vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
+
+        VBox vBox1 = new VBox();
+        vBox1.setLayoutY(250);
+        vBox1.setLayoutX(1050);
+        Button button = new Button("ScoreBoard");
+        /*"#0caf01" : "#fc2f01";*/
+        button.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 50; -fx-max-height: 50;" +
+                "-fx-font-size: 15;");
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    scoreBoard();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        vBox1.getChildren().add(button);
+        borderPane.getChildren().add(vBox1);
+    }
+
+    private void scoreBoard() throws Exception {
+        new ScoreBoard().start(stage);
     }
 
     public void initialize(){

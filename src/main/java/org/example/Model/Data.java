@@ -48,6 +48,9 @@ public class Data {
         Data.currentUser = currentUser;
     }
 
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
 
     public static void removeUser(User user) {
         users.remove(user);

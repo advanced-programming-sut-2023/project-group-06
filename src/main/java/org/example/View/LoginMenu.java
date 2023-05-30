@@ -152,17 +152,8 @@ public class LoginMenu extends Application {
         }
     }
 
-    public void back(MouseEvent mouseEvent) {
-    }
-
-
-    public static BackgroundImage setBackGround(String number, int v, int v1) {
-        Image image = new Image(LoginMenu.class.getResource("/Images/background" + number).toExternalForm(), v, v1, false, false);
-        return new BackgroundImage(image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
+    public void back(MouseEvent mouseEvent) throws Exception {
+        new SignUpMenu().start(stage);
     }
 
     public void change(MouseEvent mouseEvent) {
