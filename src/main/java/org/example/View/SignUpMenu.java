@@ -36,7 +36,7 @@ public class SignUpMenu extends Application {
     public TextField passwordConfirmationTextField;
     public PasswordField passwordConfirmationPasswordField;
     public VBox mainVbox;
-    private Stage stage;
+    private static Stage stage;
     private Scene scene;
     private static BorderPane borderPane;
     public TextField username;
@@ -103,6 +103,7 @@ public class SignUpMenu extends Application {
     public void start(Stage stage) throws Exception {
         Data.loadData("src/main/java/org/example/Model/Data.json");
         this.stage = stage;
+        Data.loadData("src/main/java/org/example/Model/Data.json");
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml"));
         System.out.println(borderPane);
         scene = new Scene(borderPane);
@@ -227,7 +228,7 @@ public class SignUpMenu extends Application {
         this.slogan.setText(slogan);
     }
 
-    public void register(ActionEvent actionEvent) throws IOException {
+    public void register(ActionEvent actionEvent) throws Exception {
         username.setStyle("-fx-border-color: transparent transparent #616161 transparent");
         passwordPasswordField.setStyle("-fx-border-color: transparent transparent #616161 transparent");
         passwordTextField.setStyle("-fx-border-color: transparent transparent #616161 transparent");
@@ -257,21 +258,75 @@ public class SignUpMenu extends Application {
         }
     }
 
-    private void runQuestionPickPane() throws IOException {
+    private void runQuestionPickPane() throws Exception {
 //        mainVbox.setVisible(false);
         VBox questionPickMenu = new VBox();
+        questionPickMenu.setSpacing(40);
         System.out.println(mainVbox);
         questionPickMenu.setAlignment(Pos.CENTER);
-        Canvas canvas = new Canvas(100, 100);
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        String randomCaptcha = Controller.getCaptcha();
-        gc.setFill(Color.ORANGE);
-        gc.fillRect(0, 0, 50, 50);
-        gc.setFill(Color.BLACK);
-        gc.setFont(new Font("Arial", 3));
-        gc.fillText(randomCaptcha, 5, 6);
-        questionPickMenu.getChildren().add(canvas);
+        //todo remember to handle captcha
+//        Canvas canvas = new Canvas(100, 100);
+//        GraphicsContext gc = canvas.getGraphicsContext2D();
+//        String randomCaptcha = Controller.getCaptcha();
+//        gc.setFill(Color.ORANGE);
+//        gc.fillRect(0, 0, 50, 50);
+//        gc.setFill(Color.BLACK);
+//        gc.setFont(new Font("Arial", 3));
+//        gc.fillText(randomCaptcha, 5, 6);
+//        questionPickMenu.getChildren().add(canvas);
+        String username = this.username.getText();
+        Button back = new Button("back");
+        back.setOnMouseClicked(mouseEvent -> {
+            SignUpController.back(username);
+            borderPane.setCenter(mainVbox);
+        });
+        ChoiceBox question = new ChoiceBox<>();
+        question.getItems().add("What is my father's name?");
+        question.getItems().add("What is my first pet's name?");
+        question.getItems().add("What is my mother's last name?");
+        TextField answer = new TextField();
+        answer.setPromptText("answer");
+        TextField answerConfirmation = new TextField();
+        answerConfirmation.setPromptText("answer confirmation");
+        Button confirm = createPickSecurityQuestion(question, answer, answerConfirmation);
+        HBox buttons = new HBox(confirm, back);
+        buttons.setSpacing(30);
+        buttons.setAlignment(Pos.CENTER);
+        questionPickMenu.getChildren().addAll(question, answer, answerConfirmation, buttons);
         borderPane.setCenter(questionPickMenu);
+    }
+
+    private Button createPickSecurityQuestion(ChoiceBox question, TextField answer, TextField answerConfirmation) throws Exception {
+        Button confirm = new Button("confirm");
+        confirm.setOnMouseClicked(mouseEvent -> {
+            //        if (captcha not valid) ...
+            //todo
+            String questionString = (String)(question.getValue());
+            String questionNumber = (questionString.equals("What is my father's name?")) ?
+                    "1" : (questionString.equals("What is my first pet's name?")) ? "2" :
+                    (questionString.equals("What is my mother's last name?")) ? "3" : "";
+            String answerString = answer.getText();
+            String answerConfirmationString = answerConfirmation.getText();
+            Response response = SignUpController.securityQuestion(Translator.getMatcherByGroups(Translator.SECURITY_QUESTION, questionNumber,
+                    answerString, answerConfirmationString), username.getText());
+            if (response != Response.USER_CREATED) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText(response.message);
+                alert.setHeaderText("Register Failed");
+                alert.showAndWait();
+                handleError(response);
+                SignUpController.back(username.getText());
+                borderPane.setCenter(mainVbox);
+            } else {
+                try {
+                    new LoginMenu().start(stage);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        return confirm;
     }
 
     public void haveAccount (ActionEvent actionEvent) throws Exception {

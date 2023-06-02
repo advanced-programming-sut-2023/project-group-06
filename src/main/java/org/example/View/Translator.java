@@ -13,6 +13,7 @@ public enum Translator {
     CHANGE_EMAIL("email"),
     CHANGE_SLOGAN("slogan"),
     START_GAME("username2", "username3", "username4", "username5", "username6", "username7", "username8"),
+    SECURITY_QUESTION("questionNumber", "answer", "answerConfirmation"),
     ;
 
     private String[] groupNames;

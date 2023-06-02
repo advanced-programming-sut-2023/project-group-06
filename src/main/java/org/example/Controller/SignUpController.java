@@ -40,7 +40,7 @@ public class SignUpController {
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
-    public static Response securityQuestion(Scanner scanner, Matcher matcher, String username) {
+    public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
         String[] groupNames = {"questionNumber","answer","answerConfirmation"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -52,17 +52,18 @@ public class SignUpController {
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
-        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
-        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
-            Data.removeUser(Data.getUserByName(username));
-            return Response.CAPTCHA_WRONG;
-        }
+        System.out.println(Data.getUserByName("sina"));
+//        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
+//        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
+//            Data.removeUser(Data.getUserByName(username));
+//            return Response.CAPTCHA_WRONG;
+//        }
         Data.saveData("src/main/java/org/example/Model/Data.json");
+        System.out.println(Data.getUserByName("sina"));
         return Response.USER_CREATED;
     }
 
-    public static void back(Matcher matcher, String username) {
-        matcher.find();
+    public static void back(String username) {
         Data.removeUser(Data.getUserByName(username));
     }
 
