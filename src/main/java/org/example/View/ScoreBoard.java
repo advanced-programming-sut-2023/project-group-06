@@ -18,13 +18,13 @@ import java.util.Objects;
 
 public class ScoreBoard extends Application {
     public VBox mainVBox;
-    private Stage stage;
+    private static Stage stage;
     private Scene scene;
     private BorderPane borderPane;
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage = stage;
+        ScoreBoard.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ScoreBoard.fxml"));
         //ScrollPane scrollPane = new ScrollPane(borderPane);
         //scrollPane.setFitToHeight(true);

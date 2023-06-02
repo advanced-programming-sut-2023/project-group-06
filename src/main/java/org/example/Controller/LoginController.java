@@ -15,6 +15,7 @@ public class LoginController {
         boolean stayLoggedIn = false;
         String username = Controller.makeEntryValid(matcher.group("username"));
         String password = Controller.makeEntryValid(matcher.group("password"));
+        System.out.println(username + "   " + password + "  llllllll");
         if (matcher.group("stayLoggedIn") != null) stayLoggedIn = true;
         if (Data.getUserByName(username) == null) return Response.USERNAME_DOES_NOT_EXIST;
         if (!Data.getUserByName(username).isPasswordCorrect(password)) return Response.WRONG_PASSWORD;

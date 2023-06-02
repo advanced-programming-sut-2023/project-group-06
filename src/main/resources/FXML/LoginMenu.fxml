@@ -40,6 +40,7 @@
                 <Button fx:id="back" text="back" styleClass="button3" onMouseClicked="#back"/>
             </HBox>
             <Label fx:id="loginResult" styleClass="invisible3"/>
+            <RadioButton fx:id="stayLoggedIn" text="stay logged in"/>
         </VBox>
     </center>
 </BorderPane>

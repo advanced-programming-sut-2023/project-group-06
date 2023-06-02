@@ -11,6 +11,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.Controller.LoginController;
 import org.example.Model.Data;
 
@@ -31,10 +32,11 @@ public class LoginMenu extends Application {
     public Button changePassword;
     public Label incorrectAnswer;
     public Label loginResult;
+    public RadioButton stayLoggedIn;
     LoginController loginController;
     private BorderPane borderPane;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
     private boolean didForget = false;
 
     private static final String[] questions = {"What is my father's name?", "What is my first pet's name?", "What is my mother's last name?"};
@@ -87,8 +89,7 @@ public class LoginMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Data.loadData("src/main/java/org/example/Model/Data.json");
-        this.stage = stage;
+        LoginMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/LoginMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
@@ -131,10 +132,14 @@ public class LoginMenu extends Application {
     }
 
     public void login(MouseEvent mouseEvent) throws Exception {
-        Matcher matcher = Translator.getMatcherByGroups(
-                Translator.LOGIN_USER, "username", "password", "stayLoggedIn");
         String usernameText = username.getText();
-        if (LoginController.setLastLoginAttempt(usernameText, (System.currentTimeMillis() / 1000L))) {
+        String passwordText =
+                passwordTextField.isVisible() ? passwordTextField.getText() : passwordPasswordField.getText();
+        String stayLogged = stayLoggedIn.isSelected() ? "stay-logged-in" : null;
+        Matcher matcher = Translator.getMatcherByGroups(
+                Translator.LOGIN_USER, usernameText, passwordText, stayLogged);
+
+        if (/*LoginController.setLastLoginAttempt(usernameText, (System.currentTimeMillis() / 1000L))*/ true) {
             Response response1 = LoginController.loginUser(matcher);
             loginResult.setVisible(true);
             loginResult.setText(response1.message);

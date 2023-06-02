@@ -14,8 +14,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.Controller.MainController;
 import org.example.Controller.ProfileController;
+import org.example.Model.Data;
 import org.example.View.GameMenus.GameMenu;
 
 public class MainMenu extends Application {
@@ -35,7 +37,7 @@ public class MainMenu extends Application {
     MainController mainController;
     private BorderPane borderPane;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
 
     public MainMenu() {
     }
@@ -63,11 +65,10 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        /*Data.loadData("src/main/java/org/example/Model/Data.json");*/
-        this.stage = stage;
+        MainMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/MainMenu.fxml"));
         scene = new Scene(borderPane);
-        stage.setFullScreen(true);
+        /*stage.setFullScreen(true);*/
         setThePain();
         /*scene.setCursor();*/
         stage.setScene(scene);
@@ -92,7 +93,7 @@ public class MainMenu extends Application {
     }
 
     public void initialize(){
-        text.setText("Hello ");// TODO: 2023-05-30
+        text.setText("Hello " + Data.getCurrentUser().getUsername());
         text.setFill(Color.rgb(17, 250, 17));
         text.setFont(Font.font("Times New Roman", 40));
 

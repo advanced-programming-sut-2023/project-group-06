@@ -16,11 +16,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import org.example.Controller.Controller;
 import org.example.Controller.LoginController;
 import org.example.Controller.SignUpController;
 import org.example.Model.Data;
+import org.example.Model.User;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -102,8 +104,7 @@ public class SignUpMenu extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Data.loadData("src/main/java/org/example/Model/Data.json");
-        this.stage = stage;
-        Data.loadData("src/main/java/org/example/Model/Data.json");
+        SignUpMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml"));
         System.out.println(borderPane);
         scene = new Scene(borderPane);

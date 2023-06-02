@@ -16,6 +16,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
+import org.example.Model.Data;
 
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -48,7 +49,7 @@ public class ProfileMenu extends Application {
     public Label emailError;
     ProfileController profileController;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
     private BorderPane borderPane;
 
 //    public MenuType run(Scanner scanner) {
@@ -94,10 +95,10 @@ public class ProfileMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage = stage;
+        ProfileMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml"));
         scene = new Scene(borderPane);
-        stage.setFullScreen(true);
+        //stage.setFullScreen(true);
         setThePain();
         stage.setScene(scene);
         stage.show();
@@ -116,6 +117,7 @@ public class ProfileMenu extends Application {
         VBox vBox1 = new VBox();
         vBox1.setLayoutY(250);
         vBox1.setLayoutX(1050);
+        vBox1.setSpacing(5);
         Button button = new Button("ScoreBoard");
         /*"#0caf01" : "#fc2f01";*/
         button.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
@@ -133,8 +135,28 @@ public class ProfileMenu extends Application {
                 }
             }
         });
-        vBox1.getChildren().add(button);
+        Button button1 = new Button("back");
+        vBox1.getChildren().addAll(button, button1);
+        button1.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 50; -fx-max-height: 50;" +
+                "-fx-font-size: 15;");
+        button1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    back();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         borderPane.getChildren().add(vBox1);
+    }
+
+    private void back() throws Exception {
+        new MainMenu().start(stage);
     }
 
     private void scoreBoard() throws Exception {
@@ -148,7 +170,10 @@ public class ProfileMenu extends Application {
                 usernameError.setStyle("-fx-text-fill: RED");
             } else usernameError.setText("");
         });
-        ////
+
+        userUsername.setText(Data.getCurrentUser().getUsername());
+        userNickname.setText(Data.getCurrentUser().getNickname());
+        UserGmail.setText(Data.getCurrentUser().getEmail());
     }
 
     public void changeUsername(MouseEvent mouseEvent) {

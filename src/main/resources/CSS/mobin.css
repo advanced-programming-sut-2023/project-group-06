@@ -163,3 +163,8 @@ ImageView {
     visibility: false;
     -fx-text-fill: #11fa11;
 }
+
+RadioButton {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 15;
+}

@@ -109,6 +109,7 @@ public class Data {
     false: error
     put address = "src/main/java/org/example/Model/Data.json" in the method */
     public static boolean loadData(String address) {
+        users = new ArrayList<>();
         File input = new File(address);
         try {
             JsonElement root = JsonParser.parseReader(new FileReader(input));
