@@ -1,5 +1,6 @@
 package org.example.Model;
 
+import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class User implements Comparable<User> {
@@ -13,6 +14,7 @@ public class User implements Comparable<User> {
     private int highScore;
     private int numberOfLoginAttempts = 0;
     private long lastLoginAttemptTime;
+    private Image avatar;
 
     public User(String username, String password, String nickname, String email, String slogan) {
         this.username = username;

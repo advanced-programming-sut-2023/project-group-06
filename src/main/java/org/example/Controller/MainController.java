@@ -21,7 +21,6 @@ public class MainController {
         String username6 = Controller.makeEntryValid(matcher.group("username6"));
         String username7 = Controller.makeEntryValid(matcher.group("username7"));
         String username8 = Controller.makeEntryValid(matcher.group("username8"));
-        //check format
         ArrayList<User> users = new ArrayList<>();
         users.add(Data.getCurrentUser());
         if(addGamePlayer(users, username2) != null ||

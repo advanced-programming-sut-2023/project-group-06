@@ -14,16 +14,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpController {
-    public static Response createUser(Matcher matcher, Scanner scanner){
+    public static Response createUser(Matcher matcher){
         matcher.find();
         String[] groupNames = {"username","nickname","password","email","slogan"};
-        boolean isSloganRandom = false; boolean isPasswordRandom = false;
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
         if (nullGroupName != null) return Response.getEmptyResponseByName(nullGroupName);
-        if ((matcher.group("passwordConfirmation") == null) && !matcher.group("password").equals("random"))
-            return Response.INVALID_COMMAND;
-        if ((matcher.group("slogan")!= null) && matcher.group("slogan").equals("random")) isSloganRandom = true;
-        if (matcher.group("password").equals("random")) isPasswordRandom = true;
         String username = Controller.makeEntryValid(matcher.group("username"));
         String password = Controller.makeEntryValid(matcher.group("password"));
         String passwordConfirmation = Controller.makeEntryValid(matcher.group("passwordConfirmation"));
@@ -34,25 +29,18 @@ public class SignUpController {
         else slogan = "";
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
-        if (!isPasswordRandom) {
-            if (!Controller.isLongPassword(password)) return Response.SHORT_PASSWORD;
-            if (!Controller.containCapitalLetter(password)) return Response.PASSWORD_CAPITAL;
-            if (!Controller.containLowercaseLetter(password)) return Response.PASSWORD_LOWER;
-            if (!Controller.containNumber(password)) return Response.PASSWORD_NUMBER;
-            if (!Controller.containSymbol(password)) return Response.PASSWORD_SYMBOL;
-            if (!password.equals(passwordConfirmation)) return Response.PASSWORD_CONFIRMATION;
-        }
+        if (!Controller.isLongPassword(password)) return Response.SHORT_PASSWORD;
+        if (!Controller.containCapitalLetter(password)) return Response.PASSWORD_CAPITAL;
+        if (!Controller.containLowercaseLetter(password)) return Response.PASSWORD_LOWER;
+        if (!Controller.containNumber(password)) return Response.PASSWORD_NUMBER;
+        if (!Controller.containSymbol(password)) return Response.PASSWORD_SYMBOL;
+        if (!password.equals(passwordConfirmation)) return Response.PASSWORD_CONFIRMATION;
         if (Data.getUserByEmail(email) != null) return Response.EMAIL_EXISTS;
         if (!Controller.isValidEmail(email)) return Response.INVALID_EMAIL_FORMAT;
-        if (isSloganRandom) slogan = SignUpMenu.randomSlogan();
-        if (isPasswordRandom) {
-            password = SignUpMenu.randomPassword(scanner);
-            if (password == null) return Response.PASSWORD_CONFIRMATION;
-        }
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
-    public static Response securityQuestion(Scanner scanner, Matcher matcher, String username) {
+    public static Response securityQuestion(Matcher matcher, String username) {
         matcher.find();
         String[] groupNames = {"questionNumber","answer","answerConfirmation"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -64,26 +52,27 @@ public class SignUpController {
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(answer);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
-        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
-        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
-            Data.removeUser(Data.getUserByName(username));
-            return Response.CAPTCHA_WRONG;
-        }
-        Data.saveData("src/main/java/org/example/Model/data.json");
+        System.out.println(Data.getUserByName("sina"));
+//        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
+//        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
+//            Data.removeUser(Data.getUserByName(username));
+//            return Response.CAPTCHA_WRONG;
+//        }
+        Data.saveData("src/main/java/org/example/Model/Data.json");
+        System.out.println(Data.getUserByName("sina"));
         return Response.USER_CREATED;
     }
 
-    public static void back(Matcher matcher, String username) {
-        matcher.find();
+    public static void back(String username) {
         Data.removeUser(Data.getUserByName(username));
     }
 
     public static String passwordGenerator(){
-        int numberOfCapitalLetters = (int) (Math.random() * 5 + 2);
-        int numberOfLowercaseLetters = (int) (Math.random() * 5 + 2);
-        int numberOfSymbols = (int) (Math.random() * 4 + 1);
-        int numberOfNumbers = (int) (Math.random() * 4 + 1);
-        char[] validSymbols = "@#$%!&*_.".toCharArray();
+        int numberOfCapitalLetters = (int) (Math.random() * 3 + 2);
+        int numberOfLowercaseLetters = (int) (Math.random() * 3 + 2);
+        int numberOfSymbols = (int) (Math.random() * 2 + 1);
+        int numberOfNumbers = (int) (Math.random() * 2 + 1);
+        char[] validSymbols = "@#$%!&*+.".toCharArray();
         char[] numbers = "0123456789".toCharArray();
         char[] lowercaseLetters = "abcdefghijklmnopqrstuvwxyz".toCharArray();
         char[] capitalLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
@@ -99,7 +88,5 @@ public class SignUpController {
         }
         return randomPassword;
     }
-
-
 
 }
