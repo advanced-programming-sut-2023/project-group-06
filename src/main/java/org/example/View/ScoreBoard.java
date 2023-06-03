@@ -2,6 +2,8 @@ package org.example.View;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -20,7 +22,7 @@ public class ScoreBoard extends Application {
     public VBox mainVBox;
     private static Stage stage;
     private Scene scene;
-    private BorderPane borderPane;
+    private static BorderPane borderPane;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -55,17 +57,18 @@ public class ScoreBoard extends Application {
 
     private void addUserToScoreBoard(VBox vBox, int rank, User user){
         HBox hBox = new HBox();
-        hBox.setSpacing(33);
-        hBox.setStyle("-fx-border-radius: 20; -fx-border-color: black");
-        if(rank == 1) hBox.setStyle("-fx-background-color: gold");
-        if(rank == 2) hBox.setStyle("-fx-background-color: silver");
-        if(rank == 3) hBox.setStyle("-fx-background-color: #f06000");
+        hBox.setSpacing(100);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setStyle("-fx-border-radius: 20; -fx-border-color: black; -fx-max-width: 800;");
+        if(rank == 1) hBox.setStyle("-fx-background-color: gold; -fx-border-radius: 20; -fx-max-width: 800;");
+        if(rank == 2) hBox.setStyle("-fx-background-color: silver; -fx-border-radius: 20; -fx-max-width: 800;");
+        if(rank == 3) hBox.setStyle("-fx-background-color: #f06000; -fx-border-radius: 20; -fx-max-width: 800;");
         Label label = new Label(user.getUsername());
         Label label1 = new Label(Objects.toString(user.getHighScore()));
-        label.setFont(Font.font("Times New Roman", 16));
-        label.setStyle("-fx-padding: 10px; -fx-border-radius: 20; -fx-pref-width: 100px");
-        label1.setFont(Font.font("Times New Roman", 16));
-        label1.setStyle("-fx-padding: 10px; -fx-border-radius: 20px; -fx-pref-width: 100px");
+        label.setFont(Font.font("Times New Roman", 20));
+        label.setStyle("-fx-padding: 10px; -fx-border-radius: 20; -fx-pref-width: 150px");
+        label1.setFont(Font.font("Times New Roman", 20));
+        label1.setStyle("-fx-padding: 10px; -fx-border-radius: 20px; -fx-pref-width: 150px");
         hBox.getChildren().addAll(label, label1);
         vBox.getChildren().add(hBox);
     }

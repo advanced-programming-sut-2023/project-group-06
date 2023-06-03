@@ -1,0 +1,21 @@
+.HBox1 {
+    -fx-border-radius: 20;
+    -fx-border-color: blue;
+    -fx-max-width: 800;
+}
+
+.Button{
+    -fx-min-width: 100;
+    -fx-max-width: 200;
+    -fx-background-color: #0caf01,
+    linear-gradient(#fafdfe, #e8f5fc),
+    linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+}
+
+Label{
+    -fx-font-size: 20;
+    -fx-font-family: "Times New Roman";
+    -fx-border-radius: 20;
+    -fx-padding: 10;
+    -fx-pref-width: 150;
+}

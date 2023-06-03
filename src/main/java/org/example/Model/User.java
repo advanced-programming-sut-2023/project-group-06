@@ -91,7 +91,7 @@ public class User implements Comparable<User> {
 
     public void setAnswerToQuestion(String answerToQuestion) {
         if (!this.hashedAnswerToQuestion.equals("")) return;
-        this.hashedAnswerToQuestion = DigestUtils.sha256Hex(answerToQuestion);
+        this.hashedAnswerToQuestion = answerToQuestion;
     }
 
     public void setQuestionIndex(int questionIndex) {

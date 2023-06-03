@@ -9,14 +9,20 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.View.ScoreBoard"
-            stylesheets="@../CSS/mobin2.css">
-    <Button text="back" onMouseClicked="#back" layoutX="430" layoutY="50" styleClass="Button1"/>
+            stylesheets="@../CSS/mobin3.css">
+    <Button text="back" onMouseClicked="#back" layoutX="430" layoutY="50"/>
     <center>
         <VBox spacing="50" alignment="CENTER" fx:id="mainVBox">
+            <HBox alignment="CENTER" spacing="100">
+                <Button text="empty" styleClass="Button" visible="false"/>
+            </HBox>
             <HBox alignment="CENTER" spacing="100" styleClass="HBox1">
                 <Label text="username"/>
                 <Label text="highScore"/>
             </HBox>
         </VBox>
     </center>
+    <VBox layoutX="100" layoutY="100" spacing="20">
+        <Button text="back" styleClass="Button" onMouseClicked="#back"/>
+    </VBox>
 </BorderPane>

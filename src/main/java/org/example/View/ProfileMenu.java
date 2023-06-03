@@ -10,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Screen;
@@ -50,7 +51,7 @@ public class ProfileMenu extends Application {
     ProfileController profileController;
     private Scene scene;
     private static Stage stage;
-    private BorderPane borderPane;
+    private static BorderPane borderPane;
 
 //    public MenuType run(Scanner scanner) {
 //        while (true) {
@@ -184,10 +185,32 @@ public class ProfileMenu extends Application {
     }
 
     public void changePassword(MouseEvent mouseEvent) {
-        passwordTextField.setVisible(true);
-        userPassword.setVisible(false);
-        changePassword.setVisible(false);
-        savePassword.setVisible(true);
+        VBox changePassMenu = new VBox();
+        changePassMenu.setSpacing(40);
+        changePassMenu.setAlignment(Pos.CENTER);
+        Button back = new Button("back");
+        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                borderPane.setCenter(profileMenu);
+            }
+        });
+        TextField oldPass = new TextField();
+        TextField newPass = new TextField();
+        newPass.setPromptText("new password");
+        oldPass.setPromptText("old password");
+        Label error = new Label();
+        error.setTextFill(Color.RED);
+        Button save = createChangePassButton(newPass, oldPass, error);
+        HBox buttons = new HBox(save, back);
+        buttons.setSpacing(30);
+        buttons.setAlignment(Pos.CENTER);
+        changePassMenu.getChildren().addAll(oldPass, newPass, error, buttons);
+        borderPane.setCenter(changePassMenu);
+    }
+
+    private Button createChangePassButton(TextField newPass, TextField oldPass, Label error) {
+        return null;
     }
 
     public void changeNickName(MouseEvent mouseEvent) {

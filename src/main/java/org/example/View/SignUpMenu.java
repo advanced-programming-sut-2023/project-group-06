@@ -301,7 +301,7 @@ public class SignUpMenu extends Application {
         Button confirm = new Button("confirm");
         confirm.setOnMouseClicked(mouseEvent -> {
             //        if (captcha not valid) ...
-            //todo
+            // todo
             String questionString = (String)(question.getValue());
             String questionNumber = (questionString.equals("What is my father's name?")) ?
                     "1" : (questionString.equals("What is my first pet's name?")) ? "2" :
