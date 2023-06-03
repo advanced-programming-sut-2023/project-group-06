@@ -115,8 +115,10 @@ public class ProfileMenu extends Application {
         vBox.setLayoutX(100);
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(new Image(ProfileMenu.class.getResource(
-                "/Images/background1.jpg").toString()))); // TODO: 2023-05-30
+        circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar())); // TODO: 2023-05-30*/
+/*      BackgroundImage backgroundImage = new BackgroundImage(Data.getCurrentUser().getAvatar(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(circle.getRadius() * 2, circle.getCenterY() * 2, false, false, false, false));
+        circle.setFill(Color.TRANSPARENT);
+        circle.setStyle("-fx-background-image: url('" + backgroundImage.getImage().getUrl() + "');");*/
         vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
 

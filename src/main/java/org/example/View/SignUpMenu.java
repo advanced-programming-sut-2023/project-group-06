@@ -109,6 +109,9 @@ public class SignUpMenu extends Application {
         System.out.println(borderPane);
         scene = new Scene(borderPane);
         stage.setScene(scene);
+        borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
+                ("/Images/34260.jpg").toExternalForm()))
+                , null, null)));
 //        stage.setFullScreen(true);
         Screen screen = Screen.getPrimary();
         stage.setWidth(screen.getBounds().getWidth());

@@ -2,6 +2,7 @@ package org.example.Model;
 
 import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.example.View.ProfileMenu;
 
 public class User implements Comparable<User> {
     private String username = "";
@@ -23,6 +24,10 @@ public class User implements Comparable<User> {
         this.email = email;
         this.slogan = slogan;
         Data.addUser(this);
+        /*
+        93088
+         */
+        this.avatar = new Image(ProfileMenu.class.getResource("/Images/93088.jpg").toString());
     }
 
     public String getHashedPassword() {
@@ -141,5 +146,13 @@ public class User implements Comparable<User> {
 
     public int compareTo(User user) {
         return this.highScore - user.highScore;
+    }
+
+    public Image getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
     }
 }

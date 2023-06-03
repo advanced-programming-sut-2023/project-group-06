@@ -97,6 +97,9 @@ public class LoginMenu extends Application {
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/LoginMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
+        /*borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
+                ("/Images/418028.jpg").toExternalForm()))
+                , null, null)));*/
         stage.setFullScreen(true);
         stage.show();
     }
