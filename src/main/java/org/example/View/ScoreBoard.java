@@ -34,6 +34,7 @@ public class ScoreBoard extends Application {
 //        stage.setFullScreen(true);
         setThePain();
         stage.setScene(scene);
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 

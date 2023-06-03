@@ -97,7 +97,7 @@ public class LoginMenu extends Application {
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/LoginMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
-        stage.setFullScreen(true);
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -120,11 +120,10 @@ public class LoginMenu extends Application {
         String usernameText = username.getText();
         didForget = true;
         answerTheQuestion.setVisible(true);
-        if(Data.getUserByName(usernameText) == null){
+        if (Data.getUserByName(usernameText) == null) {
             answerTheQuestion.setText(Response.INVALID_USERNAME.message);
             answerTheQuestion.setTextFill(Color.RED);
-        }
-        else{
+        } else {
             answerTheQuestion.setText("answer the question:");
             answerTheQuestion.setTextFill(Color.BLACK);
             question.setVisible(true);
@@ -212,7 +211,7 @@ public class LoginMenu extends Application {
             else {
                 String newPasswordConfirmation = newPassConfirm.getText();
                 Response response = LoginController.changePasswordSuccessful(username.getText(), answer.getText(), newPassword, newPasswordConfirmation);
-                if(response != Response.PASSWORD_CHANGE) error.setText(response.message);
+                if (response != Response.PASSWORD_CHANGE) error.setText(response.message);
                 else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Success");

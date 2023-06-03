@@ -8,11 +8,13 @@
         <outputRelativeToContentRoot value="true" />
         <module name="APproject" />
         <module name="AP.Project" />
+        <module name="project-group-06" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="AP.Project" target="11" />
       <module name="APproject" target="11" />
+      <module name="project-group-06" target="11" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
