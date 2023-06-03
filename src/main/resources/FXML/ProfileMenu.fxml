@@ -13,14 +13,7 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.View.ProfileMenu"
             stylesheets="@../CSS/mobin1.css">
-    <VBox fx:id="avatarVBox" layoutX="150" layoutY="150">
-        <!--<ImageView fx:id="avatarImage" fitWidth="150" fitHeight="150" preserveRatio="true" smooth="true">
-            <Image url="@../Images/background1.jpg"/>
-        </ImageView>-->
-        <!--<Circle fx:id="avatarCircle" layoutX="150" layoutY="150" styleClass="">
 
-        </Circle>-->
-    </VBox>
     <center>
         <VBox fx:id="profileMenu" alignment="CENTER" spacing="6">
             <HBox alignment="CENTER" spacing="30">
