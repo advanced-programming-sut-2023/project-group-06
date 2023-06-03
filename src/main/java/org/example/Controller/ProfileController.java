@@ -14,7 +14,7 @@ public class ProfileController {
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
         String username = Controller.makeEntryValid(matcher.group("username"));
         if (!Controller.isUsernameValid(username)) return Response.INVALID_USERNAME_FORMAT;
-        if (Data.getCurrentUser().getUsername().equals(username)) return Response.SAME_USERNAME;
+    if (Data.getCurrentUser().getUsername().equals(username)) return Response.SAME_USERNAME;
         if (Data.getUserByName(username) != null) return Response.USERNAME_EXISTS;
         Data.getCurrentUser().setUsername(username);
         return Response.USERNAME_CHANGE;

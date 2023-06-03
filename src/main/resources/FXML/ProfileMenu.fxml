@@ -43,7 +43,6 @@
                 </StackPane>
                 <StackPane>
                     <Button text="Change" styleClass="profile-button" onMouseClicked="#changePassword" fx:id="changePassword"/>
-                    <Button text="Save!!" styleClass="profile-button" onMouseClicked="#savePassword" visible="false" fx:id="savePassword"/>
                 </StackPane>
             </HBox>
             <Label/>
@@ -51,7 +50,7 @@
                 <Label text="Nickname" styleClass="profile-label1"/>
                 <StackPane>
                     <Label text="moban" fx:id="userNickname" styleClass="Label"/>
-                    <TextField fx:id="nicknameTextField" promptText="new username" visible="false" styleClass="TextField"/>
+                    <TextField fx:id="nicknameTextField" promptText="new nickname" visible="false" styleClass="TextField"/>
                 </StackPane>
                 <StackPane>
                     <Button text="Change" styleClass="profile-button" onMouseClicked="#changeNickName" fx:id="changeNickName"/>
@@ -63,7 +62,7 @@
                 <Label text="Email" styleClass="profile-label2"/>
                 <StackPane>
                     <Label fx:id="UserGmail" text="mobin.razavi2357@gmail.com" styleClass="Label"/>
-                    <TextField fx:id="gmailTextField" promptText="new username" visible="false" styleClass="TextField"/>
+                    <TextField fx:id="gmailTextField" promptText="new email" visible="false" styleClass="TextField"/>
                 </StackPane>
                 <StackPane>
                     <Button text="Change" styleClass="profile-button" onMouseClicked="#changeGmail" fx:id="changeGmail"/>
@@ -71,7 +70,17 @@
                 </StackPane>
             </HBox>
             <Label fx:id="emailError"/>
-            <Label fx:id="sloganLabel" text="Slogan" styleClass="profile-label3"/>
+            <HBox alignment="CENTER" spacing="30">
+                <Label text="Slogan" styleClass="profile-label3"/>
+                <StackPane>
+                    <Label fx:id="userSlogan" text="mobin.razavi2357@gmail.com" styleClass="Label"/>
+                    <TextField fx:id="sloganTextField" promptText="new slogan" visible="false" styleClass="TextField"/>
+                </StackPane>
+                <StackPane>
+                    <Button text="Change" styleClass="profile-button" onMouseClicked="#changeSlogan" fx:id="changeSlogan"/>
+                    <Button text="Save!!" styleClass="profile-button" onMouseClicked="#saveSlogan" visible="false" fx:id="saveSlogan"/>
+                </StackPane>
+            </HBox>
         </VBox>
     </center>
 </BorderPane>

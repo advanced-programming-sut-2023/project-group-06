@@ -3,6 +3,7 @@ package org.example.View;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
@@ -48,6 +51,13 @@ public class ProfileMenu extends Application {
     public Label usernameError;
     public Label nicknameError;
     public Label emailError;
+    public Label userSlogan;
+    public TextField sloganTextField;
+    public Button changeSlogan;
+    public Button saveSlogan;
+    private static VBox hiddenVbox;
+    private static VBox rightVbox;
+    private static Circle avatar;
     ProfileController profileController;
     private Scene scene;
     private static Stage stage;
@@ -154,6 +164,8 @@ public class ProfileMenu extends Application {
             }
         });
         borderPane.getChildren().add(vBox1);
+        rightVbox = vBox1;
+        avatar = circle;
     }
 
     private void back() throws Exception {
@@ -175,6 +187,106 @@ public class ProfileMenu extends Application {
         userUsername.setText(Data.getCurrentUser().getUsername());
         userNickname.setText(Data.getCurrentUser().getNickname());
         UserGmail.setText(Data.getCurrentUser().getEmail());
+        userSlogan.setText(Data.getCurrentUser().getSlogan());
+        userSlogan.setWrapText(true);
+        int lines = (Data.getCurrentUser().getSlogan().length() / 30) + 1;
+        System.out.println(lines);
+        userSlogan.setMinHeight(lines * 42);
+        userSlogan.setMaxHeight(lines * 42);
+
+        TextField oldPassword = new TextField();
+        TextField newPassword = new TextField();
+        TextField newPasswordConfirmation = new TextField();
+        Label error = new Label();
+        error.setTextFill(Color.RED);
+        oldPassword.setPromptText("old password");
+        newPassword.setPromptText("new password");
+        newPasswordConfirmation.setPromptText("confirm new password");
+        oldPassword.setStyle("-fx-max-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        newPassword.setStyle("-fx-max-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        newPasswordConfirmation.setStyle("-fx-max-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        Button confirm = new Button("confirm");
+        Button back = new Button("back");
+        back.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 30; -fx-max-height: 30;" +
+                "-fx-font-size: 15;");
+        confirm.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 30; -fx-max-height: 30;" +
+                "-fx-font-size: 15;");
+        HBox hBox = new HBox(confirm, back);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(30);
+        VBox vBox = new VBox(oldPassword, newPassword, newPasswordConfirmation, error, hBox);
+        vBox.setSpacing(25);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setLayoutX(500);
+        vBox.setLayoutY(300);
+
+        newPassword.textProperty().addListener((observable, oldText, newText) -> {
+            Response response;
+            if ((response = Controller.isPasswordValid((newPassword).getText())) != Response.PASSWORD_GOOD)
+                error.setText(response.message);
+            else error.setText("");
+        });
+
+        hiddenVbox = vBox;
+        confirm.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                changePasswordConfirm(vBox);
+            }
+        });
+
+        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                avatar.setVisible(true);
+                rightVbox.getChildren().get(0).setVisible(true);
+                rightVbox.getChildren().get(1).setVisible(true);
+                borderPane.setCenter(profileMenu);
+            }
+        });
+    }
+
+    private void changePasswordConfirm(VBox vBox) {
+        Response response = ProfileController.changePassword(Translator.getMatcherByGroups(
+                Translator.CHANGE_PASSWORD, ((TextField) vBox.getChildren().get(0)).getText(),
+                ((TextField) vBox.getChildren().get(1)).getText()));
+        if(response != Response.RE_ENTER_PASSWORD){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change password failed");
+            alert.showAndWait();
+        }
+        else{
+            response = ProfileController.confirmReEnteredPassword(((TextField) vBox.getChildren().get(0)).getText(),
+                    ((TextField) vBox.getChildren().get(1)).getText(), ((TextField) vBox.getChildren().get(2)).getText());
+            Alert alert;
+            if(response != Response.PASSWORD_CHANGE){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText(response.message);
+                alert.setHeaderText("Change password failed");
+            }
+            else{
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setContentText(response.message);
+                alert.setHeaderText("Change password successful");
+            }
+            alert.showAndWait();
+        }
     }
 
     public void changeUsername(MouseEvent mouseEvent) {
@@ -185,32 +297,14 @@ public class ProfileMenu extends Application {
     }
 
     public void changePassword(MouseEvent mouseEvent) {
-        VBox changePassMenu = new VBox();
-        changePassMenu.setSpacing(40);
-        changePassMenu.setAlignment(Pos.CENTER);
-        Button back = new Button("back");
-        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                borderPane.setCenter(profileMenu);
-            }
-        });
-        TextField oldPass = new TextField();
-        TextField newPass = new TextField();
-        newPass.setPromptText("new password");
-        oldPass.setPromptText("old password");
-        Label error = new Label();
-        error.setTextFill(Color.RED);
-        Button save = createChangePassButton(newPass, oldPass, error);
-        HBox buttons = new HBox(save, back);
-        buttons.setSpacing(30);
-        buttons.setAlignment(Pos.CENTER);
-        changePassMenu.getChildren().addAll(oldPass, newPass, error, buttons);
-        borderPane.setCenter(changePassMenu);
-    }
-
-    private Button createChangePassButton(TextField newPass, TextField oldPass, Label error) {
-        return null;
+        borderPane.setCenter(hiddenVbox);
+        avatar.setVisible(false);
+        rightVbox.getChildren().get(0).setVisible(false);
+        rightVbox.getChildren().get(1).setVisible(false);
+        ((TextField) hiddenVbox.getChildren().get(0)).setText("");
+        ((TextField) hiddenVbox.getChildren().get(1)).setText("");
+        ((TextField) hiddenVbox.getChildren().get(2)).setText("");
+        ((Label) hiddenVbox.getChildren().get(3)).setText("");
     }
 
     public void changeNickName(MouseEvent mouseEvent) {
@@ -275,9 +369,6 @@ public class ProfileMenu extends Application {
         alert.showAndWait();
     }
 
-    public void savePassword(MouseEvent mouseEvent) {
-    }
-
     public void saveGmail(MouseEvent mouseEvent) {
         Response response = ProfileController.changeEmail(Translator.getMatcherByGroups(
                 Translator.CHANGE_EMAIL, gmailTextField.getText()));
@@ -300,5 +391,11 @@ public class ProfileMenu extends Application {
             UserGmail.setText(nicknameTextField.getText());
         }
         alert.showAndWait();
+    }
+
+    public void changeSlogan(MouseEvent mouseEvent) {
+    }
+
+    public void saveSlogan(MouseEvent mouseEvent) {
     }
 }
