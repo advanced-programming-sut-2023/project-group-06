@@ -15,7 +15,7 @@ public class User implements Comparable<User> {
     private int highScore;
     private int numberOfLoginAttempts = 0;
     private long lastLoginAttemptTime;
-    private Image avatar;
+    private String avatar;
 
     public User(String username, String password, String nickname, String email, String slogan) {
         this.username = username;
@@ -24,20 +24,8 @@ public class User implements Comparable<User> {
         this.email = email;
         this.slogan = slogan;
         Data.addUser(this);
-        /*
-        93088
-        11
-        6357437
-        6357467
-        6357513*
-        6357518
-        278529
-        3497394
-        6357549
-        6357356
-        6357555
-         */
-        this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());
+        /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
+        this.avatar = "/Images/avatar8.jpg";
     }
 
     public String getHashedPassword() {
@@ -158,11 +146,11 @@ public class User implements Comparable<User> {
         return this.highScore - user.highScore;
     }
 
-    public Image getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Image avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 }

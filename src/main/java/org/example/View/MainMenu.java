@@ -86,7 +86,8 @@ public class MainMenu extends Application {
                 ("/Images/knight.jpg").toExternalForm()))
                 , null, null)));
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar()));
+        circle.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
         circle.setCenterX(300);
         circle.setCenterY(200);
         borderPane.getChildren().add(circle);

@@ -36,8 +36,9 @@ public class AvatarMenu extends Application {
             double y = i < 5 ? 200 : i < 9 ? 400 : 600;
             double x = ((i - 1) % 4 + 1) * 250;
             Circle circle = new Circle(x, y - 50, 90);
-            Image image = new Image(AvatarMenu.class.getResource("/Images/avatar" + i + ".jpg").toExternalForm());
-            circle.setFill(new ImagePattern(image));
+            /*Image image = new Image(AvatarMenu.class.getResource("/Images/avatar" + i + ".jpg").toExternalForm());*/
+            String image = "/Images/avatar" + i + ".jpg";
+            circle.setFill(new ImagePattern(new Image(AvatarMenu.class.getResource(image).toExternalForm())));
             circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
