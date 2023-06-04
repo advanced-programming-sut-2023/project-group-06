@@ -74,6 +74,8 @@
                     <Button text="Save!!" styleClass="profile-button" onMouseClicked="#saveSlogan" visible="false" fx:id="saveSlogan"/>
                 </StackPane>
             </HBox>
+            <Label/>
+            <Button text="remove slogan" onMouseClicked="#removeSlogan" styleClass="profile-button"/>
         </VBox>
     </center>
 </BorderPane>

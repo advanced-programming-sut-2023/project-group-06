@@ -28,9 +28,10 @@ public class ScoreBoard extends Application {
     public void start(Stage stage) throws Exception {
         ScoreBoard.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ScoreBoard.fxml"));
-        //ScrollPane scrollPane = new ScrollPane(borderPane);
-        //scrollPane.setFitToHeight(true);
-        scene = new Scene(borderPane);
+        ScrollPane scrollPane = new ScrollPane(borderPane);
+        scrollPane.setFitToHeight(true);
+        scrollPane.setFitToWidth(true);
+        scene = new Scene(scrollPane);
 //        stage.setFullScreen(true);
         setThePain();
         stage.setScene(scene);

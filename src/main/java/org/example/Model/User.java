@@ -26,8 +26,18 @@ public class User implements Comparable<User> {
         Data.addUser(this);
         /*
         93088
+        11
+        6357437
+        6357467
+        6357513*
+        6357518
+        278529
+        3497394
+        6357549
+        6357356
+        6357555
          */
-        this.avatar = new Image(ProfileMenu.class.getResource("/Images/93088.jpg").toString());
+        this.avatar = new Image(ProfileMenu.class.getResource("/Images/3497394.jpg").toString());
     }
 
     public String getHashedPassword() {
