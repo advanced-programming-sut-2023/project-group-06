@@ -118,6 +118,16 @@ public class ProfileMenu extends Application {
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
         circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar()));
+        circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    avatarMenu();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
 
@@ -164,6 +174,10 @@ public class ProfileMenu extends Application {
         borderPane.getChildren().add(vBox1);
         rightVbox = vBox1;
         avatar = circle;
+    }
+
+    private void avatarMenu() throws Exception {
+        new AvatarMenu().start(stage);
     }
 
     private void back() throws Exception {
