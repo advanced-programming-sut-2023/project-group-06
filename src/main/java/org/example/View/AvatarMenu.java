@@ -75,6 +75,7 @@ public class AvatarMenu extends Application {
         borderPane.getChildren().add(hBox);
         Scene scene = new Scene(borderPane);
         stage.setScene(scene);
+        if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 

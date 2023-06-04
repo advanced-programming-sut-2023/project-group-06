@@ -12,7 +12,6 @@ import java.util.Deque;
 
 public class Kingdom {
 
-    //todo decide about nonSoldierUnits...
     private int happiness = 0;
     private int foodDiversity;
     private int totalFoodAmount = 0;

@@ -33,8 +33,8 @@ public class ScoreBoard extends Application {
         scrollPane.setFitToWidth(true);
         scene = new Scene(scrollPane);
 //        stage.setFullScreen(true);
-        setThePain();
         stage.setScene(scene);
+        if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -43,13 +43,9 @@ public class ScoreBoard extends Application {
         Data.sortUsersByHighScore();
         for(User user : Data.getUsers()){
             i++;
-            if(i > 10) break;
+            if(i >= 20) break;
             addUserToScoreBoard(mainVBox, i, user);
         }
-    }
-
-    public void setThePain(){
-
     }
 
     public void back(MouseEvent mouseEvent) throws Exception {

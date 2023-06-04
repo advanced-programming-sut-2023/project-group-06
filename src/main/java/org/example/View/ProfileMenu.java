@@ -108,6 +108,7 @@ public class ProfileMenu extends Application {
         //stage.setFullScreen(true);
         setThePain();
         stage.setScene(scene);
+        if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -449,6 +450,7 @@ public class ProfileMenu extends Application {
 
     public void removeSlogan(MouseEvent mouseEvent) {
         userSlogan.setText("slogan is empty");
+        Data.getCurrentUser().setSlogan("null");
         userSlogan.setMaxHeight(42);
         userSlogan.setMinHeight(42);
     }
