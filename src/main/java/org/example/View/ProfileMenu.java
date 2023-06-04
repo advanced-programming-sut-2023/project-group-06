@@ -116,7 +116,8 @@ public class ProfileMenu extends Application {
         vBox.setLayoutX(100);
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar()));
+        circle.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
         circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -167,7 +168,6 @@ public class ProfileMenu extends Application {
                 }
             }
         });
-        System.out.println(userSlogan);
 
         vBox1.getChildren().addAll(button, button1);
         borderPane.getChildren().add(vBox1);
@@ -180,6 +180,7 @@ public class ProfileMenu extends Application {
     }
 
     private void back() throws Exception {
+        Data.saveData("src/main/java/org/example/Model/Data.json");
         new MainMenu().start(stage);
     }
 
