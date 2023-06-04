@@ -23,6 +23,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
 import org.example.Model.Data;
 
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
@@ -115,10 +116,7 @@ public class ProfileMenu extends Application {
         vBox.setLayoutX(100);
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar())); // TODO: 2023-05-30*/
-/*      BackgroundImage backgroundImage = new BackgroundImage(Data.getCurrentUser().getAvatar(), BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(circle.getRadius() * 2, circle.getCenterY() * 2, false, false, false, false));
-        circle.setFill(Color.TRANSPARENT);
-        circle.setStyle("-fx-background-image: url('" + backgroundImage.getImage().getUrl() + "');");*/
+        circle.setFill(new ImagePattern(Data.getCurrentUser().getAvatar()));
         vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
 
@@ -144,7 +142,6 @@ public class ProfileMenu extends Application {
             }
         });
         Button button1 = new Button("back");
-        vBox1.getChildren().addAll(button, button1);
         button1.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
                 " linear-gradient(#fffffe, #efffff)," +
                 " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
@@ -160,6 +157,9 @@ public class ProfileMenu extends Application {
                 }
             }
         });
+        System.out.println(userSlogan);
+
+        vBox1.getChildren().addAll(button, button1);
         borderPane.getChildren().add(vBox1);
         rightVbox = vBox1;
         avatar = circle;
@@ -187,10 +187,12 @@ public class ProfileMenu extends Application {
         userSlogan.setText(Data.getCurrentUser().getSlogan());
         userSlogan.setWrapText(true);
         int lines = (Data.getCurrentUser().getSlogan().length() / 30) + 1;
-        System.out.println(lines);
         userSlogan.setMinHeight(lines * 42);
         userSlogan.setMaxHeight(lines * 42);
-
+        if(Objects.equals(Data.getCurrentUser().getSlogan(), "")
+                || Objects.equals(Data.getCurrentUser().getSlogan(), "null")
+                || Data.getCurrentUser().getSlogan() == null)
+            userSlogan.setText("slogan is empty");
         TextField oldPassword = new TextField();
         TextField newPassword = new TextField();
         TextField newPasswordConfirmation = new TextField();
@@ -428,5 +430,11 @@ public class ProfileMenu extends Application {
             userSlogan.setMaxHeight(lines * 42);
         }
         alert.showAndWait();
+    }
+
+    public void removeSlogan(MouseEvent mouseEvent) {
+        userSlogan.setText("slogan is empty");
+        userSlogan.setMaxHeight(42);
+        userSlogan.setMinHeight(42);
     }
 }
