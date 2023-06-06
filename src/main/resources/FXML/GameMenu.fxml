@@ -7,21 +7,21 @@
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="org.example.View.GameMenus.GameMenu"
            prefHeight="400.0" prefWidth="600.0">
-    <BorderPane fx:id="mainBorderPane">
+    <BorderPane StackPane.alignment="CENTER">
         <center>
-            <Pane fx:id="canvasPane" prefHeight="400.0" prefWidth="600.0">
+            <Pane prefHeight="400.0" prefWidth="600.0">
                 <children>
-                    <Canvas fx:id="mainCanvas" height="400.0" width="600.0" />
+                    <Canvas height="400.0" width="600.0" />
                 </children>
             </Pane>
         </center>
         <bottom>
-            <HBox fx:id="bottomHBox" alignment="CENTER" spacing="10">
+            <HBox alignment="CENTER" spacing="10">
                 <!--some code should be right here!-->
             </HBox>
         </bottom>
     </BorderPane>
-    <Pane fx:id="mainPane">
+    <Pane>
 
     </Pane>
 </StackPane>

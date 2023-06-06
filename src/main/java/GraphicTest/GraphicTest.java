@@ -27,8 +27,8 @@ public class GraphicTest extends Application {
         borderPane.setCenter(canvas);
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
 
-        canvas.setHeight(800);
-        canvas.setWidth(1000);
+        canvas.setHeight(600);
+        canvas.setWidth(800);
 
         Image image = SuperImage.SEA.getImage();
 
