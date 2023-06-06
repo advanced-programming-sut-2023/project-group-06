@@ -27,8 +27,10 @@ public class GameMenu extends Application {
     public Pane mainPane;
     public Pane canvasPane;
     // map things
-    int mapPointerX = 2500;
-    int mapPointerY = 3000;
+    int mapPointerX = 300;
+    int mapPointerY = 1000;
+    double lastMouseX;
+    double lastMouseY;
     //
 
     @Override
@@ -46,10 +48,25 @@ public class GameMenu extends Application {
     }
 
     private void starter() {
+        makeMapDraggable();
         Tile[][] map = Data.loadMap("test");
-        mainCanvas.setHeight(5000);
-        mainCanvas.setWidth(5000);
+        mainCanvas.setHeight(1000);
+        mainCanvas.setWidth(1000);
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+    }
+
+    private void makeMapDraggable() {
+        mainPane.setOnMousePressed(e -> {
+            lastMouseX = e.getSceneX();
+            lastMouseY = e.getSceneY();
+        });
+        mainPane.setOnMouseDragged(e -> {
+            mapPointerX += e.getSceneX() - lastMouseX;
+            mapPointerY += e.getSceneY() - lastMouseY;
+            lastMouseX = e.getSceneX();
+            lastMouseY = e.getSceneY();
+            MapController.mapGraphicProcessor(mainCanvas, Data.loadMap("test"), mapPointerX, mapPointerY);
+        });
     }
 
 
