@@ -13,7 +13,8 @@ import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
-public class GameMenu extends Application { @Override
+public class GameMenu extends Application {
+    @Override
     public void start(Stage stage) throws Exception {
         Pane root = new Pane();
         stage.setTitle("Main Menu");
