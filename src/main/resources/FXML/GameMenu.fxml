@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.canvas.Canvas?>
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.View.GameMenus.GameMenu"
+           prefHeight="400.0" prefWidth="600.0">
+    <BorderPane fx:id="mainBorderPane">
+        <center>
+            <Pane fx:id="canvasPane" prefHeight="400.0" prefWidth="600.0">
+                <children>
+                    <Canvas fx:id="mainCanvas" height="400.0" width="600.0" />
+                </children>
+            </Pane>
+        </center>
+        <bottom>
+            <HBox fx:id="bottomHBox" alignment="CENTER" spacing="10">
+                <!--some code should be right here!-->
+            </HBox>
+        </bottom>
+    </BorderPane>
+    <Pane fx:id="mainPane">
+
+    </Pane>
+</StackPane>
