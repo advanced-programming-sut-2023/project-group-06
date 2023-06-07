@@ -16,6 +16,8 @@ import javafx.stage.Stage;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.Data;
 import org.example.Model.Tile;
+import org.example.Model.TileStructure;
+import org.example.View.Graphics.SuperImage;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -47,11 +49,15 @@ public class GameMenu extends Application {
         stage.show();
     }
 
+    Tile[][] map;
     private void starter() {
         makeMapDraggable();
-        Tile[][] map = Data.loadMap("test");
-        mainCanvas.setHeight(1000);
-        mainCanvas.setWidth(1000);
+        map = Data.loadMap("test");
+        mainCanvas.setHeight(2000);
+        mainCanvas.setWidth(2000);
+
+        for(int i = 0; i < 10 ; i++) for(int j =0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW,i,j);
+
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
 
@@ -65,7 +71,7 @@ public class GameMenu extends Application {
             mapPointerY += e.getSceneY() - lastMouseY;
             lastMouseX = e.getSceneX();
             lastMouseY = e.getSceneY();
-            MapController.mapGraphicProcessor(mainCanvas, Data.loadMap("test"), mapPointerX, mapPointerY);
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
         });
     }
 
