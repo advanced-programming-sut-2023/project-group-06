@@ -16,11 +16,13 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.StringConverter;
 import org.example.Controller.Controller;
 import org.example.Controller.LoginController;
 import org.example.Controller.SignUpController;
 import org.example.Model.Data;
+import org.example.Model.User;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -102,16 +104,19 @@ public class SignUpMenu extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         Data.loadData("src/main/java/org/example/Model/Data.json");
-        this.stage = stage;
-        Data.loadData("src/main/java/org/example/Model/Data.json");
+        SignUpMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/SignUpMenu.fxml"));
         System.out.println(borderPane);
         scene = new Scene(borderPane);
         stage.setScene(scene);
+        borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
+                ("/Images/34260.jpg").toExternalForm()))
+                , null, null)));
 //        stage.setFullScreen(true);
         Screen screen = Screen.getPrimary();
         stage.setWidth(screen.getBounds().getWidth());
         stage.setHeight(screen.getBounds().getHeight());
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -300,8 +305,8 @@ public class SignUpMenu extends Application {
         Button confirm = new Button("confirm");
         confirm.setOnMouseClicked(mouseEvent -> {
             //        if (captcha not valid) ...
-            //todo
-            String questionString = (String)(question.getValue());
+            // todo
+            String questionString = (String) (question.getValue());
             String questionNumber = (questionString.equals("What is my father's name?")) ?
                     "1" : (questionString.equals("What is my first pet's name?")) ? "2" :
                     (questionString.equals("What is my mother's last name?")) ? "3" : "";
@@ -329,11 +334,11 @@ public class SignUpMenu extends Application {
         return confirm;
     }
 
-    public void haveAccount (ActionEvent actionEvent) throws Exception {
+    public void haveAccount(ActionEvent actionEvent) throws Exception {
         new LoginMenu().start(stage);
     }
 
-    public void passwordToggleAction (ActionEvent actionEvent){
+    public void passwordToggleAction(ActionEvent actionEvent) {
         passwordStackPane.getChildren().get(0).toFront();
         passwordStackPane.getChildren().get(0).setVisible(false);
         passwordStackPane.getChildren().get(1).setVisible(true);
@@ -347,7 +352,7 @@ public class SignUpMenu extends Application {
                 , null, null)));
     }
 
-    private void handleError (Response response){
+    private void handleError(Response response) {
         if (response == Response.EMPTY_USERNAME || response == Response.USERNAME_EXISTS || response == Response.INVALID_USERNAME_FORMAT) {
             username.setStyle("-fx-border-color: RED");
         } else if (response == Response.EMPTY_PASSWORD || response == Response.SHORT_PASSWORD || response == Response.PASSWORD_CAPITAL
@@ -355,16 +360,14 @@ public class SignUpMenu extends Application {
                 || response == Response.PASSWORD_SYMBOL) {
             passwordTextField.setStyle("-fx-border-color: RED");
             passwordPasswordField.setStyle("-fx-border-color: RED");
-        }
-        else if(response == Response.EMPTY_CONFIRMATION
+        } else if (response == Response.EMPTY_CONFIRMATION
                 || response == Response.PASSWORD_CONFIRMATION) {
             passwordConfirmationTextField.setStyle("-fx-border-color: RED");
             passwordConfirmationPasswordField.setStyle("-fx-border-color: RED");
-        }
-        else if(response == Response.EMPTY_EMAIL || response == Response.EMAIL_EXISTS
+        } else if (response == Response.EMPTY_EMAIL || response == Response.EMAIL_EXISTS
                 || response == Response.INVALID_EMAIL_FORMAT)
             email.setStyle("-fx-border-color: RED");
-        else if(response == Response.EMPTY_NICKNAME)
+        else if (response == Response.EMPTY_NICKNAME)
             nickname.setStyle("-fx-border-color: RED");
     }
 }

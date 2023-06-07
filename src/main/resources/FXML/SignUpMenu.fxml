@@ -9,7 +9,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="org.example.View.SignUpMenu"
-            prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/style.css">
+            stylesheets="@../CSS/style.css"> <!-- prefHeight="400.0" prefWidth="600.0" -->
     <center>
         <VBox fx:id="mainVbox" alignment="CENTER" spacing="10">
             <TextField fx:id="username" promptText="username"/>

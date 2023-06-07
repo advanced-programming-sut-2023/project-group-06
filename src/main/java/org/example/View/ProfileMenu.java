@@ -1,31 +1,34 @@
 package org.example.View;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
+import org.example.Model.Data;
 
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 
 public class ProfileMenu extends Application {
     public VBox profileMenu;
-    public ImageView avatarImage;
-    public PasswordField passwordField;
-    public TextField nicknameField;
-    public TextField gmailField;
-    public Label sloganLabel;
     public Label userPassword;
     public Label userNickname;
     public Label UserGmail;
@@ -37,7 +40,6 @@ public class ProfileMenu extends Application {
     public Button changeUsername;
     public Button saveUsername;
     public Button changePassword;
-    public Button savePassword;
     public Button changeNickName;
     public Button saveNickName;
     public Button changeGmail;
@@ -45,10 +47,17 @@ public class ProfileMenu extends Application {
     public Label usernameError;
     public Label nicknameError;
     public Label emailError;
+    public Label userSlogan;
+    public TextField sloganTextField;
+    public Button changeSlogan;
+    public Button saveSlogan;
+    private static VBox hiddenVbox;
+    private static VBox rightVbox;
+    private static Circle avatar;
     ProfileController profileController;
     private Scene scene;
     private static Stage stage;
-    private BorderPane borderPane;
+    private static BorderPane borderPane;
 
 //    public MenuType run(Scanner scanner) {
 //        while (true) {
@@ -93,12 +102,13 @@ public class ProfileMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        this.stage = stage;
+        ProfileMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/ProfileMenu.fxml"));
         scene = new Scene(borderPane);
-        stage.setFullScreen(true);
+        //stage.setFullScreen(true);
         setThePain();
         stage.setScene(scene);
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -107,10 +117,76 @@ public class ProfileMenu extends Application {
         vBox.setLayoutX(100);
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(new Image(ProfileMenu.class.getResource(
-                "/Images/background1.jpg").toString()))); // TODO: 2023-05-30
+        circle.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
+        circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    avatarMenu();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
         vBox.getChildren().add(circle);
         borderPane.getChildren().add(vBox);
+
+        VBox vBox1 = new VBox();
+        vBox1.setLayoutY(250);
+        vBox1.setLayoutX(1050);
+        vBox1.setSpacing(5);
+        Button button = new Button("ScoreBoard");
+        /*"#0caf01" : "#fc2f01";*/
+        button.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 50; -fx-max-height: 50;" +
+                "-fx-font-size: 15;");
+        button.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    scoreBoard();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        Button button1 = new Button("back");
+        button1.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 50; -fx-max-height: 50;" +
+                "-fx-font-size: 15;");
+        button1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    back();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+
+        vBox1.getChildren().addAll(button, button1);
+        borderPane.getChildren().add(vBox1);
+        rightVbox = vBox1;
+        avatar = circle;
+    }
+
+    private void avatarMenu() throws Exception {
+        new AvatarMenu().start(stage);
+    }
+
+    private void back() throws Exception {
+        Data.saveData("src/main/java/org/example/Model/Data.json");
+        new MainMenu().start(stage);
+    }
+
+    private void scoreBoard() throws Exception {
+        new ScoreBoard().start(stage);
     }
 
     public void initialize(){
@@ -120,7 +196,115 @@ public class ProfileMenu extends Application {
                 usernameError.setStyle("-fx-text-fill: RED");
             } else usernameError.setText("");
         });
-        ////
+
+        userUsername.setText(Data.getCurrentUser().getUsername());
+        userNickname.setText(Data.getCurrentUser().getNickname());
+        UserGmail.setText(Data.getCurrentUser().getEmail());
+        userSlogan.setText(Data.getCurrentUser().getSlogan());
+        userSlogan.setWrapText(true);
+        int lines = (Data.getCurrentUser().getSlogan().length() / 30) + 1;
+        userSlogan.setMinHeight(lines * 42);
+        userSlogan.setMaxHeight(lines * 42);
+        if(Objects.equals(Data.getCurrentUser().getSlogan(), "")
+                || Objects.equals(Data.getCurrentUser().getSlogan(), "null")
+                || Data.getCurrentUser().getSlogan() == null)
+            userSlogan.setText("slogan is empty");
+        TextField oldPassword = new TextField();
+        TextField newPassword = new TextField();
+        TextField newPasswordConfirmation = new TextField();
+        Label error = new Label();
+        error.setTextFill(Color.RED);
+        oldPassword.setPromptText("old password");
+        newPassword.setPromptText("new password");
+        newPasswordConfirmation.setPromptText("confirm new password");
+        oldPassword.setStyle("-fx-max-width: 300; -fx-min-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        newPassword.setStyle("-fx-min-width: 300 ;-fx-max-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        newPasswordConfirmation.setStyle("-fx-max-width: 300; -fx-min-width: 300; -fx-pref-height: 30; -fx-font-size: 15px;\n" +
+                "-fx-background-radius: 10; -fx-border-color: #a62bb9; -fx-border-radius: 10;\n" +
+                "-fx-background-color: transparent; -fx-padding: 6, 4, 4, 4;");
+        Button confirm = new Button("confirm");
+        Button back = new Button("back");
+        back.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 30; -fx-max-height: 30;" +
+                "-fx-font-size: 15;");
+        confirm.setStyle("-fx-min-width: 100; -fx-max-width: 200; -fx-background-color: #0caf01," +
+                " linear-gradient(#fffffe, #efffff)," +
+                " linear-gradient(#bea6fd 0%, #a7a9f5 49%, #bee6fd 50%, #a7d9f5 100%);" +
+                "-fx-min-height: 30; -fx-max-height: 30;" +
+                "-fx-font-size: 15;");
+        HBox hBox = new HBox(confirm, back);
+        hBox.setAlignment(Pos.CENTER);
+        hBox.setSpacing(30);
+        VBox vBox = new VBox(oldPassword, newPassword, newPasswordConfirmation, error, hBox);
+        vBox.setSpacing(25);
+        vBox.setAlignment(Pos.CENTER);
+        vBox.setLayoutX(670);
+        vBox.setLayoutY(340);
+
+        newPassword.textProperty().addListener((observable, oldText, newText) -> {
+            Response response;
+            if ((response = Controller.isPasswordValid((newPassword).getText())) != Response.PASSWORD_GOOD) {
+                error.setText(response.message);
+                Text text = new Text(response.message);
+                error.setMinWidth(text.getBoundsInLocal().getWidth());
+            }
+            else error.setText("");
+        });
+
+        hiddenVbox = vBox;
+        confirm.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                changePasswordConfirm(vBox);
+            }
+        });
+
+        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                avatar.setVisible(true);
+                rightVbox.setVisible(true);
+                profileMenu.setVisible(true);
+                borderPane.getChildren().remove(hiddenVbox);
+            }
+        });
+    }
+
+    private void changePasswordConfirm(VBox vBox) {
+        Response response = ProfileController.changePassword(Translator.getMatcherByGroups(
+                Translator.CHANGE_PASSWORD, ((TextField) vBox.getChildren().get(0)).getText(),
+                ((TextField) vBox.getChildren().get(1)).getText()));
+        if(response != Response.RE_ENTER_PASSWORD){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change password failed");
+            alert.showAndWait();
+        }
+        else{
+            response = ProfileController.confirmReEnteredPassword(((TextField) vBox.getChildren().get(0)).getText(),
+                    ((TextField) vBox.getChildren().get(1)).getText(), ((TextField) vBox.getChildren().get(2)).getText());
+            Alert alert;
+            if(response != Response.PASSWORD_CHANGE){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText(response.message);
+                alert.setHeaderText("Change password failed");
+            }
+            else{
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success");
+                alert.setContentText(response.message);
+                alert.setHeaderText("Change password successful");
+            }
+            alert.showAndWait();
+        }
     }
 
     public void changeUsername(MouseEvent mouseEvent) {
@@ -131,10 +315,14 @@ public class ProfileMenu extends Application {
     }
 
     public void changePassword(MouseEvent mouseEvent) {
-        passwordTextField.setVisible(true);
-        userPassword.setVisible(false);
-        changePassword.setVisible(false);
-        savePassword.setVisible(true);
+        avatar.setVisible(false);
+        rightVbox.setVisible(false);
+        profileMenu.setVisible(false);
+        borderPane.getChildren().add(hiddenVbox);
+        ((TextField) hiddenVbox.getChildren().get(0)).setText("");
+        ((TextField) hiddenVbox.getChildren().get(1)).setText("");
+        ((TextField) hiddenVbox.getChildren().get(2)).setText("");
+        ((Label) hiddenVbox.getChildren().get(3)).setText("");
     }
 
     public void changeNickName(MouseEvent mouseEvent) {
@@ -199,9 +387,6 @@ public class ProfileMenu extends Application {
         alert.showAndWait();
     }
 
-    public void savePassword(MouseEvent mouseEvent) {
-    }
-
     public void saveGmail(MouseEvent mouseEvent) {
         Response response = ProfileController.changeEmail(Translator.getMatcherByGroups(
                 Translator.CHANGE_EMAIL, gmailTextField.getText()));
@@ -221,8 +406,51 @@ public class ProfileMenu extends Application {
             saveGmail.setVisible(false);
             gmailTextField.setVisible(false);
             UserGmail.setVisible(true);
-            UserGmail.setText(nicknameTextField.getText());
+            UserGmail.setText(gmailTextField.getText());
         }
         alert.showAndWait();
+    }
+
+    public void changeSlogan(MouseEvent mouseEvent) {
+        sloganTextField.setVisible(true);
+        userSlogan.setVisible(false);
+        changeSlogan.setVisible(false);
+        saveSlogan.setVisible(true);
+    }
+
+    public void saveSlogan(MouseEvent mouseEvent) {
+        Response response = ProfileController.changeSlogan(Translator.getMatcherByGroups(
+                Translator.CHANGE_SLOGAN, sloganTextField.getText()));
+        Alert alert;
+        if(response != Response.SLOGAN_CHANGE){
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change Info Failed!");
+        }
+        else{
+            alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Success");
+            alert.setContentText(response.message);
+            alert.setHeaderText("Change slogan was successful");
+            changeSlogan.setVisible(true);
+            saveSlogan.setVisible(false);
+            sloganTextField.setVisible(false);
+            userSlogan.setVisible(true);
+            userSlogan.setText(sloganTextField.getText());
+            userSlogan.setWrapText(true);
+            Text text = new Text(sloganTextField.getText());
+            System.out.println(text.getBoundsInLocal().getWidth());
+            int lines = (int)(text.getBoundsInLocal().getWidth() / 170) + 1;
+            userSlogan.setMinHeight(lines * 42);
+            userSlogan.setMaxHeight(lines * 42);
+        }
+        alert.showAndWait();
+    }
+
+    public void removeSlogan(MouseEvent mouseEvent) {
+        userSlogan.setText("slogan is empty");
+        userSlogan.setMaxHeight(42);
+        userSlogan.setMinHeight(42);
     }
 }

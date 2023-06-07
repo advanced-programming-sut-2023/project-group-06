@@ -3,6 +3,7 @@ package org.example.View;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -11,7 +12,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.example.Controller.LoginController;
+import org.example.Controller.SignUpController;
 import org.example.Model.Data;
 
 import java.util.regex.Matcher;
@@ -31,8 +35,10 @@ public class LoginMenu extends Application {
     public Button changePassword;
     public Label incorrectAnswer;
     public Label loginResult;
+    public RadioButton stayLoggedIn;
+    public VBox mainVBox;
     LoginController loginController;
-    private BorderPane borderPane;
+    private static BorderPane borderPane;
     private Scene scene;
     private static Stage stage;
     private boolean didForget = false;
@@ -87,11 +93,13 @@ public class LoginMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        Data.loadData("src/main/java/org/example/Model/Data.json");
-        this.stage = stage;
+        LoginMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/LoginMenu.fxml"));
         scene = new Scene(borderPane);
         stage.setScene(scene);
+        /*borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
+                ("/Images/418028.jpg").toExternalForm()))
+                , null, null)));*/
         stage.setFullScreen(true);
         stage.show();
     }
@@ -131,10 +139,14 @@ public class LoginMenu extends Application {
     }
 
     public void login(MouseEvent mouseEvent) throws Exception {
-        Matcher matcher = Translator.getMatcherByGroups(
-                Translator.LOGIN_USER, "username", "password", "stayLoggedIn");
         String usernameText = username.getText();
-        if (LoginController.setLastLoginAttempt(usernameText, (System.currentTimeMillis() / 1000L))) {
+        String passwordText =
+                passwordTextField.isVisible() ? passwordTextField.getText() : passwordPasswordField.getText();
+        String stayLogged = stayLoggedIn.isSelected() ? "stay-logged-in" : null;
+        Matcher matcher = Translator.getMatcherByGroups(
+                Translator.LOGIN_USER, usernameText, passwordText, stayLogged);
+
+        if (/*LoginController.setLastLoginAttempt(usernameText, (System.currentTimeMillis() / 1000L))*/ true) {
             Response response1 = LoginController.loginUser(matcher);
             loginResult.setVisible(true);
             loginResult.setText(response1.message);
@@ -152,31 +164,68 @@ public class LoginMenu extends Application {
         }
     }
 
-    public void back(MouseEvent mouseEvent) {
-    }
-
-
-    public static BackgroundImage setBackGround(String number, int v, int v1) {
-        Image image = new Image(LoginMenu.class.getResource("/Images/background" + number).toExternalForm(), v, v1, false, false);
-        return new BackgroundImage(image,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
+    public void back(MouseEvent mouseEvent) throws Exception {
+        new SignUpMenu().start(stage);
     }
 
     public void change(MouseEvent mouseEvent) {
-/*        Response response = LoginController.forgotPassword(..., answer.getText());
-        if (response.equals(Response.PASSWORD_CHANGE)) {
-            String newPassword = scanner.nextLine();
+        Response response = LoginController.forgotPassword(Translator.getMatcherByGroups(
+                Translator.FORGOT_PASSWORD, username.getText()), answer.getText());
+        if (response.equals(Response.PASSWORD_CHANGE))
+            runChangePasswordPane();
+        else {
+            incorrectAnswer.setVisible(true);
+            incorrectAnswer.setTextFill(Color.RED);
+            incorrectAnswer.setText(response.message);
+        }
+    }
+
+    private void runChangePasswordPane() {
+        VBox changePassMenu = new VBox();
+        changePassMenu.setSpacing(40);
+        changePassMenu.setAlignment(Pos.CENTER);
+        Button back = new Button("back");
+        back.setOnMouseClicked(mouseEvent -> {
+            answer.setVisible(false);
+            changePassword.setVisible(false);
+            answer.setText(null);
+            borderPane.setCenter(mainVBox);
+        });
+        TextField newPass = new TextField();
+        TextField newPassConfirm = new TextField();
+        newPass.setPromptText("new password");
+        newPassConfirm.setPromptText("confirmation");
+        Label error = new Label();
+        error.setTextFill(Color.RED);
+        Button confirm = createChangePassButton(newPass, newPassConfirm, error);
+        HBox buttons = new HBox(confirm, back);
+        buttons.setSpacing(30);
+        buttons.setAlignment(Pos.CENTER);
+        changePassMenu.getChildren().addAll(newPass, newPassConfirm, error, buttons);
+        borderPane.setCenter(changePassMenu);
+    }
+
+    private Button createChangePassButton(TextField newPass, TextField newPassConfirm, Label error) {
+        Button confirm = new Button("confirm");
+        confirm.setOnMouseClicked(mouseEvent -> {
+            // TODO: 2023-06-03 : if captcha is not valid...
+            String newPassword = newPass.getText();
             Response response1 = LoginController.isPasswordStrong(newPassword);
-            if (response1 != null) {
-                System.out.println(response1.message);
-                continue;
+            if (response1 != null) error.setText(response1.message);
+            else {
+                String newPasswordConfirmation = newPassConfirm.getText();
+                Response response = LoginController.changePasswordSuccessful(username.getText(), answer.getText(), newPassword, newPasswordConfirmation);
+                if(response != Response.PASSWORD_CHANGE) error.setText(response.message);
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Success");
+                    alert.setContentText(response.message);
+                    alert.setHeaderText("Change password successful");
+                    alert.showAndWait();
+                    borderPane.setCenter(mainVBox);
+                }
             }
-            System.out.println("Please re-enter your password:");
-            String newPasswordConfirmation = scanner.nextLine();
-            System.out.println(LoginController.changePasswordSuccessful(username,questionAnswer,newPassword,newPasswordConfirmation).message);
-        } else System.out.println(response.message);*/
+        });
+        return confirm;
     }
 }

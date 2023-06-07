@@ -2,6 +2,7 @@ package org.example.Model;
 
 import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.example.View.ProfileMenu;
 
 public class User implements Comparable<User> {
     private String username = "";
@@ -14,7 +15,7 @@ public class User implements Comparable<User> {
     private int highScore;
     private int numberOfLoginAttempts = 0;
     private long lastLoginAttemptTime;
-    private Image avatar;
+    private String avatar;
 
     public User(String username, String password, String nickname, String email, String slogan) {
         this.username = username;
@@ -23,6 +24,8 @@ public class User implements Comparable<User> {
         this.email = email;
         this.slogan = slogan;
         Data.addUser(this);
+        /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
+        this.avatar = "/Images/avatar8.jpg";
     }
 
     public String getHashedPassword() {
@@ -91,7 +94,7 @@ public class User implements Comparable<User> {
 
     public void setAnswerToQuestion(String answerToQuestion) {
         if (!this.hashedAnswerToQuestion.equals("")) return;
-        this.hashedAnswerToQuestion = DigestUtils.sha256Hex(answerToQuestion);
+        this.hashedAnswerToQuestion = answerToQuestion;
     }
 
     public void setQuestionIndex(int questionIndex) {
@@ -141,5 +144,13 @@ public class User implements Comparable<User> {
 
     public int compareTo(User user) {
         return this.highScore - user.highScore;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 }

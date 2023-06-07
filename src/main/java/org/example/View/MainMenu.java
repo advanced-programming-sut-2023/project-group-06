@@ -14,8 +14,10 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.example.Controller.MainController;
 import org.example.Controller.ProfileController;
+import org.example.Model.Data;
 import org.example.View.GameMenus.GameMenu;
 
 public class MainMenu extends Application {
@@ -63,30 +65,37 @@ public class MainMenu extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        /*Data.loadData("src/main/java/org/example/Model/Data.json");*/
-        this.stage = stage;
+        MainMenu.stage = stage;
+        System.out.println(SignUpMenu.class.getResource("/FXML/MainMenu.fxml"));
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/MainMenu.fxml"));
         scene = new Scene(borderPane);
-        stage.setFullScreen(true);
+        /*stage.setFullScreen(true);*/
         setThePain();
+        /*scene.setCursor();*/
         stage.setScene(scene);
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
-    public void setThePain(){
+    public void setThePain() {
+        /*Media media = new Media(getClass().getResource("/media/Fluffing-a-Duck.mp3").toString());
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setAutoPlay(true);
+        mediaPlayer.play();*/
         borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/knight.jpg").toExternalForm()))
                 , null, null)));
         Circle circle = new Circle(120);
-        circle.setFill(new ImagePattern(new Image(ProfileMenu.class.getResource(
-                "/Images/background1.jpg").toString()))); // TODO: 2023-05-30
+        if (Data.getCurrentUser() != null) circle.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
         circle.setCenterX(300);
         circle.setCenterY(200);
         borderPane.getChildren().add(circle);
     }
 
-    public void initialize(){
-        text.setText("Hello ");// TODO: 2023-05-30
+    public void initialize() {
+        if (Data.getCurrentUser() != null) text.setText("Hello " + Data.getCurrentUser().getUsername());
         text.setFill(Color.rgb(17, 250, 17));
         text.setFont(Font.font("Times New Roman", 40));
 
@@ -105,10 +114,10 @@ public class MainMenu extends Application {
         setHBox1(hBox1);
     }
 
-    public void setHBox1(HBox hbox){
+    public void setHBox1(HBox hbox) {
         hbox.getChildren().clear();
         int numberOfPlayersValue = choiceBox.getValue();
-        for(int i = 0; i < numberOfPlayersValue - 1; i++){
+        for (int i = 0; i < numberOfPlayersValue - 1; i++) {
             TextField textField = new TextField();
             textField.setStyle("-fx-background-color: #fdf090; -fx-min-width: 100; -fx-max-width: 100;" +
                     " -fx-border-radius: 10; -fx-border-color: #0f2d94;" +
@@ -136,21 +145,20 @@ public class MainMenu extends Application {
 
     public void start(MouseEvent mouseEvent) throws Exception {
         int size = hBox1.getChildren().size();
-        String user2 =  size >= 1 ? ((TextField) hBox1.getChildren().get(0)).getText() : null;
-        String user3 =  size >= 2 ? ((TextField) hBox1.getChildren().get(1)).getText() : null;
-        String user4 =  size >= 3 ? ((TextField) hBox1.getChildren().get(2)).getText() : null;
-        String user5 =  size >= 4 ? ((TextField) hBox1.getChildren().get(3)).getText() : null;
-        String user6 =  size >= 5 ? ((TextField) hBox1.getChildren().get(4)).getText() : null;
-        String user7 =  size >= 6 ? ((TextField) hBox1.getChildren().get(5)).getText() : null;
-        String user8 =  size >= 7 ? ((TextField) hBox1.getChildren().get(6)).getText() : null;
+        String user2 = size >= 1 ? ((TextField) hBox1.getChildren().get(0)).getText() : null;
+        String user3 = size >= 2 ? ((TextField) hBox1.getChildren().get(1)).getText() : null;
+        String user4 = size >= 3 ? ((TextField) hBox1.getChildren().get(2)).getText() : null;
+        String user5 = size >= 4 ? ((TextField) hBox1.getChildren().get(3)).getText() : null;
+        String user6 = size >= 5 ? ((TextField) hBox1.getChildren().get(4)).getText() : null;
+        String user7 = size >= 6 ? ((TextField) hBox1.getChildren().get(5)).getText() : null;
+        String user8 = size >= 7 ? ((TextField) hBox1.getChildren().get(6)).getText() : null;
         Response response = MainController.startGame(Translator.getMatcherByGroups(
                 Translator.START_GAME, user2, user3, user4, user5, user6, user7, user8));
-        if(response != Response.GAME_STARTED_SUCCESSFULLY){
+        if (response != Response.GAME_STARTED_SUCCESSFULLY) {
             startError.setVisible(true);
             startError.setText(response.message);
             startError.setTextFill(Color.RED);
-        }
-        else{
+        } else {
             new GameMenu().start(stage);
         }
     }

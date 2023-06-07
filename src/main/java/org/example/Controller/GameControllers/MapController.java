@@ -181,7 +181,6 @@ public class MapController {
             iEnd = Math.min(iEnd, s);
             for (int i = iStart; i <= iEnd; i++) {
                 int j = s - i;
-                System.out.println(mapHeight + " " + mapWidth + " " + i + " " + j + " " + s);
                 drawTileAt(gc, map[i][j], x + (i - j) * 46, y - s * 23);
             }
         }

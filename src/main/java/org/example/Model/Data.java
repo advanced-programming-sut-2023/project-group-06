@@ -48,6 +48,9 @@ public class Data {
         Data.currentUser = currentUser;
     }
 
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
 
     public static void removeUser(User user) {
         users.remove(user);
@@ -85,6 +88,7 @@ public class Data {
             userObject.addProperty("questionIndex", user.getQuestionIndex());
             userObject.addProperty("answerToQuestion", user.getHashedAnswerToQuestion());
             userObject.addProperty("highScore", user.getHighScore());
+            userObject.addProperty("image", user.getAvatar());
             usersObject.add(userObject);
         }
         root.add("users", usersObject);
@@ -122,11 +126,13 @@ public class Data {
                 int questionIndex = userElement.getAsJsonObject().get("questionIndex").getAsInt();
                 int highScore = userElement.getAsJsonObject().get("highScore").getAsInt();
                 String answerToQuestion = userElement.getAsJsonObject().get("answerToQuestion").getAsString();
+                String image = userElement.getAsJsonObject().get("image").getAsString();
                 User user = new User(username, "", nickname, email, slogan);
                 user.setHashedPassword(password);
                 user.setQuestionIndex(questionIndex);
                 user.setHighScore(highScore);
                 user.setAnswerToQuestion(answerToQuestion);
+                user.setAvatar(image);
             }
             if (stayLoggedIn) {
                 String currentUsername = rootObject.get("currentUsername").getAsString();

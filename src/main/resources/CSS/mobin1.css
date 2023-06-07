@@ -89,7 +89,6 @@
     -fx-border-radius: 10;
     -fx-border-color: #0f2d94;
     -fx-background-color: #eefffa;
-    /*-fx-text-fill: #fffdfd;*/
     -fx-padding: 6, 5, 5, 5;
 }
 
@@ -102,4 +101,12 @@
     -fx-border-radius: 10;
     -fx-background-color: transparent;
     -fx-padding: 6, 4, 4, 4;
+}
+
+.Button1 {
+    -fx-min-width: 100;
+    -fx-max-width: 200;
+    -fx-background-color: #0caf01,
+    linear-gradient(#fafdfe, #e8f5fc),
+    linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
 }

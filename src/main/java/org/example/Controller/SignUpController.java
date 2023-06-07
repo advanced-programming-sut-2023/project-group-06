@@ -2,6 +2,7 @@ package org.example.Controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.View.Response;
@@ -50,7 +51,7 @@ public class SignUpController {
         String answer = Controller.makeEntryValid(matcher.group("answer"));
         String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
-        Data.getUserByName(username).setAnswerToQuestion(answer);
+        Data.getUserByName(username).setAnswerToQuestion(DigestUtils.sha256Hex(answer));
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
         System.out.println(Data.getUserByName("sina"));
 //        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
