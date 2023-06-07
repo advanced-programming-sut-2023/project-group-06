@@ -153,6 +153,7 @@ public class MainMenu extends Application {
         String user8 =  size >= 7 ? ((TextField) hBox1.getChildren().get(6)).getText() : null;
         Response response = MainController.startGame(Translator.getMatcherByGroups(
                 Translator.START_GAME, user2, user3, user4, user5, user6, user7, user8));
+        System.out.println(response.message);
         if(response != Response.GAME_STARTED_SUCCESSFULLY){
             startError.setVisible(true);
             startError.setText(response.message);

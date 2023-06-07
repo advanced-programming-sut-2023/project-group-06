@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AP_Project" />
-        <module name="APproject" />
         <module name="AP.Project" />
         <module name="project-group-06" />
       </profile>

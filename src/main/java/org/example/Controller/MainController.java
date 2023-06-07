@@ -14,6 +14,7 @@ import java.util.regex.Matcher;
 
 public class MainController {
     public static Response startGame(Matcher matcher){
+        matcher.find();
         String username2 = Controller.makeEntryValid(matcher.group("username2"));
         String username3 = Controller.makeEntryValid(matcher.group("username3"));
         String username4 = Controller.makeEntryValid(matcher.group("username4"));
@@ -45,10 +46,12 @@ public class MainController {
     }
 
     public static String addGamePlayer(ArrayList<User> players, String username){
-        if(username == null)
+        if(username == null || username.equals("null")) {
             return null;
-        if(Data.getUserByName(username) == null)
+        }
+        if(Data.getUserByName(username) == null) {
             return "failed";
+        }
         players.add(Data.getUserByName(username));
         return null;
     }

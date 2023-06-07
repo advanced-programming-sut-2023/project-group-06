@@ -18,6 +18,7 @@ import org.example.Model.Data;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
 import org.example.View.Graphics.SuperImage;
+import org.example.View.MainMenu;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -98,6 +99,9 @@ public class GameMenu extends Application {
     }
 
     private Scene sceneMaker() throws Exception {
+        System.out.println(MainMenu.class.getResource("/FXML/MainMenu.fxml"));
+        System.out.println(GameMenu.class.getResource("/FXML/MainMenu.fxml"));
+        System.out.println(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
         mainStackPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
         mainBorderPane = (BorderPane) mainStackPane.getChildren().get(0);
         mainPane = (Pane) mainStackPane.getChildren().get(1);
