@@ -11,7 +11,7 @@ public enum BuildingType {
     SMALL_STONE_GATEHOUSE(SuperImage.SMALL_STONE_GATEHOUSE, 1000,0,3,ResourcesType.STONE,0,0,0,true,"small stone gatehouse",Gate.class),
     BIG_STONE_GATEHOUSE(SuperImage.BIG_STONE_GATEHOUSE, 2000,0,5,ResourcesType.STONE,20,0,0,true,"big stone gatehouse", Gate.class),
     DRAWBRIDGE(SuperImage.DRAWBRIDGE, 1,0,1,ResourcesType.WOOD,10,0,0,true,"drawbridge", Gate.class), //pol moteharek
-    LOOKOUT_TOWER(SuperImage.LOOKOUT_TOWER, 1300,0,3,ResourcesType.STONE,10,0,0,true,"lookout tower", Towers.class), // borje didbani
+    LOOKOUT_TOWER(SuperImage.LOOKOUT_TOWER, 1300,0,1,ResourcesType.STONE,10,0,0,true,"lookout tower", Towers.class), // borje didbani
     PERIMETER_TOWER(SuperImage.PERIMETER_TOWER, 1000,0,3,ResourcesType.STONE,10,0,0,true,"perimeter tower", Towers.class), // borj mohiti
     DEFENSE_TURRET(SuperImage.DEFENSE_TURRET, 1200,0,3,ResourcesType.STONE,15,0,0,true,"defense turret", Towers.class), //borjak defaei
     SQUARE_TOWER(SuperImage.SQUARE_TOWER, 1600,0,3,ResourcesType.STONE,35,0,0,true,"square tower", Towers.class), // borj moarabei
