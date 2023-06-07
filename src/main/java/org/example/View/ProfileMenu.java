@@ -202,7 +202,8 @@ public class ProfileMenu extends Application {
         UserGmail.setText(Data.getCurrentUser().getEmail());
         userSlogan.setText(Data.getCurrentUser().getSlogan());
         userSlogan.setWrapText(true);
-        int lines = (Data.getCurrentUser().getSlogan().length() / 30) + 1;
+        Text text1 = new Text(userSlogan.getText());
+        int lines = (int)(text1.getBoundsInLocal().getWidth() / 170) + 1;
         userSlogan.setMinHeight(lines * 42);
         userSlogan.setMaxHeight(lines * 42);
         if(Objects.equals(Data.getCurrentUser().getSlogan(), "")

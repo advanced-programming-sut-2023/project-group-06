@@ -76,7 +76,6 @@ public class GameMenu extends Application {
         });
     }
 
-
     private void zoomOut() {
         if (mainCanvas.getScaleX() > 0.5) {
             mainCanvas.setScaleX(mainCanvas.getScaleX() / 1.5);
@@ -92,6 +91,7 @@ public class GameMenu extends Application {
         }
         fitCanvasToCenter();
     }
+
     private void fitCanvasToCenter() {
         System.out.println(mainCanvas.getWidth());
         mainCanvas.setLayoutX(canvasPane.getWidth()/2 - mainCanvas.getWidth()/2);
@@ -99,9 +99,6 @@ public class GameMenu extends Application {
     }
 
     private Scene sceneMaker() throws Exception {
-        System.out.println(MainMenu.class.getResource("/FXML/MainMenu.fxml"));
-        System.out.println(GameMenu.class.getResource("/FXML/MainMenu.fxml"));
-        System.out.println(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
         mainStackPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
         mainBorderPane = (BorderPane) mainStackPane.getChildren().get(0);
         mainPane = (Pane) mainStackPane.getChildren().get(1);

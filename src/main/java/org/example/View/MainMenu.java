@@ -77,11 +77,6 @@ public class MainMenu extends Application {
     }
 
     public void setThePain(){
-        /*Media media = new Media(getClass().getResource("/media/Fluffing-a-Duck.mp3").toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.play();*/
         borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/knight.jpg").toExternalForm()))
                 , null, null)));

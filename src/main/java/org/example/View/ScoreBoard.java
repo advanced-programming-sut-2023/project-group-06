@@ -32,7 +32,6 @@ public class ScoreBoard extends Application {
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
         scene = new Scene(scrollPane);
-//        stage.setFullScreen(true);
         stage.setScene(scene);
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
