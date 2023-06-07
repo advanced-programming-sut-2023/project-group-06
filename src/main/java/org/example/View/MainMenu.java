@@ -35,7 +35,7 @@ public class MainMenu extends Application {
     MainController mainController;
     private BorderPane borderPane;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
 
     public MainMenu() {
     }

@@ -34,7 +34,7 @@ public class LoginMenu extends Application {
     LoginController loginController;
     private BorderPane borderPane;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
     private boolean didForget = false;
 
     private static final String[] questions = {"What is my father's name?", "What is my first pet's name?", "What is my mother's last name?"};

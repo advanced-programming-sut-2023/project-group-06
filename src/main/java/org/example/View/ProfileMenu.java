@@ -47,7 +47,7 @@ public class ProfileMenu extends Application {
     public Label emailError;
     ProfileController profileController;
     private Scene scene;
-    private Stage stage;
+    private static Stage stage;
     private BorderPane borderPane;
 
 //    public MenuType run(Scanner scanner) {
