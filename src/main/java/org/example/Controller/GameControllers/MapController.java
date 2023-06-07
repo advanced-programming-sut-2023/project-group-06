@@ -173,12 +173,12 @@ public class MapController {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.BLACK);
         gc.fillRect(0, 0, canvasWidth, canvasHeight);
-        int sStart = Math.min(mapWidth + mapHeight - 2, y / 23 + 1);
+        int sStart = Math.min(mapWidth + mapHeight - 2, y / 23 + 5);
         int sEnd = Math.max(0, (y - canvasHeight - 100) / 23);
         for (int s = sStart; s >= sEnd; s--) {
             int iStart = Math.max(0, (s - 1 - x / 46) / 2);
             iStart = Math.max(iStart, s + 1 - mapWidth);
-            int iEnd = Math.min(mapHeight - 1, (s + 1 + (canvasWidth - x) / 46) / 2);
+            int iEnd = Math.min(mapHeight - 1, (s + 1 + (canvasWidth - x) / 46) / 2 + 5);
             iEnd = Math.min(iEnd, s);
             for (int i = iStart; i <= iEnd; i++) {
                 int j = s - i;

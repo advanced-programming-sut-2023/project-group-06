@@ -60,8 +60,16 @@ public class GameMenu extends Application {
         mainCanvas.setWidth(8000);
 
         for(int i = 0; i < 10 ; i++) for(int j =0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW,i,j);
+        map[5][5].setBuilding(new Building(null, BuildingType.TREE, 5, 5));
+        map[5][6].setBuilding(new Building(null, BuildingType.ROCK, 6, 5));
         Building building = new Building(null, BuildingType.BARRACKS, 20, 20);
         for(int i = 19; i < 22; i++) for(int j = 19; j < 22; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.SMALL_STONE_GATEHOUSE, 23,20);
+        for(int i = 19; i < 22; i++) for(int j = 22; j < 25; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BIG_STONE_GATEHOUSE, 27,20);
+        for(int i = 18; i < 23; i++) for(int j = 25; j < 30; j++) map[i][j].setBuilding(building);
+
+
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
