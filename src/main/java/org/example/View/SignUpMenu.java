@@ -116,6 +116,7 @@ public class SignUpMenu extends Application {
         Screen screen = Screen.getPrimary();
         stage.setWidth(screen.getBounds().getWidth());
         stage.setHeight(screen.getBounds().getHeight());
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
@@ -305,7 +306,7 @@ public class SignUpMenu extends Application {
         confirm.setOnMouseClicked(mouseEvent -> {
             //        if (captcha not valid) ...
             // todo
-            String questionString = (String)(question.getValue());
+            String questionString = (String) (question.getValue());
             String questionNumber = (questionString.equals("What is my father's name?")) ?
                     "1" : (questionString.equals("What is my first pet's name?")) ? "2" :
                     (questionString.equals("What is my mother's last name?")) ? "3" : "";
@@ -333,11 +334,11 @@ public class SignUpMenu extends Application {
         return confirm;
     }
 
-    public void haveAccount (ActionEvent actionEvent) throws Exception {
+    public void haveAccount(ActionEvent actionEvent) throws Exception {
         new LoginMenu().start(stage);
     }
 
-    public void passwordToggleAction (ActionEvent actionEvent){
+    public void passwordToggleAction(ActionEvent actionEvent) {
         passwordStackPane.getChildren().get(0).toFront();
         passwordStackPane.getChildren().get(0).setVisible(false);
         passwordStackPane.getChildren().get(1).setVisible(true);
@@ -351,7 +352,7 @@ public class SignUpMenu extends Application {
                 , null, null)));
     }
 
-    private void handleError (Response response){
+    private void handleError(Response response) {
         if (response == Response.EMPTY_USERNAME || response == Response.USERNAME_EXISTS || response == Response.INVALID_USERNAME_FORMAT) {
             username.setStyle("-fx-border-color: RED");
         } else if (response == Response.EMPTY_PASSWORD || response == Response.SHORT_PASSWORD || response == Response.PASSWORD_CAPITAL
@@ -359,16 +360,14 @@ public class SignUpMenu extends Application {
                 || response == Response.PASSWORD_SYMBOL) {
             passwordTextField.setStyle("-fx-border-color: RED");
             passwordPasswordField.setStyle("-fx-border-color: RED");
-        }
-        else if(response == Response.EMPTY_CONFIRMATION
+        } else if (response == Response.EMPTY_CONFIRMATION
                 || response == Response.PASSWORD_CONFIRMATION) {
             passwordConfirmationTextField.setStyle("-fx-border-color: RED");
             passwordConfirmationPasswordField.setStyle("-fx-border-color: RED");
-        }
-        else if(response == Response.EMPTY_EMAIL || response == Response.EMAIL_EXISTS
+        } else if (response == Response.EMPTY_EMAIL || response == Response.EMAIL_EXISTS
                 || response == Response.INVALID_EMAIL_FORMAT)
             email.setStyle("-fx-border-color: RED");
-        else if(response == Response.EMPTY_NICKNAME)
+        else if (response == Response.EMPTY_NICKNAME)
             nickname.setStyle("-fx-border-color: RED");
     }
 }

@@ -9,4 +9,7 @@ module AP.Project {
     opens GraphicTest to javafx.fxml;
     exports org.example.View;
     opens org.example.View to javafx.fxml;
+    exports org.example.View.GameMenus;
+    opens org.example.View.GameMenus to javafx.fxml;
+
 }
