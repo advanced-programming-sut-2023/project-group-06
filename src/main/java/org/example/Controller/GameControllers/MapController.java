@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import org.example.Model.*;
+import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Trap;
 import org.example.View.Response;
@@ -181,9 +182,31 @@ public class MapController {
             iEnd = Math.min(iEnd, s);
             for (int i = iStart; i <= iEnd; i++) {
                 int j = s - i;
-                drawTileAt(gc, map[i][j], x + (i - j) * 46, y - s * 23);
+                Building building = map[i][j].getBuilding();
+                if (building == null || building.getXCoordinate() == j && building.getYCoordinate() == i)
+                    drawBuildingAndFriends(gc, map, i, j, x, y);
+                // drawTileAt(gc, map[i][j], x + (i - j) * 46, y - s * 23);
             }
         }
+    }
+
+    private static void drawBuildingAndFriends(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y) {
+        Building building = map[i][j].getBuilding();
+        if (building == null) {
+            drawTileAt(gc, map[i][j], x + (i - j) * 46, y - (i + j) * 23);
+        } else {
+            int size = building.getBuildingType().getSize();
+            for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
+                for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
+                    drawTileAt(gc, map[ii][jj], x + (ii - jj) * 46, y - (ii + jj) * 23);
+            drawBuildingAt(gc, building, x + (i - j) * 46, y - (i + j) * 23);
+        }
+        // soldiers todo
+    }
+
+    private static void drawBuildingAt(GraphicsContext gc, Building building, int x, int y) {
+        if (building == null) return;
+        gc.drawImage(building.getImg().getImage(), x - building.getImg().getXo(), y - building.getImg().getYo());
     }
 
     private static void drawTileAt(GraphicsContext gc, Tile tile, int x, int y) {

@@ -6,6 +6,7 @@ import org.example.Model.Kingdom;
 import org.example.Model.Resources;
 import org.example.Model.Soldier;
 import org.example.Model.Tile;
+import org.example.View.Graphics.SuperImage;
 
 import java.util.ArrayList;
 
@@ -25,6 +26,12 @@ public class Building {
     private ArrayList<Soldier> tunnelers = new ArrayList<>();
     private ArrayList<Soldier> ladderMen = new ArrayList<>();
     private int fireDamageEachTurn = 0;
+    private SuperImage img;
+
+    public SuperImage getImg() {
+        return img;
+    }
+
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
@@ -35,6 +42,7 @@ public class Building {
         if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
         if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
         if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
+        this.img = buildingType.getSuperImage();
     }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){

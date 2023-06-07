@@ -6,6 +6,7 @@ import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -14,6 +15,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.MapController;
+import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.Data;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
@@ -53,10 +56,12 @@ public class GameMenu extends Application {
     private void starter() {
         makeMapDraggable();
         map = Data.loadMap("test");
-        mainCanvas.setHeight(2000);
-        mainCanvas.setWidth(2000);
+        mainCanvas.setHeight(3000);
+        mainCanvas.setWidth(8000);
 
         for(int i = 0; i < 10 ; i++) for(int j =0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW,i,j);
+        Building building = new Building(null, BuildingType.BARRACKS, 20, 20);
+        for(int i = 19; i < 22; i++) for(int j = 19; j < 22; j++) map[i][j].setBuilding(building);
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
