@@ -279,6 +279,10 @@ public class SignUpMenu extends Application {
 //        gc.setFont(new Font("Arial", 3));
 //        gc.fillText(randomCaptcha, 5, 6);
 //        questionPickMenu.getChildren().add(canvas);
+        String captcha = Controller.generator();
+        TextField captchaTextField = new TextField();
+        HBox captchaBox = captchaMaker(captcha, captchaTextField);
+        questionPickMenu.getChildren().add(captchaBox);
         String username = this.username.getText();
         Button back = new Button("back");
         back.setOnMouseClicked(mouseEvent -> {
@@ -369,5 +373,36 @@ public class SignUpMenu extends Application {
             email.setStyle("-fx-border-color: RED");
         else if (response == Response.EMPTY_NICKNAME)
             nickname.setStyle("-fx-border-color: RED");
+    }
+
+    private HBox captchaMaker(String captcha, TextField textField) {
+        HBox hBox = new HBox();
+        hBox.setAlignment(Pos.CENTER);
+        System.out.println(captcha);
+        int captchaLength = captcha.length();
+        for (int i = 0; i < captchaLength; i++) {
+            Canvas canvas = new Canvas(50, 50);
+            GraphicsContext gc = canvas.getGraphicsContext2D();
+            int R = 128 - (int) (Math.random() * 128);
+            int G = 128 - (int) (Math.random() * 128);
+            int B = 128 - (int) (Math.random() * 128);
+            gc.setFill(Color.rgb(R,G,B));
+            gc.setFont(new Font("Arial", 5));
+            String fill = Controller.captchaLetterGenerator(captcha.charAt(i) - '0');
+            gc.fillText(fill, 5, 6);
+            hBox.getChildren().add(canvas);
+        }
+        textField.setPromptText("captcha");
+        hBox.getChildren().add(textField);
+        return hBox;
+    }
+
+    private String randomColor() {
+        int R = 170 - (int) (Math.random() * 128);
+        int G = 170 - (int) (Math.random() * 128);
+        int B = 170 - (int) (Math.random() * 128);
+        String color = '#' + Integer.toHexString(R) + Integer.toHexString(G) + Integer.toHexString(B);
+        System.out.println(color);
+        return color;
     }
 }

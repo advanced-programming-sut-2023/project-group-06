@@ -21,6 +21,11 @@
     -fx-min-height: 40;
 }
 
+.captcha{
+    -fx-min-width: 50;
+    -fx-max-width: 50;
+}
+
 .button2{
     -fx-min-width: 70;
     -fx-max-width: 70;
