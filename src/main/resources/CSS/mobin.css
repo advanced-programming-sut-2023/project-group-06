@@ -13,6 +13,14 @@
     -fx-cursor: HAND;
 }
 
+.toggle-button{
+    -fx-cursor: HAND;
+    -fx-max-width: 40;
+    -fx-min-width: 40;
+    -fx-max-height: 40;
+    -fx-min-height: 40;
+}
+
 .button2{
     -fx-min-width: 70;
     -fx-max-width: 70;
@@ -167,4 +175,11 @@ ImageView {
 RadioButton {
     -fx-font-family: "Times New Roman";
     -fx-font-size: 15;
+}
+
+.amount {
+    -fx-font-family: "Times New Roman";
+    -fx-font-size: 15;
+    -fx-max-width: 100;
+    -fx-min-width: 100;
 }
