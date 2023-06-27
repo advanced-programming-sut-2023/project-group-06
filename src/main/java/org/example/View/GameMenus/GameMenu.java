@@ -34,7 +34,6 @@ public class GameMenu extends Application {
     int mapPointerY = 1000;
     double lastMouseX;
     double lastMouseY;
-    //
 
     @Override
     public void start(Stage stage) throws Exception {
