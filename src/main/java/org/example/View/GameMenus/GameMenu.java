@@ -4,14 +4,16 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.Data;
@@ -25,7 +27,7 @@ public class GameMenu extends Application {
     public StackPane mainStackPane;
     public BorderPane mainBorderPane;
     public Canvas mainCanvas;
-    public HBox bottomHBox;
+    public static HBox bottomHBox;
     public Pane mainPane;
     public Pane canvasPane;
     // map things
@@ -103,9 +105,36 @@ public class GameMenu extends Application {
         mainPane = (Pane) mainStackPane.getChildren().get(1);
         canvasPane = (Pane) mainBorderPane.getCenter();
         bottomHBox = (HBox) mainBorderPane.getBottom();
+        kingdomTape();
         mainCanvas = (Canvas) canvasPane.getChildren().get(0);
         Scene scene = new Scene(mainStackPane);
         return scene;
+    }
+
+    public HBox kingdomTape() {
+        HBox hBox = bottomHBox;
+        hBox.setMinHeight(230);
+        HBox buildingHBox = new HBox(), popularityHBox = new HBox();
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(buildingHBox, popularityHBox);
+        hBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
+        hBox.getChildren().addAll(stackPane);
+        stackPane.setMinHeight(150);
+        stackPane.setMaxHeight(150);
+        stackPane.setTranslateX(-160);
+        stackPane.setMinWidth(545);
+        stackPane.setMaxWidth(545);
+        popularityHBox.setVisible(false);
+        hBox.setAlignment(Pos.BOTTOM_CENTER);
+        buildingHBox.setStyle("-fx-background-color: RED");
+        popularityHBox.setStyle("-fx-background-color: BLUE");
+        buildingHBox.getChildren().addAll(new Text("s"), new Button("ssss"));
+        Button button = new Button("aa");
+        button.setOnMouseClicked(mouseEvent -> {
+            System.out.println("slam");
+        });
+        buildingHBox.getChildren().add(button);
+        return hBox;
     }
 
 //    public void initialize() {
