@@ -17,6 +17,7 @@ public enum Translator {
     FORGOT_PASSWORD("username"),
     BUY("count", "type"),
     SELL("count", "type"),
+    SEND_TRADE_REQUEST("resourceType", "resourceAmount", "message", "price", "username"),
     ;
 
     private String[] groupNames;

@@ -46,10 +46,12 @@ public class MainController {
     }
 
     public static String addGamePlayer(ArrayList<User> players, String username){
-        if(username == null)
+        if(username == null || username.equals("null")) {
             return null;
-        if(Data.getUserByName(username) == null)
+        }
+        if(Data.getUserByName(username) == null) {
             return "failed";
+        }
         players.add(Data.getUserByName(username));
         return null;
     }

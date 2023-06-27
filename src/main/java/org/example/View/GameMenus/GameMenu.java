@@ -20,6 +20,7 @@ import org.example.Model.Data;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
 import org.example.View.Graphics.SuperImage;
+import org.example.View.MainMenu;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -77,7 +78,6 @@ public class GameMenu extends Application {
         });
     }
 
-
     private void zoomOut() {
         if (mainCanvas.getScaleX() > 0.5) {
             mainCanvas.setScaleX(mainCanvas.getScaleX() / 1.5);
@@ -93,6 +93,7 @@ public class GameMenu extends Application {
         }
         fitCanvasToCenter();
     }
+
     private void fitCanvasToCenter() {
         System.out.println(mainCanvas.getWidth());
         mainCanvas.setLayoutX(canvasPane.getWidth()/2 - mainCanvas.getWidth()/2);

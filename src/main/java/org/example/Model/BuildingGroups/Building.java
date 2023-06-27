@@ -25,6 +25,7 @@ public class Building {
     private ArrayList<Soldier> tunnelers = new ArrayList<>();
     private ArrayList<Soldier> ladderMen = new ArrayList<>();
     private int fireDamageEachTurn = 0;
+
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;

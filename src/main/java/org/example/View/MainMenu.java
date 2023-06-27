@@ -77,11 +77,6 @@ public class MainMenu extends Application {
     }
 
     public void setThePain(){
-        /*Media media = new Media(getClass().getResource("/media/Fluffing-a-Duck.mp3").toString());
-        mediaPlayer = new MediaPlayer(media);
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-        mediaPlayer.setAutoPlay(true);
-        mediaPlayer.play();*/
         borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/knight.jpg").toExternalForm()))
                 , null, null)));
@@ -153,6 +148,7 @@ public class MainMenu extends Application {
         String user8 =  size >= 7 ? ((TextField) hBox1.getChildren().get(6)).getText() : null;
         Response response = MainController.startGame(Translator.getMatcherByGroups(
                 Translator.START_GAME, user2, user3, user4, user5, user6, user7, user8));
+        System.out.println(response.message);
         if(response != Response.GAME_STARTED_SUCCESSFULLY){
             startError.setVisible(true);
             startError.setText(response.message);

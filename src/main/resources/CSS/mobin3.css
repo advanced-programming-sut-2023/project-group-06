@@ -19,3 +19,16 @@ Label{
     -fx-padding: 10;
     -fx-pref-width: 150;
 }
+
+.ButtonRed{
+    -fx-min-width: 100;
+    -fx-max-width: 100;
+    -fx-background-color: #e81625;
+    -fx-border-color: #680c72;
+    -fx-border-width: 2;
+    -fx-text-fill: #fdd94b;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+    -fx-font-size: 23;
+    -fx-font-family: "Book Antiqua";
+}
