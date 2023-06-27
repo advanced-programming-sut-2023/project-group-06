@@ -12,6 +12,8 @@ public enum SuperImage {
     STONE("Tiles/stone.png", 46, 23),
     IRON("Tiles/iron.png", 46, 23),
     GRASS("Tiles/grass.png", 46, 23),
+    MEADOW("Tiles/grass.png", 46, 23),
+    DENSE_MEADOW("Tiles/grass.png", 46, 23),
     OIL("Tiles/oil.png", 46, 23),
     SHALLOW_WATER("Tiles/shallow-water.png", 46, 23),
     PLAIN("Tiles/plain.png", 46, 23),
@@ -20,8 +22,6 @@ public enum SuperImage {
     BIG_LAKE("Tiles/big-lake.png", 46, 23),
     BEACH("Tiles/beach.png", 46, 23),
     SEA("Tiles/sea.png", 46, 23),
-    MEADOW("Tiles/meadow.png",46,33),
-    DENSE_MEADOW("Tiles/dense-meadow.png", 46, 33),
     ;
     Image image;
     int Xo;

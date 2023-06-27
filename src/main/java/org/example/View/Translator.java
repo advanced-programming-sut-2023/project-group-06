@@ -16,6 +16,8 @@ public enum Translator {
     SECURITY_QUESTION("questionNumber", "answer", "answerConfirmation"),
     FORGOT_PASSWORD("username"),
     SEND_TRADE_REQUEST("resourceType", "resourceAmount", "message", "price", "username"),
+    BUY("count", "type"),
+    SELL("count", "type"),
     ;
 
     private String[] groupNames;
