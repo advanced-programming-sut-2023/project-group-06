@@ -22,7 +22,7 @@ public enum BuildingType {
     ENGINEERS_GUILD(SuperImage.ENGINEERS_GUILD, 500,100,3,ResourcesType.WOOD,10,0,0,true,"engineers guild", Storage.class), // senf mohandesan
     KILLING_PIT(SuperImage.KILLING_PIT, 1,0,1,ResourcesType.WOOD,6,0,0,true,"killing pit", Trap.class), //godal koshtar
     INN(SuperImage.INN, 300,100,3,ResourcesType.WOOD,20,1,0,false,"inn",Producers.class), //mosafer khane
-    MILL(SuperImage.MILL, 300,0,3,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
+    MILL(SuperImage.MILL, 300,0,1,ResourcesType.WOOD,20,3,0,false,"mill", Producers.class), //asyab
     IRON_MINE(SuperImage.IRON_MINE, 100,0,3,ResourcesType.WOOD,20,2,0,false,"iron mine", Producers.class),
     MARKET(SuperImage.MARKET, 300,0,3,ResourcesType.WOOD,5,1,0,false,"market",Building.class),
     OX_TETHER(SuperImage.OX_TETHER, 100,0,1,ResourcesType.WOOD,5,1,0,true,"ox tether", Producers.class), //afsar gav
@@ -38,7 +38,7 @@ public enum BuildingType {
     FLETCHER(SuperImage.FLETCHER, 300,100,3,ResourcesType.WOOD,20,1,0,false,"fletcher", Building.class), //kaman sazi
     POLETURNER(SuperImage.POLETURNER, 300,100,3,ResourcesType.WOOD,10,1,0,false,"poleturner", Building.class), //neyze sazi
     OIL_SMELTER(SuperImage.OIL_SMELTER, 300,100,3,ResourcesType.IRON,10,0,1,true,"oil smelter", Producers.class), //karkhane zob
-    PITCH_DITCH(SuperImage.PITCH_DITCH, 300,0,3,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
+    PITCH_DITCH(SuperImage.PITCH_DITCH, 300,0,1,ResourcesType.PITCH,10,0,0,true,"pitch ditch", Trap.class), //khandagh ghir
     CAGED_WAR_DOGS(SuperImage.CAGED_WAR_DOGS, 100,100,3,ResourcesType.WOOD,10,0,0,false,"caged war dogs", Storage.class),
     SIEGE_TENT(SuperImage.SIEGE_TENT, 100,0,1,null,0,0,0,false,"siege tent", Building.class), //chador mohasere
     STABLE(SuperImage.STABLE, 300,400,3,ResourcesType.WOOD,20,0,0,true,"stable", Storage.class),
