@@ -62,6 +62,7 @@ public class GameMenu extends Application {
         stage.show();
     }
 
+
     Tile[][] map;
     private void starter() {
         makeMapDraggable();
