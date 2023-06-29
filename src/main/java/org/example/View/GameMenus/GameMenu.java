@@ -1,26 +1,23 @@
 package org.example.View.GameMenus;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.Data;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
-import org.example.View.Graphics.SuperImage;
-import org.example.View.MainMenu;
+
+import java.util.ArrayList;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -36,7 +33,12 @@ public class GameMenu extends Application {
     int mapPointerY = 1000;
     double lastMouseX;
     double lastMouseY;
-    //
+    private ArrayList<String> buildingIcons = new ArrayList<>();
+    private int[] buildingGroup = new int[6];
+    private int buildingIndex = 0;
+    private HBox buildingHBox, popularityHBox, buildingGroupHBox;
+    private BorderPane buildingBorderPane;
+    private VBox actionVBox;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -47,6 +49,8 @@ public class GameMenu extends Application {
             System.out.println("ininin " + mainCanvas);
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
+            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
+            else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
         });
         starter();
         stage.show();
@@ -112,30 +116,132 @@ public class GameMenu extends Application {
         return scene;
     }
 
-    public HBox kingdomTape() {
-        HBox hBox = bottomHBox;
-        hBox.setMinHeight(230);
-        HBox buildingHBox = new HBox(), popularityHBox = new HBox();
+    private void setBuildingIndex(int i) {
+        System.out.println("ttt: " + i);
+        if (i >= buildingIcons.size() - 4 || i < 0) return;
+        buildingIndex = i;
+        showBuildings();
+    }
+
+    private void showBuildings() {
+        System.out.println("000");
+        buildingHBox.getChildren().clear();
+        buildingHBox.setSpacing(10);
+        for (int i = 0; i < 4; i++) {
+            ImageView buildingImage = new ImageView(buildingIcons.get(buildingIndex + i));
+            buildingImage.setFitHeight(100);
+            buildingImage.setFitWidth(100);
+            buildingHBox.getChildren().add(buildingImage);
+        }
+    }
+
+    public void kingdomTape() {
+        bottomHBox.setMinHeight(230);
+        initBuildingsArray();
+        popularityHBox = new HBox();
+        buildingBorderPane = new BorderPane();
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(buildingHBox, popularityHBox);
-        hBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
-        hBox.getChildren().addAll(stackPane);
-        stackPane.setMinHeight(150);
-        stackPane.setMaxHeight(150);
-        stackPane.setTranslateX(-160);
-        stackPane.setMinWidth(545);
-        stackPane.setMaxWidth(545);
+        stackPane.getChildren().addAll(buildingBorderPane, popularityHBox);
+        buildingHBox = new HBox();
+        buildingBorderPane.setCenter(buildingHBox);
+        buildingGroupHBox = makeGroupHBox();
+        buildingBorderPane.setBottom(buildingGroupHBox);
+        makeActionVBox();
+        buildingBorderPane.setRight(actionVBox);
+        bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
+        bottomHBox.setFocusTraversable(true);
+        bottomHBox.getChildren().addAll(stackPane);
+        stackPane.setMinHeight(140);
+        stackPane.setMaxHeight(140);
+        stackPane.setTranslateX(-170);
+        stackPane.setMinWidth(520);
+        stackPane.setMaxWidth(520);
+        setBuildingIndex(0);
         popularityHBox.setVisible(false);
-        hBox.setAlignment(Pos.BOTTOM_CENTER);
-        buildingHBox.setStyle("-fx-background-color: RED");
+        bottomHBox.setAlignment(Pos.BOTTOM_CENTER);
         popularityHBox.setStyle("-fx-background-color: BLUE");
-        buildingHBox.getChildren().addAll(new Text("s"), new Button("ssss"));
-        Button button = new Button("aa");
-        button.setOnMouseClicked(mouseEvent -> {
-            System.out.println("slam");
+    }
+
+    private void makeActionVBox() {
+        actionVBox = new VBox();
+        String address = GameMenu.class.getResource("/Images/Icons/undo.png").toExternalForm();
+        ImageView icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            undo();
         });
-        buildingHBox.getChildren().add(button);
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/briefing.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            briefing();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/delete.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            delete();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/settings.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            options();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+    }
+
+    private void briefing() {
+    }
+
+    private void delete() {
+        
+    }
+
+    private void options() {
+        
+    }
+
+    private void undo() {
+        
+    }
+
+    private HBox makeGroupHBox() {
+        //todo make this right
+        HBox hBox = new HBox();
+        hBox.setSpacing(2);
+        for (int i = 0; i < 6; i++) {
+            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i+1) + ").png").toExternalForm();
+            ImageView buildingIcon = new ImageView(address);
+            buildingIcon.setFitHeight(20);
+            buildingIcon.setPreserveRatio(true);
+            int finalI = i;
+            buildingIcon.setOnMouseClicked(mouseEvent -> {
+                buildingIndex = buildingGroup[finalI];
+            });
+            hBox.getChildren().add(buildingIcon);
+        }
         return hBox;
+    }
+
+    private void initBuildingsArray() {
+        //todo correct this
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 16; j++) {
+                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+                buildingIcons.add(address);
+            }
+        }
+        for (int i = 0; i < 6; i++) {
+            buildingGroup[i] = i;
+        }
     }
 
 //    public void initialize() {

@@ -1492,7 +1492,7 @@ public class GameController {
 
     private static void resetOilState() {
         for (Kingdom kingdom : currentGame.getKingdoms()) {
-            int difference = 5;
+            int difference = 3;
             for (Building building : kingdom.getBuildings()) {
                 if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference)
                     building.setFlammable(false);
