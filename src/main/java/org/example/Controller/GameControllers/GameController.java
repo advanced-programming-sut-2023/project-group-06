@@ -4,7 +4,6 @@ import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.*;
-import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
 import java.util.ArrayList;

@@ -23,7 +23,6 @@ public class ProfileControllerTest {
         if (happy) System.out.println("Data loaded from src/test/FakeData.json");
         else Assertions.assertEquals(0,1);
     }
-
     @Test
     public void changeUsernameTest() throws IOException {
         changeUsernameDoer("profile change -u ", Response.EMPTY_USERNAME);
