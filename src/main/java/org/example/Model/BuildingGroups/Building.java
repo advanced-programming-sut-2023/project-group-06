@@ -42,6 +42,7 @@ public class Building {
         if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
         if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
         if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
+        this.img = buildingType.getSuperImage();
     }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate, int direction){

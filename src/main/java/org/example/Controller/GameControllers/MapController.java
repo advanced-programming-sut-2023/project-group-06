@@ -206,6 +206,7 @@ public class MapController {
 
     private static void drawBuildingAt(GraphicsContext gc, Building building, int x, int y) {
         if (building == null) return;
+        System.out.println("<<< " + building.getImg());
         gc.drawImage(building.getImg().getImage(), x - building.getImg().getXo(), y - building.getImg().getYo());
     }
 
