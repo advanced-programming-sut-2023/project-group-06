@@ -4,7 +4,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
 
-public class User implements Comparable<User> {
+public class Client implements Comparable<Client> {
     private String username = "";
     private String hashedPassword = "";
     private String nickname = "";
@@ -17,7 +17,7 @@ public class User implements Comparable<User> {
     private long lastLoginAttemptTime;
     private String avatar;
 
-    public User(String username, String password, String nickname, String email, String slogan) throws IOException {
+    public Client(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
         this.hashedPassword = DigestUtils.sha256Hex(password);
         this.nickname = nickname;
@@ -136,12 +136,9 @@ public class User implements Comparable<User> {
         this.highScore += highScore;
     }
 
-    public int getRank() {
-        return Data.getUserRank(this);
-    }
 
-    public int compareTo(User user) {
-        return this.highScore - user.highScore;
+    public int compareTo(Client client) {
+        return this.highScore - client.highScore;
     }
 
     public String getAvatar() {
@@ -163,16 +160,16 @@ public class User implements Comparable<User> {
         "image: " + this.getAvatar() + '\n';
     }
 
-    public void override(User user) {
-        this.username = user.getUsername();
-        this.hashedPassword = user.hashedPassword;
-        this.avatar = user.avatar;
-        this.email = user.email;
-        this.nickname = user.nickname;
-        this.slogan = user.slogan;
-        this.highScore = user.highScore;
-        this.hashedAnswerToQuestion = user.hashedAnswerToQuestion;
-        this.questionIndex = user.questionIndex;
+    public void override(Client client) {
+        this.username = client.getUsername();
+        this.hashedPassword = client.hashedPassword;
+        this.avatar = client.avatar;
+        this.email = client.email;
+        this.nickname = client.nickname;
+        this.slogan = client.slogan;
+        this.highScore = client.highScore;
+        this.hashedAnswerToQuestion = client.hashedAnswerToQuestion;
+        this.questionIndex = client.questionIndex;
     }
 }
 

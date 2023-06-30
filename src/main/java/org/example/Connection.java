@@ -8,12 +8,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.util.regex.Matcher;
 
 public class Connection extends Thread {
     Socket socket;
     final DataInputStream dataInputStream;
     final DataOutputStream dataOutputStream;
+    long lastTime = -2L;
+    Client client = null;
+    private boolean isConnectionAlive = true;
 
 
     public Connection(Socket socket) throws IOException {
@@ -47,7 +49,33 @@ public class Connection extends Thread {
 //            System.out.println("ccc");
 //            throw new RuntimeException(e);
 //        }
-        while (true) {
+        String input = null;
+        try {
+            input = dataInputStream.readUTF();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        JsonParser parser = new JsonParser();
+        JsonObject json = (JsonObject) parser.parse(input);
+        JsonObject userJson = json.get("user").getAsJsonObject();
+        String avatar = userJson.get("image").getAsString();
+        String password = userJson.get("password").getAsString();
+        String answerToQuestion = userJson.get("answerToQuestion").getAsString();
+        Client client2 = new Gson().fromJson(userJson, Client.class);
+        client2.setHashedPassword(password);
+        client2.setAvatar(avatar);
+        client2.setAnswerToQuestion(answerToQuestion);
+        System.out.println(json);
+        String username = userJson.get("username").getAsString();
+        Client client1 = Data.getClientByName(username);
+        if (client1 == null) {
+            Data.addClient(client2);
+            client = client2;
+        } else {
+            client1.override(client2);
+            client = client1;
+        }
+        while (isConnectionAlive) {
             try {
                 handleClient();
             } catch (IOException e) {
@@ -88,26 +116,11 @@ public class Connection extends Thread {
     }
     private synchronized void handleClient() throws IOException {
         String input = dataInputStream.readUTF();
-        if (isData(input)) {
-            input = makeValidData(input);
-            System.out.println(input);
-            JsonParser parser = new JsonParser();
-            JsonObject json = (JsonObject) parser.parse(input);
-            String avatar = json.get("image").getAsString();
-            String password = json.get("password").getAsString();
-            String answerToQuestion = json.get("answerToQuestion").getAsString();
-            User user = new Gson().fromJson(input, User.class);
-            user.setHashedPassword(password);
-            user.setAvatar(avatar);
-            user.setAnswerToQuestion(answerToQuestion);
-            String username = json.get("username").getAsString();
-            if (Data.getUserByName(username) == null) {
-                Data.addUser(user);
-            } else {
-                Data.getUserByName(username).override(user);
-            }
-
-        }
+        JsonParser parser = new JsonParser();
+        JsonObject json = (JsonObject) parser.parse(input);
+        handleClientCommand(json);
+        updateClientData(json);
+        updateLastTime(json);
         //        String data = dataInputStream.readUTF();
 //        Matcher matcher;
 //        try {
@@ -131,13 +144,32 @@ public class Connection extends Thread {
 //        }
     }
 
-    private boolean isData(String input) {
-        return true;
+    private void updateLastTime(JsonObject json) {
+        long time = json.get("isAlive").getAsJsonObject().get("time").getAsLong();
+        if (time == -1) isConnectionAlive = false;
+        else if (lastTime == -2L) return;
+        else if (time > lastTime + 100000) {
+            System.out.println("Client with username " + client.getUsername() + " has been disconnected!");
+            //todo
+        }
+    }
+
+    private void handleClientCommand(JsonObject json) {
+        String command = json.get("command").getAsJsonObject().get("command").getAsString();
         //todo
     }
 
-    private String makeValidData(String input) {
-        return input;
-        //todo
+    private synchronized void updateClientData(JsonObject json) {
+        JsonObject userJson = json.get("user").getAsJsonObject();
+        String avatar = userJson.get("image").getAsString();
+        String password = userJson.get("password").getAsString();
+        String answerToQuestion = userJson.get("answerToQuestion").getAsString();
+        Client client = new Gson().fromJson(userJson, Client.class);
+        client.setHashedPassword(password);
+        client.setAvatar(avatar);
+        client.setAnswerToQuestion(answerToQuestion);
+        String username = userJson.get("username").getAsString();
+        Client client1 = Data.getClientByName(username);
+        client1.override(client);
     }
 }
