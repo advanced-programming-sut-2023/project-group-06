@@ -1,5 +1,9 @@
 package org.example;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -10,6 +14,7 @@ public class Connection extends Thread {
     Socket socket;
     final DataInputStream dataInputStream;
     final DataOutputStream dataOutputStream;
+
 
     public Connection(Socket socket) throws IOException {
         System.out.println("New connection form: " + socket.getInetAddress() + ":" + socket.getPort());
@@ -83,8 +88,28 @@ public class Connection extends Thread {
     }
 
     private synchronized void handleClient() throws IOException {
-        System.out.println(dataInputStream.readUTF());
-//        String data = dataInputStream.readUTF();
+        String input = dataInputStream.readUTF();
+        if (isData(input)) {
+            input = makeValidData(input);
+            System.out.println(input);
+            JsonParser parser = new JsonParser();
+            JsonObject json = (JsonObject) parser.parse(input);
+            String avatar = json.get("image").getAsString();
+            String password = json.get("password").getAsString();
+            String answerToQuestion = json.get("answerToQuestion").getAsString();
+            User user = new Gson().fromJson(input, User.class);
+            user.setHashedPassword(password);
+            user.setAvatar(avatar);
+            user.setAnswerToQuestion(answerToQuestion);
+            String username = json.get("username").getAsString();
+            if (Data.getUserByName(username) == null) {
+                Data.addUser(user);
+            } else {
+                Data.getUserByName(username).override(user);
+            }
+
+        }
+        //        String data = dataInputStream.readUTF();
 //        Matcher matcher;
 //        try {
 //            if ((matcher = Commands.getMatcher(data, Commands.CREATE_TASK)).find()) {
@@ -105,5 +130,15 @@ public class Connection extends Thread {
 //        } catch (JsonSyntaxException e) {
 //            dataOutputStream.writeUTF("400: Missing topic or value or command fields.");
 //        }
+    }
+
+    private boolean isData(String input) {
+        return true;
+        //todo
+    }
+
+    private String makeValidData(String input) {
+        return input;
+        //todo
     }
 }
