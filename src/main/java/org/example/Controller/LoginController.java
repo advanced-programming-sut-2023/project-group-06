@@ -23,7 +23,9 @@ public class LoginController {
         Data.setStayLoggedIn(stayLoggedIn);
         Data.setCurrentUser(Data.getUserByName(username));
         Data.saveData("src/main/java/org/example/Model/Data.json");
-        Data.getCurrentUser().setClient(new Client("localhost", 8000));
+        Data.getCurrentUser().setClient(new Client("localhost", 8001));
+        System.out.println("salam");
+        Data.getCurrentUser().sendToServer();
         return Response.LOGIN_SUCCESSFUL;
     }
 

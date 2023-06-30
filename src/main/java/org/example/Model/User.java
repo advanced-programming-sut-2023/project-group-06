@@ -177,6 +177,7 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendToServer() throws IOException {
+        if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(""));
     }
 
@@ -195,9 +196,6 @@ public class User implements Comparable<User>, Serializable {
 
     public String toGson(String commandString) {
         JsonObject data = new JsonObject();
-        JsonObject dataType = new JsonObject();
-        dataType.addProperty("type", "user");
-        data.add("dataType", dataType);
         JsonObject user = new JsonObject();
         user.addProperty("username", this.getUsername());
         user.addProperty("password", this.getHashedPassword());
@@ -209,17 +207,17 @@ public class User implements Comparable<User>, Serializable {
         user.addProperty("highScore", this.getHighScore());
         user.addProperty("image", this.getAvatar());
         data.add("user", user);
-        client.toggle = 1 - client.toggle;
-        JsonObject toggle = new JsonObject();
-        toggle.addProperty("toggle", client.toggle);
-        data.add("isAlive", toggle);
+        JsonObject time = new JsonObject();
+        time.addProperty("time", (client.isClientActive) ? System.currentTimeMillis() / 1000L : -1L);
+        data.add("isAlive", time);
         JsonObject command = new JsonObject();
         command.addProperty("command", commandString);
+        data.add("command", command);
         String output = new Gson().toJson(data);
         return output;
     }
 
     public void inactivateClient() {
-        client.isClientAlive = false;
+        client.isClientActive = false;
     }
 }
