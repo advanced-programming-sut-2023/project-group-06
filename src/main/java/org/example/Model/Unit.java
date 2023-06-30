@@ -38,7 +38,7 @@ public class Unit {
         return cowStored;
     }
 
-    public void addToStored(int amount){
+    public void addToStored(int amount) {
         this.cowStored += amount;
     }
 
@@ -50,7 +50,7 @@ public class Unit {
         this.unitType = unitType;
         this.speed = unitType.getSpeed();
         this.health = unitType.getHitPoint();
-        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
+        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate, XCoordinate);
         if (unitType == UnitType.ENGINEER) owner.addEngineer(this);
     }
 
@@ -58,7 +58,7 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
-        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate,XCoordinate);
+        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate, XCoordinate);
         owner.addUnit(this);
     }
 
@@ -70,7 +70,7 @@ public class Unit {
         return speed;
     }
 
-    public void addToSpeed(int amount){
+    public void addToSpeed(int amount) {
         this.speed += amount;
     }
 
@@ -109,9 +109,11 @@ public class Unit {
     public void setAvailable(boolean available) {
         isAvailable = available;
     }
+
     public boolean isFlammable() {
         return isFlammable;
     }
+
     public int getLastOiledTurn() {
         return lastOiledTurn;
     }
@@ -123,6 +125,7 @@ public class Unit {
     public void addToFireDamageEachTurn(int fireDamageEachTurn) {
         this.fireDamageEachTurn += fireDamageEachTurn;
     }
+
     public void resetFireDamageEachTurn() {
         this.fireDamageEachTurn = 0;
     }

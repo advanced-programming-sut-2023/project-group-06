@@ -3,11 +3,12 @@ package org.example.Controller;
 import org.example.Model.Data;
 import org.example.View.Response;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 
 public class ProfileController {
 
-    public static Response changeUsername(Matcher matcher) {
+    public static Response changeUsername(Matcher matcher) throws IOException {
         matcher.find();
         String[] groupNames = {"username"};
         String nullGroup = Controller.nullGroup(matcher, groupNames);
@@ -20,7 +21,7 @@ public class ProfileController {
         return Response.USERNAME_CHANGE;
     }
 
-    public static Response changeNickname(Matcher matcher) {
+    public static Response changeNickname(Matcher matcher) throws IOException {
         matcher.find();
         String nullGroup = Controller.nullGroup(matcher, "nickname");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
@@ -46,13 +47,13 @@ public class ProfileController {
         return Response.RE_ENTER_PASSWORD;
     }
 
-    public static Response confirmReEnteredPassword(String oldPassword, String newPassword, String reEnteredPassword) {
+    public static Response confirmReEnteredPassword(String oldPassword, String newPassword, String reEnteredPassword) throws IOException {
         if (!newPassword.equals(reEnteredPassword)) return Response.PASSWORD_CONFIRMATION;
         if (!Data.getCurrentUser().changePassword(newPassword, oldPassword)) return Response.INCORRECT_OLD_PASSWORD;
         return Response.PASSWORD_CHANGE;
     }
 
-    public static Response changeEmail(Matcher matcher) {
+    public static Response changeEmail(Matcher matcher) throws IOException {
         matcher.find();
         String nullGroup = Controller.nullGroup(matcher, "email");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
@@ -64,7 +65,7 @@ public class ProfileController {
         return Response.EMAIL_CHANGE;
     }
 
-    public static Response changeSlogan(Matcher matcher) {
+    public static Response changeSlogan(Matcher matcher) throws IOException {
         matcher.find();
         String nullGroup = Controller.nullGroup(matcher, "slogan");
         if (nullGroup != null) return Response.getEmptyResponseByName(nullGroup);
@@ -75,7 +76,7 @@ public class ProfileController {
         return Response.SLOGAN_CHANGE;
     }
 
-    public static Response removeSlogan() {
+    public static Response removeSlogan() throws IOException {
         if (Data.getCurrentUser().getSlogan().equals("")) return Response.SLOGAN_ALREADY_NULL;
         Data.getCurrentUser().setSlogan("");
         return Response.SLOGAN_REMOVE;

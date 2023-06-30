@@ -18,6 +18,7 @@ import org.example.Controller.LoginController;
 import org.example.Controller.SignUpController;
 import org.example.Model.Data;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 
 public class LoginMenu extends Application {
@@ -214,7 +215,12 @@ public class LoginMenu extends Application {
             if (response1 != null) error.setText(response1.message);
             else {
                 String newPasswordConfirmation = newPassConfirm.getText();
-                Response response = LoginController.changePasswordSuccessful(username.getText(), answer.getText(), newPassword, newPasswordConfirmation);
+                Response response = null;
+                try {
+                    response = LoginController.changePasswordSuccessful(username.getText(), answer.getText(), newPassword, newPasswordConfirmation);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 if(response != Response.PASSWORD_CHANGE) error.setText(response.message);
                 else {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);

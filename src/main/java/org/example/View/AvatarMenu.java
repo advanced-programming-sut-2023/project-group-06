@@ -17,6 +17,7 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import org.example.Model.Data;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -42,7 +43,11 @@ public class AvatarMenu extends Application {
             circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Data.getCurrentUser().setAvatar(image);
+                    try {
+                        Data.getCurrentUser().setAvatar(image);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             circles.add(circle);

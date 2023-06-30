@@ -1,13 +1,15 @@
 package org.example.Controller;
 
+import org.example.Model.Client;
 import org.example.Model.Data;
 import org.example.View.Response;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 
 public class LoginController {
 
-    public static Response loginUser(Matcher matcher){
+    public static Response loginUser(Matcher matcher) throws IOException {
         matcher.find();
         String[] groupNames = {"username","password"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -21,6 +23,7 @@ public class LoginController {
         Data.setStayLoggedIn(stayLoggedIn);
         Data.setCurrentUser(Data.getUserByName(username));
         Data.saveData("src/main/java/org/example/Model/Data.json");
+        Data.getCurrentUser().setClient(new Client("localhost", 8000));
         return Response.LOGIN_SUCCESSFUL;
     }
 
@@ -44,13 +47,13 @@ public class LoginController {
         return null;
     }
 
-    public static Response changePasswordSuccessful(String username, String answer, String password, String passwordConfirmation) {
+    public static Response changePasswordSuccessful(String username, String answer, String password, String passwordConfirmation) throws IOException {
         if (!password.equals(passwordConfirmation)) return Response.PASSWORD_CONFIRMATION;
         Data.getUserByName(username).changePasswordBySecurityQuestion(answer,password);
         return Response.PASSWORD_CHANGE;
     }
 
-    public static void resetLoginAttempts (String username) {
+    public static void resetLoginAttempts (String username) throws IOException {
         Data.getUserByName(username).setNumberOfLoginAttempts(0);
     }
 
@@ -62,7 +65,7 @@ public class LoginController {
         return Data.getUserByName(username).getLastLoginAttemptTime();
     }
 
-    public static boolean setLastLoginAttempt (String username, long currentTime) {
+    public static boolean setLastLoginAttempt (String username, long currentTime) throws IOException {
         if ((currentTime - Data.getUserByName(username).getLastLoginAttemptTime())
                 < (Data.getUserByName(username).getNumberOfLoginAttempts() * 5)) {
             return false;

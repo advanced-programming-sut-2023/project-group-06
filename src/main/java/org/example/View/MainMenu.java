@@ -122,6 +122,10 @@ public class MainMenu extends Application {
     }
 
     public void logout(MouseEvent mouseEvent) throws Exception {
+        if (Data.getCurrentUser() != null) {
+            Data.getCurrentUser().inactivateClient();
+            Data.getCurrentUser().setClient(null);
+        }
         new SignUpMenu().start(stage);
     }
 

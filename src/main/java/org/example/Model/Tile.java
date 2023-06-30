@@ -113,7 +113,7 @@ public class Tile {
         this.building = building;
         if(building == null) return;
         if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType() == BuildingType.KILLING_PIT) height = 0;
-        if(building.getBuildingType() == BuildingType.OX_TETHER){
+        if(building.getBuildingType() == BuildingType.OX_TETHER && building.getOwner() != null){
             Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getAllUnits().add(cow);
             GameController.currentPlayer.getCows().add(cow);

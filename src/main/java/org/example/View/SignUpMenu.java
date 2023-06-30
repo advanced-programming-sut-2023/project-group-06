@@ -316,8 +316,13 @@ public class SignUpMenu extends Application {
                     (questionString.equals("What is my mother's last name?")) ? "3" : "";
             String answerString = answer.getText();
             String answerConfirmationString = answerConfirmation.getText();
-            Response response = SignUpController.securityQuestion(Translator.getMatcherByGroups(Translator.SECURITY_QUESTION, questionNumber,
-                    answerString, answerConfirmationString), username.getText());
+            Response response = null;
+            try {
+                response = SignUpController.securityQuestion(Translator.getMatcherByGroups(Translator.SECURITY_QUESTION, questionNumber,
+                        answerString, answerConfirmationString), username.getText());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             if (response != Response.USER_CREATED) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Error");

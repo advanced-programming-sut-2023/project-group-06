@@ -4,9 +4,9 @@ import org.example.Controller.Controller;
 import org.example.Controller.PathFinder;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.*;
-import org.example.Model.BuildingGroups.*;
 import org.example.View.Response;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Objects;
@@ -721,7 +721,7 @@ public class GameController {
         else return Response.ALREADY_CLOSE;
     }
 
-    public static Response nextTurn(){
+    public static Response nextTurn() throws IOException {
         if(currentGame.getTurnIndex() == currentGame.getNumberOfPlayers() - 1){
             armOilEngineers();
             resetOilState();
@@ -1033,7 +1033,7 @@ public class GameController {
         return true;
     }
 
-    private static void destroyDeadBodies() {
+    private static void destroyDeadBodies() throws IOException {
         for (int j = 0; j < currentGame.getKingdoms().size(); j++) {
             Kingdom k = currentGame.getKingdoms().get(j);
             boolean isKingDead = false;
@@ -1260,7 +1260,7 @@ public class GameController {
         TradeController.currentPlayer = currentPlayer;
     }
 
-    private static void removeKingdom(Kingdom kingdom){
+    private static void removeKingdom(Kingdom kingdom) throws IOException {
         for(Unit unit : kingdom.getUnits())
             currentGame.getTileByCoordinates(unit.getYCoordinate(),unit.getXCoordinate()).removeUnit(unit);
         for(Building building : kingdom.getBuildings()) {
@@ -1492,7 +1492,7 @@ public class GameController {
 
     private static void resetOilState() {
         for (Kingdom kingdom : currentGame.getKingdoms()) {
-            int difference = 5;
+            int difference = 3;
             for (Building building : kingdom.getBuildings()) {
                 if (currentGame.getNumberOfTurns() - building.getLastOiledTurn() >= difference)
                     building.setFlammable(false);

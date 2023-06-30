@@ -8,6 +8,7 @@ import org.example.Model.User;
 import org.example.View.Response;
 import org.example.View.SignUpMenu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -15,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignUpController {
-    public static Response createUser(Matcher matcher){
+    public static Response createUser(Matcher matcher) throws IOException {
         matcher.find();
         String[] groupNames = {"username","nickname","password","email","slogan"};
         String nullGroupName = Controller.nullGroup(matcher,groupNames);
@@ -41,7 +42,7 @@ public class SignUpController {
         User newUser = new User(username, password, nickname, email, slogan);
         return Response.PICK_SECURITY_QUESTION;
     }
-    public static Response securityQuestion(Matcher matcher, String username) {
+    public static Response securityQuestion(Matcher matcher, String username) throws IOException {
         matcher.find();
         String[] groupNames = {"questionNumber","answer","answerConfirmation"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -53,7 +54,6 @@ public class SignUpController {
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(DigestUtils.sha256Hex(answer));
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
-        System.out.println(Data.getUserByName("sina"));
 //        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
 //        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
 //            Data.removeUser(Data.getUserByName(username));

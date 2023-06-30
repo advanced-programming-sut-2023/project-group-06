@@ -2,28 +2,29 @@ package org.example.View.GameMenus;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.GameController;
-import org.example.Controller.GameControllers.KingdomController;
 import org.example.Controller.GameControllers.MapController;
+import org.example.Model.BuildingGroups.Building;
+import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.Data;
-import org.example.Model.Kingdom;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
 import org.example.View.Graphics.SuperImage;
@@ -36,13 +37,19 @@ public class GameMenu extends Application {
     public BorderPane mainBorderPane;
     public Canvas mainCanvas;
     public static HBox bottomHBox;
-    public Pane mainPane;
+    public Pane UIPane;
     public Pane canvasPane;
     // map things
     int mapPointerX = 300;
     int mapPointerY = 1000;
     double lastMouseX;
     double lastMouseY;
+    private ArrayList<String> buildingIcons = new ArrayList<>();
+    private int[] buildingGroup = new int[6];
+    private int buildingIndex = 0;
+    private HBox buildingHBox, popularityHBox, buildingGroupHBox;
+    private BorderPane buildingBorderPane;
+    private VBox actionVBox;
     Text currentPlayer;
 
     @Override
@@ -54,33 +61,115 @@ public class GameMenu extends Application {
             System.out.println("ininin " + mainCanvas);
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
+            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
+            else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
             else if (e.getCode() == KeyCode.F) nextTurn();
         });
         starter();
-        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
     Tile[][] map;
-
     private void starter() {
         makeMapDraggable();
         map = Data.loadMap("test");
-        mainCanvas.setHeight(2000);
-        mainCanvas.setWidth(2000);
+        mainCanvas.setHeight(3000);
+        mainCanvas.setWidth(8000);
 
-        for (int i = 0; i < 10; i++)
-            for (int j = 0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW, i, j);
+        for(int i = 0; i < 10 ; i++) for(int j =0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW,i,j);
+        map[5][0].setBuilding(new Building(null, BuildingType.SIEGE_TENT, 0, 5));
+        map[5][1].setBuilding(new Building(null, BuildingType.STOCKPILE, 1, 5));
+        map[5][2].setBuilding(new Building(null, BuildingType.OX_TETHER, 2, 5));
+        map[5][3].setBuilding(new Building(null, BuildingType.MILL, 3, 5));
+        map[5][4].setBuilding(new Building(null, BuildingType.KILLING_PIT, 4, 5));
+        map[5][5].setBuilding(new Building(null, BuildingType.TREE, 5, 5));
+        map[5][6].setBuilding(new Building(null, BuildingType.ROCK, 6, 5));
+        map[5][7].setBuilding(new Building(null, BuildingType.LOOKOUT_TOWER, 7, 5));
+        map[5][8].setBuilding(new Building(null, BuildingType.ARMORY, 8, 5));
+        map[0][0].setBuilding(new Building(null, BuildingType.PITCH_DITCH, 0, 0));
+        map[0][1].setBuilding(new Building(null, BuildingType.GRANARY, 1, 0));
+
+
+
+        Building building = new Building(null, BuildingType.INN, 1, 20);
+        for(int i = 19; i < 22; i++) for(int j = 0; j < 3; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.ENGINEERS_GUILD, 4, 20);
+        for(int i = 19; i < 22; i++) for(int j = 3; j < 6; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.MERCENARY_POST, 7, 20);
+        for(int i = 19; i < 22; i++) for(int j = 6; j < 9; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BARRACKS, 10, 20);
+        for(int i = 19; i < 22; i++) for(int j = 9; j < 12; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.SMALL_STONE_GATEHOUSE, 13,20);
+        for(int i = 19; i < 22; i++) for(int j = 12; j < 15; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BIG_STONE_GATEHOUSE, 17,20);
+        for(int i = 18; i < 23; i++) for(int j = 15; j < 20; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.PERIMETER_TOWER, 21,20);
+        for(int i = 19; i < 22; i++) for(int j = 20; j < 23; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.DEFENSE_TURRET, 24,20);
+        for(int i = 19; i < 22; i++) for(int j = 23; j < 26; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.SQUARE_TOWER, 27,20);
+        for(int i = 19; i < 22; i++) for(int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.ROUND_TOWER, 30,20);
+        for(int i = 19; i < 22; i++) for(int j = 29; j < 32; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.IRON_MINE, 33,20);
+        for(int i = 19; i < 22; i++) for(int j = 32; j < 35; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.MARKET, 36,20);
+        for(int i = 19; i < 22; i++) for(int j = 35; j < 38; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.PITCH_RIG, 39,20);
+        for(int i = 19; i < 22; i++) for(int j = 38; j < 41; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.QUARRY, 42,20);
+        for(int i = 19; i < 22; i++) for(int j = 41; j < 44; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.WOODCUTTERS, 45,20);
+        for(int i = 19; i < 22; i++) for(int j = 44; j < 47; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.HOVEL, 48,20);
+        for(int i = 19; i < 22; i++) for(int j = 47; j < 50; j++) map[i][j].setBuilding(building);
+        ///////////////////////
+        building = new Building(null, BuildingType.CATHEDRAL, 2,12);
+        for(int i = 10; i < 15; i++) for(int j = 0; j < 5; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.CHURCH, 6,12);
+        for(int i = 11; i < 14; i++) for(int j = 5; j < 8; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.ARMORER, 9,12);
+        for(int i = 11; i < 14; i++) for(int j = 8; j < 11; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.FLETCHER, 12,12);
+        for(int i = 11; i < 14; i++) for(int j = 11; j < 14; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.POLETURNER, 15,12);
+        for(int i = 11; i < 14; i++) for(int j = 14; j < 17; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.OIL_SMELTER, 18,12);
+        for(int i = 11; i < 14; i++) for(int j = 17; j < 20; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.STABLE, 21,12);
+        for(int i = 11; i < 14; i++) for(int j = 20; j < 23; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BLACKSMITH, 24,12);
+        for(int i = 11; i < 14; i++) for(int j = 23; j < 26; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.APPLE_ORCHARD, 27,12);
+        for(int i = 11; i < 14; i++) for(int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.DIARY_FARMER, 30,12);
+        for(int i = 11; i < 14; i++) for(int j = 29; j < 32; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.HOPS_FARMER, 33,12);
+        for(int i = 11; i < 14; i++) for(int j = 32; j < 35; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.HUNTERS_POST, 36,12);
+        for(int i = 11; i < 14; i++) for(int j = 35; j < 38; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.WHEAT_FARMER, 39,12);
+        for(int i = 11; i < 14; i++) for(int j = 38; j < 41; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BAKERY, 42,12);
+        for(int i = 11; i < 14; i++) for(int j = 41; j < 44; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.BREWER, 45,12);
+        for(int i = 11; i < 14; i++) for(int j = 44; j < 47; j++) map[i][j].setBuilding(building);
+        building = new Building(null, BuildingType.MAIN_CASTLE, 48,12);
+        for(int i = 11; i < 14; i++) for(int j = 47; j < 50; j++) map[i][j].setBuilding(building);
+
+
+
+
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
 
     private void makeMapDraggable() {
-        mainPane.setOnMousePressed(e -> {
+        UIPane.setOnMousePressed(e -> {
             lastMouseX = e.getSceneX();
             lastMouseY = e.getSceneY();
         });
-        mainPane.setOnMouseDragged(e -> {
+        UIPane.setOnMouseDragged(e -> {
             mapPointerX += e.getSceneX() - lastMouseX;
             mapPointerY += e.getSceneY() - lastMouseY;
             lastMouseX = e.getSceneX();
@@ -107,15 +196,15 @@ public class GameMenu extends Application {
 
     private void fitCanvasToCenter() {
         System.out.println(mainCanvas.getWidth());
-        mainCanvas.setLayoutX(canvasPane.getWidth() / 2 - mainCanvas.getWidth() / 2);
-        mainCanvas.setLayoutY(canvasPane.getHeight() / 2 - mainCanvas.getHeight() / 2);
+        mainCanvas.setLayoutX(canvasPane.getWidth()/2 - mainCanvas.getWidth()/2);
+        mainCanvas.setLayoutY(canvasPane.getHeight()/2 - mainCanvas.getHeight()/2);
     }
 
     private Scene sceneMaker() throws Exception {
-        mainStackPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
-        mainBorderPane = (BorderPane) mainStackPane.getChildren().get(0);
-        mainPane = (Pane) mainStackPane.getChildren().get(1);
-        canvasPane = (Pane) mainBorderPane.getCenter();
+        mainBorderPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
+        mainStackPane = (StackPane) mainBorderPane.getCenter();
+        UIPane = (Pane) mainStackPane.getChildren().get(1);
+        canvasPane = (Pane) mainStackPane.getChildren().get(0);
         bottomHBox = (HBox) mainBorderPane.getBottom();
         kingdomTape();
         currentPlayer = new Text("current player: " + GameController.currentPlayer.getOwner().getUsername());
@@ -125,33 +214,90 @@ public class GameMenu extends Application {
         currentPlayer.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20;");
         currentPlayer.setFill(Color.WHITE);
         mainCanvas = (Canvas) canvasPane.getChildren().get(0);
-        Scene scene = new Scene(mainStackPane);
+        Scene scene = new Scene(mainBorderPane);
         return scene;
     }
 
-    public HBox kingdomTape() {
-        HBox hBox = bottomHBox;
-        hBox.setMinHeight(170);
-        HBox buildingHBox = new HBox(), popularityHBox = new HBox();
+    private void setBuildingIndex(int i) {
+        System.out.println("ttt: " + i);
+        if (i >= buildingIcons.size() - 4 || i < 0) return;
+        buildingIndex = i;
+        showBuildings();
+    }
+
+    private void showBuildings() {
+        System.out.println("000");
+        buildingHBox.getChildren().clear();
+        buildingHBox.setSpacing(10);
+        for (int i = 0; i < 4; i++) {
+            ImageView buildingImage = new ImageView(buildingIcons.get(buildingIndex + i));
+            buildingImage.setFitHeight(100);
+            buildingImage.setFitWidth(100);
+            buildingHBox.getChildren().add(buildingImage);
+        }
+    }
+
+    public void kingdomTape() {
+        bottomHBox.setMinHeight(230);
+        initBuildingsArray();
+        popularityHBox = new HBox();
+        buildingBorderPane = new BorderPane();
         StackPane stackPane = new StackPane();
-        stackPane.getChildren().addAll(buildingHBox, popularityHBox);
-        hBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(
-                GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
-        hBox.getChildren().addAll(stackPane);
+        stackPane.getChildren().addAll(buildingBorderPane, popularityHBox);
+        buildingHBox = new HBox();
+        buildingBorderPane.setCenter(buildingHBox);
+        buildingGroupHBox = makeGroupHBox();
+        buildingBorderPane.setBottom(buildingGroupHBox);
+        makeActionVBox();
+        buildingBorderPane.setRight(actionVBox);
+        bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
+        bottomHBox.setFocusTraversable(true);
+        bottomHBox.getChildren().addAll(stackPane);
         stackPane.setMinHeight(111);
         stackPane.setMaxHeight(111);
         stackPane.setTranslateX(-93);
         stackPane.setMinWidth(500);
         stackPane.setMaxWidth(500);
-        buildingHBox.setVisible(false);
-        hBox.setAlignment(Pos.BOTTOM_CENTER);
-        buildingHBox.setStyle("-fx-background-color: RED");
-        buildingHBox.getChildren().addAll(new Text("s"), new Button("ssss"));
-        Button button = new Button("aa");
-        button.setOnMouseClicked(mouseEvent -> {
-            System.out.println("slam");
+        setBuildingIndex(0);
+        popularityHBox.setVisible(false);
+        bottomHBox.setAlignment(Pos.BOTTOM_CENTER);
+        popularityHBox.setStyle("-fx-background-color: BLUE");
+    }
+
+    private void makeActionVBox() {
+        actionVBox = new VBox();
+        String address = GameMenu.class.getResource("/Images/Icons/undo.png").toExternalForm();
+        ImageView icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            undo();
         });
-        buildingHBox.getChildren().add(button);
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/briefing.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            briefing();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/delete.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            delete();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
+        address = GameMenu.class.getResource("/Images/Icons/settings.png").toExternalForm();
+        icon = new ImageView(address);
+        icon.setOnMouseClicked(mouseEvent -> {
+            options();
+        });
+        icon.setFitHeight(30);
+        icon.setFitWidth(30);
+        actionVBox.getChildren().add(icon);
         Text happiness = new Text(Integer.toString(GameController.currentPlayer.getHappiness()));
         happiness.setTranslateX(-70);
         happiness.setTranslateY(-60);
@@ -174,9 +320,54 @@ public class GameMenu extends Application {
         population.setFill(Color.RED);
         population.setTranslateX(-150);
         population.setTranslateY(-20);
-        hBox.getChildren().addAll(happiness, wealth, population);
+        bottomHBox.getChildren().addAll(happiness, wealth, population);
         setPopularityHBox(popularityHBox);
+    }
+
+    private void briefing() {
+    }
+
+    private void delete() {
+
+    }
+
+    private void options() {
+
+    }
+
+    private void undo() {
+
+    }
+
+    private HBox makeGroupHBox() {
+        //todo make this right
+        HBox hBox = new HBox();
+        hBox.setSpacing(2);
+        for (int i = 0; i < 6; i++) {
+            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i+1) + ").png").toExternalForm();
+            ImageView buildingIcon = new ImageView(address);
+            buildingIcon.setFitHeight(20);
+            buildingIcon.setPreserveRatio(true);
+            int finalI = i;
+            buildingIcon.setOnMouseClicked(mouseEvent -> {
+                buildingIndex = buildingGroup[finalI];
+            });
+            hBox.getChildren().add(buildingIcon);
+        }
         return hBox;
+    }
+
+    private void initBuildingsArray() {
+        //todo correct this
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 16; j++) {
+                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+                buildingIcons.add(address);
+            }
+        }
+        for (int i = 0; i < 6; i++) {
+            buildingGroup[i] = i;
+        }
     }
 
     public void setPopularityHBox(HBox popularityHBox) {
