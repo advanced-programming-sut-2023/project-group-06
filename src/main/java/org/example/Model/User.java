@@ -1,6 +1,7 @@
 package org.example.Model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -33,7 +34,6 @@ public class User implements Comparable<User>, Serializable {
         Data.addUser(this);
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
-        client = new Client("localhost",8080);
         sendToServer();
     }
 
@@ -177,20 +177,49 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendToServer() throws IOException {
-        client.dataOutputStream.writeUTF(toGson());
+        client.dataOutputStream.writeUTF(toGson(""));
     }
-    public String toGson() {
-        JsonObject userObject = new JsonObject();
-        userObject.addProperty("username", this.getUsername());
-        userObject.addProperty("password", this.getHashedPassword());
-        userObject.addProperty("nickname", this.getNickname());
-        userObject.addProperty("email", this.getEmail());
-        userObject.addProperty("slogan", this.getSlogan());
-        userObject.addProperty("questionIndex", this.getQuestionIndex());
-        userObject.addProperty("answerToQuestion", this.getHashedAnswerToQuestion());
-        userObject.addProperty("highScore", this.getHighScore());
-        userObject.addProperty("image", this.getAvatar());
-        String output = new Gson().toJson(userObject);
+
+    public void sendToServer(String command) throws IOException {
+        if (client == null) return;
+        client.dataOutputStream.writeUTF(toGson(command));
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public String toGson(String commandString) {
+        JsonObject data = new JsonObject();
+        JsonObject dataType = new JsonObject();
+        dataType.addProperty("type", "user");
+        data.add("dataType", dataType);
+        JsonObject user = new JsonObject();
+        user.addProperty("username", this.getUsername());
+        user.addProperty("password", this.getHashedPassword());
+        user.addProperty("nickname", this.getNickname());
+        user.addProperty("email", this.getEmail());
+        user.addProperty("slogan", this.getSlogan());
+        user.addProperty("questionIndex", this.getQuestionIndex());
+        user.addProperty("answerToQuestion", this.getHashedAnswerToQuestion());
+        user.addProperty("highScore", this.getHighScore());
+        user.addProperty("image", this.getAvatar());
+        data.add("user", user);
+        client.toggle = 1 - client.toggle;
+        JsonObject toggle = new JsonObject();
+        toggle.addProperty("toggle", client.toggle);
+        data.add("isAlive", toggle);
+        JsonObject command = new JsonObject();
+        command.addProperty("command", commandString);
+        String output = new Gson().toJson(data);
         return output;
+    }
+
+    public void inactivateClient() {
+        client.isClientAlive = false;
     }
 }

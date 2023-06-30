@@ -1,5 +1,6 @@
 package org.example.Controller;
 
+import org.example.Model.Client;
 import org.example.Model.Data;
 import org.example.View.Response;
 
@@ -8,7 +9,7 @@ import java.util.regex.Matcher;
 
 public class LoginController {
 
-    public static Response loginUser(Matcher matcher){
+    public static Response loginUser(Matcher matcher) throws IOException {
         matcher.find();
         String[] groupNames = {"username","password"};
         String nullGroup = Controller.nullGroup(matcher,groupNames);
@@ -22,6 +23,7 @@ public class LoginController {
         Data.setStayLoggedIn(stayLoggedIn);
         Data.setCurrentUser(Data.getUserByName(username));
         Data.saveData("src/main/java/org/example/Model/Data.json");
+        Data.getCurrentUser().setClient(new Client("localhost", 8000));
         return Response.LOGIN_SUCCESSFUL;
     }
 
