@@ -9,6 +9,7 @@ import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Trap;
 import org.example.View.Response;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +17,33 @@ public class MapController {
     public static Game currentGame;
     public static int currentX;
     public static int currentY;
+    public static ArrayList<ColliderBox> unitsColliderBoxes = new ArrayList<>();
+
+    public static Unit getUnitAt(int x, int y) {
+        for (int i = unitsColliderBoxes.size() - 1; i >= 0; i--) {
+            ColliderBox colliderBox = unitsColliderBoxes.get(i);
+            if (colliderBox.contains(x, y) && colliderBox.object instanceof Unit)
+                return (Unit) colliderBox.object;
+        }
+        return null;
+    }
+
+    public static class ColliderBox {
+        public int x, y, width, height;
+        public Object object;
+
+        ColliderBox(int x, int y, int width, int height, Object object) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.object = object;
+        }
+
+        public boolean contains(int x, int y) {
+            return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+        }
+    }
 
     public static String showMapRow(int x, int y) {
         StringBuilder result = new StringBuilder();
@@ -166,6 +194,7 @@ public class MapController {
     }
 
     public static void mapGraphicProcessor(Canvas canvas, Tile[][] map, int x, int y) {
+        unitsColliderBoxes.clear();
         int mapHeight = map.length;
         int mapWidth = map[0].length;
         int canvasHeight = (int) canvas.getHeight();
@@ -206,7 +235,6 @@ public class MapController {
                 for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
                     drawUnitsOfTile(gc, map, ii, jj, x, y, graphicalHeight);
         }
-        // soldiers todo
     }
 
     private static void drawUnitsOfTile(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y, int h) {
@@ -223,6 +251,7 @@ public class MapController {
     private static void drawUnitAt(GraphicsContext gc, Unit unit, int x, int y) {
         if (unit == null) return;
         gc.drawImage(unit.getImg().getImage(), x - unit.getImg().getXo(), y - unit.getImg().getYo());
+        unitsColliderBoxes.add(new ColliderBox(x - 10, y - 30, 20, 40, unit));
     }
 
     private static int graphicalHeightOf(Building building) {

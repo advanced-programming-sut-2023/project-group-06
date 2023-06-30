@@ -27,12 +27,12 @@ public class Soldier extends Unit {
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
-        if(owner != null) owner.addSoldier(this);
+        if (owner != null) owner.addSoldier(this);
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();
         isArab = unitType.isArab();
-        if(unitType == UnitType.LADDER_MAN) hasLadder = true;
+        if (unitType == UnitType.LADDER_MAN) hasLadder = true;
     }
 
     public Building getLadder() {
@@ -95,7 +95,7 @@ public class Soldier extends Unit {
         return patrolWishPlace1;
     }
 
-    public void switchPatrolPlaces(){
+    public void switchPatrolPlaces() {
         Tile tile = patrolWishPlace1;
         patrolWishPlace1 = patrolWishPlace2;
         patrolWishPlace2 = tile;
@@ -135,8 +135,10 @@ public class Soldier extends Unit {
 
 
     public String toString() {
-        String output = getUnitType().getName() + ": hp: " + getHealth() + ", owner: " + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate();
-        output += ", is it flammable? " + isFlammable() + ", has it oil? " + hasOil + ", wishPlace: " + wishPlace + ", state: " + state + ", fireDamageTaken: " + getFireDamageEachTurn();
+        String output = getUnitType().getName() + ": hp: " + getHealth() + "\nowner: "
+                + (getOwner() == null ? "null" : getOwner().getOwner().getUsername()) + "\nx: " + getXCoordinate() + ", y: "
+                + getYCoordinate() +"\nis it flammable? " + isFlammable() + "\nhas it oil? " + hasOil + "\nwishPlace: " + wishPlace
+                + "\nstate: " + state + "\nfireDamageTaken: " + getFireDamageEachTurn();
         return output;
     }
 }

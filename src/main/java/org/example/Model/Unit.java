@@ -145,9 +145,10 @@ public class Unit {
     }
 
     public String toString() {
-        String output = getUnitType().getName() + ": hp: " + health + ", owner: "
-                + getOwner().getOwner().getUsername() + ", x: " + getXCoordinate() + ", y: " + getYCoordinate() + ", wishPlace: " + wishPlace + ", fireDamageTaken: " + fireDamageEachTurn;
-        if (this.unitType == UnitType.ENGINEER) output += ", is available? " + isAvailable;
+        String output = getUnitType().getName() + ": hp: " + getHealth() + "\nowner: "
+                + (getOwner() == null? "null" : getOwner().getOwner().getUsername()) + "\nx: " + getXCoordinate() + ", y: "
+                + getYCoordinate() + "\nwishPlace: " + wishPlace + "\nfireDamageTaken: " + fireDamageEachTurn + "\nis available? "
+                + isAvailable;
         return output;
     }
 }
