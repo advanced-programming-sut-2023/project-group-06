@@ -86,7 +86,6 @@ public class Connection extends Thread {
 //        }
 //        dataOutputStream.writeUTF(output);
     }
-
     private synchronized void handleClient() throws IOException {
         String input = dataInputStream.readUTF();
         if (isData(input)) {
