@@ -42,10 +42,17 @@ public class MapController {
         double J = I - X / 46;
         int i = -(int) Math.floor(I + 0.5);
         int j = -(int) Math.floor(J + 0.5);
-        System.out.println(i + " " + j);
         if (i < 0 || i >= map.length || j < 0 || j >= map[0].length)
             return null;
         return map[j][i].getBuilding();
+    }
+
+    public static void selectUnitsIn(int x, int y, int w, int h) {
+        selectedUnits.clear();
+        for(ColliderBox colliderBox : unitsColliderBoxes) {
+            if(colliderBox.isIn(x, y, w, h))
+                selectedUnits.add((Unit) colliderBox.object);
+        }
     }
 
     public static class ColliderBox {
@@ -62,6 +69,10 @@ public class MapController {
 
         public boolean contains(int x, int y) {
             return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+        }
+
+        public boolean isIn(int x, int y, int w, int h) {
+            return this.x >= x && this.x + width <= x + w && this.y >= y && this.y + height <= y + h;
         }
     }
 

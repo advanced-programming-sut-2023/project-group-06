@@ -12,12 +12,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.Controller.GameControllers.MapController;
@@ -52,6 +55,8 @@ public class GameMenu extends Application {
     private long mouseLastChangeTime = System.currentTimeMillis();
     private boolean isShowingInformation = false;
     private Label informationLabel;
+    private Rectangle selectionRectangle;
+    private double SRStartX, SRStartY, SREndX, SREndY;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -59,7 +64,6 @@ public class GameMenu extends Application {
         scene = sceneMaker();
         stage.setScene(scene);
         scene.setOnKeyPressed(e -> {
-            System.out.println("ininin " + mainCanvas);
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
             else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
@@ -185,8 +189,10 @@ public class GameMenu extends Application {
 
     private void setMouseActions() {
         UIPane.setOnMouseClicked(e -> {
-            clickedAt(e.getSceneX(), e.getSceneY());
-            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+            if (e.getButton() == MouseButton.PRIMARY) {
+                clickedAt(e.getSceneX(), e.getSceneY());
+                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+            }
         });
         UIPane.setOnMouseMoved(e -> {
             mouseX = e.getSceneX();
@@ -196,15 +202,36 @@ public class GameMenu extends Application {
             informationLabel.setVisible(false);
         });
         UIPane.setOnMousePressed(e -> {
-            lastMouseX = e.getSceneX();
-            lastMouseY = e.getSceneY();
+            if (e.getButton() == MouseButton.PRIMARY) {
+                SRStartX = e.getSceneX();
+                SRStartY = e.getSceneY();
+                selectionRectangle.setWidth(0);
+                selectionRectangle.setHeight(0);
+                selectionRectangle.setVisible(true);
+            } else if (e.getButton() == MouseButton.SECONDARY) {
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+            }
         });
         UIPane.setOnMouseDragged(e -> {
-            mapPointerX += e.getSceneX() - lastMouseX;
-            mapPointerY += e.getSceneY() - lastMouseY;
-            lastMouseX = e.getSceneX();
-            lastMouseY = e.getSceneY();
-            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+            if (e.getButton() == MouseButton.PRIMARY) {
+                double x = e.getSceneX(), y = e.getSceneY();
+                selectionRectangle.setLayoutX(Math.min(SRStartX, x));
+                selectionRectangle.setLayoutY(Math.min(SRStartY, y));
+                selectionRectangle.setWidth(Math.abs(SRStartX - x));
+                selectionRectangle.setHeight(Math.abs(SRStartY - y));
+                updateSelectedUnits();
+                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+            } else if (e.getButton() == MouseButton.SECONDARY) {
+                mapPointerX += e.getSceneX() - lastMouseX;
+                mapPointerY += e.getSceneY() - lastMouseY;
+                lastMouseX = e.getSceneX();
+                lastMouseY = e.getSceneY();
+                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+            }
+        });
+        UIPane.setOnMouseReleased(e -> {
+            selectionRectangle.setVisible(false);
         });
 
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
@@ -222,6 +249,16 @@ public class GameMenu extends Application {
         }));
         timeline.setCycleCount(-1);
         timeline.play();
+    }
+
+    private void updateSelectedUnits() {
+        double x = selectionRectangle.getLayoutX(), y = selectionRectangle.getLayoutY();
+        double w = selectionRectangle.getWidth(), h = selectionRectangle.getHeight();
+        int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + x) / mainCanvas.getScaleX());
+        int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
+        int ww = (int) (w / mainCanvas.getScaleX());
+        int hh = (int) (h / mainCanvas.getScaleY());
+        MapController.selectUnitsIn(xx, yy, ww, hh);
     }
 
     private void clickedAt(double x, double y) {
@@ -282,6 +319,11 @@ public class GameMenu extends Application {
         informationLabel.setStyle("-fx-background-color: rgba(0, 0, 0, 0.7); -fx-font-size: 10px; -fx-text-fill: white;");
         informationLabel.setVisible(false);
         UIPane.getChildren().add(informationLabel);
+        selectionRectangle = new Rectangle(0, 0, 0, 0);  // selection rectangle
+        selectionRectangle.setFill(Color.CYAN);
+        selectionRectangle.setOpacity(0.4);
+        selectionRectangle.setVisible(false);
+        UIPane.getChildren().add(selectionRectangle);
         return scene;
     }
 
