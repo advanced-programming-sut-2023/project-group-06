@@ -16,11 +16,9 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.MapController;
+import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.Data;
-import org.example.Model.Tile;
-import org.example.Model.TileStructure;
 
 import java.util.ArrayList;
 
@@ -81,6 +79,22 @@ public class GameMenu extends Application {
         map[5][8].setBuilding(new Building(null, BuildingType.ARMORY, 8, 5));
         map[0][0].setBuilding(new Building(null, BuildingType.PITCH_DITCH, 0, 0));
         map[0][1].setBuilding(new Building(null, BuildingType.GRANARY, 1, 0));
+
+        Soldier soldier = new Soldier(5, 0, null, UnitType.ARCHER);
+        map[0][5].addSoldier(soldier);
+        soldier = new Soldier(5, 0, null, UnitType.SWORDS_MAN);
+        map[0][5].addSoldier(soldier);
+        soldier = new Soldier(5, 0, null, UnitType.SPEAR_MAN);
+        map[0][5].addSoldier(soldier);
+        soldier = new Soldier(5, 0, null, UnitType.KNIGHT);
+        map[0][5].addSoldier(soldier);
+
+        Soldier archer;
+        for(int i = 19; i < 22; i++) for(int j = 26; j < 29; j++) for(int k = 0; k < 4; k++) {
+            archer = new Soldier(j, i, null, UnitType.ARCHER);
+            map[i][j].addSoldier(archer);
+        }
+
 
 
 

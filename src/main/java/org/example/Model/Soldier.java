@@ -27,7 +27,7 @@ public class Soldier extends Unit {
 
     public Soldier(int XCoordinate, int YCoordinate, Kingdom owner, UnitType unitType) {
         super(XCoordinate, YCoordinate, owner, unitType);
-        owner.addSoldier(this);
+        if(owner != null) owner.addSoldier(this);
         range = unitType.getRange();
         secondRange = unitType.getSecondRange();
         attackPower = unitType.getAttackPower();

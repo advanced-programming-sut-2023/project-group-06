@@ -69,6 +69,30 @@ public enum SuperImage {
     STAIR("bla bla", 0, 0),
     WALL("bla bla", 0, 0),
     BRIDGE("bla bla", 0, 0),
+
+    /////////////////////////////////////////////////// units
+    KING("Unit/king.png", 23, 36),
+    ARCHER("Unit/archer.png", 23, 40),
+    CROSSBOW_MAN("Unit/crossbow-man.png", 23, 40),
+    SPEAR_MAN("Unit/spear-man.png", 23, 40),
+    PIKE_MAN("Unit/pike-man.png", 23, 40),
+    MACE_MAN("Unit/mace-man.png", 23, 40),
+    SWORDS_MAN("Unit/swords-man.png", 23, 65),
+    KNIGHT("Unit/knight.png", 23, 65),
+    TUNNELER("Unit/tunneler.png", 23, 35),
+    LADDER_MAN("Unit/ladder-man.png", 23, 74),
+    ENGINEER("Unit/engineer.png", 23, 39),
+    OIL_ENGINEER("Unit/oil-engineer.png", 23, 39),
+    BLACK_MONK("Unit/black-monk.png", 23, 42),
+    ARABIAN_BOW("Unit/arabian-bow.png", 23, 45),
+    SLAVE("Unit/slave.png", 23, 45),
+    SLINGER("Unit/slinger.png", 23, 45),
+    ASSASSIN("Unit/assassin.png", 23, 45),
+    HORSE_ARCHER("Unit/horse-archer.png", 23, 58),
+    ARABIAN_SWORDSMAN("Unit/arabian-swordsman.png", 23, 44),
+    FIRE_THROWER("Unit/fire-thrower.png", 23, 44),
+    COW("Unit/cow.png", 23, 44),
+    DOG("Unit/dog.png", 23, 16),
     ;
     Image image;
     int Xo;

@@ -2,6 +2,8 @@ package org.example.Model;
 
 import org.example.Controller.GameControllers.GameController;
 import org.example.Model.BuildingGroups.Building;
+import org.example.View.GameMenus.GameMenu;
+import org.example.View.Graphics.SuperImage;
 
 public class Unit {
     protected int XCoordinate;
@@ -17,6 +19,11 @@ public class Unit {
     private boolean isFlammable = false;
     private int lastOiledTurn = -1;
     private int fireDamageEachTurn = 0;
+    private SuperImage img;
+
+    public SuperImage getImg() {
+        return img;
+    }
 
     public boolean isKingSaidToMove() {
         return isKingSaidToMove;
@@ -46,12 +53,14 @@ public class Unit {
         this.XCoordinate = XCoordinate;
         this.YCoordinate = YCoordinate;
         this.owner = owner;
-        owner.addUnit(this);
+        if (owner != null) owner.addUnit(this);
         this.unitType = unitType;
         this.speed = unitType.getSpeed();
         this.health = unitType.getHitPoint();
-        wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate, XCoordinate);
+        if (GameController.currentGame != null)
+            wishPlace = GameController.currentGame.getTileByCoordinates(YCoordinate, XCoordinate);
         if (unitType == UnitType.ENGINEER) owner.addEngineer(this);
+        this.img = unitType.getImg();
     }
 
     public Unit(int XCoordinate, int YCoordinate, Kingdom owner) {

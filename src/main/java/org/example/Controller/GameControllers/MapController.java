@@ -192,21 +192,46 @@ public class MapController {
 
     private static void drawBuildingAndFriends(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y) {
         Building building = map[i][j].getBuilding();
+        int graphicalHeight = graphicalHeightOf(building);
         if (building == null) {
             drawTileAt(gc, map[i][j], x + (i - j) * 46, y - (i + j) * 23);
+            drawUnitsOfTile(gc, map, i, j, x, y, graphicalHeight);
         } else {
             int size = building.getBuildingType().getSize();
             for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
                 for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
                     drawTileAt(gc, map[ii][jj], x + (ii - jj) * 46, y - (ii + jj) * 23);
             drawBuildingAt(gc, building, x + (i - j) * 46, y - (i + j) * 23);
+            for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
+                for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
+                    drawUnitsOfTile(gc, map, ii, jj, x, y, graphicalHeight);
         }
         // soldiers todo
     }
 
+    private static void drawUnitsOfTile(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y, int h) {
+        int centerX = x + (i - j) * 46;
+        int centerY = y - (i + j) * 23 - h;
+        for (int k = 0; k < 4 && k < map[i][j].getAllUnits().size(); k++) {
+            int dx = k == 1 ? -23 : k == 2 ? 23 : 0;
+            int dy = k == 0 ? -12 : k == 3 ? 12 : 0;
+            Unit unit = map[i][j].getAllUnits().get(k);
+            drawUnitAt(gc, unit, centerX + dx, centerY + dy);
+        }
+    }
+
+    private static void drawUnitAt(GraphicsContext gc, Unit unit, int x, int y) {
+        if (unit == null) return;
+        gc.drawImage(unit.getImg().getImage(), x - unit.getImg().getXo(), y - unit.getImg().getYo());
+    }
+
+    private static int graphicalHeightOf(Building building) {
+        if (building == null) return 0;
+        return building.getImg().getYo() - 23 * building.getBuildingType().getSize();
+    }
+
     private static void drawBuildingAt(GraphicsContext gc, Building building, int x, int y) {
         if (building == null) return;
-        System.out.println("<<< " + building.getImg());
         gc.drawImage(building.getImg().getImage(), x - building.getImg().getXo(), y - building.getImg().getYo());
     }
 
