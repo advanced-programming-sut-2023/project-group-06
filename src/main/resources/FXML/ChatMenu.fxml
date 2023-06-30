@@ -18,7 +18,7 @@
             </HBox>
         </VBox>
     </center>
-    <VBox layoutX="100" layoutY="100" spacing="20">
+    <VBox layoutX="100" layoutY="100" spacing="20" fx:id="leftVBox">
         <Button text="back" onMouseClicked="#back" fx:id="backButton"/>
         <Button text="add private chat" onMouseClicked="#addPrivateChat" fx:id="addPrivateChat"/>
         <TextField promptText="enter username" fx:id="usernameTextField" visible="false"/>

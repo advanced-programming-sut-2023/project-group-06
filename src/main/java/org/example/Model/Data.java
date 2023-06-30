@@ -13,6 +13,7 @@ public class Data {
     private static ArrayList<User> users = new ArrayList<>();
     private static User currentUser = null;
     private static boolean stayLoggedIn = false;
+    private static int numberOfMessages;
 
     public static User getUserByName(String username) {
         for (int i = 0; i < users.size(); i++) {
@@ -66,6 +67,14 @@ public class Data {
             if (users.get(users.size() - i) == user) return i;
         }
         return -1;
+    }
+
+    public static int getNumberOfMessages(){
+        return numberOfMessages;
+    }
+
+    public static void updateNumberOfMessages(){
+        numberOfMessages++;
     }
 
     /* saveDate:
@@ -206,5 +215,4 @@ public class Data {
             return null;
         }
     }
-
 }

@@ -26,7 +26,6 @@ TextField{
 Label{
     -fx-min-width: 250;
     -fx-max-width: 250;
-    -fx-text-fill: RED;
     -fx-font-family: "Times New Roman";
     -fx-font-size: 15px;
 }

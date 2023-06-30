@@ -5,12 +5,15 @@ public class Message{
     private String content;
     private String time;
     private ChatRoom chatRoom;
+    private int id;
 
     public Message(User owner, String content, String time, ChatRoom chatRoom) {
         this.owner = owner;
         this.content = content;
         this.time = time;
         this.chatRoom = chatRoom;
+        this.id = Data.getNumberOfMessages() + 1;
+        Data.updateNumberOfMessages();
     }
 
     public User getOwner() {
@@ -35,5 +38,9 @@ public class Message{
 
     public ChatRoom getChatRoom() {
         return chatRoom;
+    }
+
+    public int getId() {
+        return id;
     }
 }
