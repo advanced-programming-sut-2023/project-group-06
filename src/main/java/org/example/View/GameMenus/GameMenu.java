@@ -184,6 +184,10 @@ public class GameMenu extends Application {
     }
 
     private void setMouseActions() {
+        UIPane.setOnMouseClicked(e -> {
+            clickedAt(e.getSceneX(), e.getSceneY());
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        });
         UIPane.setOnMouseMoved(e -> {
             mouseX = e.getSceneX();
             mouseY = e.getSceneY();
@@ -218,6 +222,20 @@ public class GameMenu extends Application {
         }));
         timeline.setCycleCount(-1);
         timeline.play();
+    }
+
+    private void clickedAt(double x, double y) {
+        int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + x) / mainCanvas.getScaleX());
+        int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
+        Unit unit = MapController.getUnitAt(xx, yy);
+        if (unit != null) {
+            MapController.selectedUnits.clear();
+            MapController.selectedUnits.add(unit);
+            return;
+        }
+        Building building = MapController.getBuildingAt(xx, yy);
+        if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
+        else MapController.selectedBuilding = building;
     }
 
     private String getInfoOfPoint(double x, double y) {
