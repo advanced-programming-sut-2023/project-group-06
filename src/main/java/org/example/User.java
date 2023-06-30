@@ -5,7 +5,6 @@ import org.apache.commons.codec.digest.DigestUtils;
 import java.io.IOException;
 
 public class User implements Comparable<User> {
-    public Connection connection;
     private String username = "";
     private String hashedPassword = "";
     private String nickname = "";
@@ -24,7 +23,6 @@ public class User implements Comparable<User> {
         this.nickname = nickname;
         this.email = email;
         this.slogan = slogan;
-        Data.addUser(this);
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
     }
@@ -94,7 +92,6 @@ public class User implements Comparable<User> {
     }
 
     public void setAnswerToQuestion(String answerToQuestion) {
-        if (!this.hashedAnswerToQuestion.equals("")) return;
         this.hashedAnswerToQuestion = answerToQuestion;
     }
 
@@ -153,6 +150,29 @@ public class User implements Comparable<User> {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+    public String toString() {
+        return "username: " + username + "\n\t" +
+        "password: " + this.getHashedPassword() + "\n\t" +
+        "nickname: " +  this.getNickname() + "\n\t" +
+        "email: " + this.getEmail() + "\n\t" +
+        "slogan: " + this.getSlogan() + "\n\t" +
+        "questionIndex: " + this.getQuestionIndex() + "\n\t" +
+        "answerToQuestion: " + this.getHashedAnswerToQuestion() + "\n\t" +
+        "highScore: " + this.getHighScore() + "\n\t" +
+        "image: " + this.getAvatar() + '\n';
+    }
+
+    public void override(User user) {
+        this.username = user.getUsername();
+        this.hashedPassword = user.hashedPassword;
+        this.avatar = user.avatar;
+        this.email = user.email;
+        this.nickname = user.nickname;
+        this.slogan = user.slogan;
+        this.highScore = user.highScore;
+        this.hashedAnswerToQuestion = user.hashedAnswerToQuestion;
+        this.questionIndex = user.questionIndex;
     }
 }
 
