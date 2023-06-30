@@ -7,7 +7,6 @@ public class ChatRoom {
     private ArrayList<Message> messages = new ArrayList<>();
     private ChatType chatType;
 
-
     public ChatRoom(ArrayList<User> users, ChatType chatType) {
         this.users = users;
         this.chatType = chatType;
