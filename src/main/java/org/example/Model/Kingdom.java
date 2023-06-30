@@ -692,4 +692,24 @@ public class Kingdom {
     public void addEquipment(Equipment equipment) {
         this.equipments.add(equipment);
     }
+
+    public int showPopularityFactorsFood() {
+        return this.getFoodDiversity() + this.getFoodRate() * 4 - 1;
+    }
+
+    public int showPopularityFactorsTax(){
+        return this.taxEffectOnHappiness(this.getTax());
+    }
+
+    public int showPopularityFactorsFear(){
+        return this.getFear();
+    }
+
+    public int showPopularityFactorsReligion(){
+        return this.getHappinessIncrease();
+    }
+
+    public int showPopularityFactorsWine(){
+        return this.wineUsage();
+    }
 }

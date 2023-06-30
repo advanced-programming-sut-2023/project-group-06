@@ -15,9 +15,9 @@ public enum Translator {
     START_GAME("username2", "username3", "username4", "username5", "username6", "username7", "username8"),
     SECURITY_QUESTION("questionNumber", "answer", "answerConfirmation"),
     FORGOT_PASSWORD("username"),
+    SEND_TRADE_REQUEST("resourceType", "resourceAmount", "message", "price", "username"),
     BUY("count", "type"),
     SELL("count", "type"),
-    SEND_TRADE_REQUEST("resourceType", "resourceAmount", "message", "price", "username"),
     ;
 
     private String[] groupNames;
