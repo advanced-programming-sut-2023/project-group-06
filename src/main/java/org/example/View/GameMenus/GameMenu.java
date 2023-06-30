@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -28,11 +27,11 @@ import java.util.ArrayList;
 public class GameMenu extends Application {
     static Stage stage;
     static Scene scene;
-    public StackPane mainStackPane;
     public BorderPane mainBorderPane;
+    public StackPane mainStackPane;
     public Canvas mainCanvas;
     public HBox bottomHBox;
-    public Pane mainPane;
+    public Pane UIPane;
     public Pane canvasPane;
     // map things
     int mapPointerX = 300;
@@ -159,11 +158,11 @@ public class GameMenu extends Application {
     }
 
     private void makeMapDraggable() {
-        mainPane.setOnMousePressed(e -> {
+        UIPane.setOnMousePressed(e -> {
             lastMouseX = e.getSceneX();
             lastMouseY = e.getSceneY();
         });
-        mainPane.setOnMouseDragged(e -> {
+        UIPane.setOnMouseDragged(e -> {
             mapPointerX += e.getSceneX() - lastMouseX;
             mapPointerY += e.getSceneY() - lastMouseY;
             lastMouseX = e.getSceneX();
@@ -195,14 +194,14 @@ public class GameMenu extends Application {
     }
 
     private Scene sceneMaker() throws Exception {
-        mainStackPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
-        mainBorderPane = (BorderPane) mainStackPane.getChildren().get(0);
-        mainPane = (Pane) mainStackPane.getChildren().get(1);
-        canvasPane = (Pane) mainBorderPane.getCenter();
+        mainBorderPane = FXMLLoader.load(GameMenu.class.getResource("/FXML/GameMenu.fxml"));
+        mainStackPane = (StackPane) mainBorderPane.getCenter();
+        UIPane = (Pane) mainStackPane.getChildren().get(1);
+        canvasPane = (Pane) mainStackPane.getChildren().get(0);
         bottomHBox = (HBox) mainBorderPane.getBottom();
         kingdomTape();
         mainCanvas = (Canvas) canvasPane.getChildren().get(0);
-        Scene scene = new Scene(mainStackPane);
+        Scene scene = new Scene(mainBorderPane);
         return scene;
     }
 
