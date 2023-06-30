@@ -225,6 +225,8 @@ public class GameMenu extends Application {
         int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
         Unit unit = MapController.getUnitAt(xx, yy);
         if (unit != null) return unit.toString();
+        Building building = MapController.getBuildingAt(xx, yy);
+        if (building != null) return building.toString();
         return null;
     }
 

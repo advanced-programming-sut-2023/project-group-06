@@ -18,6 +18,8 @@ public class MapController {
     public static int currentX;
     public static int currentY;
     public static ArrayList<ColliderBox> unitsColliderBoxes = new ArrayList<>();
+    public static int mapX, mapY;
+    static Tile[][] map;
 
     public static Unit getUnitAt(int x, int y) {
         for (int i = unitsColliderBoxes.size() - 1; i >= 0; i--) {
@@ -26,6 +28,19 @@ public class MapController {
                 return (Unit) colliderBox.object;
         }
         return null;
+    }
+
+    public static Building getBuildingAt(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        System.out.println(i + " " + j);
+        if (i < 0 || i >= map.length || j < 0 || j >= map[0].length)
+            return null;
+        return map[j][i].getBuilding();
     }
 
     public static class ColliderBox {
@@ -195,6 +210,9 @@ public class MapController {
 
     public static void mapGraphicProcessor(Canvas canvas, Tile[][] map, int x, int y) {
         unitsColliderBoxes.clear();
+        mapX = x;
+        mapY = y;
+        MapController.map = map;
         int mapHeight = map.length;
         int mapWidth = map[0].length;
         int canvasHeight = (int) canvas.getHeight();
