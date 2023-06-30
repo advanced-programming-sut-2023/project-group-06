@@ -1,12 +1,10 @@
 package org.example.View.GameMenus;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -16,6 +14,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -23,7 +23,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.GameController;
-import org.example.Controller.GameControllers.KingdomController;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
@@ -31,6 +30,8 @@ import org.example.Model.Data;
 import org.example.Model.Kingdom;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
+import org.example.View.Graphics.SuperImage;
+import org.example.View.MainMenu;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,8 +39,8 @@ import java.util.ArrayList;
 public class GameMenu extends Application {
     static Stage stage;
     static Scene scene;
-    public StackPane mainStackPane;
     public BorderPane mainBorderPane;
+    public StackPane mainStackPane;
     public Canvas mainCanvas;
     public HBox bottomHBox;
     public Pane UIPane;
@@ -210,8 +211,8 @@ public class GameMenu extends Application {
 
     private void fitCanvasToCenter() {
         System.out.println(mainCanvas.getWidth());
-        mainCanvas.setLayoutX(canvasPane.getWidth() / 2 - mainCanvas.getWidth() / 2);
-        mainCanvas.setLayoutY(canvasPane.getHeight() / 2 - mainCanvas.getHeight() / 2);
+        mainCanvas.setLayoutX(canvasPane.getWidth()/2 - mainCanvas.getWidth()/2);
+        mainCanvas.setLayoutY(canvasPane.getHeight()/2 - mainCanvas.getHeight()/2);
     }
 
     private Scene sceneMaker() throws Exception {
@@ -368,9 +369,20 @@ public class GameMenu extends Application {
             });
             hBox.getChildren().add(buildingIcon);
         }
-        return hBox;
     }
 
+    private void initBuildingsArray() {
+        //todo correct this
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 16; j++) {
+                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+                buildingIcons.add(address);
+            }
+        }
+        for (int i = 0; i < 6; i++) {
+            buildingGroup[i] = i;
+        }
+    }
 
     public void setPopularityHBox(HBox popularityHBox) {
         Text text = new Text("Popularity");
@@ -461,19 +473,6 @@ public class GameMenu extends Application {
     public void nextTurn() throws IOException {
         System.out.println("salam");
         GameController.nextTurn();
-    }
-
-    private void initBuildingsArray() {
-        //todo correct this
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 16; j++) {
-                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
-                buildingIcons.add(address);
-            }
-        }
-        for (int i = 0; i < 6; i++) {
-            buildingGroup[i] = i;
-        }
     }
 
 //    public void initialize() {

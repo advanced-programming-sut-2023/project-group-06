@@ -1,6 +1,8 @@
 package org.example.View;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -33,6 +36,7 @@ public class MainMenu extends Application {
     public Button start;
     public Label startError;
     public Text text;
+    public Button chat;
     private ChoiceBox<Integer> choiceBox;
     MainController mainController;
     private BorderPane borderPane;
@@ -68,9 +72,7 @@ public class MainMenu extends Application {
         MainMenu.stage = stage;
         borderPane = FXMLLoader.load(SignUpMenu.class.getResource("/FXML/MainMenu.fxml"));
         scene = new Scene(borderPane);
-        /*stage.setFullScreen(true);*/
         setThePain();
-        /*scene.setCursor();*/
         stage.setScene(scene);
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
@@ -86,6 +88,11 @@ public class MainMenu extends Application {
         circle.setCenterX(300);
         circle.setCenterY(200);
         borderPane.getChildren().add(circle);
+    }
+
+    @FXML
+    private void enterChatMenu() throws Exception {
+        new ChatMenu().start(stage);
     }
 
     public void initialize(){
