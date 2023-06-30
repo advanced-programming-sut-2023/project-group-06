@@ -23,6 +23,7 @@ import org.example.Controller.Controller;
 import org.example.Controller.ProfileController;
 import org.example.Model.Data;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -262,7 +263,11 @@ public class ProfileMenu extends Application {
         confirm.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                changePasswordConfirm(vBox);
+                try {
+                    changePasswordConfirm(vBox);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
 
@@ -277,7 +282,7 @@ public class ProfileMenu extends Application {
         });
     }
 
-    private void changePasswordConfirm(VBox vBox) {
+    private void changePasswordConfirm(VBox vBox) throws IOException {
         Response response = ProfileController.changePassword(Translator.getMatcherByGroups(
                 Translator.CHANGE_PASSWORD, ((TextField) vBox.getChildren().get(0)).getText(),
                 ((TextField) vBox.getChildren().get(1)).getText()));
@@ -340,7 +345,7 @@ public class ProfileMenu extends Application {
         saveGmail.setVisible(true);
     }
 
-    public void saveUsername(MouseEvent mouseEvent) {
+    public void saveUsername(MouseEvent mouseEvent) throws IOException {
         Response response = ProfileController.changeUsername(Translator.getMatcherByGroups(
                 Translator.CHANGE_USERNAME, usernameTextField.getText()));
         Alert alert;
@@ -364,7 +369,7 @@ public class ProfileMenu extends Application {
         alert.showAndWait();
     }
 
-    public void saveNickName(MouseEvent mouseEvent) {
+    public void saveNickName(MouseEvent mouseEvent) throws IOException {
         Response response = ProfileController.changeNickname(Translator.getMatcherByGroups(
                 Translator.CHANGE_NICKNAME, nicknameTextField.getText()));
         Alert alert;
@@ -388,7 +393,7 @@ public class ProfileMenu extends Application {
         alert.showAndWait();
     }
 
-    public void saveGmail(MouseEvent mouseEvent) {
+    public void saveGmail(MouseEvent mouseEvent) throws IOException {
         Response response = ProfileController.changeEmail(Translator.getMatcherByGroups(
                 Translator.CHANGE_EMAIL, gmailTextField.getText()));
         Alert alert;
@@ -419,7 +424,7 @@ public class ProfileMenu extends Application {
         saveSlogan.setVisible(true);
     }
 
-    public void saveSlogan(MouseEvent mouseEvent) {
+    public void saveSlogan(MouseEvent mouseEvent) throws IOException {
         Response response = ProfileController.changeSlogan(Translator.getMatcherByGroups(
                 Translator.CHANGE_SLOGAN, sloganTextField.getText()));
         Alert alert;
@@ -449,7 +454,7 @@ public class ProfileMenu extends Application {
         alert.showAndWait();
     }
 
-    public void removeSlogan(MouseEvent mouseEvent) {
+    public void removeSlogan(MouseEvent mouseEvent) throws IOException {
         userSlogan.setText("slogan is empty");
         Data.getCurrentUser().setSlogan("null");
         userSlogan.setMaxHeight(42);

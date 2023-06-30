@@ -141,6 +141,8 @@ public class Data {
             return true;
         } catch (FileNotFoundException e) {
             return false;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

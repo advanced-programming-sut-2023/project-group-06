@@ -3,6 +3,7 @@ package org.example.Controller;
 import org.example.Model.Data;
 import org.example.View.Response;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 
 public class LoginController {
@@ -44,13 +45,13 @@ public class LoginController {
         return null;
     }
 
-    public static Response changePasswordSuccessful(String username, String answer, String password, String passwordConfirmation) {
+    public static Response changePasswordSuccessful(String username, String answer, String password, String passwordConfirmation) throws IOException {
         if (!password.equals(passwordConfirmation)) return Response.PASSWORD_CONFIRMATION;
         Data.getUserByName(username).changePasswordBySecurityQuestion(answer,password);
         return Response.PASSWORD_CHANGE;
     }
 
-    public static void resetLoginAttempts (String username) {
+    public static void resetLoginAttempts (String username) throws IOException {
         Data.getUserByName(username).setNumberOfLoginAttempts(0);
     }
 
@@ -62,7 +63,7 @@ public class LoginController {
         return Data.getUserByName(username).getLastLoginAttemptTime();
     }
 
-    public static boolean setLastLoginAttempt (String username, long currentTime) {
+    public static boolean setLastLoginAttempt (String username, long currentTime) throws IOException {
         if ((currentTime - Data.getUserByName(username).getLastLoginAttemptTime())
                 < (Data.getUserByName(username).getNumberOfLoginAttempts() * 5)) {
             return false;
