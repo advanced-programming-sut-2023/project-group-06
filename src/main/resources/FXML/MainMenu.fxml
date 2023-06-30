@@ -15,6 +15,7 @@
         <VBox alignment="CENTER" spacing="30" fx:id="MainVbox">
             <Text fx:id="text" styleClass="text"/>
             <Button fx:id="logout" text="logout" styleClass="button4" onMouseClicked="#logout"/>
+            <Button fx:id="chat" text="chat" styleClass="button4" onMouseClicked="#enterChatMenu"/>
             <Button fx:id="profile" text="enter profile menu" styleClass="button4" onMouseClicked="#enterProfile"/>
             <Button fx:id="startGame" text="start game" styleClass="button4" onMouseClicked="#startGame"/>
             <HBox alignment="CENTER" spacing="20" fx:id="hbox">

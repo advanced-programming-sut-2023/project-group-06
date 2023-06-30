@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -25,10 +26,14 @@ import org.example.Controller.GameControllers.MapController;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.Data;
+import org.example.Model.Kingdom;
 import org.example.Model.Tile;
 import org.example.Model.TileStructure;
 import org.example.View.Graphics.SuperImage;
 import org.example.View.MainMenu;
+
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -63,7 +68,13 @@ public class GameMenu extends Application {
             else if (e.getCode() == KeyCode.O) zoomOut();
             else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
             else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
-            else if (e.getCode() == KeyCode.F) nextTurn();
+            else if (e.getCode() == KeyCode.F) {
+                try {
+                    nextTurn();
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
         });
         starter();
         stage.show();
@@ -456,7 +467,7 @@ public class GameMenu extends Application {
         buildingHBox.setVisible(false);
     }
 
-    public void nextTurn() {
+    public void nextTurn() throws IOException {
         System.out.println("salam");
         GameController.nextTurn();
     }

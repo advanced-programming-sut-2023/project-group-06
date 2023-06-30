@@ -6,10 +6,12 @@ import com.google.gson.JsonObject;
 import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.example.Model.Client;
+import org.example.View.ChatMenu;
 import org.example.View.ProfileMenu;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class User implements Comparable<User>, Serializable {
     private String username = "";
@@ -24,6 +26,7 @@ public class User implements Comparable<User>, Serializable {
     private long lastLoginAttemptTime;
     private String avatar;
     private Client client;
+    private ArrayList<ChatRoom> chats = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -177,6 +180,7 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendToServer() throws IOException {
+        if(client == null) return;
         client.dataOutputStream.writeUTF(toGson(""));
     }
 
@@ -221,5 +225,16 @@ public class User implements Comparable<User>, Serializable {
 
     public void inactivateClient() {
         client.isClientAlive = false;
+    }
+
+    public ArrayList<ChatRoom> getChats() {
+        return chats;
+    }
+
+    public boolean hasPrivateChatWith(String name){
+        for(ChatRoom chatRoom : chats){
+            if(chatRoom.getChatType() == ChatType.PRIVATE && chatRoom.hasSomeOne(name)) return true;
+        }
+        return false;
     }
 }

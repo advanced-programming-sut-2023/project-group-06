@@ -18,8 +18,8 @@ public class Client {
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         System.out.println(socket.getPort());
-        while (isClientAlive)
-            handleClient();
+//        while (isClientAlive)
+//            handleClient();
     }
 
     private synchronized void handleClient() throws IOException {
