@@ -57,19 +57,22 @@ public class ChatMenu extends Application {
     }
 
     public void initialize(){
-        Button publicChat = new Button("Public");
-        publicChat.setStyle(" -fx-background-color: #dff168; -fx-text-fill: black");
-        publicChat.setTextFill(Color.BLACK);
-        mainVBox.getChildren().add(publicChat);
-        publicChat.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                selectedChat = Data.getPublicRoom();
-                enterTheChat();
-            }
-        });
         for(ChatRoom chatRoom : Data.getCurrentUser().getChats()){
-            if(chatRoom == Data.getPublicRoom()) continue;
+            if(chatRoom == Data.getPublicRoom()) {
+                System.out.println("salaaamammama");
+                Button publicChat = new Button("Public");
+                publicChat.setStyle(" -fx-background-color: #dff168; -fx-text-fill: black");
+                publicChat.setTextFill(Color.BLACK);
+                mainVBox.getChildren().add(publicChat);
+                publicChat.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    @Override
+                    public void handle(MouseEvent mouseEvent) {
+                        selectedChat = Data.getPublicRoom();
+                        enterTheChat();
+                    }
+                });
+                continue;
+            }
             String name = chatRoom.getChatType() == ChatType.ROOM ? chatRoom.getName() :
                     chatRoom.getUsers().get(0) == Data.getCurrentUser() ? chatRoom.getUsers().get(1).getUsername() :
                     chatRoom.getUsers().get(0).getUsername();
@@ -217,7 +220,11 @@ public class ChatMenu extends Application {
                     mainSend.setOnMouseClicked(new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent mouseEvent) {
-                            edit(message);
+                            try {
+                                edit(message);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     });
                 }
@@ -323,7 +330,7 @@ public class ChatMenu extends Application {
         selectedChat.getUsers().add(Data.getUserByName(username));
         Data.getUserByName(username).getChats().add(selectedChat);
         System.out.println("add member");
-        Data.getUserByName(username).addToGroup(selectedChat);
+        Data.getCurrentUser().addToGroup(selectedChat);
     }
 
     private void delete(Message message) throws IOException {
@@ -331,16 +338,23 @@ public class ChatMenu extends Application {
         Data.getCurrentUser().deleteMessageCommand(message);
     }
 
-    private void edit(Message message) {
+    private void edit(Message message) throws IOException {
         System.out.println("edit");
+        String text = mainTextField.getText();
         mainTextField.setText("");
+        message.setContent(text);
+        editMessage(message);
         mainSend.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                try {
-                    editMessage(message);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+                if(mainTextField.getText() != null && !Objects.equals(mainTextField.getText(), "")){
+                    Message message = new Message(Data.getCurrentUser(), mainTextField.getText(), "00:00", selectedChat);
+                    try {
+                        sendMessage(message);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    mainTextField.setText("");
                 }
             }
         });

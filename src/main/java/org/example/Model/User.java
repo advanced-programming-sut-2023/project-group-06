@@ -42,7 +42,6 @@ public class User implements Comparable<User>, Serializable {
         if(Data.flag) {
             chats.add(Data.getPublicRoom());
             Data.getPublicRoom().getUsers().add(this);
-            this.addToGroup(Data.getPublicRoom());
         }
     }
 
@@ -191,6 +190,7 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendToServer(String commandType, JsonObject context) throws IOException {
+        System.out.println("client:  " + client + "  " + " command:  " + commandType + "  user:  " + username + " context:  " + context);
         if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(commandType, context));
     }

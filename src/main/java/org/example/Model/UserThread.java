@@ -59,7 +59,8 @@ public class UserThread extends Thread {
                 ChatType chatType = ChatType.getChatTypeByString(roomObject.get("chat type").getAsString());
                 ChatRoom chatRoom = user.getChatWithId(id);
                 if (chatRoom == null) {
-                    chatRoom = new ChatRoom(users1, chatType, 0);
+                    if (chatType != ChatType.PUBLIC) chatRoom = new ChatRoom(users1, chatType, 0);
+                    else chatRoom = Data.getPublicRoom();
                     for (User user1 : users1) {
                         user1.getChats().add(chatRoom);
                     }
