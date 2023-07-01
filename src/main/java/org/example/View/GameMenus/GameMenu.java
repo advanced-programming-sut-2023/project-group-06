@@ -1,10 +1,12 @@
 package org.example.View.GameMenus;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -369,6 +371,7 @@ public class GameMenu extends Application {
             });
             hBox.getChildren().add(buildingIcon);
         }
+        return hBox;
     }
 
     private void initBuildingsArray() {
