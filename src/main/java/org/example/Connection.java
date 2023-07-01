@@ -174,7 +174,7 @@ public class Connection extends Thread {
         if (commandType.equals("delete message")) deleteMessage(context);
         if (commandType.equals("edit message")) editMessage(context);
         if (commandType.equals("create room")) createRoom(context);
-        if (commandType.equals("addToGroup")) addToGroup(context);
+        if (commandType.equals("add to group")) addToGroup(context);
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
     }
 
@@ -185,6 +185,7 @@ public class Connection extends Thread {
             usernames.add(user.getAsJsonObject().get("username").getAsString());
         }
         int id = context.get("id").getAsInt();
+        System.out.println("ADDTOGROUP:    usernames: " + usernames + " id: " + id);
         Data.getChatRoomById(id).setUsernames(usernames);
     }
 
