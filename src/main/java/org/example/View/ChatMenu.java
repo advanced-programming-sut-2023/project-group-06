@@ -88,6 +88,9 @@ public class ChatMenu extends Application {
     }
 
     private void enterTheChat() {
+        for (int i = borderPane.getChildren().size() - 1; i >= 0; i--) {
+            borderPane.getChildren().remove(i);
+        }
         borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/Game/chatBackground.jpg").toExternalForm()))
                 , null, null)));
@@ -177,12 +180,6 @@ public class ChatMenu extends Application {
         Message message5 = new Message(Data.getUserByName("mobin14"), "Hi How Are You Today! Hi How Are You Today? I'm Really Good But I Hate Java", "12:80", selectedChat);
         Message message6 = new Message(Data.getUserByName("mobin14"), "Hi How Are You Today! Hi How Are You Today?", "12:80", selectedChat);
         Message message7 = new Message(Data.getUserByName("mobin13"), "Hi How Are You Today! Hi How Are You Today?", "12:80", selectedChat);
-        selectedChat.getMessages().add(message3);
-        selectedChat.getMessages().add(message1);
-        selectedChat.getMessages().add(message2);
-        selectedChat.getMessages().add(message4);
-        selectedChat.getMessages().add(message5);
-        selectedChat.getMessages().add(message6);
         int num = Math.min(selectedChat.getMessages().size(), 6);
         String style2 = "-fx-pref-width: 300;\n" +
                 "    -fx-pref-height: 35;\n" +
@@ -324,7 +321,7 @@ public class ChatMenu extends Application {
 
     private void addMember(String username) throws IOException {
         selectedChat.getUsers().add(Data.getUserByName(username));
-        /*Data.getUserByName(username).getChats().add(selectedChat);*/
+        Data.getUserByName(username).getChats().add(selectedChat);
         System.out.println("add member");
         Data.getUserByName(username).addToGroup(selectedChat);
     }
@@ -356,6 +353,7 @@ public class ChatMenu extends Application {
     private void sendMessage(Message message) throws IOException {
         System.out.println("send");
         Data.getCurrentUser().sendMessageCommand(message);
+        enterTheChat();
     }
 
     private void newBack() throws Exception {
@@ -420,7 +418,7 @@ public class ChatMenu extends Application {
         else {
             ArrayList<User> users = new ArrayList<>();
             users.add(Data.getCurrentUser());
-            ChatRoom chatRoom = new ChatRoom(users, ChatType.ROOM);/////////////?????????????
+            ChatRoom chatRoom = new ChatRoom(users, name);/////////////?????????????
             roomError.setText("successful");
             roomError.setTextFill(Color.GREEN);
             roomError.setVisible(true);

@@ -43,7 +43,7 @@ public class Message{
     }
     public JsonObject toJson() {
         JsonObject jsonObject = new JsonObject();
-        jsonObject.add("owner", owner.toJson());
+        jsonObject.addProperty("owner", owner.getUsername());
         jsonObject.addProperty("content", content);
         jsonObject.addProperty("time", time);
         jsonObject.addProperty("id", id);

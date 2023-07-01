@@ -20,8 +20,19 @@ public class ChatRoom{
     public ChatRoom(ArrayList<User> users, ChatType chatType) throws IOException {
         this.users = users;
         this.chatType = chatType;
+        this.name = "null";
         id = ++count;
         users.get(0).createRoom(this);
+        System.out.println("----------------------------------------------------------------");
+        /*for(User user : users) user.getChats().add(this);*/
+    }
+
+    public ChatRoom(ArrayList<User> users, ChatType chatType, int o) throws IOException {
+        this.users = users;
+        this.chatType = chatType;
+        this.name = "null";
+        id = ++count;
+        System.out.println("----------------------------------------------------------------");
         /*for(User user : users) user.getChats().add(this);*/
     }
 
@@ -31,6 +42,7 @@ public class ChatRoom{
         this.chatType = ChatType.ROOM;
         id = ++count;
         users.get(0).createRoom(this);
+        System.out.println("+++++++++++++++++++++++++++++++++++++");
         /*for(User user : users) user.getChats().add(this);*/
     }
 
@@ -96,5 +108,9 @@ public class ChatRoom{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMessages(ArrayList<Message> messages) {
+        this.messages = messages;
     }
 }
