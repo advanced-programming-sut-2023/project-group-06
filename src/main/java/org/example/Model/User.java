@@ -28,6 +28,9 @@ public class User implements Comparable<User>, Serializable {
     private String avatar;
     private Client client;
     private ArrayList<ChatRoom> chats = new ArrayList<>();
+    private ArrayList<FriendRequest> friendRequestsSentByMe = new ArrayList<>();
+    private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
+    private ArrayList<User> myFriends = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -289,5 +292,17 @@ public class User implements Comparable<User>, Serializable {
             if (chat.getId() == id) return chat;
         }
         return null;
+    }
+
+    public ArrayList<FriendRequest> getFriendRequestsSentByMe() {
+        return friendRequestsSentByMe;
+    }
+
+    public ArrayList<FriendRequest> getFriendRequestsReceivedByMe() {
+        return friendRequestsReceivedByMe;
+    }
+
+    public ArrayList<User> getMyFriends() {
+        return myFriends;
     }
 }
