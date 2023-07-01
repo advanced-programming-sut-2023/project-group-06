@@ -38,10 +38,11 @@ public class User implements Comparable<User>, Serializable {
         Data.addUser(this);
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
-        sendToServer();
+//        sendToServer();
         if(Data.flag) {
             chats.add(Data.getPublicRoom());
             Data.getPublicRoom().getUsers().add(this);
+            this.addToGroup(Data.getPublicRoom());
         }
     }
 
@@ -186,10 +187,10 @@ public class User implements Comparable<User>, Serializable {
 
     public void sendToServer() throws IOException {
         if (client == null) return;
-        client.dataOutputStream.writeUTF(toGson("", ""));
+        client.dataOutputStream.writeUTF(toGson("", null));
     }
 
-    public void sendToServer(String commandType, String context) throws IOException {
+    public void sendToServer(String commandType, JsonObject context) throws IOException {
         if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(commandType, context));
         System.out.println(commandType + " W " + context);
@@ -208,7 +209,7 @@ public class User implements Comparable<User>, Serializable {
         }
     }
 
-    public String toGson(String commandType, String context) {
+    public String toGson(String commandType, JsonObject context) {
         JsonObject data = new JsonObject();
         JsonObject user = toJson();
         data.add("user", user);
@@ -217,8 +218,10 @@ public class User implements Comparable<User>, Serializable {
         data.add("isAlive", time);
         JsonObject command = new JsonObject();
         command.addProperty("command type", commandType);
-        command.addProperty("command content", context);
-        data.add("command", command);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("id", "null");
+        data.add("command content", (context != null) ? context : jsonObject);
+        data.add("command type", command);
         String output = new Gson().toJson(data);
         return output;
     }
@@ -238,24 +241,25 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendMessageCommand(Message message) throws IOException {
-        sendToServer("send message", message.toJson().toString());
+        sendToServer("send message", message.toJson());
     }
 
     public void deleteMessageCommand(Message message) throws IOException {
-        sendToServer("delete message", message.toJson().toString());
+        sendToServer("delete message", message.toJson());
     }
 
     public void editMessage(Message message) throws IOException {
-        sendToServer("edit message", message.toJson().toString());
+        sendToServer("edit message", message.toJson());
     }
 
     public void createRoom(ChatRoom chatRoom) throws IOException {
         System.out.println(chatRoom.toJson() + " ppppppp");
-        sendToServer("create room", chatRoom.toJson().toString());
+        sendToServer("create room", chatRoom.toJson());
     }
 
     public void addToGroup(ChatRoom chatRoom) throws IOException {
-        sendToServer("add to group", chatRoom.toJson().toString());
+        System.out.println("added To Groupppp");
+        sendToServer("add to group", chatRoom.toJson());
     }
 
     public void inactivateClient() {

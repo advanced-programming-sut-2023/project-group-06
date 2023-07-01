@@ -18,7 +18,7 @@ public class Data {
     public static boolean flag = false;
 
     public static void initializePublicRoom() throws IOException {
-        publicRoom = new ChatRoom(users, ChatType.PUBLIC);
+        publicRoom = new ChatRoom(users, ChatType.PUBLIC, 0);
     }
 
     public static User getUserByName(String username) {
