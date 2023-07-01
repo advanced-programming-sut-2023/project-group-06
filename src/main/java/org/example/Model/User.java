@@ -198,13 +198,29 @@ public class User implements Comparable<User>, Serializable {
 
     public void setClient(Client client) {
         this.client = client;
+        if (client != null) {
+            UserThread userThread = new UserThread(this);
+            userThread.setDaemon(true);
+            userThread.start();
+        }
     }
 
-    public String toGson(String commandString) {
+    public String toGson(String commandType, String context) {
         JsonObject data = new JsonObject();
-        JsonObject dataType = new JsonObject();
-        dataType.addProperty("type", "user");
-        data.add("dataType", dataType);
+        JsonObject user = toJson();
+        data.add("user", user);
+        JsonObject time = new JsonObject();
+        time.addProperty("time", (client.isClientActive) ? System.currentTimeMillis() / 1000L : -1L);
+        data.add("isAlive", time);
+        JsonObject command = new JsonObject();
+        command.addProperty("command type", commandType);
+        command.addProperty("command content", context);
+        data.add("command", command);
+        String output = new Gson().toJson(data);
+        return output;
+    }
+
+    public JsonObject toJson() {
         JsonObject user = new JsonObject();
         user.addProperty("username", this.getUsername());
         user.addProperty("password", this.getHashedPassword());
@@ -215,15 +231,27 @@ public class User implements Comparable<User>, Serializable {
         user.addProperty("answerToQuestion", this.getHashedAnswerToQuestion());
         user.addProperty("highScore", this.getHighScore());
         user.addProperty("image", this.getAvatar());
-        data.add("user", user);
-        client.toggle = 1 - client.toggle;
-        JsonObject toggle = new JsonObject();
-        toggle.addProperty("toggle", client.toggle);
-        data.add("isAlive", toggle);
-        JsonObject command = new JsonObject();
-        command.addProperty("command", commandString);
-        String output = new Gson().toJson(data);
-        return output;
+        return user;
+    }
+
+    private void sendMessageCommand(Message message) throws IOException {
+        sendToServer("send message", message.toJson().getAsString());
+    }
+
+    private void deleteMessageCommand(Message message) throws IOException {
+        sendToServer("delete message", message.toJson().getAsString());
+    }
+
+    private void editMessage(Message message) throws IOException {
+        sendToServer("edit message", message.toJson().getAsString());
+    }
+
+    private void createRoom(ChatRoom chatRoom) throws IOException {
+        sendToServer("create room", chatRoom.toJson().getAsString());
+    }
+
+    private void addToGroup(ChatRoom chatRoom) throws IOException {
+        sendToServer("add to group", chatRoom.toJson().getAsString());
     }
 
     public void inactivateClient() {
@@ -246,5 +274,12 @@ public class User implements Comparable<User>, Serializable {
             if(chatRoom.getChatType() == ChatType.ROOM && Objects.equals(chatRoom.getName(), name))
                 return true;
         return false;
+    }
+
+    public ChatRoom getChatWithId(int id) {
+        for (ChatRoom chat : chats) {
+            if (chat.getId() == id) return chat;
+        }
+        return null;
     }
 }

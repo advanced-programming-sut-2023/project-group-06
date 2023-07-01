@@ -10,6 +10,8 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -19,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.GameController;
@@ -35,10 +38,10 @@ import java.util.ArrayList;
 public class GameMenu extends Application {
     static Stage stage;
     static Scene scene;
-    public StackPane mainStackPane;
     public BorderPane mainBorderPane;
+    public StackPane mainStackPane;
     public Canvas mainCanvas;
-    public static HBox bottomHBox;
+    public HBox bottomHBox;
     public Pane UIPane;
     public Pane canvasPane;
     // map things
@@ -63,8 +66,6 @@ public class GameMenu extends Application {
             System.out.println("ininin " + mainCanvas);
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
-            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
-            else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
             else if (e.getCode() == KeyCode.F) {
                 try {
                     nextTurn();
@@ -72,15 +73,20 @@ public class GameMenu extends Application {
                     throw new RuntimeException(ex);
                 }
             }
+            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
+            else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
         });
         starter();
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         ChatRoom chatRoom = new ChatRoom(GameController.currentGame.getPlayers(),
                 GameController.currentGame.getPlayers().get(0).getUsername());
     }
 
+
     Tile[][] map;
+
     private void starter() {
         makeMapDraggable();
         map = Data.loadMap("test");
@@ -264,15 +270,39 @@ public class GameMenu extends Application {
         bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
         bottomHBox.setFocusTraversable(true);
         bottomHBox.getChildren().addAll(stackPane);
-        stackPane.setMinHeight(111);
-        stackPane.setMaxHeight(111);
-        stackPane.setTranslateX(-93);
-        stackPane.setMinWidth(500);
-        stackPane.setMaxWidth(500);
+        stackPane.setMinHeight(140);
+        stackPane.setMaxHeight(140);
+        stackPane.setTranslateX(-170);
+        stackPane.setMinWidth(520);
+        stackPane.setMaxWidth(520);
         setBuildingIndex(0);
         popularityHBox.setVisible(false);
         bottomHBox.setAlignment(Pos.BOTTOM_CENTER);
         popularityHBox.setStyle("-fx-background-color: BLUE");
+        Text happiness = new Text(Integer.toString(GameController.currentPlayer.getHappiness()));
+        happiness.setTranslateX(-70);
+        happiness.setTranslateY(-60);
+        happiness.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
+        happiness.setFill(Color.GREEN);
+        happiness.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                popularityBar(popularityHBox, buildingHBox);
+            }
+        });
+        Text wealth = new Text(Integer.toString(GameController.currentPlayer.getWealth()));
+        wealth.setTranslateX(-110);
+        wealth.setTranslateY(-40);
+        wealth.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
+        wealth.setFill(Color.BLUE);
+        Text population = new Text(GameController.currentPlayer.getPopulation() + "/" +
+                GameController.currentPlayer.getMaxPopulation());
+        population.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
+        population.setFill(Color.RED);
+        population.setTranslateX(-150);
+        population.setTranslateY(-20);
+        bottomHBox.getChildren().addAll(happiness, wealth, population);
+        setPopularityHBox(popularityHBox);
     }
 
     private void makeActionVBox() {
@@ -309,30 +339,6 @@ public class GameMenu extends Application {
         icon.setFitHeight(30);
         icon.setFitWidth(30);
         actionVBox.getChildren().add(icon);
-        Text happiness = new Text(Integer.toString(GameController.currentPlayer.getHappiness()));
-        happiness.setTranslateX(-70);
-        happiness.setTranslateY(-60);
-        happiness.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
-        happiness.setFill(Color.GREEN);
-        happiness.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                popularityBar(popularityHBox, buildingHBox);
-            }
-        });
-        Text wealth = new Text(Integer.toString(GameController.currentPlayer.getWealth()));
-        wealth.setTranslateX(-110);
-        wealth.setTranslateY(-40);
-        wealth.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
-        wealth.setFill(Color.BLUE);
-        Text population = new Text(GameController.currentPlayer.getPopulation() + "/" +
-                GameController.currentPlayer.getMaxPopulation());
-        population.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 18");
-        population.setFill(Color.RED);
-        population.setTranslateX(-150);
-        population.setTranslateY(-20);
-        bottomHBox.getChildren().addAll(happiness, wealth, population);
-        setPopularityHBox(popularityHBox);
     }
 
     private void briefing() {

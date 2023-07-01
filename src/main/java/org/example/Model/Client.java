@@ -9,8 +9,7 @@ import java.util.Scanner;
 public class Client {
     final DataInputStream dataInputStream;
     final DataOutputStream dataOutputStream;
-    int toggle = 0;
-    public boolean isClientAlive = true;
+    public boolean isClientActive = true;
 
     public Client(String host, int port) throws IOException {
         System.out.println("client");
@@ -18,7 +17,7 @@ public class Client {
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
         System.out.println(socket.getPort());
-//        while (isClientAlive)
+//        while (isClientActive)
 //            handleClient();
     }
 
