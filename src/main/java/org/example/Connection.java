@@ -159,7 +159,10 @@ public class Connection extends Thread {
     private void handleClientCommand(JsonObject json) {
         JsonObject command = json.get("command").getAsJsonObject();
         String commandType = command.get("command type").getAsString();
-        JsonObject context = command.get("command content").getAsJsonObject();
+        System.out.println(command.get("command content") + " uuuuuu " + command.get("command content").getClass());
+        String input = command.get("command content").getAsString();
+        JsonParser parser = new JsonParser();
+        JsonObject context = (JsonObject) parser.parse(input);
         if (commandType.equals("send message")) sendMessage(context);
         if (commandType.equals("delete message")) deleteMessage(context);
         if (commandType.equals("edit message")) editMessage(context);
