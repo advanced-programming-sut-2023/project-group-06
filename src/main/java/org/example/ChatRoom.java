@@ -18,8 +18,8 @@ public class ChatRoom {
         this.chatType = chatType;
         this.name = name;
         this.id = id;
-        Data.getChatRooms().add(this);//////////////////////
-        System.out.println(Data.getChatRooms() + " iiii");
+        Data.getChatRooms().add(this);
+        System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     }
 
     public void addMessage(Message message) {

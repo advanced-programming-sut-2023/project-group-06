@@ -6,6 +6,7 @@ import java.util.Collections;
 public class Data {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<ChatRoom> chatRooms = new ArrayList<>();
+    static boolean hasAnyOneLoggedInYet = false;
 
     public static Client getClientByName(String username) {
         for (int i = 0; i < clients.size(); i++) {
