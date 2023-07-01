@@ -15,7 +15,7 @@ public class Connection extends Thread {
     long lastTime = -2L;
     Client client = null;
     private boolean isConnectionAlive = true;
-
+    JsonObject updateData = null;
 
     public Connection(Socket socket) throws IOException {
         System.out.println("New connection form: " + socket.getInetAddress() + ":" + socket.getPort());
@@ -48,9 +48,15 @@ public class Connection extends Thread {
 //            System.out.println("ccc");
 //            throw new RuntimeException(e);
 //        }
-        UpdateData updateData = new UpdateData(this);
-        updateData.setDaemon(true);
-        updateData.start();
+//        UpdateData updateData = new UpdateData(this);
+//        updateData.setDaemon(true);
+//        updateData.start();
+        try {
+            dataOutputStream.writeUTF(Boolean.toString(Data.hasAnyOneLoggedInYet));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        Data.hasAnyOneLoggedInYet = true;
         String input = null;
         try {
             input = dataInputStream.readUTF();
@@ -67,7 +73,6 @@ public class Connection extends Thread {
         client2.setHashedPassword(password);
         client2.setAvatar(avatar);
         client2.setAnswerToQuestion(answerToQuestion);
-        System.out.println(json);
         String username = userJson.get("username").getAsString();
         Client client1 = Data.getClientByName(username);
         if (client1 == null) {
@@ -117,7 +122,13 @@ public class Connection extends Thread {
 //        dataOutputStream.writeUTF(output);
     }
     private synchronized void handleClient() throws IOException {
+        if (updateData != null) {
+            dataOutputStream.writeUTF(new Gson().toJson(updateData));
+            System.out.println("dataWriteIfNotNull:    " + updateData);
+            updateData = null;
+        } else dataOutputStream.writeUTF("salam");
         String input = dataInputStream.readUTF();
+        System.out.println("client input: " + input);
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(input);
         handleClientCommand(json);
@@ -156,17 +167,15 @@ public class Connection extends Thread {
         }
     }
 
-    private void handleClientCommand(JsonObject json) {
+    private void handleClientCommand(JsonObject json) throws IOException {
         String commandType = json.get("command type").getAsJsonObject().get("command type").getAsString();
-        System.out.println(commandType);
-        System.out.println(json);
         JsonObject context = json.get("command content").getAsJsonObject();
-        System.out.println(context);
         if (commandType.equals("send message")) sendMessage(context);
         if (commandType.equals("delete message")) deleteMessage(context);
         if (commandType.equals("edit message")) editMessage(context);
         if (commandType.equals("create room")) createRoom(context);
         if (commandType.equals("addToGroup")) addToGroup(context);
+        dataOutputStream.writeUTF(new Gson().toJson(sendData()));
     }
 
     private void addToGroup(JsonObject context) {
@@ -180,9 +189,7 @@ public class Connection extends Thread {
     }
 
     private void createRoom(JsonObject context) {
-        System.out.println("ppp - crete Room : " + context);
-        String idString = context.get("id").getAsString();
-        if (idString.equals("null")) return;
+        System.out.println("create Room : " + context);
         int id = context.get("id").getAsInt();
         JsonArray members = context.get("users").getAsJsonArray();
         ArrayList<String> usernames = new ArrayList<>();
@@ -216,7 +223,7 @@ public class Connection extends Thread {
         int chatRoomId = context.get("chat room id").getAsInt();
         ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
         int id = context.get("id").getAsInt();
-        String username = context.get("owner").getAsJsonObject().get("owner").getAsString();
+        String username = context.get("owner").getAsString();
         String time = context.get("time").getAsString();
         String content = context.get("content").getAsString();
         chatRoom.getMessages().add(new Message(username, content, time, chatRoom, id));
@@ -238,5 +245,15 @@ public class Connection extends Thread {
 
     public Client getClient() {
         return client;
+    }
+
+    private JsonObject sendData() {
+        JsonObject root = new JsonObject();
+        JsonArray chatRooms = new JsonArray();
+        for (ChatRoom chatRoom : Data.getChatRooms()) {
+            chatRooms.add(chatRoom.toJson());
+        }
+        root.add("chat rooms", chatRooms);
+        return root;
     }
 }
