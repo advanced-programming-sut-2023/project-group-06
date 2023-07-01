@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -56,7 +57,10 @@ public class GameMenu extends Application {
     private boolean isShowingInformation = false;
     private Label informationLabel;
     private Rectangle selectionRectangle;
-    private double SRStartX, SRStartY, SREndX, SREndY;
+    private double SRStartX, SRStartY;
+    public Building draggedBuilding;
+    // todo final drop position of dragged building on canvas
+    private ImageView draggedBuildingImageView;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -183,25 +187,58 @@ public class GameMenu extends Application {
         for (int i = 11; i < 14; i++) for (int j = 47; j < 50; j++) map[i][j].setBuilding(building);
 
 
+
+        draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
+        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
+        draggedBuildingImageView.setVisible(true);
+
+
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
 
     }
 
     private void setMouseActions() {
-        UIPane.setOnMouseClicked(e -> {
+        UIPane.setOnMouseClicked(e -> onMouseClickedFunction(e));
+        UIPane.setOnMouseMoved(e -> onMouseMovedFunction(e));
+        UIPane.setOnMousePressed(e -> onMousePressedFunction(e));
+        UIPane.setOnMouseDragged(e -> onMouseDraggedFunction(e));
+        UIPane.setOnMouseReleased(e -> {
+            selectionRectangle.setVisible(false);
+        });
+
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
+            timeLineFunction();
+        }));
+        timeline.setCycleCount(-1);
+        timeline.play();
+    }
+
+    private void onMouseClickedFunction(MouseEvent e) {
+        if (draggedBuilding == null) {
             if (e.getButton() == MouseButton.PRIMARY) {
                 clickedAt(e.getSceneX(), e.getSceneY());
                 MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
             }
-        });
-        UIPane.setOnMouseMoved(e -> {
-            mouseX = e.getSceneX();
-            mouseY = e.getSceneY();
-            mouseLastChangeTime = System.currentTimeMillis();
-            isShowingInformation = false;
-            informationLabel.setVisible(false);
-        });
-        UIPane.setOnMousePressed(e -> {
+        }
+        else {
+
+        }
+    }
+
+    private void onMouseMovedFunction(MouseEvent e) {
+        mouseX = e.getSceneX();
+        mouseY = e.getSceneY();
+        mouseLastChangeTime = System.currentTimeMillis();
+        isShowingInformation = false;
+        informationLabel.setVisible(false);
+        if (draggedBuilding != null) {
+            draggedBuildingImageView.setLayoutX(mouseX - 140);
+            draggedBuildingImageView.setLayoutY(mouseY - 100);
+        }
+    }
+
+    private void onMousePressedFunction(MouseEvent e) {
+        if (draggedBuilding == null) {
             if (e.getButton() == MouseButton.PRIMARY) {
                 SRStartX = e.getSceneX();
                 SRStartY = e.getSceneY();
@@ -212,43 +249,49 @@ public class GameMenu extends Application {
                 lastMouseX = e.getSceneX();
                 lastMouseY = e.getSceneY();
             }
-        });
-        UIPane.setOnMouseDragged(e -> {
-            if (e.getButton() == MouseButton.PRIMARY) {
-                double x = e.getSceneX(), y = e.getSceneY();
-                selectionRectangle.setLayoutX(Math.min(SRStartX, x));
-                selectionRectangle.setLayoutY(Math.min(SRStartY, y));
-                selectionRectangle.setWidth(Math.abs(SRStartX - x));
-                selectionRectangle.setHeight(Math.abs(SRStartY - y));
-                updateSelectedUnits();
-                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
-            } else if (e.getButton() == MouseButton.SECONDARY) {
-                mapPointerX += e.getSceneX() - lastMouseX;
-                mapPointerY += e.getSceneY() - lastMouseY;
-                lastMouseX = e.getSceneX();
-                lastMouseY = e.getSceneY();
+        }
+        else {
+            if (e.getButton() == MouseButton.PRIMARY){
+                // todo drop building
+            }
+            else if (e.getButton() == MouseButton.SECONDARY) {
+                draggedBuilding = null;
+                draggedBuildingImageView.setVisible(false);
                 MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
             }
-        });
-        UIPane.setOnMouseReleased(e -> {
-            selectionRectangle.setVisible(false);
-        });
+        }
+    }
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(100), e -> {
-            fitCanvasToCenter();
-            if (System.currentTimeMillis() - mouseLastChangeTime > 500 && !isShowingInformation) {
-                String information = getInfoOfPoint(mouseX, mouseY);
-                if (information != null) {
-                    informationLabel.setText(information);
-                    informationLabel.setVisible(true);
-                    informationLabel.setLayoutX(mouseX - informationLabel.getWidth());
-                    informationLabel.setLayoutY(mouseY);
-                }
-                isShowingInformation = true;
+    private void onMouseDraggedFunction(MouseEvent e) {
+        if (e.getButton() == MouseButton.PRIMARY) {
+            double x = e.getSceneX(), y = e.getSceneY();
+            selectionRectangle.setLayoutX(Math.min(SRStartX, x));
+            selectionRectangle.setLayoutY(Math.min(SRStartY, y));
+            selectionRectangle.setWidth(Math.abs(SRStartX - x));
+            selectionRectangle.setHeight(Math.abs(SRStartY - y));
+            updateSelectedUnits();
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        } else if (e.getButton() == MouseButton.SECONDARY) {
+            mapPointerX += e.getSceneX() - lastMouseX;
+            mapPointerY += e.getSceneY() - lastMouseY;
+            lastMouseX = e.getSceneX();
+            lastMouseY = e.getSceneY();
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        }
+    }
+
+    private void timeLineFunction() {
+        fitCanvasToCenter();
+        if (System.currentTimeMillis() - mouseLastChangeTime > 500 && !isShowingInformation) {
+            String information = getInfoOfPoint(mouseX, mouseY);
+            if (information != null) {
+                informationLabel.setText(information);
+                informationLabel.setVisible(true);
+                informationLabel.setLayoutX(mouseX - informationLabel.getWidth());
+                informationLabel.setLayoutY(mouseY);
             }
-        }));
-        timeline.setCycleCount(-1);
-        timeline.play();
+            isShowingInformation = true;
+        }
     }
 
     private void updateSelectedUnits() {
@@ -324,6 +367,11 @@ public class GameMenu extends Application {
         selectionRectangle.setOpacity(0.4);
         selectionRectangle.setVisible(false);
         UIPane.getChildren().add(selectionRectangle);
+        draggedBuildingImageView = new ImageView();  // dragged building image view
+        draggedBuildingImageView.setScaleX(0.3);
+        draggedBuildingImageView.setScaleY(0.3);
+        draggedBuildingImageView.setVisible(false);
+        UIPane.getChildren().add(draggedBuildingImageView);
         return scene;
     }
 
