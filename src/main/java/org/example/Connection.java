@@ -1,13 +1,12 @@
 package org.example;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Connection extends Thread {
     Socket socket;
@@ -49,6 +48,9 @@ public class Connection extends Thread {
 //            System.out.println("ccc");
 //            throw new RuntimeException(e);
 //        }
+        UpdateData updateData = new UpdateData(this);
+        updateData.setDaemon(true);
+        updateData.start();
         String input = null;
         try {
             input = dataInputStream.readUTF();
@@ -155,8 +157,64 @@ public class Connection extends Thread {
     }
 
     private void handleClientCommand(JsonObject json) {
-        String command = json.get("command").getAsJsonObject().get("command").getAsString();
-        //todo
+        JsonObject command = json.get("command").getAsJsonObject();
+        String commandType = command.get("command type").getAsString();
+        JsonObject context = command.get("command content").getAsJsonObject();
+        if (commandType.equals("send message")) sendMessage(context);
+        if (commandType.equals("delete message")) deleteMessage(context);
+        if (commandType.equals("edit message")) editMessage(context);
+        if (commandType.equals("create room")) createRoom(context);
+        if (commandType.equals("addToGroup")) addToGroup(context);
+    }
+
+    private void addToGroup(JsonObject context) {
+        JsonArray users = context.get("users").getAsJsonArray();
+        ArrayList<String> usernames = new ArrayList<>();
+        for (JsonElement user : users) {
+            usernames.add(user.getAsJsonObject().get("username").getAsString());
+        }
+        int id = context.get("id").getAsInt();
+        Data.getChatRoomById(id).setUsernames(usernames);
+    }
+
+    private void createRoom(JsonObject context) {
+        JsonArray members = context.get("users").getAsJsonArray();
+        ArrayList<String> usernames = new ArrayList<>();
+        for (JsonElement member : members) {
+            JsonObject user = member.getAsJsonObject();
+            usernames.add(user.get("username").getAsString());
+        }
+        ChatType chatType = ChatType.getChatTypeByString(context.get("chat type").getAsString());
+        String name = context.get("name").getAsString();
+        int id = context.get("id").getAsInt();
+        ChatRoom chatRoom = new ChatRoom(usernames, chatType, name, id);
+    }
+
+    private void editMessage(JsonObject context) {
+        int chatRoomId = context.get("chat room id").getAsInt();
+        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        int id = context.get("id").getAsInt();
+        Message message = chatRoom.getMessageById(id);
+        String content = context.get("content").getAsString();
+        message.setContent(content);
+    }
+
+    private void deleteMessage(JsonObject context) {
+        int chatRoomId = context.get("chat room id").getAsInt();
+        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        int id = context.get("id").getAsInt();
+        Message message = chatRoom.getMessageById(id);
+        chatRoom.getMessages().remove(message);
+    }
+
+    private void sendMessage(JsonObject context) {
+        int chatRoomId = context.get("chat room id").getAsInt();
+        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        int id = context.get("id").getAsInt();
+        String username = context.get("owner").getAsJsonObject().get("owner").getAsString();
+        String time = context.get("time").getAsString();
+        String content = context.get("content").getAsString();
+        chatRoom.getMessages().add(new Message(username, content, time, chatRoom, id));
     }
 
     private synchronized void updateClientData(JsonObject json) {
@@ -171,5 +229,9 @@ public class Connection extends Thread {
         String username = userJson.get("username").getAsString();
         Client client1 = Data.getClientByName(username);
         client1.override(client);
+    }
+
+    public Client getClient() {
+        return client;
     }
 }
