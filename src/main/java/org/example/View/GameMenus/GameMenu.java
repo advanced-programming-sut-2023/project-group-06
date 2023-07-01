@@ -24,6 +24,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import org.example.Controller.GameControllers.GameController;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
@@ -191,7 +192,6 @@ public class GameMenu extends Application {
         draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
         draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
         draggedBuildingImageView.setVisible(true);
-
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
 
