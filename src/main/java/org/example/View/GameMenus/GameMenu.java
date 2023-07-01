@@ -134,7 +134,7 @@ public class GameMenu extends Application {
         for(int i = 19; i < 22; i++) for(int j = 44; j < 47; j++) map[i][j].setBuilding(building);
         building = new Building(null, BuildingType.HOVEL, 48,20);
         for(int i = 19; i < 22; i++) for(int j = 47; j < 50; j++) map[i][j].setBuilding(building);
-        ///////////////////////
+        ///////////////////////////
         building = new Building(null, BuildingType.CATHEDRAL, 2,12);
         for(int i = 10; i < 15; i++) for(int j = 0; j < 5; j++) map[i][j].setBuilding(building);
         building = new Building(null, BuildingType.CHURCH, 6,12);
