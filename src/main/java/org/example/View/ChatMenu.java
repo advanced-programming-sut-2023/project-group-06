@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import org.example.Model.*;
 import org.example.View.GameMenus.TradeMenus.MakeTradeMenu;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -158,7 +159,11 @@ public class ChatMenu extends Application {
             add.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    addingMember(adding.getText());
+                    try {
+                        addingMember(adding.getText());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             hBox.getChildren().addAll(addUsers, adding, add);
@@ -223,7 +228,11 @@ public class ChatMenu extends Application {
             delete.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    delete(message);
+                    try {
+                        delete(message);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             HBox messageHBox = new HBox(empty, messageLabel, edit, delete);
@@ -271,7 +280,11 @@ public class ChatMenu extends Application {
             public void handle(MouseEvent mouseEvent) {
                 if(textField.getText() != null && !Objects.equals(textField.getText(), "")){
                     Message message = new Message(Data.getCurrentUser(), textField.getText(), "00:00", selectedChat);
-                    sendMessage(message);
+                    try {
+                        sendMessage(message);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                     textField.setText("");
                 }
             }
@@ -284,7 +297,7 @@ public class ChatMenu extends Application {
         borderPane.getChildren().add(sending);
     }
 
-    private void addingMember(String username) {
+    private void addingMember(String username) throws IOException {
         if(Data.getUserByName(username) == null){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -309,15 +322,16 @@ public class ChatMenu extends Application {
         }
     }
 
-    private void addMember(String username){
+    private void addMember(String username) throws IOException {
         selectedChat.getUsers().add(Data.getUserByName(username));
-        Data.getUserByName(username).getChats().add(selectedChat);
-        //todo
+        /*Data.getUserByName(username).getChats().add(selectedChat);*/
+        System.out.println("add member");
+        Data.getUserByName(username).addToGroup(selectedChat);
     }
 
-    private void delete(Message message) {
+    private void delete(Message message) throws IOException {
         System.out.println("delete");
-        //todo
+        Data.getCurrentUser().deleteMessageCommand(message);
     }
 
     private void edit(Message message) {
@@ -326,18 +340,22 @@ public class ChatMenu extends Application {
         mainSend.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                editMessage(message);
+                try {
+                    editMessage(message);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
     }
 
-    private void editMessage(Message message) {
-        ///todo
+    private void editMessage(Message message) throws IOException {
+        Data.getCurrentUser().editMessage(message);
     }
 
-    private void sendMessage(Message message) {
-        System.out.println("hiiiiii");
-        //todo
+    private void sendMessage(Message message) throws IOException {
+        System.out.println("send");
+        Data.getCurrentUser().sendMessageCommand(message);
     }
 
     private void newBack() throws Exception {
@@ -353,7 +371,7 @@ public class ChatMenu extends Application {
         done.setVisible(true);
     }
 
-    public void createPrivateChat(MouseEvent mouseEvent) {
+    public void createPrivateChat(MouseEvent mouseEvent) throws IOException {
         String name = usernameTextField.getText();
         if(Data.getUserByName(name) == null
                 || Objects.equals(name, Data.getCurrentUser().getUsername())){
@@ -387,7 +405,7 @@ public class ChatMenu extends Application {
         }
     }
 
-    public void createRoom(MouseEvent mouseEvent) {
+    public void createRoom(MouseEvent mouseEvent) throws IOException {
         String name = roomNameTextField.getText();
         if(!name.matches("\\w+")){
             roomError.setVisible(true);
@@ -402,7 +420,7 @@ public class ChatMenu extends Application {
         else {
             ArrayList<User> users = new ArrayList<>();
             users.add(Data.getCurrentUser());
-            ChatRoom chatRoom = new ChatRoom(users, ChatType.ROOM);
+            ChatRoom chatRoom = new ChatRoom(users, ChatType.ROOM);/////////////?????????????
             roomError.setText("successful");
             roomError.setTextFill(Color.GREEN);
             roomError.setVisible(true);

@@ -14,7 +14,12 @@ public class Data {
     private static User currentUser = null;
     private static boolean stayLoggedIn = false;
     private static int numberOfMessages;
-    private static ChatRoom publicRoom = new ChatRoom(users, "public");
+    private static ChatRoom publicRoom;
+    public static boolean flag = false;
+
+    public static void initializePublicRoom() throws IOException {
+        publicRoom = new ChatRoom(users, ChatType.PUBLIC);
+    }
 
     public static User getUserByName(String username) {
         for (int i = 0; i < users.size(); i++) {
@@ -152,6 +157,8 @@ public class Data {
                 String currentUsername = rootObject.get("currentUsername").getAsString();
                 currentUser = getUserByName(currentUsername);
             }
+            if(!flag) initializePublicRoom();
+            flag = true;
             return true;
         } catch (FileNotFoundException e) {
             return false;

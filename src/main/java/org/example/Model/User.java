@@ -39,8 +39,10 @@ public class User implements Comparable<User>, Serializable {
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
         sendToServer();
-        chats.add(Data.getPublicRoom());
-        Data.getPublicRoom().getUsers().add(this);
+        if(Data.flag) {
+            chats.add(Data.getPublicRoom());
+            Data.getPublicRoom().getUsers().add(this);
+        }
     }
 
     public String getHashedPassword() {
@@ -183,13 +185,13 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendToServer() throws IOException {
-        if(client == null) return;
-        client.dataOutputStream.writeUTF(toGson(""));
+        if (client == null) return;
+        client.dataOutputStream.writeUTF(toGson("", ""));
     }
 
-    public void sendToServer(String command) throws IOException {
+    public void sendToServer(String commandType, String context) throws IOException {
         if (client == null) return;
-        client.dataOutputStream.writeUTF(toGson(command));
+        client.dataOutputStream.writeUTF(toGson(commandType, context));
     }
 
     public Client getClient() {
@@ -234,28 +236,29 @@ public class User implements Comparable<User>, Serializable {
         return user;
     }
 
-    private void sendMessageCommand(Message message) throws IOException {
-        sendToServer("send message", message.toJson().getAsString());
+    public void sendMessageCommand(Message message) throws IOException {
+        sendToServer("send message", message.toJson().toString());
     }
 
-    private void deleteMessageCommand(Message message) throws IOException {
-        sendToServer("delete message", message.toJson().getAsString());
+    public void deleteMessageCommand(Message message) throws IOException {
+        sendToServer("delete message", message.toJson().toString());
     }
 
-    private void editMessage(Message message) throws IOException {
-        sendToServer("edit message", message.toJson().getAsString());
+    public void editMessage(Message message) throws IOException {
+        sendToServer("edit message", message.toJson().toString());
     }
 
-    private void createRoom(ChatRoom chatRoom) throws IOException {
-        sendToServer("create room", chatRoom.toJson().getAsString());
+    public void createRoom(ChatRoom chatRoom) throws IOException {
+        System.out.println(chatRoom.toJson() + " ppppppp");
+        sendToServer("create room", chatRoom.toJson().toString());
     }
 
-    private void addToGroup(ChatRoom chatRoom) throws IOException {
-        sendToServer("add to group", chatRoom.toJson().getAsString());
+    public void addToGroup(ChatRoom chatRoom) throws IOException {
+        sendToServer("add to group", chatRoom.toJson().toString());
     }
 
     public void inactivateClient() {
-        client.isClientAlive = false;
+    client.isClientActive = false;
     }
 
     public ArrayList<ChatRoom> getChats() {
