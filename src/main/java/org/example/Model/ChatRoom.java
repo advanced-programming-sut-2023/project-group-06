@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -16,16 +17,21 @@ public class ChatRoom{
     private static int count = 0;
     int messageCounter = 0;
 
-    public ChatRoom(ArrayList<User> users, ChatType chatType) {
+    public ChatRoom(ArrayList<User> users, ChatType chatType) throws IOException {
         this.users = users;
         this.chatType = chatType;
         id = ++count;
+        users.get(0).createRoom(this);
+        /*for(User user : users) user.getChats().add(this);*/
     }
 
-    public ChatRoom(ArrayList<User> users, String name){
+    public ChatRoom(ArrayList<User> users, String name) throws IOException {
         this.users = users;
         this.name = name;
         this.chatType = ChatType.ROOM;
+        id = ++count;
+        users.get(0).createRoom(this);
+        /*for(User user : users) user.getChats().add(this);*/
     }
 
     public void addMessage(Message message) {

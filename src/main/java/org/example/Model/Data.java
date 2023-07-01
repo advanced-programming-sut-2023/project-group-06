@@ -13,6 +13,13 @@ public class Data {
     private static ArrayList<User> users = new ArrayList<>();
     private static User currentUser = null;
     private static boolean stayLoggedIn = false;
+    private static int numberOfMessages;
+    private static ChatRoom publicRoom;
+    public static boolean flag = false;
+
+    public static void initializePublicRoom() throws IOException {
+        publicRoom = new ChatRoom(users, ChatType.PUBLIC);
+    }
 
     public static User getUserByName(String username) {
         for (int i = 0; i < users.size(); i++) {
@@ -26,6 +33,10 @@ public class Data {
             if (users.get(i).getEmail().equals(email)) return users.get(i);
         }
         return null;
+    }
+
+    public static ChatRoom getPublicRoom(){
+        return publicRoom;
     }
 
     public static void addUser(User user) {
@@ -66,6 +77,14 @@ public class Data {
             if (users.get(users.size() - i) == user) return i;
         }
         return -1;
+    }
+
+    public static int getNumberOfMessages(){
+        return numberOfMessages;
+    }
+
+    public static void updateNumberOfMessages(){
+        numberOfMessages++;
     }
 
     /* saveDate:
@@ -138,6 +157,8 @@ public class Data {
                 String currentUsername = rootObject.get("currentUsername").getAsString();
                 currentUser = getUserByName(currentUsername);
             }
+            if(!flag) initializePublicRoom();
+            flag = true;
             return true;
         } catch (FileNotFoundException e) {
             return false;
@@ -206,5 +227,4 @@ public class Data {
             return null;
         }
     }
-
 }

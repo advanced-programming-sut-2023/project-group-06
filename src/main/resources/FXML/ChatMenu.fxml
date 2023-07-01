@@ -18,11 +18,17 @@
             </HBox>
         </VBox>
     </center>
-    <VBox layoutX="100" layoutY="100" spacing="20">
+    <VBox layoutX="100" layoutY="100" spacing="20" fx:id="leftVBox">
         <Button text="back" onMouseClicked="#back" fx:id="backButton"/>
         <Button text="add private chat" onMouseClicked="#addPrivateChat" fx:id="addPrivateChat"/>
         <TextField promptText="enter username" fx:id="usernameTextField" visible="false"/>
         <Label text="invalid username" fx:id="error" visible="false"/>
         <Button text="create chat" fx:id="done" onMouseClicked="#createPrivateChat" visible="false" styleClass="smallButton"/>
+    </VBox>
+    <VBox layoutY="100" layoutX="900" spacing="20" fx:id="rightVBox">
+        <Button text="create new room" onMouseClicked="#addRoom" fx:id="createRoom"/>
+        <TextField promptText="enter room's name" fx:id="roomNameTextField" visible="false"/>
+        <Label text="invalid name" fx:id="roomError" visible="false"/>
+        <Button text="create room" fx:id="done1" onMouseClicked="#createRoom" visible="false" styleClass="smallButton"/>
     </VBox>
 </BorderPane>

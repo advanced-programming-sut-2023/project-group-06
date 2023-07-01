@@ -1,12 +1,18 @@
 package org.example.Model;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.example.Model.Client;
+import org.example.View.ChatMenu;
+import org.example.View.ProfileMenu;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class User implements Comparable<User>, Serializable {
     private String username = "";
@@ -33,6 +39,10 @@ public class User implements Comparable<User>, Serializable {
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
         sendToServer();
+        if(Data.flag) {
+            chats.add(Data.getPublicRoom());
+            Data.getPublicRoom().getUsers().add(this);
+        }
     }
 
     public String getHashedPassword() {
@@ -227,27 +237,28 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public void sendMessageCommand(Message message) throws IOException {
-        sendToServer("send message", message.toJson().getAsString());
+        sendToServer("send message", message.toJson().toString());
     }
 
     public void deleteMessageCommand(Message message) throws IOException {
-        sendToServer("delete message", message.toJson().getAsString());
+        sendToServer("delete message", message.toJson().toString());
     }
 
     public void editMessage(Message message) throws IOException {
-        sendToServer("edit message", message.toJson().getAsString());
+        sendToServer("edit message", message.toJson().toString());
     }
 
     public void createRoom(ChatRoom chatRoom) throws IOException {
-        sendToServer("create room", chatRoom.toJson().getAsString());
+        System.out.println(chatRoom.toJson() + " ppppppp");
+        sendToServer("create room", chatRoom.toJson().toString());
     }
 
     public void addToGroup(ChatRoom chatRoom) throws IOException {
-        sendToServer("add to group", chatRoom.toJson().getAsString());
+        sendToServer("add to group", chatRoom.toJson().toString());
     }
 
     public void inactivateClient() {
-        client.isClientActive = false;
+    client.isClientActive = false;
     }
 
     public ArrayList<ChatRoom> getChats() {
@@ -258,6 +269,13 @@ public class User implements Comparable<User>, Serializable {
         for(ChatRoom chatRoom : chats){
             if(chatRoom.getChatType() == ChatType.PRIVATE && chatRoom.hasSomeOne(name)) return true;
         }
+        return false;
+    }
+
+    public boolean haveRoom(String name) {
+        for(ChatRoom chatRoom : this.getChats())
+            if(chatRoom.getChatType() == ChatType.ROOM && Objects.equals(chatRoom.getName(), name))
+                return true;
         return false;
     }
 

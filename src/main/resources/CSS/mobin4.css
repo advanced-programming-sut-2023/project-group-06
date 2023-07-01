@@ -26,14 +26,13 @@ TextField{
 Label{
     -fx-min-width: 250;
     -fx-max-width: 250;
-    -fx-text-fill: RED;
     -fx-font-family: "Times New Roman";
     -fx-font-size: 15px;
 }
 
 .smallButton{
-    -fx-min-width: 150;
-    -fx-max-width: 150;
+    -fx-min-width: 160;
+    -fx-max-width: 160;
     -fx-background-insets: 0,1,2;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
