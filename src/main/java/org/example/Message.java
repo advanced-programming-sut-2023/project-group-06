@@ -1,23 +1,27 @@
 package org.example;
 
+import com.google.gson.JsonObject;
+
 public class Message {
-    private Client owner;
+    private String owner;
     private String content;
     private String time;
     private ChatRoom chatRoom;
+    int id;
 
-    public Message(Client owner, String content, String time, ChatRoom chatRoom) {
+    public Message(String owner, String content, String time, ChatRoom chatRoom, int id) {
         this.owner = owner;
         this.content = content;
         this.time = time;
         this.chatRoom = chatRoom;
+        this.id = id;
     }
 
-    public Client getOwner() {
+    public String getOwner() {
         return owner;
     }
 
-    public void setOwner(Client owner) {
+    public void setOwner(String owner) {
         this.owner = owner;
     }
 
@@ -35,5 +39,19 @@ public class Message {
 
     public ChatRoom getChatRoom() {
         return chatRoom;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("owner", owner);
+        jsonObject.addProperty("content", content);
+        jsonObject.addProperty("time", time);
+        jsonObject.addProperty("id", id);
+        jsonObject.addProperty("chat room id", chatRoom.getId());
+        return jsonObject;
     }
 }
