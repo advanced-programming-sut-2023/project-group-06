@@ -27,6 +27,7 @@ public class UpdateData extends Thread {
     private void sendData() throws IOException {
         JsonObject root = new JsonObject();
         JsonArray chatRooms = new JsonArray();
+        System.out.println(Data.getChatRooms() + " oooo");
         for (ChatRoom chatRoom : Data.getChatRooms()) {
             chatRooms.add(chatRoom.toJson());
         }

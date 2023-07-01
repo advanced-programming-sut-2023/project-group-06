@@ -26,6 +26,7 @@ public class Connection extends Thread {
 
     @Override
     public synchronized void run() {
+        System.out.println(0000000000000);
 //        try {
 //            ClientType clientType;
 //            while ((clientType = getClientType()) == ClientType.UNKNOWN) Thread.sleep(200);
@@ -70,6 +71,7 @@ public class Connection extends Thread {
         System.out.println(json);
         String username = userJson.get("username").getAsString();
         Client client1 = Data.getClientByName(username);
+        System.out.println(1111111);
         if (client1 == null) {
             Data.addClient(client2);
             client = client2;
@@ -77,8 +79,11 @@ public class Connection extends Thread {
             client1.override(client2);
             client = client1;
         }
+        System.out.println(5555555);
         while (isConnectionAlive) {
+            System.out.println(8888);
             try {
+                System.out.println(7777);
                 handleClient();
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -117,7 +122,9 @@ public class Connection extends Thread {
 //        dataOutputStream.writeUTF(output);
     }
     private synchronized void handleClient() throws IOException {
+        System.out.println(5555);
         String input = dataInputStream.readUTF();
+        System.out.println(input + " 1234");
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(input);
         handleClientCommand(json);
@@ -157,8 +164,10 @@ public class Connection extends Thread {
     }
 
     private void handleClientCommand(JsonObject json) {
+        System.out.println(4444);
         JsonObject command = json.get("command").getAsJsonObject();
         String commandType = command.get("command type").getAsString();
+        System.out.println(commandType + " qqqq");
         System.out.println(command.get("command content") + " uuuuuu " + command.get("command content").getClass());
         String input = command.get("command content").getAsString();
         JsonParser parser = new JsonParser();
@@ -181,6 +190,7 @@ public class Connection extends Thread {
     }
 
     private void createRoom(JsonObject context) {
+        System.out.println(1111);
         JsonArray members = context.get("users").getAsJsonArray();
         ArrayList<String> usernames = new ArrayList<>();
         for (JsonElement member : members) {
@@ -190,7 +200,9 @@ public class Connection extends Thread {
         ChatType chatType = ChatType.getChatTypeByString(context.get("chat type").getAsString());
         String name = context.get("name").getAsString();
         int id = context.get("id").getAsInt();
+        System.out.println(2222);
         ChatRoom chatRoom = new ChatRoom(usernames, chatType, name, id);
+        System.out.println(3333);
     }
 
     private void editMessage(JsonObject context) {
