@@ -157,12 +157,11 @@ public class Connection extends Thread {
     }
 
     private void handleClientCommand(JsonObject json) {
-        JsonObject command = json.get("command").getAsJsonObject();
-        String commandType = command.get("command type").getAsString();
-        System.out.println(command.get("command content") + " uuuuuu " + command.get("command content").getClass());
-        String input = command.get("command content").getAsString();
-        JsonParser parser = new JsonParser();
-        JsonObject context = (JsonObject) parser.parse(input);
+        String commandType = json.get("command type").getAsJsonObject().get("command type").getAsString();
+        System.out.println(commandType);
+        System.out.println(json);
+        JsonObject context = json.get("command content").getAsJsonObject();
+        System.out.println(context);
         if (commandType.equals("send message")) sendMessage(context);
         if (commandType.equals("delete message")) deleteMessage(context);
         if (commandType.equals("edit message")) editMessage(context);
@@ -181,6 +180,10 @@ public class Connection extends Thread {
     }
 
     private void createRoom(JsonObject context) {
+        System.out.println("ppp - crete Room : " + context);
+        String idString = context.get("id").getAsString();
+        if (idString.equals("null")) return;
+        int id = context.get("id").getAsInt();
         JsonArray members = context.get("users").getAsJsonArray();
         ArrayList<String> usernames = new ArrayList<>();
         for (JsonElement member : members) {
@@ -189,7 +192,6 @@ public class Connection extends Thread {
         }
         ChatType chatType = ChatType.getChatTypeByString(context.get("chat type").getAsString());
         String name = context.get("name").getAsString();
-        int id = context.get("id").getAsInt();
         ChatRoom chatRoom = new ChatRoom(usernames, chatType, name, id);
     }
 
