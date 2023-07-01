@@ -226,23 +226,23 @@ public class User implements Comparable<User>, Serializable {
         return user;
     }
 
-    private void sendMessageCommand(Message message) throws IOException {
+    public void sendMessageCommand(Message message) throws IOException {
         sendToServer("send message", message.toJson().getAsString());
     }
 
-    private void deleteMessageCommand(Message message) throws IOException {
+    public void deleteMessageCommand(Message message) throws IOException {
         sendToServer("delete message", message.toJson().getAsString());
     }
 
-    private void editMessage(Message message) throws IOException {
+    public void editMessage(Message message) throws IOException {
         sendToServer("edit message", message.toJson().getAsString());
     }
 
-    private void createRoom(ChatRoom chatRoom) throws IOException {
+    public void createRoom(ChatRoom chatRoom) throws IOException {
         sendToServer("create room", chatRoom.toJson().getAsString());
     }
 
-    private void addToGroup(ChatRoom chatRoom) throws IOException {
+    public void addToGroup(ChatRoom chatRoom) throws IOException {
         sendToServer("add to group", chatRoom.toJson().getAsString());
     }
 
