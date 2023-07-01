@@ -12,12 +12,14 @@ public class ChatRoom{
     public ChatRoom(ArrayList<User> users, ChatType chatType) {
         this.users = users;
         this.chatType = chatType;
+        for(User user : users) user.getChats().add(this);
     }
 
     public ChatRoom(ArrayList<User> users, String name){
         this.users = users;
         this.name = name;
         this.chatType = ChatType.ROOM;
+        for(User user : users) user.getChats().add(this);
     }
 
     public void addMessage(Message message) {

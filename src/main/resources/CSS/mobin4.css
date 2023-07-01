@@ -31,8 +31,8 @@ Label{
 }
 
 .smallButton{
-    -fx-min-width: 150;
-    -fx-max-width: 150;
+    -fx-min-width: 160;
+    -fx-max-width: 160;
     -fx-background-insets: 0,1,2;
     -fx-background-radius: 20;
     -fx-border-radius: 20;

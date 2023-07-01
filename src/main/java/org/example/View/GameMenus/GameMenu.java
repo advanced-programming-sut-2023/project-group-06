@@ -23,12 +23,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.example.Controller.GameControllers.GameController;
 import org.example.Controller.GameControllers.MapController;
+import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
-import org.example.Model.Data;
-import org.example.Model.Kingdom;
-import org.example.Model.Tile;
-import org.example.Model.TileStructure;
 import org.example.View.Graphics.SuperImage;
 import org.example.View.MainMenu;
 
@@ -78,6 +75,9 @@ public class GameMenu extends Application {
         });
         starter();
         stage.show();
+        if(!stage.isFullScreen()) stage.setFullScreen(true);
+        ChatRoom chatRoom = new ChatRoom(GameController.currentGame.getPlayers(),
+                GameController.currentGame.getPlayers().get(0).getUsername());
     }
 
     Tile[][] map;

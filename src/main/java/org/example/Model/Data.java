@@ -14,6 +14,7 @@ public class Data {
     private static User currentUser = null;
     private static boolean stayLoggedIn = false;
     private static int numberOfMessages;
+    private static ChatRoom publicRoom = new ChatRoom(users, "public");
 
     public static User getUserByName(String username) {
         for (int i = 0; i < users.size(); i++) {
@@ -27,6 +28,10 @@ public class Data {
             if (users.get(i).getEmail().equals(email)) return users.get(i);
         }
         return null;
+    }
+
+    public static ChatRoom getPublicRoom(){
+        return publicRoom;
     }
 
     public static void addUser(User user) {

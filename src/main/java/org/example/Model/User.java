@@ -12,6 +12,7 @@ import org.example.View.ProfileMenu;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class User implements Comparable<User>, Serializable {
     private String username = "";
@@ -38,6 +39,8 @@ public class User implements Comparable<User>, Serializable {
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
         this.avatar = "/Images/avatar8.jpg";
         sendToServer();
+        chats.add(Data.getPublicRoom());
+        Data.getPublicRoom().getUsers().add(this);
     }
 
     public String getHashedPassword() {
@@ -235,6 +238,13 @@ public class User implements Comparable<User>, Serializable {
         for(ChatRoom chatRoom : chats){
             if(chatRoom.getChatType() == ChatType.PRIVATE && chatRoom.hasSomeOne(name)) return true;
         }
+        return false;
+    }
+
+    public boolean haveRoom(String name) {
+        for(ChatRoom chatRoom : this.getChats())
+            if(chatRoom.getChatType() == ChatType.ROOM && Objects.equals(chatRoom.getName(), name))
+                return true;
         return false;
     }
 }
