@@ -45,6 +45,7 @@ public class ChatMenu extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         ChatMenu.stage = stage;
+        System.out.println("jjj " + Data.getCurrentUser().getChats());
         borderPane = FXMLLoader.load(ChatMenu.class.getResource("/FXML/ChatMenu.fxml"));
         ScrollPane scrollPane = new ScrollPane(borderPane);
         scrollPane.setFitToHeight(true);
@@ -376,6 +377,7 @@ public class ChatMenu extends Application {
         if(Data.getUserByName(name) == null
                 || Objects.equals(name, Data.getCurrentUser().getUsername())){
             error.setVisible(true);
+            error.setText("invalid username");
             error.setTextFill(Color.RED);
         }
         else if(Data.getCurrentUser().hasPrivateChatWith(name)){
@@ -388,6 +390,7 @@ public class ChatMenu extends Application {
             them.add(Data.getCurrentUser());
             them.add(Data.getUserByName(name));
             ChatRoom chatRoom = new ChatRoom(them, ChatType.PRIVATE);
+            System.out.println("kkk " + Data.getCurrentUser().getChats());
             error.setText("successful");
             error.setTextFill(Color.GREEN);
             error.setVisible(true);

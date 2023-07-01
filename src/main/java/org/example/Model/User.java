@@ -192,6 +192,7 @@ public class User implements Comparable<User>, Serializable {
     public void sendToServer(String commandType, String context) throws IOException {
         if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(commandType, context));
+        System.out.println(commandType + " W " + context);
     }
 
     public Client getClient() {

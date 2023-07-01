@@ -22,6 +22,7 @@ public class ChatRoom{
         this.chatType = chatType;
         id = ++count;
         users.get(0).createRoom(this);
+        System.out.println(9999);
         /*for(User user : users) user.getChats().add(this);*/
     }
 
