@@ -26,6 +26,7 @@ public class LoginController {
         Data.getCurrentUser().setClient(new Client("localhost", 8001));
         System.out.println("salam");
         Data.getCurrentUser().sendToServer();
+        if (!Data.getPublicRoom().hasSomeOne(Data.getCurrentUser().getUsername())) Data.getCurrentUser().addToGroup(Data.getPublicRoom());
         return Response.LOGIN_SUCCESSFUL;
     }
 
