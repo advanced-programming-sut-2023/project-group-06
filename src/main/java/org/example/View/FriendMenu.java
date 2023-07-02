@@ -98,9 +98,13 @@ public class FriendMenu extends Application {
         timeline.play();
     }
 
+    public boolean isValid(int i){
+        return ((VBox) pane.getChildren().get(i)).getChildren().get(0).getClass() != Button.class;
+    }
+
     public void setThePane(){
         for (int i = pane.getChildren().size() - 1; i >= 0; i--)
-            pane.getChildren().remove(i);
+            if(isValid(i)) pane.getChildren().remove(i);
         VBox leftVBox = new VBox();
         VBox mainVBox = new VBox();
         leftVBox.setLayoutY(100);
@@ -109,23 +113,6 @@ public class FriendMenu extends Application {
         mainVBox.setLayoutX(600);
         mainVBox.setLayoutY(100);
         mainVBox.setSpacing(20);
-
-//        FriendRequest friendRequest0 = new FriendRequest(Data.getUserByName("mobin12"), Data.getCurrentUser());
-//        FriendRequest friendRequest1 = new FriendRequest(Data.getUserByName("mobin13"), Data.getCurrentUser());
-//        FriendRequest friendRequest2 = new FriendRequest(Data.getUserByName("mobin14"), Data.getCurrentUser());
-//        FriendRequest friendRequest3 = new FriendRequest(Data.getUserByName("mobin13"), Data.getCurrentUser());
-//        FriendRequest friendRequest4 = new FriendRequest(Data.getUserByName("mobin15"), Data.getCurrentUser());
-//        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest0);
-//        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest1);
-//        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest2);
-//        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest3);
-//        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest4);
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin15"));
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin16"));
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin17"));
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin18"));
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin19"));
-//        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin20"));
 
         Label label = new Label("received requests");
         String style = "-fx-font-family: 'Times New Roman'; -fx-font-size: 20";
@@ -332,5 +319,9 @@ public class FriendMenu extends Application {
         friendRequest.getSender().getMyFriends().add(Data.getCurrentUser());*/
         Data.getCurrentUser().acceptRequestCommand(friendRequest);
         setThePane();
+    }
+
+    public String timeConverter(long time){
+        return null;
     }
 }
