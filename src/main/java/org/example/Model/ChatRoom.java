@@ -113,4 +113,13 @@ public class ChatRoom{
     public void setMessages(ArrayList<Message> messages) {
         this.messages = messages;
     }
+
+    public ArrayList<Message> lastSix(){
+        ArrayList<Message> arrayList = new ArrayList<>();
+        for(int i = 6; i >= 1; i--){
+            if(messages.size() < i) continue;
+            arrayList.add(messages.get(messages.size() - i));
+        }
+        return arrayList;
+    }
 }
