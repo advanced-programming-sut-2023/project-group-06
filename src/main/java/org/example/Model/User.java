@@ -261,8 +261,9 @@ public class User implements Comparable<User>, Serializable {
         sendToServer("add to group", chatRoom.toJson());
     }
 
-    public void inactivateClient() {
-    client.isClientActive = false;
+    public void inactivateClient() throws IOException {
+        sendToServer("inactivate", null);
+        client.isClientActive = false;
     }
 
     public ArrayList<ChatRoom> getChats() {

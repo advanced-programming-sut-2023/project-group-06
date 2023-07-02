@@ -21,7 +21,7 @@ public class UserThread extends Thread {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        while (true) {
+        while (user.getClient() != null && user.getClient().isClientActive == true) {
             try {
                 updateData();
             } catch (IOException e) {

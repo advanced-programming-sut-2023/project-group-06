@@ -12,11 +12,9 @@ public class Client {
     public boolean isClientActive = true;
 
     public Client(String host, int port) throws IOException {
-        System.out.println("client");
         Socket socket = new Socket(host, port);
         dataInputStream = new DataInputStream(socket.getInputStream());
         dataOutputStream = new DataOutputStream(socket.getOutputStream());
-        System.out.println(socket.getPort());
 //        while (isClientActive)
 //            handleClient();
     }
