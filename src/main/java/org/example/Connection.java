@@ -69,11 +69,22 @@ public class Connection extends Thread {
         String avatar = userJson.get("image").getAsString();
         String password = userJson.get("password").getAsString();
         String answerToQuestion = userJson.get("answerToQuestion").getAsString();
-        Client client2 = new Gson().fromJson(userJson, Client.class);
-        client2.setHashedPassword(password);
+        String username = userJson.get("username").getAsString();
+        String nickname = userJson.get("nickname").getAsString();
+        String email = userJson.get("email").getAsString();
+        int questionIndex = userJson.get("questionIndex").getAsInt();
+        String slogan = userJson.get("slogan").getAsString();
+        int highScore = userJson.get("highScore").getAsInt();
+        Client client2 = null;
+        try {
+            client2 = new Client(username, password, nickname, email, slogan);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        client2.setHighScore(highScore);
+        client2.setQuestionIndex(questionIndex);
         client2.setAvatar(avatar);
         client2.setAnswerToQuestion(answerToQuestion);
-        String username = userJson.get("username").getAsString();
         Client client1 = Data.getClientByName(username);
         if (client1 == null) {
             Data.addClient(client2);
@@ -81,12 +92,14 @@ public class Connection extends Thread {
         } else {
             client1.override(client2);
             client = client1;
+            client.setOnline(true);
         }
+        System.out.println("PPPP" + client.getNotRespondedFriendRequestsReceivedByMe());
         while (isConnectionAlive) {
             try {
                 handleClient();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                killConnection();
             }
         }
     }
@@ -159,12 +172,8 @@ public class Connection extends Thread {
 
     private void updateLastTime(JsonObject json) {
         long time = json.get("isAlive").getAsJsonObject().get("time").getAsLong();
-        if (time == -1) isConnectionAlive = false;
-        else if (lastTime == -2L) return;
-        else if (time > lastTime + 100000) {
-            System.out.println("Client with username " + client.getUsername() + " has been disconnected!");
-            //todo
-        }
+        if (time == -1) killConnection();
+        else lastTime = time;
     }
 
     private void handleClientCommand(JsonObject json) throws IOException {
@@ -176,7 +185,15 @@ public class Connection extends Thread {
         if (commandType.equals("edit message")) editMessage(context);
         if (commandType.equals("create room")) createRoom(context);
         if (commandType.equals("add to group")) addToGroup(context);
+        if (commandType.equals("inactivate")) killConnection();
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
+    }
+
+    private void killConnection() {
+        client.setOnline(false);
+        client.setLastSeen(lastTime);
+        isConnectionAlive = false;
+        System.out.println("Client with username " + client.getUsername() + " just got offline!");
     }
 
     private void addToGroup(JsonObject context) {
@@ -249,13 +266,43 @@ public class Connection extends Thread {
         return client;
     }
 
+    private void updateReceivingFriendRequests() {
+        System.out.println(client.getNotRespondedFriendRequestsReceivedByMe());
+        for (Client client1 : Data.getClients()) {
+            if (client1 != client) {
+                for (int i = client1.getNotDeliveredFriendRequestsSentByMe().size() - 1; i >= 0; i--) {
+                    if (client1.getNotDeliveredFriendRequestsSentByMe().get(i).equals(client.getUsername())) {
+                        client.addToNotRespondedFriendRequestsReceivedByMe(client1.getUsername());
+                        client1.removeFromNotDeliveredFriendRequestsSentByMe(i);
+                    }
+                }
+            }
+        }
+    }
+
     private JsonObject sendData() {
+        updateReceivingFriendRequests();
         JsonObject root = new JsonObject();
         JsonArray chatRooms = new JsonArray();
         for (ChatRoom chatRoom : Data.getChatRooms()) {
             chatRooms.add(chatRoom.toJson());
         }
         root.add("chat rooms", chatRooms);
+        JsonArray notRespondedFriendRequestsReceivedByMe = new JsonArray();
+        System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());
+        for (int i = 0; i < client.getNotRespondedFriendRequestsReceivedByMe().size(); i++) {
+            String s = client.getNotRespondedFriendRequestsReceivedByMe().get(i);
+            JsonObject jsonString = new JsonObject();
+            jsonString.addProperty("name", s);
+            notRespondedFriendRequestsReceivedByMe.add(jsonString);
+        }
+        root.add("friend requests received by me", notRespondedFriendRequestsReceivedByMe);
+        JsonArray friends = new JsonArray();
+        for (Client friend : client.getFriends()) {
+            friends.add(friend.toJson());
+        }
+        root.add("friends", friends);
         return root;
     }
 }
+

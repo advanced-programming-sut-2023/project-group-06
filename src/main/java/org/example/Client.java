@@ -1,10 +1,14 @@
 package org.example;
 
+import com.google.gson.JsonObject;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Client implements Comparable<Client> {
+    private boolean isOnline = true;
+    private long lastSeen = 0;
     private String username = "";
     private String hashedPassword = "";
     private String nickname = "";
@@ -16,6 +20,11 @@ public class Client implements Comparable<Client> {
     private int numberOfLoginAttempts = 0;
     private long lastLoginAttemptTime;
     private String avatar;
+    private ArrayList<String> notDeliveredFriendRequestsSentByMe = new ArrayList<>();
+    private ArrayList<String> notRespondedFriendRequestsReceivedByMe = new ArrayList<>();
+    private ArrayList<Client> friends = new ArrayList<>();
+
+
 
     public Client(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -170,6 +179,62 @@ public class Client implements Comparable<Client> {
         this.highScore = client.highScore;
         this.hashedAnswerToQuestion = client.hashedAnswerToQuestion;
         this.questionIndex = client.questionIndex;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public long getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(long lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public ArrayList<String> getNotDeliveredFriendRequestsSentByMe() {
+        return notDeliveredFriendRequestsSentByMe;
+    }
+
+    public synchronized void addToNotDeliveredFriendRequestsSentByMe(String notDeliveredFriendRequestSentByMe) {
+        this.notDeliveredFriendRequestsSentByMe.add(notDeliveredFriendRequestSentByMe);
+    }
+
+    public synchronized void removeFromNotDeliveredFriendRequestsSentByMe(int index) {
+        this.notDeliveredFriendRequestsSentByMe.remove(index);
+    }
+
+    public ArrayList<String> getNotRespondedFriendRequestsReceivedByMe() {
+        return notRespondedFriendRequestsReceivedByMe;
+    }
+
+    public synchronized void addToNotRespondedFriendRequestsReceivedByMe(String notRespondedFriendRequestReceivedByMe) {
+        this.notRespondedFriendRequestsReceivedByMe.add(notRespondedFriendRequestReceivedByMe);
+    }
+
+    public synchronized void removeFromNotRespondedFriendRequestsReceivedByMe(int index) {
+        this.notRespondedFriendRequestsReceivedByMe.remove(index);
+    }
+
+    public ArrayList<Client> getFriends() {
+        return friends;
+    }
+
+    public void addFriend(Client friend) {
+        this.friends.add(friend);
+    }
+
+    public JsonObject toJson() {
+        JsonObject root = new JsonObject();
+        root.addProperty("is online", isOnline);
+        root.addProperty("last seen", lastSeen);
+        root.addProperty("username", username);
+        return root;
     }
 }
 
