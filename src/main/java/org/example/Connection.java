@@ -69,11 +69,22 @@ public class Connection extends Thread {
         String avatar = userJson.get("image").getAsString();
         String password = userJson.get("password").getAsString();
         String answerToQuestion = userJson.get("answerToQuestion").getAsString();
-        Client client2 = new Gson().fromJson(userJson, Client.class);
-        client2.setHashedPassword(password);
+        String username = userJson.get("username").getAsString();
+        String nickname = userJson.get("nickname").getAsString();
+        String email = userJson.get("email").getAsString();
+        int questionIndex = userJson.get("questionIndex").getAsInt();
+        String slogan = userJson.get("slogan").getAsString();
+        int highScore = userJson.get("highScore").getAsInt();
+        Client client2 = null;
+        try {
+            client2 = new Client(username, password, nickname, email, slogan);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        client2.setHighScore(highScore);
+        client2.setQuestionIndex(questionIndex);
         client2.setAvatar(avatar);
         client2.setAnswerToQuestion(answerToQuestion);
-        String username = userJson.get("username").getAsString();
         Client client1 = Data.getClientByName(username);
         if (client1 == null) {
             Data.addClient(client2);
@@ -83,6 +94,7 @@ public class Connection extends Thread {
             client = client1;
             client.setOnline(true);
         }
+        System.out.println("PPPP" + client.getNotRespondedFriendRequestsReceivedByMe());
         while (isConnectionAlive) {
             try {
                 handleClient();
@@ -254,6 +266,7 @@ public class Connection extends Thread {
     }
 
     private void updateReceivingFriendRequests() {
+        System.out.println(client.getNotRespondedFriendRequestsReceivedByMe());
         for (Client client1 : Data.getClients()) {
             if (client1 != client) {
                 for (int i = client1.getNotDeliveredFriendRequestsSentByMe().size() - 1; i >= 0; i--) {
@@ -275,8 +288,12 @@ public class Connection extends Thread {
         }
         root.add("chat rooms", chatRooms);
         JsonArray notRespondedFriendRequestsReceivedByMe = new JsonArray();
-        for (String s : client.getNotRespondedFriendRequestsReceivedByMe()) {
-            notRespondedFriendRequestsReceivedByMe.add(s);
+        System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());
+        for (int i = 0; i < client.getNotRespondedFriendRequestsReceivedByMe().size(); i++) {
+            String s = client.getNotRespondedFriendRequestsReceivedByMe().get(i);
+            JsonObject jsonString = new JsonObject();
+            jsonString.addProperty("name", s);
+            notRespondedFriendRequestsReceivedByMe.add(jsonString);
         }
         root.add("friend requests received by me", notRespondedFriendRequestsReceivedByMe);
         JsonArray friends = new JsonArray();
