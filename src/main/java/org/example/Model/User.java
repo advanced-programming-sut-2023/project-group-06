@@ -1,13 +1,8 @@
 package org.example.Model;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.example.Model.Client;
-import org.example.View.ChatMenu;
-import org.example.View.ProfileMenu;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -304,5 +299,22 @@ public class User implements Comparable<User>, Serializable {
 
     public ArrayList<User> getMyFriends() {
         return myFriends;
+    }
+
+    public void acceptRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("accept request", friendRequest.toJson());
+    }
+
+    public void rejectRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("reject request", friendRequest.toJson());
+    }
+
+    public void sendRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("send request", friendRequest.toJson());
+    }
+
+    public boolean isOnline(User user){
+        //todo
+        return false;
     }
 }

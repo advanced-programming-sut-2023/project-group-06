@@ -19,6 +19,7 @@ import org.example.Model.Data;
 import org.example.Model.FriendRequest;
 import org.example.Model.User;
 
+import java.io.IOException;
 import java.util.Objects;
 
 public class FriendMenu extends Application {
@@ -97,13 +98,21 @@ public class FriendMenu extends Application {
             green.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    accept(friendRequest);
+                    try {
+                        accept(friendRequest);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             red.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    reject(friendRequest);
+                    try {
+                        reject(friendRequest);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             HBox hBox = new HBox(label1, green, red);
@@ -174,7 +183,11 @@ public class FriendMenu extends Application {
         send.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                sending();
+                try {
+                    sending();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         rightVBox.getChildren().addAll(back, hBox, send, circle);
@@ -182,8 +195,7 @@ public class FriendMenu extends Application {
     }
 
     private boolean isOnline(User myFriend) {
-        return false;
-        //todo
+        return Data.getCurrentUser().isOnline(myFriend);
     }
 
     private void search(String text, Circle circle) {
@@ -215,7 +227,7 @@ public class FriendMenu extends Application {
         }
     }
 
-    private void sending() {
+    private void sending() throws IOException {
         if(Objects.equals(searched, "")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -230,29 +242,31 @@ public class FriendMenu extends Application {
             alert.setHeaderText("send request failed");
             alert.showAndWait();
         }
-        else{
-            send(searched);
-        }
+        else send(Data.getUserByName(searched));
     }
 
-    private void send(String text) {
-        //todo
+    private void send(User user) throws IOException {
+        System.out.println("send");
+        FriendRequest friendRequest = new FriendRequest(Data.getCurrentUser(), user);
+        Data.getCurrentUser().getFriendRequestsSentByMe().add(friendRequest);
+        user.getFriendRequestsReceivedByMe().add(friendRequest);
+        Data.getCurrentUser().sendRequestCommand(friendRequest);
     }
 
-    private void reject(FriendRequest friendRequest) {
+    private void reject(FriendRequest friendRequest) throws IOException {
         System.out.println("reject");
         Data.getCurrentUser().getFriendRequestsReceivedByMe().remove(friendRequest);
         friendRequest.getSender().getFriendRequestsSentByMe().remove(friendRequest);
+        Data.getCurrentUser().rejectRequestCommand(friendRequest);
         setThePane();
-        //todo
     }
 
-    private void accept(FriendRequest friendRequest) {
+    private void accept(FriendRequest friendRequest) throws IOException {
         System.out.println("accept");
         friendRequest.setAccepted(true);
         Data.getCurrentUser().getMyFriends().add(friendRequest.getSender());
         friendRequest.getSender().getMyFriends().add(Data.getCurrentUser());
+        Data.getCurrentUser().acceptRequestCommand(friendRequest);
         setThePane();
-        //todo
     }
 }

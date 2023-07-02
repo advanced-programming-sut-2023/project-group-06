@@ -1,5 +1,7 @@
 package org.example.Model;
 
+import com.google.gson.JsonObject;
+
 public class FriendRequest {
     private User sender;
     private User target;
@@ -24,5 +26,13 @@ public class FriendRequest {
 
     public void setAccepted(boolean accepted) {
         isAccepted = accepted;
+    }
+
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("sender", sender.getUsername());
+        jsonObject.addProperty("target", target.getUsername());
+        jsonObject.addProperty("isAccepted", isAccepted);
+        return jsonObject;
     }
 }
