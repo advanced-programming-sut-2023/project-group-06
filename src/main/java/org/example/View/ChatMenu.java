@@ -1,5 +1,7 @@
 package org.example.View;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.Model.*;
 import org.example.View.GameMenus.TradeMenus.MakeTradeMenu;
 
@@ -39,8 +42,10 @@ public class ChatMenu extends Application {
     public VBox mainVBox;
     public Button backButton;
     private static ChatRoom selectedChat;
-    private TextField mainTextField;
+    private TextField mainTextField = new TextField();
     private Circle mainSend;
+    private Timeline timeline;
+    private ArrayList<Message> lastSixMessages = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -68,7 +73,12 @@ public class ChatMenu extends Application {
                     @Override
                     public void handle(MouseEvent mouseEvent) {
                         selectedChat = Data.getPublicRoom();
-                        enterTheChat();
+                        /*enterTheChat();*/
+                        try {
+                            startTheTimeLine();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                 });
                 continue;
@@ -83,16 +93,61 @@ public class ChatMenu extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     selectedChat = chatRoom;
-                    enterTheChat();
+                    /*enterTheChat();*/
+                    try {
+                        startTheTimeLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             mainVBox.getChildren().add(chat);
         }
     }
 
-    private void enterTheChat() {
+    private void startTheTimeLine() throws IOException {
+        Data.getCurrentUser().sendToServer();
+        Data.getCurrentUser().sendToServer();
+        setTopHBox();
+        setTheBottomHBox();
+        /*lastSixMessages = selectedChat.lastSix();*/
+        enterTheChat();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> {
+            try {
+                Data.getCurrentUser().sendToServer();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            System.out.println("sss  " + selectedChat.lastSix() + "   " + lastSixMessages);
+            boolean areEqual = true;
+            if(selectedChat.lastSix().size() != lastSixMessages.size()) areEqual = false;
+            if(areEqual) {
+                for (int i = 0; i < lastSixMessages.size(); i++) {
+                    if (!lastSixMessages.get(i).equals(selectedChat.lastSix().get(i))) {
+                        areEqual = false;
+                        break;
+                    }
+                }
+            }
+            if(!areEqual){
+                lastSixMessages.clear();
+                lastSixMessages.addAll(selectedChat.lastSix());
+                try {
+                    enterTheChat();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }));
+        timeline.setCycleCount(-1);
+        this.timeline = timeline;
+        timeline.play();
+    }
+
+    private void enterTheChat() throws IOException {
+        System.out.println("lllllll");
         for (int i = borderPane.getChildren().size() - 1; i >= 0; i--) {
-            borderPane.getChildren().remove(i);
+            if(isValid(i)) borderPane.getChildren().remove(i);
         }
         borderPane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
                 ("/Images/Game/chatBackground.jpg").toExternalForm()))
@@ -100,81 +155,8 @@ public class ChatMenu extends Application {
         mainVBox.setVisible(false);
         leftVBox.setVisible(false);
         rightVBox.setVisible(false);
-        if(!stage.isFullScreen()) stage.setFullScreen(true);
+//        if(!stage.isFullScreen()) stage.setFullScreen(true);
         VBox vBox = new VBox();
-        HBox hBox = new HBox();
-        hBox.setSpacing(60);
-        HBox emptyHBox = new HBox();
-        emptyHBox.setStyle("-fx-min-height: 20");
-        Button back = new Button("Back");
-        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent mouseEvent) {
-                try {
-                    newBack();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        });
-        String style = "-fx-min-width: 100;\n" +
-                "    -fx-max-width: 100;\n" +
-                "    -fx-background-insets: 0,1,2;\n" +
-                "    -fx-background-radius: 20;\n" +
-                "    -fx-border-radius: 20;\n" +
-                "    -fx-padding: 4 30 4 30;\n" +
-                "    -fx-text-fill: #e7fce2;\n" +
-                "    -fx-font-size: 18px;\n" +
-                "    -fx-background-color: #0f2d94;";
-        String style3 = "-fx-min-width: 200;\n" +
-                "    -fx-max-width: 200;\n" +
-                "    -fx-background-insets: 0,1,2;\n" +
-                "    -fx-background-radius: 20;\n" +
-                "    -fx-border-radius: 20;\n" +
-                "    -fx-padding: 4 30 4 30;\n" +
-                "    -fx-text-fill: #e7fce2;\n" +
-                "    -fx-font-size: 18px;\n" +
-                "    -fx-background-color: #0f2d94;";
-        String style4 = "-fx-min-width: 300; -fx-min-height: 40;" +
-                "    -fx-max-width: 300; -fx-max-height: 40;" +
-                "    -fx-background-insets: 0,1,2;\n" +
-                "    -fx-background-radius: 20;\n" +
-                "    -fx-border-radius: 20;\n" +
-                "    -fx-padding: 4 30 4 30;\n" +
-                "    -fx-font-size: 18px;\n" +
-                "    -fx-background-color: #ffe8fb;";
-        back.setStyle(style);
-        hBox.getChildren().addAll(back);
-        if(selectedChat.getChatType() == ChatType.ROOM){
-            Button addUsers = new Button("+ add member");
-            TextField adding = new TextField();
-            adding.setPromptText("username");
-            Button add = new Button("add");
-            adding.setVisible(false);
-            add.setVisible(false);
-            addUsers.setStyle(style3);
-            adding.setStyle(style4);
-            add.setStyle(style);
-            addUsers.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    adding.setVisible(true);
-                    add.setVisible(true);
-                }
-            });
-            add.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    try {
-                        addingMember(adding.getText());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-            hBox.getChildren().addAll(addUsers, adding, add);
-        }
-        vBox.getChildren().addAll(hBox, emptyHBox);
         vBox.setSpacing(15);
         int num = Math.min(selectedChat.getMessages().size(), 6);
         String style2 = "-fx-pref-width: 300;\n" +
@@ -263,6 +245,12 @@ public class ChatMenu extends Application {
             });
             vBox.getChildren().add(messageHBox);
         }
+        vBox.setLayoutX(0);
+        vBox.setLayoutY(100);
+        borderPane.getChildren().add(vBox);
+    }
+
+    private void setTheBottomHBox(){
         TextField textField = new TextField();
         mainTextField = textField;
         textField.setPromptText("enter the message");
@@ -290,8 +278,83 @@ public class ChatMenu extends Application {
         sending.setSpacing(10);
         sending.setLayoutX(150);
         sending.setLayoutY(650);
-        borderPane.getChildren().add(vBox);
         borderPane.getChildren().add(sending);
+    }
+
+    private void setTopHBox(){
+        HBox hBox = new HBox();
+        hBox.setSpacing(60);
+        HBox emptyHBox = new HBox();
+        emptyHBox.setStyle("-fx-min-height: 20");
+        Button back = new Button("Back");
+        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    newBack();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        String style = "-fx-min-width: 100;\n" +
+                "    -fx-max-width: 100;\n" +
+                "    -fx-background-insets: 0,1,2;\n" +
+                "    -fx-background-radius: 20;\n" +
+                "    -fx-border-radius: 20;\n" +
+                "    -fx-padding: 4 30 4 30;\n" +
+                "    -fx-text-fill: #e7fce2;\n" +
+                "    -fx-font-size: 18px;\n" +
+                "    -fx-background-color: #0f2d94;";
+        String style3 = "-fx-min-width: 200;\n" +
+                "    -fx-max-width: 200;\n" +
+                "    -fx-background-insets: 0,1,2;\n" +
+                "    -fx-background-radius: 20;\n" +
+                "    -fx-border-radius: 20;\n" +
+                "    -fx-padding: 4 30 4 30;\n" +
+                "    -fx-text-fill: #e7fce2;\n" +
+                "    -fx-font-size: 18px;\n" +
+                "    -fx-background-color: #0f2d94;";
+        String style4 = "-fx-min-width: 300; -fx-min-height: 40;" +
+                "    -fx-max-width: 300; -fx-max-height: 40;" +
+                "    -fx-background-insets: 0,1,2;\n" +
+                "    -fx-background-radius: 20;\n" +
+                "    -fx-border-radius: 20;\n" +
+                "    -fx-padding: 4 30 4 30;\n" +
+                "    -fx-font-size: 18px;\n" +
+                "    -fx-background-color: #ffe8fb;";
+        back.setStyle(style);
+        hBox.getChildren().addAll(back);
+        if(selectedChat.getChatType() == ChatType.ROOM){
+            Button addUsers = new Button("+ add member");
+            TextField adding = new TextField();
+            adding.setPromptText("username");
+            Button add = new Button("add");
+            adding.setVisible(false);
+            add.setVisible(false);
+            addUsers.setStyle(style3);
+            adding.setStyle(style4);
+            add.setStyle(style);
+            addUsers.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    adding.setVisible(true);
+                    add.setVisible(true);
+                }
+            });
+            add.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    try {
+                        addingMember(adding.getText());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
+            hBox.getChildren().addAll(addUsers, adding, add);
+        }
+        borderPane.getChildren().add(hBox);
     }
 
     private void addingMember(String username) throws IOException {
@@ -358,12 +421,15 @@ public class ChatMenu extends Application {
     }
 
     private void sendMessage(Message message) throws IOException {
+        System.out.println(lastSixMessages);
+        System.out.println(selectedChat.lastSix());
         System.out.println("send");
         Data.getCurrentUser().sendMessageCommand(message);
-        enterTheChat();
+        /*enterTheChat();*/
     }
 
     private void newBack() throws Exception {
+        timeline.stop();
         new MainMenu().start(stage);
     }
 
@@ -403,7 +469,12 @@ public class ChatMenu extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     selectedChat = chatRoom;
-                    enterTheChat();
+                    /*enterTheChat();*/
+                    try {
+                        startTheTimeLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             mainVBox.getChildren().add(chat);
@@ -436,7 +507,12 @@ public class ChatMenu extends Application {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     selectedChat = chatRoom;
-                    enterTheChat();
+                    /*enterTheChat();*/
+                    try {
+                        startTheTimeLine();
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
             mainVBox.getChildren().add(chat);
@@ -450,5 +526,9 @@ public class ChatMenu extends Application {
 
     public void enterFriendsMenu() throws Exception {
         new FriendMenu().start(stage);
+    }
+
+    public boolean isValid(int i){
+        return borderPane.getChildren().get(i).getClass() == VBox.class;
     }
 }

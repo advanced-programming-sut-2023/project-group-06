@@ -167,6 +167,7 @@ public class FriendMenu extends Application {
         Circle circle = new Circle(80);
         circle.setFill(new ImagePattern(
                 new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
+        circle.setVisible(false);
         Circle search = new Circle(20);
         search.setFill(new ImagePattern(
                 new Image(ProfileMenu.class.getResource("/Images/Icons/search.png").toString())));
@@ -199,6 +200,8 @@ public class FriendMenu extends Application {
     }
 
     private void search(String text, Circle circle) {
+        circle.setVisible(false);
+        searched = "";
         if(text == null || text.equals("")){
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
@@ -224,6 +227,7 @@ public class FriendMenu extends Application {
             searched = text;
             circle.setFill(new ImagePattern(
                     new Image(ProfileMenu.class.getResource(Data.getUserByName(text).getAvatar()).toString())));
+            circle.setVisible(true);
         }
     }
 

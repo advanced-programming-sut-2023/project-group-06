@@ -59,4 +59,13 @@ public class Message{
         this.id = id;
         chatRoom.messageCounter = id;
     }
+
+    public String toString(){
+        return this.content;
+    }
+
+    public boolean equals(Message message){
+        return this.content.equals(message.content) && owner == message.owner && time.equals(message.time)
+                && chatRoom == message.chatRoom && id == message.id;
+    }
 }
