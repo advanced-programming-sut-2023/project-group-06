@@ -324,6 +324,7 @@ public class User implements Comparable<User>, Serializable {
         return user.getLastSeen();
     }
 
+
     public boolean isOnline() {
         return isOnline;
     }
