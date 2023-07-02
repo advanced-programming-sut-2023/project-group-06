@@ -75,7 +75,7 @@ public class ChatMenu extends Application {
             }
             String name = chatRoom.getChatType() == ChatType.ROOM ? chatRoom.getName() :
                     chatRoom.getUsers().get(0) == Data.getCurrentUser() ? chatRoom.getUsers().get(1).getUsername() :
-                    chatRoom.getUsers().get(0).getUsername();
+                            chatRoom.getUsers().get(0).getUsername();
             Button chat = new Button(name);
             String color = chatRoom.getChatType() == ChatType.PRIVATE ? "#f10ccc" : "#0cf1c7";
             chat.setStyle("-fx-background-color: " + color);
@@ -176,13 +176,6 @@ public class ChatMenu extends Application {
         }
         vBox.getChildren().addAll(hBox, emptyHBox);
         vBox.setSpacing(15);
-        Message message3 = new Message(Data.getUserByName("mobin2"), "Hi How Are You Today!", "12:80", selectedChat);
-        Message message1 = new Message(Data.getUserByName("mobin30"), "Hi How Are You Today!", "12:80", selectedChat);
-        Message message2 = new Message(Data.getUserByName("mobin12"), "Salam?", "12:80", selectedChat);
-        Message message4 = new Message(Data.getUserByName("mobin13"), "Hi How Are You Today! Hi How Are You Today?", "12:80", selectedChat);
-        Message message5 = new Message(Data.getUserByName("mobin14"), "Hi How Are You Today! Hi How Are You Today? I'm Really Good But I Hate Java", "12:80", selectedChat);
-        Message message6 = new Message(Data.getUserByName("mobin14"), "Hi How Are You Today! Hi How Are You Today?", "12:80", selectedChat);
-        Message message7 = new Message(Data.getUserByName("mobin13"), "Hi How Are You Today! Hi How Are You Today?", "12:80", selectedChat);
         int num = Math.min(selectedChat.getMessages().size(), 6);
         String style2 = "-fx-pref-width: 300;\n" +
                 "    -fx-pref-height: 35;\n" +
@@ -453,5 +446,9 @@ public class ChatMenu extends Application {
     public void addRoom(MouseEvent mouseEvent) {
         roomNameTextField.setVisible(true);
         done1.setVisible(true);
+    }
+
+    public void enterFriendsMenu() throws Exception {
+        new FriendMenu().start(stage);
     }
 }

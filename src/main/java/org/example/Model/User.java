@@ -1,13 +1,8 @@
 package org.example.Model;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import javafx.scene.image.Image;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.example.Model.Client;
-import org.example.View.ChatMenu;
-import org.example.View.ProfileMenu;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -28,6 +23,9 @@ public class User implements Comparable<User>, Serializable {
     private String avatar;
     private Client client;
     private ArrayList<ChatRoom> chats = new ArrayList<>();
+    private ArrayList<FriendRequest> friendRequestsSentByMe = new ArrayList<>();
+    private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
+    private ArrayList<User> myFriends = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -193,6 +191,7 @@ public class User implements Comparable<User>, Serializable {
         System.out.println("client:  " + client + "  " + " command:  " + commandType + "  user:  " + username + " context:  " + context);
         if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(commandType, context));
+        System.out.println(commandType + " W " + context);
     }
 
     public Client getClient() {
@@ -289,5 +288,34 @@ public class User implements Comparable<User>, Serializable {
             if (chat.getId() == id) return chat;
         }
         return null;
+    }
+
+    public ArrayList<FriendRequest> getFriendRequestsSentByMe() {
+        return friendRequestsSentByMe;
+    }
+
+    public ArrayList<FriendRequest> getFriendRequestsReceivedByMe() {
+        return friendRequestsReceivedByMe;
+    }
+
+    public ArrayList<User> getMyFriends() {
+        return myFriends;
+    }
+
+    public void acceptRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("accept request", friendRequest.toJson());
+    }
+
+    public void rejectRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("reject request", friendRequest.toJson());
+    }
+
+    public void sendRequestCommand(FriendRequest friendRequest) throws IOException {
+        sendToServer("send request", friendRequest.toJson());
+    }
+
+    public boolean isOnline(User user){
+        //todo
+        return false;
     }
 }

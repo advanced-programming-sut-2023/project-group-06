@@ -26,6 +26,7 @@
         <Button text="create chat" fx:id="done" onMouseClicked="#createPrivateChat" visible="false" styleClass="smallButton"/>
     </VBox>
     <VBox layoutY="100" layoutX="900" spacing="20" fx:id="rightVBox">
+        <Button text="friends" onMouseClicked="#enterFriendsMenu" fx:id="friends"/>
         <Button text="create new room" onMouseClicked="#addRoom" fx:id="createRoom"/>
         <TextField promptText="enter room's name" fx:id="roomNameTextField" visible="false"/>
         <Label text="invalid name" fx:id="roomError" visible="false"/>
