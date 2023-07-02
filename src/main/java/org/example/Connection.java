@@ -168,6 +168,7 @@ public class Connection extends Thread {
     }
 
     private void handleClientCommand(JsonObject json) throws IOException {
+        //
         String commandType = json.get("command type").getAsJsonObject().get("command type").getAsString();
         JsonObject context = json.get("command content").getAsJsonObject();
         if (commandType.equals("send message")) sendMessage(context);
