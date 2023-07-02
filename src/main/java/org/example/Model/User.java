@@ -26,6 +26,8 @@ public class User implements Comparable<User>, Serializable {
     private ArrayList<FriendRequest> friendRequestsSentByMe = new ArrayList<>();
     private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<User> myFriends = new ArrayList<>();
+    private boolean isOnline = false;
+    private long lastSeen = 0;
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -315,7 +317,30 @@ public class User implements Comparable<User>, Serializable {
     }
 
     public boolean isOnline(User user){
-        //todo
-        return false;
+        return user.isOnline();
+    }
+
+    public long getLastSeen(User user) {
+        return user.getLastSeen();
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean online) {
+        isOnline = online;
+    }
+
+    public long getLastSeen() {
+        return lastSeen;
+    }
+
+    public void setLastSeen(long lastSeen) {
+        this.lastSeen = lastSeen;
+    }
+
+    public void setMyFriends(ArrayList<User> myFriends) {
+        this.myFriends = myFriends;
     }
 }

@@ -28,7 +28,7 @@ public class UserThread extends Thread {
                 throw new RuntimeException(e);
             }
             try {
-                Thread.sleep(200);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -43,6 +43,33 @@ public class UserThread extends Thread {
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(input);
         JsonArray chatRooms = json.get("chat rooms").getAsJsonArray();
+        JsonArray notRespondedFriendRequestsReceivedByMe = json.get("friend requests received by me").getAsJsonArray();
+        JsonArray friends = json.get("friends").getAsJsonArray();
+        handleChatRoom(chatRooms);
+        handleFriendRequests(notRespondedFriendRequestsReceivedByMe);
+        handleFriends(friends);
+    }
+
+    private void handleFriends(JsonArray friends) {
+        ArrayList<User> myFriends = new ArrayList<>();
+        user.setOnline(true);
+        for (JsonElement friend : friends) {
+            JsonObject friendObject = friend.getAsJsonObject();
+            String username = friendObject.get("username").getAsString();
+            long lastSeen = friendObject.get("last seen").getAsLong();
+            boolean isOnline = friendObject.get("is online").getAsBoolean();
+            User user1 = Data.getUserByName(username);
+            user1.setOnline(isOnline);
+            user1.setLastSeen(lastSeen);
+            myFriends.add(user1);
+        }
+        user.setMyFriends(myFriends);
+    }
+
+    private void handleFriendRequests(JsonArray notRespondedFriendRequestsReceivedByMe) {
+    }
+
+    private void handleChatRoom(JsonArray chatRooms) throws IOException {
         for (JsonElement roomElement : chatRooms) {
             JsonObject roomObject = roomElement.getAsJsonObject();
             JsonArray users = roomObject.get("users").getAsJsonArray();
