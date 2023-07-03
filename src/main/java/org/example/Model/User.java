@@ -369,4 +369,5 @@ public class User implements Comparable<User>, Serializable {
     public void createWaitingGameCommand(WaitingGame waitingGame) throws IOException {
         sendToServer("create waiting game", waitingGame.toJson());
     }
+
 }
