@@ -27,7 +27,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -39,7 +38,6 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.View.Commands;
-import org.example.View.ProfileMenu;
 import org.example.View.Response;
 import org.example.View.Graphics.SuperImage;
 import org.example.View.MainMenu;
@@ -71,7 +69,7 @@ public class GameMenu extends Application {
     double lastMouseY;
     double mouseX;
     double mouseY;
-    private ArrayList<String> buildingIcons = new ArrayList<>();
+    private ArrayList<Image> buildingIcons = new ArrayList<>();
     private int[] buildingGroup = new int[6];
     private int buildingIndex = 0;
     private HBox buildingHBox, popularityHBox, buildingGroupHBox;
@@ -87,6 +85,7 @@ public class GameMenu extends Application {
     public Building draggedBuilding;
     // todo final drop position of dragged building on canvas
     private ImageView draggedBuildingImageView;
+    private ArrayList<BuildingType> allBuildingTypes = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -493,10 +492,23 @@ public class GameMenu extends Application {
         buildingHBox.setSpacing(10);
         for (int i = 0; i < 4; i++) {
             ImageView buildingImage = new ImageView(buildingIcons.get(buildingIndex + i));
+            int finalI = i;
+            buildingImage.setOnMouseClicked(mouseEvent -> {
+                //todo doctor
+                handleClicked(buildingIndex + finalI);
+            });
             buildingImage.setFitHeight(100);
             buildingImage.setFitWidth(100);
             buildingHBox.getChildren().add(buildingImage);
         }
+    }
+
+    private void handleClicked(int index) {
+        if (index >= allBuildingTypes.size()) return;
+        Building building = new Building(null, allBuildingTypes.get(index), 0, 0);
+        draggedBuilding = building;
+        draggedBuildingImageView.setVisible(true);
+        draggedBuildingImageView.setImage(building.getImg().getImage());
     }
 
     public void kingdomTape() {
@@ -622,13 +634,13 @@ public class GameMenu extends Application {
         HBox hBox = new HBox();
         hBox.setSpacing(2);
         for (int i = 0; i < 6; i++) {
-            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i + 1) + ").png").toExternalForm();
-            ImageView buildingIcon = new ImageView(address);
+            ImageView buildingIcon = new ImageView(buildingIcons.get(buildingGroup[i]));
+            System.out.println("buildingGroup[" + i + "]" + " = " + buildingGroup[i]);
             buildingIcon.setFitHeight(20);
             buildingIcon.setPreserveRatio(true);
-            int finalI = i;
+            int finalI1 = i;
             buildingIcon.setOnMouseClicked(mouseEvent -> {
-                buildingIndex = buildingGroup[finalI];
+                setBuildingIndex(buildingGroup[finalI1]);
             });
             hBox.getChildren().add(buildingIcon);
         }
@@ -637,15 +649,34 @@ public class GameMenu extends Application {
 
     private void initBuildingsArray() {
         //todo correct this
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 16; j++) {
-                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j + 1) + ").png").toExternalForm();
-                buildingIcons.add(address);
+//        for (int i = 0; i < 3; i++) {
+//            for (int j = 0; j < 16; j++) {
+//                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+//                buildingIcons.add(address);
+//            }
+//        }
+
+        for (BuildingType value : BuildingType.values()) {
+            buildingIcons.add(value.getSuperImage().getImage());
+            allBuildingTypes.add(value);
+        }
+
+        int size = 0;
+        for (BuildingType value : BuildingType.values()) {
+            size++;
+        }
+        int cnt = 0;
+        int i = 0;
+        for (BuildingType value : BuildingType.values()) {
+            if (i == 6) break;
+            if (cnt == ((size * i) / 6)) {
+                buildingGroup[i] = cnt;
+                System.out.println("cnt: " + cnt);
+                i++;
             }
+            cnt++;
         }
-        for (int i = 0; i < 6; i++) {
-            buildingGroup[i] = i;
-        }
+        System.err.println("++++++++++++   " + size + " " + buildingGroup);
     }
 
     public void setPopularityHBox(HBox popularityHBox) {
@@ -668,11 +699,7 @@ public class GameMenu extends Application {
         Text text2 = new Text("Food");
         text1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text2.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        String maskImage5 = food1 > 0 ? "8" : food1 < 0 ? "9" : "10";
-        Circle mask5 = new Circle(10);
-        mask5.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage5 + ".png").toString())));
-        food.getChildren().addAll(text1, mask5, text2);
+        food.getChildren().addAll(text1, text2);
         food.setSpacing(5);
         HBox tax = new HBox();
         int tax1 = kingdom.showPopularityFactorsTax();
@@ -685,11 +712,7 @@ public class GameMenu extends Application {
         Text text4 = new Text("Tax");
         text3.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text4.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        String maskImage = tax1 > 0 ? "8" : tax1 < 0 ? "9" : "10";
-        Circle mask = new Circle(10);
-        mask.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage + ".png").toString())));
-        tax.getChildren().addAll(text3, mask, text4);
+        tax.getChildren().addAll(text3, text4);
         tax.setSpacing(5);
         HBox fear = new HBox();
         int fear1 = kingdom.showPopularityFactorsFear();
@@ -701,11 +724,7 @@ public class GameMenu extends Application {
         Text text6 = new Text("Fear");
         text5.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text6.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        String maskImage1 = fear1 > 0 ? "8" : fear1 < 0 ? "9" : "10";
-        Circle mask1 = new Circle(10);
-        mask1.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage1 + ".png").toString())));
-        fear.getChildren().addAll(text5, mask1, text6);
+        fear.getChildren().addAll(text5, text6);
         fear.setSpacing(5);
         HBox religion = new HBox();
         int religion1 = kingdom.showPopularityFactorsReligion();
@@ -717,11 +736,7 @@ public class GameMenu extends Application {
         Text text8 = new Text("Religion");
         text7.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text8.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        String maskImage2 = religion1 > 0 ? "8" : religion1 < 0 ? "9" : "10";
-        Circle mask2 = new Circle(10);
-        mask2.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage2 + ".png").toString())));
-        religion.getChildren().addAll(text7, mask2, text8);
+        religion.getChildren().addAll(text7, text8);
         religion.setSpacing(5);
         HBox wine = new HBox();
         int wine1 = kingdom.showPopularityFactorsWine();
@@ -733,11 +748,7 @@ public class GameMenu extends Application {
         Text text10 = new Text("Wine Usage");
         text9.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text10.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        String maskImage3 = wine1 > 0 ? "8" : wine1 < 0 ? "9" : "10";
-        Circle mask3 = new Circle(10);
-        mask3.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage3 + ".png").toString())));
-        wine.getChildren().addAll(text9, mask3, text10);
+        wine.getChildren().addAll(text9, text10);
         wine.setSpacing(5);
         Button back = new Button("Back");
         Button rate = new Button("Rate");
@@ -746,8 +757,8 @@ public class GameMenu extends Application {
                 "-fx-font-family: 'Book Antiqua'";
         back.setStyle(style3);
         rate.setStyle(style3);
-        back.setTranslateX(-540);
-        back.setTranslateY(80);
+        back.setTranslateX(-440);
+        back.setTranslateY(70);
         back.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
