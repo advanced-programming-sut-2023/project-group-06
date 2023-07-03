@@ -13,6 +13,7 @@ public class WaitingGame {
     private User admin;
     private long startTime;
     private boolean isPublic = true;
+    private boolean isGameStarted = false;
     private static int count = 0;
 
     public WaitingGame(int capacity, User admin, boolean isPublic) {
@@ -62,6 +63,14 @@ public class WaitingGame {
 
     public void setAdmin(User admin) {
         this.admin = admin;
+    }
+
+    public boolean isGameStarted() {
+        return isGameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        isGameStarted = gameStarted;
     }
 
     public JsonObject toJson(){
