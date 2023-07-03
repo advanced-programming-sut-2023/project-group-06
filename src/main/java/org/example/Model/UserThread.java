@@ -63,6 +63,7 @@ public class UserThread extends Thread {
 //            int id;
 //            Client admin;
             boolean isPublic = gameObj.get("is public").getAsBoolean();
+            boolean isGameStarted = gameObj.get("is game started").getAsBoolean();
             long startTime = gameObj.get("start time").getAsLong();
             int capacity = gameObj.get("capacity").getAsInt();
             ArrayList<User> players = new ArrayList<>();
@@ -73,7 +74,7 @@ public class UserThread extends Thread {
             }
             int id = gameObj.get("id").getAsInt();
             User admin = Data.getUserByName(gameObj.get("admin").getAsString());
-            waitingGames.add(new WaitingGame(id, players, capacity, admin, startTime, isPublic));
+            waitingGames.add(new WaitingGame(id, players, capacity, admin, startTime, isPublic, isGameStarted));
         }
         user.setAllWaitingGames(waitingGames);
     }

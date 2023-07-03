@@ -15,6 +15,7 @@ public class WaitingGame {
     private boolean isPublic = true;
     private boolean isGameStarted = false;
     private static int count = 0;
+    private boolean isGameStarted = false;
 
     public WaitingGame(int capacity, User admin, boolean isPublic) {
         this.capacity = capacity;
@@ -27,7 +28,7 @@ public class WaitingGame {
         startTime = System.currentTimeMillis() / 1000L;
     }
 
-    public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic) {
+    public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic, boolean isGameStarted) {
         this.id = id;
         this.players = players;
         this.capacity = capacity;
@@ -35,6 +36,7 @@ public class WaitingGame {
         this.startTime = startTime;
         this.isPublic = isPublic;
         count = id + 1;
+        this.isGameStarted = isGameStarted;
     }
 
     public int getId() {
@@ -86,5 +88,13 @@ public class WaitingGame {
         root.addProperty("start time", startTime);
         root.addProperty("is public", isPublic);
         return root;
+    }
+
+    public boolean isGameStarted() {
+        return isGameStarted;
+    }
+
+    public void setGameStarted(boolean isGameStarted) {
+        this.isGameStarted = isGameStarted;
     }
 }
