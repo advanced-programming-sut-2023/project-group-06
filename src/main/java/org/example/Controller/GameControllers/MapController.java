@@ -3,12 +3,15 @@ package org.example.Controller.GameControllers;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.StrokeLineCap;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Trap;
 import org.example.View.Response;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,6 +19,62 @@ public class MapController {
     public static Game currentGame;
     public static int currentX;
     public static int currentY;
+    public static ArrayList<ColliderBox> unitsColliderBoxes = new ArrayList<>();
+    public static ArrayList<ColliderBox> drawingRectangles = new ArrayList<>();
+    public static int mapX, mapY;
+    static Tile[][] map;
+    public static Building selectedBuilding;
+    public static HashSet<Unit> selectedUnits = new HashSet<>();
+
+    public static Unit getUnitAt(int x, int y) {
+        for (int i = unitsColliderBoxes.size() - 1; i >= 0; i--) {
+            ColliderBox colliderBox = unitsColliderBoxes.get(i);
+            if (colliderBox.contains(x, y) && colliderBox.object instanceof Unit)
+                return (Unit) colliderBox.object;
+        }
+        return null;
+    }
+
+    public static Building getBuildingAt(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        if (i < 0 || i >= map.length || j < 0 || j >= map[0].length)
+            return null;
+        return map[j][i].getBuilding();
+    }
+
+    public static void selectUnitsIn(int x, int y, int w, int h) {
+        selectedUnits.clear();
+        for(ColliderBox colliderBox : unitsColliderBoxes) {
+            if(colliderBox.isIn(x, y, w, h))
+                selectedUnits.add((Unit) colliderBox.object);
+        }
+    }
+
+    public static class ColliderBox {
+        public int x, y, width, height;
+        public Object object;
+
+        ColliderBox(int x, int y, int width, int height, Object object) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.object = object;
+        }
+
+        public boolean contains(int x, int y) {
+            return x >= this.x && x <= this.x + width && y >= this.y && y <= this.y + height;
+        }
+
+        public boolean isIn(int x, int y, int w, int h) {
+            return this.x >= x && this.x + width <= x + w && this.y >= y && this.y + height <= y + h;
+        }
+    }
 
     public static String showMapRow(int x, int y) {
         StringBuilder result = new StringBuilder();
@@ -166,6 +225,11 @@ public class MapController {
     }
 
     public static void mapGraphicProcessor(Canvas canvas, Tile[][] map, int x, int y) {
+        unitsColliderBoxes.clear();
+        drawingRectangles.clear();
+        mapX = x;
+        mapY = y;
+        MapController.map = map;
         int mapHeight = map.length;
         int mapWidth = map[0].length;
         int canvasHeight = (int) canvas.getHeight();
@@ -188,26 +252,67 @@ public class MapController {
                 // drawTileAt(gc, map[i][j], x + (i - j) * 46, y - s * 23);
             }
         }
+        drawRectangles(gc);
+    }
+
+    private static void drawRectangles(GraphicsContext gc) {
+        for (ColliderBox c : drawingRectangles) {
+            gc.setStroke((Color) c.object);
+            gc.setLineWidth(2);
+            gc.strokeRect(c.x, c.y, c.width, c.height);
+        }
     }
 
     private static void drawBuildingAndFriends(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y) {
         Building building = map[i][j].getBuilding();
+        int graphicalHeight = graphicalHeightOf(building);
         if (building == null) {
             drawTileAt(gc, map[i][j], x + (i - j) * 46, y - (i + j) * 23);
+            drawUnitsOfTile(gc, map, i, j, x, y, graphicalHeight);
         } else {
             int size = building.getBuildingType().getSize();
             for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
                 for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
                     drawTileAt(gc, map[ii][jj], x + (ii - jj) * 46, y - (ii + jj) * 23);
             drawBuildingAt(gc, building, x + (i - j) * 46, y - (i + j) * 23);
+            for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
+                for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
+                    drawUnitsOfTile(gc, map, ii, jj, x, y, graphicalHeight);
         }
-        // soldiers todo
+    }
+
+    private static void drawUnitsOfTile(GraphicsContext gc, Tile[][] map, int i, int j, int x, int y, int h) {
+        int centerX = x + (i - j) * 46;
+        int centerY = y - (i + j) * 23 - h;
+        for (int k = 0; k < 4 && k < map[i][j].getAllUnits().size(); k++) {
+            int dx = k == 1 ? -23 : k == 2 ? 23 : 0;
+            int dy = k == 0 ? -12 : k == 3 ? 12 : 0;
+            Unit unit = map[i][j].getAllUnits().get(k);
+            drawUnitAt(gc, unit, centerX + dx, centerY + dy);
+        }
+    }
+
+    private static void drawUnitAt(GraphicsContext gc, Unit unit, int x, int y) {
+        if (unit == null) return;
+        gc.drawImage(unit.getImg().getImage(), x - unit.getImg().getXo(), y - unit.getImg().getYo());
+        unitsColliderBoxes.add(new ColliderBox(x - 10, y - 30, 20, 40, unit));
+        if (selectedUnits.contains(unit))
+            drawingRectangles.add(new ColliderBox(x - unit.getImg().getXo(), y - unit.getImg().getYo(),
+                    (int) unit.getImg().getImage().getWidth(), (int) unit.getImg().getImage().getHeight(), Color.GREEN));
+    }
+
+    private static int graphicalHeightOf(Building building) {
+        if (building == null) return 0;
+        System.err.println(">>>>>>>>>>" + building.getBuildingType() + " " + building.getImg());
+        return building.getImg().getYo() - 23 * building.getBuildingType().getSize();
     }
 
     private static void drawBuildingAt(GraphicsContext gc, Building building, int x, int y) {
         if (building == null) return;
-        System.out.println("<<< " + building.getImg());
         gc.drawImage(building.getImg().getImage(), x - building.getImg().getXo(), y - building.getImg().getYo());
+        if (building == selectedBuilding)
+            drawingRectangles.add(new ColliderBox(x - building.getImg().getXo(), y - building.getImg().getYo(),
+                    (int) building.getImg().getImage().getWidth(), (int) building.getImg().getImage().getHeight(), Color.GREENYELLOW));
     }
 
     private static void drawTileAt(GraphicsContext gc, Tile tile, int x, int y) {
