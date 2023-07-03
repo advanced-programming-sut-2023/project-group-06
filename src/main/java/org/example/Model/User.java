@@ -370,7 +370,8 @@ public class User implements Comparable<User>, Serializable {
         sendToServer("create waiting game", waitingGame.toJson());
     }
 
-    public void joinCommand(WaitingGame waitingGame) {
+    public void joinCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("join waiting game", waitingGame.toJson());
     }
 
 }
