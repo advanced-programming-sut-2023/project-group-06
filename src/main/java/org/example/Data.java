@@ -7,6 +7,7 @@ public class Data {
     private static ArrayList<Client> clients = new ArrayList<>();
     private static ArrayList<ChatRoom> chatRooms = new ArrayList<>();
     static boolean hasAnyOneLoggedInYet = false;
+    private static ArrayList<Game> allWaitingGames = new ArrayList<>();
 
     public static Client getClientByName(String username) {
         for (int i = 0; i < clients.size(); i++) {
@@ -55,5 +56,13 @@ public class Data {
             if (chatRoom.getId() == id) return chatRoom;
         }
         return null;
+    }
+
+    public static void addWaitingGame(Game waitingGame) {
+        Data.allWaitingGames.add(waitingGame);
+    }
+
+    public static ArrayList<Game> getAllWaitingGames() {
+        return allWaitingGames;
     }
 }
