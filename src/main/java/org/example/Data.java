@@ -62,7 +62,23 @@ public class Data {
         Data.allWaitingGames.add(waitingGame);
     }
 
-    public static ArrayList<Game> getAllWaitingGames() {
+    public synchronized static ArrayList<Game> getAllWaitingGames() {
         return allWaitingGames;
+    }
+
+    public static Game getGameById(int id) {
+        synchronized (allWaitingGames) {
+            for (int i = allWaitingGames.size() - 1; i >= 0; i--) {
+                Game allWaitingGame = allWaitingGames.get(i);
+                if (allWaitingGame.getId() == id) return allWaitingGame;
+            }
+            return null;
+        }
+    }
+
+    public static void removeGame(Game game) {
+        synchronized (allWaitingGames) {
+            allWaitingGames.remove(game);
+        }
     }
 }

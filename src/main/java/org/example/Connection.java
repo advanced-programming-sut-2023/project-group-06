@@ -189,7 +189,33 @@ public class Connection extends Thread {
         if (commandType.equals("reject request")) rejectRequest(context);
         if (commandType.equals("inactivate")) killConnection();
         if (commandType.equals("create waiting game")) createWaitingGame(context);
+        if (commandType.equals("join waiting game")) joinWaitingGame(context);
+        if (commandType.equals("leave waiting game")) leaveWaitingGame(context);
+        if (commandType.equals("delete waiting game")) deleteWaitingGame(context);
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
+    }
+
+    private void joinWaitingGame(JsonObject context) {
+        int id = context.get("id").getAsInt();
+        Game game = Data.getGameById(id);
+        game.addPlayer(client);
+    }
+
+    private void leaveWaitingGame(JsonObject context) {
+        int id = context.get("id").getAsInt();
+        Client admin = Data.getClientByName(context.get("admin").getAsString());
+        Game game = Data.getGameById(id);
+        game.removePlayer(client);
+        if (client == admin) {
+            if (game.getPlayers().isEmpty()) Data.removeGame(game);
+            else game.setAdmin(game.getPlayers().get(0));
+        }
+    }
+
+    private void deleteWaitingGame(JsonObject context) {
+        int id = context.get("id").getAsInt();
+        Game game = Data.getGameById(id);
+        Data.removeGame(game);
     }
 
     private void createWaitingGame(JsonObject context) {
