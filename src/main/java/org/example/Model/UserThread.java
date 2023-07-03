@@ -69,9 +69,7 @@ public class UserThread extends Thread {
             String username = friendObject.get("username").getAsString();
             long lastSeen = friendObject.get("last seen").getAsLong();
             boolean isOnline = friendObject.get("is online").getAsBoolean();
-            System.out.println("ggg " + username);
             User user1 = Data.getUserByName(username);
-            System.out.println("fff " + user1);
             user1.setOnline(isOnline);
             user1.setLastSeen(lastSeen);
             myFriends.add(user1);

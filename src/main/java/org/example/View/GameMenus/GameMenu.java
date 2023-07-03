@@ -1,5 +1,7 @@
 package org.example.View.GameMenus;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +26,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.Controller.GameControllers.GameController;
 import org.example.Controller.GameControllers.MapController;
 import org.example.Model.*;
@@ -56,6 +59,7 @@ public class GameMenu extends Application {
     private BorderPane buildingBorderPane;
     private VBox actionVBox;
     Text currentPlayer;
+    Timeline timeline;
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -255,7 +259,7 @@ public class GameMenu extends Application {
     }
 
     public void kingdomTape() {
-        bottomHBox.setMinHeight(230);
+        bottomHBox.setMinHeight(200);
         initBuildingsArray();
         popularityHBox = new HBox();
         buildingBorderPane = new BorderPane();
@@ -267,18 +271,25 @@ public class GameMenu extends Application {
         buildingBorderPane.setBottom(buildingGroupHBox);
         makeActionVBox();
         buildingBorderPane.setRight(actionVBox);
+        /////////////
+        int x = 480;
+        int y = 130;
+        buildingBorderPane.setMaxWidth(x);
+        buildingBorderPane.setMinWidth(x);
+        buildingBorderPane.setMaxHeight(y);
+        buildingBorderPane.setMinHeight(y);
+        ////////////////
         bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
         bottomHBox.setFocusTraversable(true);
         bottomHBox.getChildren().addAll(stackPane);
         stackPane.setMinHeight(140);
         stackPane.setMaxHeight(140);
-        stackPane.setTranslateX(-170);
+        stackPane.setTranslateX(-100);
         stackPane.setMinWidth(520);
         stackPane.setMaxWidth(520);
         setBuildingIndex(0);
         popularityHBox.setVisible(false);
         bottomHBox.setAlignment(Pos.BOTTOM_CENTER);
-        popularityHBox.setStyle("-fx-background-color: BLUE");
         Text happiness = new Text(Integer.toString(GameController.currentPlayer.getHappiness()));
         happiness.setTranslateX(-70);
         happiness.setTranslateY(-60);
@@ -303,6 +314,15 @@ public class GameMenu extends Application {
         population.setTranslateY(-20);
         bottomHBox.getChildren().addAll(happiness, wealth, population);
         setPopularityHBox(popularityHBox);
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1), actionEvent -> {
+            wealth.setText(Integer.toString(GameController.currentPlayer.getWealth()));
+            happiness.setText(Integer.toString(GameController.currentPlayer.getHappiness()));
+            population.setText(GameController.currentPlayer.getPopulation() + "/" +
+                    GameController.currentPlayer.getMaxPopulation());
+        }));
+        timeline.setCycleCount(-1);
+        timeline.play();
+        this.timeline = timeline;
     }
 
     private void makeActionVBox() {
@@ -390,8 +410,8 @@ public class GameMenu extends Application {
     public void setPopularityHBox(HBox popularityHBox) {
         Text text = new Text("Popularity");
         text.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23");
-        text.setTranslateX(10);
-        text.setTranslateY(10);
+        text.setTranslateX(20);
+        text.setTranslateY(20);
         HBox food = new HBox();
         Kingdom kingdom = GameController.currentPlayer;
         int food1 = kingdom.showPopularityFactorsFood();
@@ -465,17 +485,33 @@ public class GameMenu extends Application {
                 "-fx-font-family: 'Book Antiqua'";
         back.setStyle(style3);
         rate.setStyle(style3);
-        popularityHBox.getChildren().addAll(text, food, tax, fear, religion, wine/*, back, rate*/);
+        back.setTranslateX(-440);
+        back.setTranslateY(70);
+        back.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                reversePopularityBar(popularityHBox);
+            }
+        });
+        popularityHBox.setMaxWidth(500);
+        popularityHBox.setMinWidth(500);
+        popularityHBox.getChildren().addAll(text, food, tax, fear, religion, wine, back/*, rate*/);
+    }
+
+    private void reversePopularityBar(HBox popularityHBox) {
+        popularityHBox.setVisible(false);
+        buildingBorderPane.setVisible(true);
     }
 
     private void popularityBar(HBox popularityHBox, HBox buildingHBox) {
         popularityHBox.setVisible(true);
-        buildingHBox.setVisible(false);
+        buildingBorderPane.setVisible(false);
     }
 
     public void nextTurn() throws IOException {
         System.out.println("salam");
         GameController.nextTurn();
+        currentPlayer.setText("current player: " + GameController.currentPlayer.getOwner().getUsername());
     }
 
 //    public void initialize() {

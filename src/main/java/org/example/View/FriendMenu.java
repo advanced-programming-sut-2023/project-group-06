@@ -16,6 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.example.Model.Data;
@@ -119,15 +120,19 @@ public class FriendMenu extends Application {
         return ((VBox) pane.getChildren().get(i)).getChildren().get(0).getClass() != Button.class;
     }
 
-    public void setLastSeenPane(){
+    /*public void setLastSeenPane(){
         VBox vBox = new VBox();
         vBox.setLayoutY(100);
         vBox.setLayoutX(500);
+        vBox.setSpacing(20);
         for (User myFriend : Data.getCurrentUser().getMyFriends()) {
             long lastSeen = Data.getCurrentUser().getLastSeen(myFriend);
-            Label label = new Label();
+            Text label = new Text(timeConverter(lastSeen));
+            label.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 10");
+            vBox.getChildren().add(label);
         }
-    }
+        pane.getChildren().add(vBox);
+    }*/
 
     public void setThePane(){
         for (int i = pane.getChildren().size() - 1; i >= 0; i--)
@@ -356,6 +361,12 @@ public class FriendMenu extends Application {
     }
 
     public String timeConverter(long time){
-        return null;
+        int seconds = (int)(time % 90000);
+        int hour = seconds / 3600;
+        int seconds2 = seconds - hour * 3600;
+        int minutes = seconds2 / 60;
+        String hh = hour < 10 ? "0" + hour : String.valueOf(hour);
+        String mm = minutes < 10 ? "0" + minutes : String.valueOf(minutes);
+        return hh + ":" + mm;
     }
 }
