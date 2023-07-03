@@ -64,7 +64,7 @@ public class GameMenu extends Application {
     double lastMouseY;
     double mouseX;
     double mouseY;
-    private ArrayList<String> buildingIcons = new ArrayList<>();
+    private ArrayList<Image> buildingIcons = new ArrayList<>();
     private int[] buildingGroup = new int[6];
     private int buildingIndex = 0;
     private HBox buildingHBox, popularityHBox, buildingGroupHBox;
@@ -435,10 +435,17 @@ public class GameMenu extends Application {
         buildingHBox.setSpacing(10);
         for (int i = 0; i < 4; i++) {
             ImageView buildingImage = new ImageView(buildingIcons.get(buildingIndex + i));
+            buildingImage.setOnMouseClicked(mouseEvent -> {
+                //todo doctor
+                handleClicked(buildingImage);
+            });
             buildingImage.setFitHeight(100);
             buildingImage.setFitWidth(100);
             buildingHBox.getChildren().add(buildingImage);
         }
+    }
+
+    private void handleClicked(ImageView buildingImage) {
     }
 
     public void kingdomTape() {
@@ -564,13 +571,13 @@ public class GameMenu extends Application {
         HBox hBox = new HBox();
         hBox.setSpacing(2);
         for (int i = 0; i < 6; i++) {
-            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i+1) + ").png").toExternalForm();
-            ImageView buildingIcon = new ImageView(address);
+            ImageView buildingIcon = new ImageView(buildingIcons.get(buildingGroup[i]));
+            System.out.println("buildingGroup[" + i + "]" + " = " + buildingGroup[i]);
             buildingIcon.setFitHeight(20);
             buildingIcon.setPreserveRatio(true);
-            int finalI = i;
+            int finalI1 = i;
             buildingIcon.setOnMouseClicked(mouseEvent -> {
-                buildingIndex = buildingGroup[finalI];
+                setBuildingIndex(buildingGroup[finalI1]);
             });
             hBox.getChildren().add(buildingIcon);
         }
@@ -579,15 +586,33 @@ public class GameMenu extends Application {
 
     private void initBuildingsArray() {
         //todo correct this
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 16; j++) {
-                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
-                buildingIcons.add(address);
+//        for (int i = 0; i < 3; i++) {
+//            for (int j = 0; j < 16; j++) {
+//                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+//                buildingIcons.add(address);
+//            }
+//        }
+
+        for (BuildingType value : BuildingType.values()) {
+            buildingIcons.add(value.getSuperImage().getImage());
+        }
+
+        int size = 0;
+        for (BuildingType value : BuildingType.values()) {
+            size++;
+        }
+        int cnt = 0;
+        int i = 0;
+        for (BuildingType value : BuildingType.values()) {
+            if (i == 6) break;
+            if (cnt == ((size * i) / 6)) {
+                buildingGroup[i] = cnt;
+                System.out.println("cnt: " + cnt);
+                i++;
             }
+            cnt++;
         }
-        for (int i = 0; i < 6; i++) {
-            buildingGroup[i] = i;
-        }
+        System.err.println("++++++++++++   " + size + " " + buildingGroup);
     }
 
     public void setPopularityHBox(HBox popularityHBox) {
