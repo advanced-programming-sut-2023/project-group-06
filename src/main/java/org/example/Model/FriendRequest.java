@@ -35,4 +35,8 @@ public class FriendRequest {
         jsonObject.addProperty("isAccepted", isAccepted);
         return jsonObject;
     }
+
+    public boolean equals(FriendRequest friendRequest){
+        return sender == friendRequest.sender && target == friendRequest.target;
+    }
 }

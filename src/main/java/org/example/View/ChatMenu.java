@@ -6,6 +6,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -62,9 +63,41 @@ public class ChatMenu extends Application {
     }
 
     public void initialize(){
+        setTheMainVBox();
+        Timeline timeline1 = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> {
+            try {
+                Data.getCurrentUser().sendToServer();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            boolean areEqual = true;
+            if(Data.getCurrentUser().getChats().size() != chatRooms.size()) areEqual = false;
+            if(areEqual) {
+                for (int i = 0; i < chatRooms.size(); i++) {
+                    if (!chatRooms.get(i).equals(Data.getCurrentUser().getChats().get(i))) {
+                        areEqual = false;
+                        break;
+                    }
+                }
+            }
+            if(!areEqual){
+                chatRooms.clear();
+                chatRooms.addAll(Data.getCurrentUser().getChats());
+                setTheMainVBox();
+            }
+        }));
+        timeline1.setCycleCount(-1);
+        this.chatsTimeline = timeline1;
+        timeline1.play();
+    }
+
+    private void setTheMainVBox(){
+        for (int i = mainVBox.getChildren().size() - 1; i >= 0; i--) {
+            mainVBox.getChildren().remove(i);
+        }
         for(ChatRoom chatRoom : Data.getCurrentUser().getChats()){
             if(chatRoom == Data.getPublicRoom()) {
-                System.out.println("added public room button");
+                System.out.println("salaaamammama");
                 Button publicChat = new Button("Public");
                 publicChat.setStyle(" -fx-background-color: #dff168; -fx-text-fill: black");
                 publicChat.setTextFill(Color.BLACK);
@@ -145,7 +178,6 @@ public class ChatMenu extends Application {
     }
 
     private void enterTheChat() throws IOException {
-        System.out.println("lllllll");
         for (int i = borderPane.getChildren().size() - 1; i >= 0; i--) {
             if(isValid(i)) borderPane.getChildren().remove(i);
         }

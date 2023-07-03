@@ -1,5 +1,7 @@
 package org.example.View;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -15,11 +17,13 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.example.Model.Data;
 import org.example.Model.FriendRequest;
 import org.example.Model.User;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class FriendMenu extends Application {
@@ -27,6 +31,9 @@ public class FriendMenu extends Application {
     private static Pane pane;
     private Scene scene;
     private static String searched = "";
+    private ArrayList<User> friends = new ArrayList<>();
+    private ArrayList<FriendRequest> requests = new ArrayList<>();
+    private Timeline timeline;
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -38,43 +45,74 @@ public class FriendMenu extends Application {
         pane.requestFocus();
         scene = new Scene(scrollPane);
         stage.setScene(scene);
-        setThePane();
+        startTheTimeLine();
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
+    public void startTheTimeLine() throws IOException {
+        setTheRightVBox();
+        Data.getCurrentUser().sendToServer();
+        Data.getCurrentUser().sendToServer();
+        friends.addAll(Data.getCurrentUser().getMyFriends());
+        requests.addAll(Data.getCurrentUser().getFriendRequestsReceivedByMe());
+        setThePane();
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> {
+            try {
+                Data.getCurrentUser().sendToServer();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            boolean areRequestsUpdated = true;
+            boolean areFriendsUpdated = true;
+            if(Data.getCurrentUser().getFriendRequestsReceivedByMe().size() != requests.size()) areRequestsUpdated = false;
+            if(Data.getCurrentUser().getMyFriends().size() != friends.size()) areFriendsUpdated = false;
+            if(areFriendsUpdated && areRequestsUpdated) {
+                for (int i = 0; i < requests.size(); i++) {
+                    if (!requests.get(i).equals(Data.getCurrentUser().getFriendRequestsReceivedByMe().get(i))) {
+                        areRequestsUpdated = false;
+                        break;
+                    }
+                }
+                for(int i = 0; i < friends.size(); i++){
+                    if(friends.get(i) != Data.getCurrentUser().getMyFriends().get(i)){
+                        areFriendsUpdated = false;
+                        break;
+                    }
+                }
+            }
+            if(!areFriendsUpdated || !areRequestsUpdated){
+                if(!areFriendsUpdated) {
+                    friends.clear();
+                    friends.addAll(Data.getCurrentUser().getMyFriends());
+                }
+                if(!areRequestsUpdated){
+                    requests.clear();
+                    requests.addAll(Data.getCurrentUser().getFriendRequestsReceivedByMe());
+                }
+                setThePane();
+            }
+        }));
+        timeline.setCycleCount(-1);
+        this.timeline = timeline;
+        timeline.play();
+    }
+
+    public boolean isValid(int i){
+        return ((VBox) pane.getChildren().get(i)).getChildren().get(0).getClass() != Button.class;
+    }
+
     public void setThePane(){
         for (int i = pane.getChildren().size() - 1; i >= 0; i--)
-            pane.getChildren().remove(i);
+            if(isValid(i)) pane.getChildren().remove(i);
         VBox leftVBox = new VBox();
         VBox mainVBox = new VBox();
-        VBox rightVBox = new VBox();
         leftVBox.setLayoutY(100);
         leftVBox.setLayoutX(100);
         leftVBox.setSpacing(20);
         mainVBox.setLayoutX(600);
         mainVBox.setLayoutY(100);
         mainVBox.setSpacing(20);
-        rightVBox.setSpacing(20);
-        rightVBox.setLayoutY(100);
-        rightVBox.setLayoutX(900);
-
-        FriendRequest friendRequest0 = new FriendRequest(Data.getUserByName("mobin12"), Data.getCurrentUser());
-        FriendRequest friendRequest1 = new FriendRequest(Data.getUserByName("mobin13"), Data.getCurrentUser());
-        FriendRequest friendRequest2 = new FriendRequest(Data.getUserByName("mobin14"), Data.getCurrentUser());
-        FriendRequest friendRequest3 = new FriendRequest(Data.getUserByName("mobin13"), Data.getCurrentUser());
-        FriendRequest friendRequest4 = new FriendRequest(Data.getUserByName("mobin15"), Data.getCurrentUser());
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest0);
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest1);
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest2);
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest3);
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().add(friendRequest4);
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin15"));
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin16"));
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin17"));
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin18"));
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin19"));
-        Data.getCurrentUser().getMyFriends().add(Data.getUserByName("mobin20"));
 
         Label label = new Label("received requests");
         String style = "-fx-font-family: 'Times New Roman'; -fx-font-size: 20";
@@ -141,6 +179,14 @@ public class FriendMenu extends Application {
             if(!isOnline(myFriend)) blue.setVisible(false);
             mainVBox.getChildren().add(stackPane);
         }
+        pane.getChildren().addAll(leftVBox, mainVBox);
+    }
+
+    private void setTheRightVBox(){
+        VBox rightVBox = new VBox();
+        rightVBox.setSpacing(20);
+        rightVBox.setLayoutY(100);
+        rightVBox.setLayoutX(900);
         Button back = new Button("Back");
         String style1 = "";
         back.setStyle(style1);
@@ -148,6 +194,7 @@ public class FriendMenu extends Application {
             @Override
             public void handle(MouseEvent mouseEvent) {
                 try {
+                    timeline.stop();
                     new MainMenu().start(stage);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
@@ -192,7 +239,7 @@ public class FriendMenu extends Application {
             }
         });
         rightVBox.getChildren().addAll(back, hBox, send, circle);
-        pane.getChildren().addAll(leftVBox, mainVBox, rightVBox);
+        pane.getChildren().add(rightVBox);
     }
 
     private boolean isOnline(User myFriend) {
@@ -252,25 +299,29 @@ public class FriendMenu extends Application {
     private void send(User user) throws IOException {
         System.out.println("send");
         FriendRequest friendRequest = new FriendRequest(Data.getCurrentUser(), user);
-        Data.getCurrentUser().getFriendRequestsSentByMe().add(friendRequest);
-        user.getFriendRequestsReceivedByMe().add(friendRequest);
+        /*Data.getCurrentUser().getFriendRequestsSentByMe().add(friendRequest);
+        user.getFriendRequestsReceivedByMe().add(friendRequest);*/
         Data.getCurrentUser().sendRequestCommand(friendRequest);
     }
 
     private void reject(FriendRequest friendRequest) throws IOException {
         System.out.println("reject");
-        Data.getCurrentUser().getFriendRequestsReceivedByMe().remove(friendRequest);
-        friendRequest.getSender().getFriendRequestsSentByMe().remove(friendRequest);
+        /*Data.getCurrentUser().getFriendRequestsReceivedByMe().remove(friendRequest);
+        friendRequest.getSender().getFriendRequestsSentByMe().remove(friendRequest);*/
         Data.getCurrentUser().rejectRequestCommand(friendRequest);
         setThePane();
     }
 
     private void accept(FriendRequest friendRequest) throws IOException {
         System.out.println("accept");
-        friendRequest.setAccepted(true);
+        /*friendRequest.setAccepted(true);
         Data.getCurrentUser().getMyFriends().add(friendRequest.getSender());
-        friendRequest.getSender().getMyFriends().add(Data.getCurrentUser());
+        friendRequest.getSender().getMyFriends().add(Data.getCurrentUser());*/
         Data.getCurrentUser().acceptRequestCommand(friendRequest);
         setThePane();
+    }
+
+    public String timeConverter(long time){
+        return null;
     }
 }
