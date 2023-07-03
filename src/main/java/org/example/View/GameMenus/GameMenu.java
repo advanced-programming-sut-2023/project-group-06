@@ -29,8 +29,13 @@ import org.example.Controller.GameControllers.MapController;
 import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
+import org.example.View.Commands;
+import org.example.View.Response;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -85,109 +90,129 @@ public class GameMenu extends Application {
 
     private void starter() {
         setMouseActions();
-        map = Data.loadMap("test");
+        if (GameController.currentGame != null) {
+            map = Data.loadMap("test");
+            GameController.currentGame.setMap(map, map[0].length, map.length);
+            System.out.println(GameController.currentGame.getPlayers().size());
+            for (int i = 0; i < GameController.currentGame.getPlayers().size(); i++) {
+              //  Kingdom kingdom = GameController.currentGame.getKingdoms().get(i);
+                int x = i % 2 == 0 ? 10 : map[0].length - 11, y = i / 2 == 0 ? 10 : map.length - 11;
+
+                //Building building = new Building(kingdom, BuildingType.MAIN_CASTLE, x, y);
+              //  map[y][x].setBuilding(building);
+                String validColors[] = {"red", "blue", "green", "yellow"};
+                String cmd = "main castle -x " + x + " -y " + y + " -color " + validColors[i] + " -d n";
+                Response response = GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
+//                System.err.println(response.message);
+                GameController.nextTurn();
+            }
+
+        } else {
+            map = Data.loadMap("test");
+
+
+            for (int i = 0; i < 10; i++)
+                for (int j = 0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW, i, j);
+            map[5][0].setBuilding(new Building(null, BuildingType.SIEGE_TENT, 0, 5));
+            map[5][1].setBuilding(new Building(null, BuildingType.STOCKPILE, 1, 5));
+            map[5][2].setBuilding(new Building(null, BuildingType.OX_TETHER, 2, 5));
+            map[5][3].setBuilding(new Building(null, BuildingType.MILL, 3, 5));
+            map[5][4].setBuilding(new Building(null, BuildingType.KILLING_PIT, 4, 5));
+            map[5][5].setBuilding(new Building(null, BuildingType.TREE, 5, 5));
+            map[5][6].setBuilding(new Building(null, BuildingType.ROCK, 6, 5));
+            map[5][7].setBuilding(new Building(null, BuildingType.LOOKOUT_TOWER, 7, 5));
+            map[5][8].setBuilding(new Building(null, BuildingType.ARMORY, 8, 5));
+            map[0][0].setBuilding(new Building(null, BuildingType.PITCH_DITCH, 0, 0));
+            map[0][1].setBuilding(new Building(null, BuildingType.GRANARY, 1, 0));
+
+            Soldier soldier = new Soldier(5, 0, null, UnitType.ARCHER);
+            map[0][5].addSoldier(soldier);
+            soldier = new Soldier(5, 0, null, UnitType.SWORDS_MAN);
+            map[0][5].addSoldier(soldier);
+            soldier = new Soldier(5, 0, null, UnitType.SPEAR_MAN);
+            map[0][5].addSoldier(soldier);
+            soldier = new Soldier(5, 0, null, UnitType.KNIGHT);
+            map[0][5].addSoldier(soldier);
+
+            Soldier archer;
+            for (int i = 19; i < 22; i++)
+                for (int j = 26; j < 29; j++)
+                    for (int k = 0; k < 4; k++) {
+                        archer = new Soldier(j, i, null, UnitType.ARCHER);
+                        map[i][j].addSoldier(archer);
+                    }
+
+
+            Building building = new Building(null, BuildingType.INN, 1, 20);
+            for (int i = 19; i < 22; i++) for (int j = 0; j < 3; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.ENGINEERS_GUILD, 4, 20);
+            for (int i = 19; i < 22; i++) for (int j = 3; j < 6; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.MERCENARY_POST, 7, 20);
+            for (int i = 19; i < 22; i++) for (int j = 6; j < 9; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.BARRACKS, 10, 20);
+            for (int i = 19; i < 22; i++) for (int j = 9; j < 12; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.SMALL_STONE_GATEHOUSE, 13, 20);
+            for (int i = 19; i < 22; i++) for (int j = 12; j < 15; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.BIG_STONE_GATEHOUSE, 17, 20);
+            for (int i = 18; i < 23; i++) for (int j = 15; j < 20; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.PERIMETER_TOWER, 21, 20);
+            for (int i = 19; i < 22; i++) for (int j = 20; j < 23; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.DEFENSE_TURRET, 24, 20);
+            for (int i = 19; i < 22; i++) for (int j = 23; j < 26; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.SQUARE_TOWER, 27, 20);
+            for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.ROUND_TOWER, 30, 20);
+            for (int i = 19; i < 22; i++) for (int j = 29; j < 32; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.IRON_MINE, 33, 20);
+            for (int i = 19; i < 22; i++) for (int j = 32; j < 35; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.MARKET, 36, 20);
+            for (int i = 19; i < 22; i++) for (int j = 35; j < 38; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.PITCH_RIG, 39, 20);
+            for (int i = 19; i < 22; i++) for (int j = 38; j < 41; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.QUARRY, 42, 20);
+            for (int i = 19; i < 22; i++) for (int j = 41; j < 44; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.WOODCUTTERS, 45, 20);
+            for (int i = 19; i < 22; i++) for (int j = 44; j < 47; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.HOVEL, 48, 20);
+            for (int i = 19; i < 22; i++) for (int j = 47; j < 50; j++) map[i][j].setBuilding(building);
+            ///////////////////////
+            building = new Building(null, BuildingType.CATHEDRAL, 2, 12);
+            for (int i = 10; i < 15; i++) for (int j = 0; j < 5; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.CHURCH, 6, 12);
+            for (int i = 11; i < 14; i++) for (int j = 5; j < 8; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.ARMORER, 9, 12);
+            for (int i = 11; i < 14; i++) for (int j = 8; j < 11; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.FLETCHER, 12, 12);
+            for (int i = 11; i < 14; i++) for (int j = 11; j < 14; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.POLETURNER, 15, 12);
+            for (int i = 11; i < 14; i++) for (int j = 14; j < 17; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.OIL_SMELTER, 18, 12);
+            for (int i = 11; i < 14; i++) for (int j = 17; j < 20; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.STABLE, 21, 12);
+            for (int i = 11; i < 14; i++) for (int j = 20; j < 23; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.BLACKSMITH, 24, 12);
+            for (int i = 11; i < 14; i++) for (int j = 23; j < 26; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.APPLE_ORCHARD, 27, 12);
+            for (int i = 11; i < 14; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.DIARY_FARMER, 30, 12);
+            for (int i = 11; i < 14; i++) for (int j = 29; j < 32; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.HOPS_FARMER, 33, 12);
+            for (int i = 11; i < 14; i++) for (int j = 32; j < 35; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.HUNTERS_POST, 36, 12);
+            for (int i = 11; i < 14; i++) for (int j = 35; j < 38; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.WHEAT_FARMER, 39, 12);
+            for (int i = 11; i < 14; i++) for (int j = 38; j < 41; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.BAKERY, 42, 12);
+            for (int i = 11; i < 14; i++) for (int j = 41; j < 44; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.BREWER, 45, 12);
+            for (int i = 11; i < 14; i++) for (int j = 44; j < 47; j++) map[i][j].setBuilding(building);
+            building = new Building(null, BuildingType.MAIN_CASTLE, 48, 12);
+            for (int i = 11; i < 14; i++) for (int j = 47; j < 50; j++) map[i][j].setBuilding(building);
+        }
+
+
         mainCanvas.setHeight(3000);
         mainCanvas.setWidth(8000);
-
-        for (int i = 0; i < 10; i++)
-            for (int j = 0; j < 10; j++) map[i][j] = new Tile(TileStructure.DENSE_MEADOW, i, j);
-        map[5][0].setBuilding(new Building(null, BuildingType.SIEGE_TENT, 0, 5));
-        map[5][1].setBuilding(new Building(null, BuildingType.STOCKPILE, 1, 5));
-        map[5][2].setBuilding(new Building(null, BuildingType.OX_TETHER, 2, 5));
-        map[5][3].setBuilding(new Building(null, BuildingType.MILL, 3, 5));
-        map[5][4].setBuilding(new Building(null, BuildingType.KILLING_PIT, 4, 5));
-        map[5][5].setBuilding(new Building(null, BuildingType.TREE, 5, 5));
-        map[5][6].setBuilding(new Building(null, BuildingType.ROCK, 6, 5));
-        map[5][7].setBuilding(new Building(null, BuildingType.LOOKOUT_TOWER, 7, 5));
-        map[5][8].setBuilding(new Building(null, BuildingType.ARMORY, 8, 5));
-        map[0][0].setBuilding(new Building(null, BuildingType.PITCH_DITCH, 0, 0));
-        map[0][1].setBuilding(new Building(null, BuildingType.GRANARY, 1, 0));
-
-        Soldier soldier = new Soldier(5, 0, null, UnitType.ARCHER);
-        map[0][5].addSoldier(soldier);
-        soldier = new Soldier(5, 0, null, UnitType.SWORDS_MAN);
-        map[0][5].addSoldier(soldier);
-        soldier = new Soldier(5, 0, null, UnitType.SPEAR_MAN);
-        map[0][5].addSoldier(soldier);
-        soldier = new Soldier(5, 0, null, UnitType.KNIGHT);
-        map[0][5].addSoldier(soldier);
-
-        Soldier archer;
-        for (int i = 19; i < 22; i++)
-            for (int j = 26; j < 29; j++)
-                for (int k = 0; k < 4; k++) {
-                    archer = new Soldier(j, i, null, UnitType.ARCHER);
-                    map[i][j].addSoldier(archer);
-                }
-
-
-        Building building = new Building(null, BuildingType.INN, 1, 20);
-        for (int i = 19; i < 22; i++) for (int j = 0; j < 3; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.ENGINEERS_GUILD, 4, 20);
-        for (int i = 19; i < 22; i++) for (int j = 3; j < 6; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.MERCENARY_POST, 7, 20);
-        for (int i = 19; i < 22; i++) for (int j = 6; j < 9; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.BARRACKS, 10, 20);
-        for (int i = 19; i < 22; i++) for (int j = 9; j < 12; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.SMALL_STONE_GATEHOUSE, 13, 20);
-        for (int i = 19; i < 22; i++) for (int j = 12; j < 15; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.BIG_STONE_GATEHOUSE, 17, 20);
-        for (int i = 18; i < 23; i++) for (int j = 15; j < 20; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.PERIMETER_TOWER, 21, 20);
-        for (int i = 19; i < 22; i++) for (int j = 20; j < 23; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.DEFENSE_TURRET, 24, 20);
-        for (int i = 19; i < 22; i++) for (int j = 23; j < 26; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.SQUARE_TOWER, 27, 20);
-        for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.ROUND_TOWER, 30, 20);
-        for (int i = 19; i < 22; i++) for (int j = 29; j < 32; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.IRON_MINE, 33, 20);
-        for (int i = 19; i < 22; i++) for (int j = 32; j < 35; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.MARKET, 36, 20);
-        for (int i = 19; i < 22; i++) for (int j = 35; j < 38; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.PITCH_RIG, 39, 20);
-        for (int i = 19; i < 22; i++) for (int j = 38; j < 41; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.QUARRY, 42, 20);
-        for (int i = 19; i < 22; i++) for (int j = 41; j < 44; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.WOODCUTTERS, 45, 20);
-        for (int i = 19; i < 22; i++) for (int j = 44; j < 47; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.HOVEL, 48, 20);
-        for (int i = 19; i < 22; i++) for (int j = 47; j < 50; j++) map[i][j].setBuilding(building);
-        ///////////////////////
-        building = new Building(null, BuildingType.CATHEDRAL, 2, 12);
-        for (int i = 10; i < 15; i++) for (int j = 0; j < 5; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.CHURCH, 6, 12);
-        for (int i = 11; i < 14; i++) for (int j = 5; j < 8; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.ARMORER, 9, 12);
-        for (int i = 11; i < 14; i++) for (int j = 8; j < 11; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.FLETCHER, 12, 12);
-        for (int i = 11; i < 14; i++) for (int j = 11; j < 14; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.POLETURNER, 15, 12);
-        for (int i = 11; i < 14; i++) for (int j = 14; j < 17; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.OIL_SMELTER, 18, 12);
-        for (int i = 11; i < 14; i++) for (int j = 17; j < 20; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.STABLE, 21, 12);
-        for (int i = 11; i < 14; i++) for (int j = 20; j < 23; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.BLACKSMITH, 24, 12);
-        for (int i = 11; i < 14; i++) for (int j = 23; j < 26; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.APPLE_ORCHARD, 27, 12);
-        for (int i = 11; i < 14; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.DIARY_FARMER, 30, 12);
-        for (int i = 11; i < 14; i++) for (int j = 29; j < 32; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.HOPS_FARMER, 33, 12);
-        for (int i = 11; i < 14; i++) for (int j = 32; j < 35; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.HUNTERS_POST, 36, 12);
-        for (int i = 11; i < 14; i++) for (int j = 35; j < 38; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.WHEAT_FARMER, 39, 12);
-        for (int i = 11; i < 14; i++) for (int j = 38; j < 41; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.BAKERY, 42, 12);
-        for (int i = 11; i < 14; i++) for (int j = 41; j < 44; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.BREWER, 45, 12);
-        for (int i = 11; i < 14; i++) for (int j = 44; j < 47; j++) map[i][j].setBuilding(building);
-        building = new Building(null, BuildingType.MAIN_CASTLE, 48, 12);
-        for (int i = 11; i < 14; i++) for (int j = 47; j < 50; j++) map[i][j].setBuilding(building);
-
-
 
         draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
         draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
@@ -219,8 +244,7 @@ public class GameMenu extends Application {
                 clickedAt(e.getSceneX(), e.getSceneY());
                 MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
             }
-        }
-        else {
+        } else {
 
         }
     }
@@ -249,12 +273,10 @@ public class GameMenu extends Application {
                 lastMouseX = e.getSceneX();
                 lastMouseY = e.getSceneY();
             }
-        }
-        else {
-            if (e.getButton() == MouseButton.PRIMARY){
+        } else {
+            if (e.getButton() == MouseButton.PRIMARY) {
                 // todo drop building
-            }
-            else if (e.getButton() == MouseButton.SECONDARY) {
+            } else if (e.getButton() == MouseButton.SECONDARY) {
                 draggedBuilding = null;
                 draggedBuildingImageView.setVisible(false);
                 MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);

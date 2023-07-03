@@ -56,6 +56,7 @@ public class Building {
         if(buildingType == BuildingType.STAIR) tunnelDelay = 3;
         if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
         if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
+        this.img = buildingType.getSuperImage();
     }
 
     public ArrayList<Soldier> getLadderMen() {
@@ -158,7 +159,8 @@ public class Building {
     }
 
     public String toString() {
-        String output = "x: " + xCoordinate + ", y: " + yCoordinate + "\ntype: " + getBuildingType().getName() + "\nhp: "
+        String output = "owner: " + owner.getOwner().getUsername() + "\ncolor: " + owner.getColor()
+                + "\nx: " + xCoordinate + ", y: " + yCoordinate + "\ntype: " + getBuildingType().getName() + "\nhp: "
                 + hitPoint + "\nis it flammable? " + isFlammable;
         return output;
     }

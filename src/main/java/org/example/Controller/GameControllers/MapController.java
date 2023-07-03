@@ -303,6 +303,7 @@ public class MapController {
 
     private static int graphicalHeightOf(Building building) {
         if (building == null) return 0;
+        System.err.println(">>>>>>>>>>" + building.getBuildingType() + " " + building.getImg());
         return building.getImg().getYo() - 23 * building.getBuildingType().getSize();
     }
 

@@ -433,6 +433,7 @@ public class GameController {
     }
 
     public static Response putMainCastle(Matcher matcher){
+        matcher.matches();
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String color = Controller.makeEntryValid(matcher.group("color"));
@@ -456,6 +457,7 @@ public class GameController {
         }
         int newDirection = (direction + 1) % 4;
         int numberOfLoops = 0;
+        System.err.println("3");
         while(checkDirection(x, y, newDirection) == null) {
             newDirection = (newDirection + 1) % 4;
             numberOfLoops++;
