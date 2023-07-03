@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.View.GameMenus.TradeMenus.MakeTradeMenu"
+            stylesheets="@../CSS/mobin3.css">
+    <center>
+        <VBox spacing="5" alignment="CENTER" fx:id="mainVBox">
+            <HBox alignment="CENTER" spacing="100">
+                <Button text="empty" styleClass="Button" visible="false"/>
+            </HBox>
+        </VBox>
+    </center>
+    <VBox layoutX="100" layoutY="100" spacing="20">
+        <Button text="back" styleClass="ButtonRed" onMouseClicked="#back" fx:id="backButton"/>
+    </VBox>
+</BorderPane>
