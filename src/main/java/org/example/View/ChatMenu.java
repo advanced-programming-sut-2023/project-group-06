@@ -481,6 +481,7 @@ public class ChatMenu extends Application {
         if(Data.getUserByName(name) == null
                 || Objects.equals(name, Data.getCurrentUser().getUsername())){
             error.setVisible(true);
+            error.setText("Invalid username");
             error.setTextFill(Color.RED);
         }
         else if(Data.getCurrentUser().hasPrivateChatWith(name)){
