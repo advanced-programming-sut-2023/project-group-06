@@ -416,6 +416,10 @@ public class GameMenu extends Application {
         Building building = MapController.getBuildingAt(xx, yy);
         if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
         else MapController.selectedBuilding = building;
+
+        Tile tile = MapController.getTileAt(xx, yy);
+        if (tile != null) if (MapController.selectedTile == tile) MapController.selectedTile = null;
+        else MapController.selectedTile = tile;
     }
 
     private String getInfoOfPoint(double x, double y) {

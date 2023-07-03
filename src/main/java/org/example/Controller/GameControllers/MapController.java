@@ -26,6 +26,7 @@ public class MapController {
     static Tile[][] map;
     public static Building selectedBuilding;
     public static HashSet<Unit> selectedUnits = new HashSet<>();
+    public static Tile selectedTile;
 
     public static Unit getUnitAt(int x, int y) {
         for (int i = unitsColliderBoxes.size() - 1; i >= 0; i--) {
@@ -54,6 +55,18 @@ public class MapController {
             if (colliderBox.isIn(x, y, w, h))
                 selectedUnits.add((Unit) colliderBox.object);
         }
+    }
+
+    public static Tile getTileAt(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        if (i < 0 || i >= map.length || j < 0 || j >= map[0].length)
+            return null;
+        return map[j][i];
     }
 
     public static class ColliderBox {
@@ -332,6 +345,9 @@ public class MapController {
     private static void drawTileAt(GraphicsContext gc, Tile tile, int x, int y) {
         if (tile == null) return;
         gc.drawImage(tile.getImg().getImage(), x - tile.getImg().getXo(), y - tile.getImg().getYo());
+        if (tile == selectedTile)
+            drawingRectangles.add(new ColliderBox(x - tile.getImg().getXo(), y - tile.getImg().getYo(),
+                    (int) tile.getImg().getImage().getWidth(), (int) tile.getImg().getImage().getHeight(), Color.RED));
         if(tile.sick)
             gc.drawImage(SuperImage.SICK.getImage(), x - SuperImage.SICK.getXo(), y - SuperImage.SICK.getYo());
     }
