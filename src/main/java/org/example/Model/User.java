@@ -27,6 +27,7 @@ public class User implements Comparable<User>, Serializable {
     private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<User> myFriends = new ArrayList<>();
     private ArrayList<String> allClients = new ArrayList<>();
+    private ArrayList<WaitingGame> allWaitingGames = new ArrayList<>();
     private boolean isOnline = false;
     private long lastSeen = 0;
 
@@ -355,5 +356,9 @@ public class User implements Comparable<User>, Serializable {
 
     public void setAllClients(ArrayList<String> allClients) {
         this.allClients = allClients;
+    }
+
+    public ArrayList<WaitingGame> getAllWaitingGames() {
+        return allWaitingGames;
     }
 }
