@@ -94,7 +94,6 @@ public class Connection extends Thread {
             client = client1;
             client.setOnline(true);
         }
-        System.out.println("PPPP" + client.getNotRespondedFriendRequestsReceivedByMe());
         while (isConnectionAlive) {
             try {
                 handleClient();
@@ -185,8 +184,48 @@ public class Connection extends Thread {
         if (commandType.equals("edit message")) editMessage(context);
         if (commandType.equals("create room")) createRoom(context);
         if (commandType.equals("add to group")) addToGroup(context);
+        if (commandType.equals("send request")) sendRequest(context);
+        if (commandType.equals("accept request")) acceptRequest(context);
+        if (commandType.equals("reject request")) rejectRequest(context);
         if (commandType.equals("inactivate")) killConnection();
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
+    }
+
+    private void rejectRequest(JsonObject context) {
+        String senderUsername = context.get("sender").getAsString();
+        String targetUsername = context.get("target").getAsString();
+        boolean isAccepted = context.get("isAccepted").getAsBoolean();
+        Client target = Data.getClientByName(targetUsername);
+        for (int i = target.getNotRespondedFriendRequestsReceivedByMe().size() - 1; i >= 0; i--) {
+            if (target.getNotRespondedFriendRequestsReceivedByMe().get(i).equals(senderUsername)) {
+                target.removeFromNotRespondedFriendRequestsReceivedByMe(i);
+                break;
+            }
+        }
+    }
+
+    private void acceptRequest(JsonObject context) {
+        String senderUsername = context.get("sender").getAsString();
+        String targetUsername = context.get("target").getAsString();
+        boolean isAccepted = context.get("isAccepted").getAsBoolean();
+        Client target = Data.getClientByName(targetUsername);
+        Client sender = Data.getClientByName(senderUsername);
+        for (int i = target.getNotRespondedFriendRequestsReceivedByMe().size() - 1; i >= 0; i--) {
+            if (target.getNotRespondedFriendRequestsReceivedByMe().get(i).equals(senderUsername)) {
+                target.addFriend(sender);
+                sender.addFriend(target);
+                target.removeFromNotRespondedFriendRequestsReceivedByMe(i);
+                break;
+            }
+        }
+    }
+
+    private void sendRequest(JsonObject context) {
+        String senderUsername = context.get("sender").getAsString();
+        String targetUsername = context.get("target").getAsString();
+        boolean isAccepted = context.get("isAccepted").getAsBoolean();
+        Client sender = Data.getClientByName(senderUsername);
+        sender.addToNotDeliveredFriendRequestsSentByMe(targetUsername);
     }
 
     private void killConnection() {
@@ -302,6 +341,13 @@ public class Connection extends Thread {
             friends.add(friend.toJson());
         }
         root.add("friends", friends);
+        JsonArray allClients = new JsonArray();
+        for (Client client1 : Data.getClients()) {
+            JsonObject jsonString = new JsonObject();
+            jsonString.addProperty("name", client1.getUsername());
+            allClients.add(jsonString);
+        }
+        root.add("all clients", allClients);
         return root;
     }
 }

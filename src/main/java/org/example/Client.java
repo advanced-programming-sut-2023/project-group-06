@@ -225,7 +225,7 @@ public class Client implements Comparable<Client> {
         return friends;
     }
 
-    public void addFriend(Client friend) {
+    public synchronized void addFriend(Client friend) {
         this.friends.add(friend);
     }
 
