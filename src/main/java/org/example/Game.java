@@ -12,6 +12,7 @@ public class Game {
     ArrayList<Client> players = new ArrayList<>();
     int id;
     Client admin;
+    boolean isGameStarted = false;
 
     public Game(boolean isPublic, long startTime, int capacity, int id, Client admin) {
         this.isPublic = isPublic;
@@ -21,9 +22,6 @@ public class Game {
         this.admin = admin;
         players.add(admin);
     }
-
-    boolean isGameStarted = false;
-
     public long getStartTime() {
         return startTime;
     }
@@ -76,8 +74,8 @@ public class Game {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setPublic(boolean isPublic) {
+        this.isPublic = isPublic;
     }
 
     public JsonObject toJson() {
@@ -92,6 +90,11 @@ public class Game {
         root.addProperty("start time", startTime);
         root.addProperty("capacity", capacity);
         root.addProperty("admin", admin.getUsername());
+        root.addProperty("is public", isGameStarted);
         return root;
+    }
+
+    public synchronized void removePlayer(Client player) {
+        players.remove(player);
     }
 }
