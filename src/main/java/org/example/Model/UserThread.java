@@ -38,7 +38,6 @@ public class UserThread extends Thread {
     private void updateData() throws IOException {
         if (user.getClient() == null) return;
         String input = user.getClient().dataInputStream.readUTF();
-        System.out.println(user.getUsername() + "  UserThread:  input:  " + input);
         if (input.equals("salam")) return;
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(input);
@@ -70,7 +69,9 @@ public class UserThread extends Thread {
             String username = friendObject.get("username").getAsString();
             long lastSeen = friendObject.get("last seen").getAsLong();
             boolean isOnline = friendObject.get("is online").getAsBoolean();
+            System.out.println("ggg " + username);
             User user1 = Data.getUserByName(username);
+            System.out.println("fff " + user1);
             user1.setOnline(isOnline);
             user1.setLastSeen(lastSeen);
             myFriends.add(user1);

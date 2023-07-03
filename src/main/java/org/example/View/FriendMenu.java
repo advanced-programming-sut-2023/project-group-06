@@ -33,6 +33,7 @@ public class FriendMenu extends Application {
     private static String searched = "";
     private ArrayList<User> friends = new ArrayList<>();
     private ArrayList<FriendRequest> requests = new ArrayList<>();
+    private ArrayList<Boolean> online = new ArrayList<>();
     private Timeline timeline;
     
     @Override
@@ -50,12 +51,19 @@ public class FriendMenu extends Application {
         stage.show();
     }
 
+    private void setOnlinePeople(){
+        online.clear();
+        for (User friend : friends)
+            online.add(Data.getCurrentUser().isOnline(friend));
+    }
+
     public void startTheTimeLine() throws IOException {
         setTheRightVBox();
         Data.getCurrentUser().sendToServer();
         Data.getCurrentUser().sendToServer();
         friends.addAll(Data.getCurrentUser().getMyFriends());
         requests.addAll(Data.getCurrentUser().getFriendRequestsReceivedByMe());
+        setOnlinePeople();
         setThePane();
         Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1000), actionEvent -> {
             try {
@@ -65,9 +73,11 @@ public class FriendMenu extends Application {
             }
             boolean areRequestsUpdated = true;
             boolean areFriendsUpdated = true;
+            boolean areOnlineUpdated = true;
             if(Data.getCurrentUser().getFriendRequestsReceivedByMe().size() != requests.size()) areRequestsUpdated = false;
             if(Data.getCurrentUser().getMyFriends().size() != friends.size()) areFriendsUpdated = false;
-            if(areFriendsUpdated && areRequestsUpdated) {
+            if(online.size() != friends.size()) areOnlineUpdated = false;
+            if(areFriendsUpdated && areRequestsUpdated && areOnlineUpdated) {
                 for (int i = 0; i < requests.size(); i++) {
                     if (!requests.get(i).equals(Data.getCurrentUser().getFriendRequestsReceivedByMe().get(i))) {
                         areRequestsUpdated = false;
@@ -80,8 +90,14 @@ public class FriendMenu extends Application {
                         break;
                     }
                 }
+                for(int i = 0; i < online.size(); i++){
+                    if(online.get(i) != Data.getCurrentUser().isOnline(friends.get(i))){
+                        areOnlineUpdated = false;
+                        break;
+                    }
+                }
             }
-            if(!areFriendsUpdated || !areRequestsUpdated){
+            if(!areFriendsUpdated || !areRequestsUpdated || !areOnlineUpdated){
                 if(!areFriendsUpdated) {
                     friends.clear();
                     friends.addAll(Data.getCurrentUser().getMyFriends());
@@ -90,6 +106,7 @@ public class FriendMenu extends Application {
                     requests.clear();
                     requests.addAll(Data.getCurrentUser().getFriendRequestsReceivedByMe());
                 }
+                if(!areOnlineUpdated) setOnlinePeople();
                 setThePane();
             }
         }));
@@ -100,6 +117,16 @@ public class FriendMenu extends Application {
 
     public boolean isValid(int i){
         return ((VBox) pane.getChildren().get(i)).getChildren().get(0).getClass() != Button.class;
+    }
+
+    public void setLastSeenPane(){
+        VBox vBox = new VBox();
+        vBox.setLayoutY(100);
+        vBox.setLayoutX(500);
+        for (User myFriend : Data.getCurrentUser().getMyFriends()) {
+            long lastSeen = Data.getCurrentUser().getLastSeen(myFriend);
+            Label label = new Label();
+        }
     }
 
     public void setThePane(){
@@ -267,6 +294,13 @@ public class FriendMenu extends Application {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error");
             alert.setContentText("why are you searching yourself?");
+            alert.setHeaderText("not found");
+            alert.showAndWait();
+        }
+        else if(!Data.getCurrentUser().getAllClients().contains(text)){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setContentText("this user has never logged in!");
             alert.setHeaderText("not found");
             alert.showAndWait();
         }
