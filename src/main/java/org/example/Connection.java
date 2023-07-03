@@ -198,7 +198,9 @@ public class Connection extends Thread {
     private void joinWaitingGame(JsonObject context) {
         int id = context.get("id").getAsInt();
         Game game = Data.getGameById(id);
+        game.setStartTime(System.currentTimeMillis());
         game.addPlayer(client);
+        if (game.getPlayers().size() == game.getCapacity()) game.setGameStarted(true);
     }
 
     private void leaveWaitingGame(JsonObject context) {

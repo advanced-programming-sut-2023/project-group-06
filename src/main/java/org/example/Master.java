@@ -7,6 +7,8 @@ import java.net.Socket;
 public class Master {
     public Master(int port) {
         System.out.println("Starting Master service...");
+        DeleteGameThread deleteGameThread = new DeleteGameThread();
+        deleteGameThread.start();
         try {
             ServerSocket serverSocket = new ServerSocket(port);
             while (true){
