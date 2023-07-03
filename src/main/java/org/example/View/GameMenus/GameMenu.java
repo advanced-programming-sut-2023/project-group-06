@@ -334,13 +334,30 @@ public class GameMenu extends Application {
             }
         } else {
             if (e.getButton() == MouseButton.PRIMARY) {
-                // todo drop building
+                dropBuildingFunction();
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                draggedBuilding = null;
-                draggedBuildingImageView.setVisible(false);
-                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
             }
+            draggedBuilding = null;
+            draggedBuildingImageView.setVisible(false);
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
         }
+    }
+
+    private void dropBuildingFunction() {
+        int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + mouseX) / mainCanvas.getScaleX());
+        int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + mouseY) / mainCanvas.getScaleY());
+
+        double X = xx - mapPointerX;
+        double Y = yy - mapPointerY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+
+        String cmd = "dropbuilding -x " + i + " -y " + j + " -type \"" + draggedBuilding.getBuildingType().getName() + "\" -d n";
+        Response response = GameController.dropBuilding(Commands.getMatcher(cmd, Commands.DROP_BUILDING));
+        System.out.println(response);
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
 
     private void onMouseDraggedFunction(MouseEvent e) {
@@ -388,6 +405,7 @@ public class GameMenu extends Application {
     private void clickedAt(double x, double y) {
         int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + x) / mainCanvas.getScaleX());
         int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
+
         Unit unit = MapController.getUnitAt(xx, yy);
         if (unit != null) {
             MapController.selectedUnits.clear();
