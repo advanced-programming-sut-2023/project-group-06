@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.View.SignUpMenu"
+            stylesheets="@../CSS/style.css"> <!-- prefHeight="400.0" prefWidth="600.0" -->
+    <center>
+        <VBox fx:id="mainVbox" alignment="CENTER" spacing="10">
+            <TextField fx:id="username" promptText="username"/>
+            <Label fx:id="usernameError" />
+            <HBox alignment="CENTER" spacing="5">
+                <StackPane fx:id="passwordStackPane">
+                    <TextField promptText="password" fx:id="passwordTextField" styleClass="password" visible="false"/>
+                    <PasswordField promptText="password" fx:id="passwordPasswordField" styleClass="password"/>
+                </StackPane>
+                <ToggleButton fx:id="passwordToggle" onAction="#passwordToggleAction" maxWidth="20" minWidth="20"/>
+                <Button fx:id="randomPassword" text="random" onAction="#randomPassword"/>
+            </HBox>
+            <HBox alignment="CENTER" spacing="5">
+                <StackPane fx:id="passwordConfirmationStackPane">
+                    <TextField promptText="password confirmation" fx:id="passwordConfirmationTextField" visible="false"/>
+                    <PasswordField promptText="password confirmation" fx:id="passwordConfirmationPasswordField"/>
+                </StackPane>
+            </HBox>
+            <Label fx:id="passwordError" />
+            <TextField fx:id="nickname" promptText="nickname" />
+            <TextField fx:id="email" promptText="email"/>
+            <HBox alignment="CENTER" spacing="5">
+                <CheckBox fx:id="wantSlogan" text="slogan" onAction="#wantSlogan" />
+                <TextField fx:id="slogan" promptText="slogan" visible="false" styleClass="slogan"/>
+                <ChoiceBox fx:id="sloganChoiceBox" onAction="#sloganChoiceBoxAction" visible="false"/>
+            </HBox>
+            <Button text="register" fx:id="register" onAction="#register"/>
+            <Hyperlink text="already have an account?" fx:id="haveAccount" onAction="#haveAccount"/>
+        </VBox>
+    </center>
+</BorderPane>

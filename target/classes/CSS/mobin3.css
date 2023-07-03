@@ -1,0 +1,34 @@
+.HBox1 {
+    -fx-border-radius: 20;
+    -fx-border-color: blue;
+    -fx-max-width: 800;
+}
+
+.Button{
+    -fx-min-width: 100;
+    -fx-max-width: 200;
+    -fx-background-color: #0caf01,
+    linear-gradient(#fafdfe, #e8f5fc),
+    linear-gradient(#eaf6fd 0%, #d9f0fc 49%, #bee6fd 50%, #a7d9f5 100%);
+}
+
+Label{
+    -fx-font-size: 20;
+    -fx-font-family: "Times New Roman";
+    -fx-border-radius: 20;
+    -fx-padding: 10;
+    -fx-pref-width: 150;
+}
+
+.ButtonRed{
+    -fx-min-width: 100;
+    -fx-max-width: 100;
+    -fx-background-color: #e81625;
+    -fx-border-color: #680c72;
+    -fx-border-width: 2;
+    -fx-text-fill: #fdd94b;
+    -fx-min-height: 50;
+    -fx-max-height: 50;
+    -fx-font-size: 23;
+    -fx-font-family: "Book Antiqua";
+}
