@@ -361,4 +361,12 @@ public class User implements Comparable<User>, Serializable {
     public ArrayList<WaitingGame> getAllWaitingGames() {
         return allWaitingGames;
     }
+
+    public void setAllWaitingGames(ArrayList<WaitingGame> allWaitingGames) {
+        this.allWaitingGames = allWaitingGames;
+    }
+
+    public void createWaitingGameCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("create waiting game", waitingGame.toJson());
+    }
 }

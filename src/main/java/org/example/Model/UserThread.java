@@ -45,10 +45,37 @@ public class UserThread extends Thread {
         JsonArray notRespondedFriendRequestsReceivedByMe = json.get("friend requests received by me").getAsJsonArray();
         JsonArray friends = json.get("friends").getAsJsonArray();
         JsonArray clients = json.get("all clients").getAsJsonArray();
+        JsonArray allWaitingGames = json.get("all waiting games").getAsJsonArray();
         handleChatRoom(chatRooms);
         handleFriendRequests(notRespondedFriendRequestsReceivedByMe);
         handleFriends(friends);
         handleClients(clients);
+        handleWaitingGames(allWaitingGames);
+    }
+
+    private void handleWaitingGames(JsonArray allWaitingGames) {
+        ArrayList<WaitingGame> waitingGames = new ArrayList<>();
+        for (JsonElement waitingGame : allWaitingGames) {
+            JsonObject gameObj = waitingGame.getAsJsonObject();
+//            long startTime;
+//            int capacity;
+//            ArrayList<Client> players = new ArrayList<>();
+//            int id;
+//            Client admin;
+            boolean isPublic = gameObj.get("is public").getAsBoolean();
+            long startTime = gameObj.get("start time").getAsLong();
+            int capacity = gameObj.get("capacity").getAsInt();
+            ArrayList<User> players = new ArrayList<>();
+            JsonArray playersObj = gameObj.get("players").getAsJsonArray();
+            for (JsonElement jsonElement : playersObj) {
+                String username = jsonElement.getAsJsonObject().getAsString();
+                players.add(Data.getUserByName(username));
+            }
+            int id = gameObj.get("id").getAsInt();
+            User admin = Data.getUserByName(gameObj.get("admin").getAsString());
+            waitingGames.add(new WaitingGame(id, players, capacity, admin, startTime, isPublic));
+        }
+        user.setAllWaitingGames(waitingGames);
     }
 
     private void handleClients(JsonArray clients) {
