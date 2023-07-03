@@ -6,7 +6,7 @@ public class DeleteGameThread extends Thread {
         while (true) {
             for (int i = Data.getAllWaitingGames().size() - 1; i >= 0; i--) {
                 Game game = Data.getAllWaitingGames().get(i);
-                if ((System.currentTimeMillis() / 1000L) - game.getStartTime() > 10)
+                if ((System.currentTimeMillis() / 1000L) - game.getStartTime() > 300) Data.removeGame(game);
             }
             try {
                 Thread.sleep(100);
