@@ -47,9 +47,12 @@ public class ChatMenu extends Application {
     private Circle mainSend;
     private Timeline timeline;
     private ArrayList<Message> lastSixMessages = new ArrayList<>();
+    private Timeline chatsTimeline;
+    private ArrayList<ChatRoom> chatRooms = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
+        chatRooms.addAll(Data.getCurrentUser().getChats());
         ChatMenu.stage = stage;
         borderPane = FXMLLoader.load(ChatMenu.class.getResource("/FXML/ChatMenu.fxml"));
         ScrollPane scrollPane = new ScrollPane(borderPane);
@@ -97,7 +100,6 @@ public class ChatMenu extends Application {
         }
         for(ChatRoom chatRoom : Data.getCurrentUser().getChats()){
             if(chatRoom == Data.getPublicRoom()) {
-                System.out.println("salaaamammama");
                 Button publicChat = new Button("Public");
                 publicChat.setStyle(" -fx-background-color: #dff168; -fx-text-fill: black");
                 publicChat.setTextFill(Color.BLACK);
