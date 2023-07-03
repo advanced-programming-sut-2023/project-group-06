@@ -328,7 +328,7 @@ public class Connection extends Thread {
         }
         root.add("chat rooms", chatRooms);
         JsonArray notRespondedFriendRequestsReceivedByMe = new JsonArray();
-        System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());
+        /*System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());*/
         for (int i = 0; i < client.getNotRespondedFriendRequestsReceivedByMe().size(); i++) {
             String s = client.getNotRespondedFriendRequestsReceivedByMe().get(i);
             JsonObject jsonString = new JsonObject();
