@@ -20,6 +20,7 @@ import org.example.Model.WaitingGame;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 
 public class Lobby extends Application {
     private static Stage stage;
@@ -179,12 +180,17 @@ public class Lobby extends Application {
         hBox.setSpacing(7);
         leftVBox.setSpacing(15);
         leftVBox.getChildren().add(hBox);
-        ArrayList<Integer> shuffle = shuffle(Data.getCurrentUser().getAllWaitingGames().size());
-        for(int i = 0; i < Math.min(5, Data.getCurrentUser().getAllWaitingGames().size()); i++){
-            WaitingGame waitingGame = Data.getCurrentUser().getAllWaitingGames().get(shuffle.get(i));
+        ArrayList<WaitingGame> waitingGames1 = new ArrayList<>(Data.getCurrentUser().getAllWaitingGames());
+        Collections.shuffle(waitingGames1);
+        int publicNum = 0;
+        for (WaitingGame allWaitingGame : Data.getCurrentUser().getAllWaitingGames()) {
+            if(allWaitingGame.isPublic() && !allWaitingGame.isGameStarted()) publicNum++;
+        }
+        for(int i = 0; i < Math.min(5, publicNum); i++){
+            WaitingGame waitingGame = waitingGames1.get(i);
             if(!waitingGame.isPublic() || waitingGame.isGameStarted()){
+                waitingGames1.remove(i);
                 i--;
-                shuffle.remove(i);
                 continue;
             }
             VBox vBox = addWaitingRoom(waitingGame);
@@ -231,15 +237,6 @@ public class Lobby extends Application {
         //todo
         Data.getCurrentUser().joinCommand(waitingGame);
         refresh();
-    }
-
-    public ArrayList<Integer> shuffle(int n){
-        ArrayList<Integer> arrayList = new ArrayList<>();
-        for(int i = 0; i < n; i++){
-            arrayList.add(i);
-        }
-        Collections.shuffle(arrayList);
-        return arrayList;
     }
 
     private void refresh() throws IOException {
