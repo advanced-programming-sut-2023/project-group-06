@@ -53,6 +53,7 @@ public class SignUpController {
         String answerConfirmation = Controller.makeEntryValid(matcher.group("answerConfirmation"));
         if (!answer.equals(answerConfirmation)) return Response.ANSWER_CONFIRMATION;
         Data.getUserByName(username).setAnswerToQuestion(DigestUtils.sha256Hex(answer));
+        System.out.println(username);
         Data.getUserByName(username).setQuestionIndex(questionIndex - 1);
 //        String answerToCaptcha = SignUpMenu.getCaptcha(scanner, Controller.getCaptcha());
 //        if (!Controller.isCaptchaCorrect(answerToCaptcha)) {
@@ -60,7 +61,6 @@ public class SignUpController {
 //            return Response.CAPTCHA_WRONG;
 //        }
         Data.saveData("src/main/java/org/example/Model/Data.json");
-        System.out.println(Data.getUserByName("sina"));
         return Response.USER_CREATED;
     }
 

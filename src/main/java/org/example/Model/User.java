@@ -38,7 +38,7 @@ public class User implements Comparable<User>, Serializable {
         this.slogan = slogan;
         Data.addUser(this);
         /*this.avatar = new Image(ProfileMenu.class.getResource("/Images/avatar8.jpg").toString());*/
-        this.avatar = "/Images/avatar8.jpg";
+        this.avatar = User.class.getResource("/Images/avatar8.jpg").toExternalForm();
 //        sendToServer();
         if(Data.flag) {
             chats.add(Data.getPublicRoom());
