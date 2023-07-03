@@ -1,6 +1,7 @@
 package org.example.Model;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
@@ -12,15 +13,17 @@ public class WaitingGame {
     private User admin;
     private long startTime;
     private boolean isPublic = true;
+    private static int count = 0;
 
-    public WaitingGame(int id, int capacity, User admin, boolean isPublic) {
+    public WaitingGame(int capacity, User admin, boolean isPublic) {
+        this.capacity = capacity;
+        this.admin = admin;
+        this.id = count;
+        count++;
+        this.isPublic = isPublic;
         players = new ArrayList<>();
         players.add(admin);
         startTime = System.currentTimeMillis() / 1000L;
-        this.id = id;
-        this.capacity = capacity;
-        this.admin = admin;
-        this.isPublic = isPublic;
     }
 
     public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic) {
@@ -30,57 +33,38 @@ public class WaitingGame {
         this.admin = admin;
         this.startTime = startTime;
         this.isPublic = isPublic;
+        count = id + 1;
     }
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public ArrayList<User> getPlayers() {
         return players;
-    }
-
-    public void setPlayers(ArrayList<User> players) {
-        this.players = players;
     }
 
     public int getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
-        this.capacity = capacity;
-    }
-
     public User getAdmin() {
         return admin;
-    }
-
-    public void setAdmin(User admin) {
-        this.admin = admin;
     }
 
     public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
     public boolean isPublic() {
         return isPublic;
     }
 
-    public void setPublic(boolean aPublic) {
-        isPublic = aPublic;
+    public void setAdmin(User admin) {
+        this.admin = admin;
     }
 
-    public JsonObject toJson() {
+    public JsonObject toJson(){
         JsonObject root = new JsonObject();
         JsonArray playersObj = new JsonArray();
         for (User player : players) {

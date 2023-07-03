@@ -68,7 +68,7 @@ public class UserThread extends Thread {
             ArrayList<User> players = new ArrayList<>();
             JsonArray playersObj = gameObj.get("players").getAsJsonArray();
             for (JsonElement jsonElement : playersObj) {
-                String username = jsonElement.getAsJsonObject().getAsString();
+                String username = jsonElement.getAsString();
                 players.add(Data.getUserByName(username));
             }
             int id = gameObj.get("id").getAsInt();

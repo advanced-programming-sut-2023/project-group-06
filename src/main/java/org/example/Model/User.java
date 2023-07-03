@@ -370,4 +370,7 @@ public class User implements Comparable<User>, Serializable {
         sendToServer("create waiting game", waitingGame.toJson());
     }
 
+    public void joinCommand(WaitingGame waitingGame) {
+    }
+
 }

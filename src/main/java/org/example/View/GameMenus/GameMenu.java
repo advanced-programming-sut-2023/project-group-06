@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -38,6 +39,7 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.View.Commands;
+import org.example.View.ProfileMenu;
 import org.example.View.Response;
 import org.example.View.Graphics.SuperImage;
 import org.example.View.MainMenu;
@@ -635,7 +637,11 @@ public class GameMenu extends Application {
         Text text2 = new Text("Food");
         text1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text2.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        food.getChildren().addAll(text1, text2);
+        String maskImage5 = food1 > 0 ? "8" : food1 < 0 ? "9" : "10";
+        Circle mask5 = new Circle(10);
+        mask5.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage5 + ".png").toString())));
+        food.getChildren().addAll(text1, mask5, text2);
         food.setSpacing(5);
         HBox tax = new HBox();
         int tax1 = kingdom.showPopularityFactorsTax();
@@ -648,7 +654,11 @@ public class GameMenu extends Application {
         Text text4 = new Text("Tax");
         text3.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text4.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        tax.getChildren().addAll(text3, text4);
+        String maskImage = tax1 > 0 ? "8" : tax1 < 0 ? "9" : "10";
+        Circle mask = new Circle(10);
+        mask.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage + ".png").toString())));
+        tax.getChildren().addAll(text3, mask, text4);
         tax.setSpacing(5);
         HBox fear = new HBox();
         int fear1 = kingdom.showPopularityFactorsFear();
@@ -660,7 +670,11 @@ public class GameMenu extends Application {
         Text text6 = new Text("Fear");
         text5.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text6.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        fear.getChildren().addAll(text5, text6);
+        String maskImage1 = fear1 > 0 ? "8" : fear1 < 0 ? "9" : "10";
+        Circle mask1 = new Circle(10);
+        mask1.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage1 + ".png").toString())));
+        fear.getChildren().addAll(text5, mask1, text6);
         fear.setSpacing(5);
         HBox religion = new HBox();
         int religion1 = kingdom.showPopularityFactorsReligion();
@@ -672,7 +686,11 @@ public class GameMenu extends Application {
         Text text8 = new Text("Religion");
         text7.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text8.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        religion.getChildren().addAll(text7, text8);
+        String maskImage2 = religion1 > 0 ? "8" : religion1 < 0 ? "9" : "10";
+        Circle mask2 = new Circle(10);
+        mask2.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage2 + ".png").toString())));
+        religion.getChildren().addAll(text7, mask2, text8);
         religion.setSpacing(5);
         HBox wine = new HBox();
         int wine1 = kingdom.showPopularityFactorsWine();
@@ -684,7 +702,11 @@ public class GameMenu extends Application {
         Text text10 = new Text("Wine Usage");
         text9.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text10.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        wine.getChildren().addAll(text9, text10);
+        String maskImage3 = wine1 > 0 ? "8" : wine1 < 0 ? "9" : "10";
+        Circle mask3 = new Circle(10);
+        mask3.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage3 + ".png").toString())));
+        wine.getChildren().addAll(text9, mask3, text10);
         wine.setSpacing(5);
         Button back = new Button("Back");
         Button rate = new Button("Rate");
@@ -693,8 +715,8 @@ public class GameMenu extends Application {
                 "-fx-font-family: 'Book Antiqua'";
         back.setStyle(style3);
         rate.setStyle(style3);
-        back.setTranslateX(-440);
-        back.setTranslateY(70);
+        back.setTranslateX(-540);
+        back.setTranslateY(80);
         back.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
