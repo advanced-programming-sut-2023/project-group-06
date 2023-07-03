@@ -64,7 +64,7 @@ public class ChatMenu extends Application {
     public void initialize(){
         for(ChatRoom chatRoom : Data.getCurrentUser().getChats()){
             if(chatRoom == Data.getPublicRoom()) {
-                System.out.println("salaaamammama");
+                System.out.println("added public room button");
                 Button publicChat = new Button("Public");
                 publicChat.setStyle(" -fx-background-color: #dff168; -fx-text-fill: black");
                 publicChat.setTextFill(Color.BLACK);

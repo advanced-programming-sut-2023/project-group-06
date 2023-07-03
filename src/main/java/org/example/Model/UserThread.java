@@ -38,16 +38,28 @@ public class UserThread extends Thread {
     private void updateData() throws IOException {
         if (user.getClient() == null) return;
         String input = user.getClient().dataInputStream.readUTF();
-        System.out.println("UserThread:  input:  " + input);
+        System.out.println(user.getUsername() + "  UserThread:  input:  " + input);
         if (input.equals("salam")) return;
         JsonParser parser = new JsonParser();
         JsonObject json = (JsonObject) parser.parse(input);
         JsonArray chatRooms = json.get("chat rooms").getAsJsonArray();
         JsonArray notRespondedFriendRequestsReceivedByMe = json.get("friend requests received by me").getAsJsonArray();
         JsonArray friends = json.get("friends").getAsJsonArray();
+        JsonArray clients = json.get("all clients").getAsJsonArray();
         handleChatRoom(chatRooms);
         handleFriendRequests(notRespondedFriendRequestsReceivedByMe);
         handleFriends(friends);
+        handleClients(clients);
+    }
+
+    private void handleClients(JsonArray clients) {
+        ArrayList<String> users = new ArrayList<>();
+        for (JsonElement client : clients) {
+            JsonObject clientObj = client.getAsJsonObject();
+            String clientUsername = clientObj.get("name").getAsString();
+            users.add(clientUsername);
+        }
+        user.setAllClients(users);
     }
 
     private void handleFriends(JsonArray friends) {
@@ -67,6 +79,13 @@ public class UserThread extends Thread {
     }
 
     private void handleFriendRequests(JsonArray notRespondedFriendRequestsReceivedByMe) {
+        ArrayList<FriendRequest> friendRequests = new ArrayList<>();
+        for (JsonElement jsonElement : notRespondedFriendRequestsReceivedByMe) {
+            JsonObject friendReqObj = jsonElement.getAsJsonObject();
+            String senderName = friendReqObj.get("name").getAsString();
+            friendRequests.add(new FriendRequest(Data.getUserByName(senderName), user));
+        }
+        user.setFriendRequestsReceivedByMe(friendRequests);
     }
 
     private void handleChatRoom(JsonArray chatRooms) throws IOException {
