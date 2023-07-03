@@ -47,6 +47,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -89,27 +94,52 @@ public class GameMenu extends Application {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
+            else if (e.getCode() == KeyCode.C) copySelectedBuilding();
+            else if (e.getCode() == KeyCode.V) pasteToDraggingBuilding();
             else if (e.getCode() == KeyCode.F) {
                 try {
                     nextTurn();
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-            }
-            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
+            } else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
             else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
         });
         starter();
         stage.show();
-        if(!stage.isFullScreen()) stage.setFullScreen(true);
+        if (!stage.isFullScreen()) stage.setFullScreen(true);
         ChatRoom chatRoom = new ChatRoom(GameController.currentGame.getPlayers(),
                 GameController.currentGame.getPlayers().get(0).getUsername());
         /*zoomOut();
         zoomIn();*/
     }
 
+    private void pasteToDraggingBuilding() {
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        BuildingType bt = null;
+        try {
+            System.out.println(cb.getData(DataFlavor.stringFlavor));
+            bt = BuildingType.getBuildingTypeByString(cb.getData(DataFlavor.stringFlavor).toString());
+            System.out.println(bt);
+        } catch (UnsupportedFlavorException | IOException ignored) {
+        }
+        if (bt == null) return;
+        draggedBuilding = new Building(GameController.currentPlayer, bt, 0, 0);
+        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
+        draggedBuildingImageView.setVisible(true);
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+    }
+
+    private void copySelectedBuilding() {
+        if (MapController.selectedBuilding == null) return;
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection strSel = new StringSelection(MapController.selectedBuilding.getBuildingType().getName());
+        cb.setContents(strSel, null);
+    }
+
 
     Tile[][] map;
+
     private void starter() throws IOException {
         setMouseActions();
         if (GameController.currentGame != null) {
@@ -117,17 +147,26 @@ public class GameMenu extends Application {
             GameController.currentGame.setMap(map, map[0].length, map.length);
             System.out.println(GameController.currentGame.getPlayers().size());
             for (int i = 0; i < GameController.currentGame.getPlayers().size(); i++) {
-                //  Kingdom kingdom = GameController.currentGame.getKingdoms().get(i);
                 int x = i % 2 == 0 ? 10 : map[0].length - 11, y = i / 2 == 0 ? 10 : map.length - 11;
-
-                //Building building = new Building(kingdom, BuildingType.MAIN_CASTLE, x, y);
-                //  map[y][x].setBuilding(building);
                 String validColors[] = {"red", "blue", "green", "yellow"};
                 String cmd = "main castle -x " + x + " -y " + y + " -color " + validColors[i] + " -d n";
-                Response response = GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
-//                System.err.println(response.message);
+                GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
                 GameController.nextTurn();
             }
+
+            Soldier archer;
+            for (int i = 19; i < 22; i++)
+                for (int j = 26; j < 29; j++)
+                    for (int k = 0; k < 4; k++) {
+                        archer = new Soldier(j, i, null, UnitType.ARCHER);
+                        archer.addToFireDamageEachTurn(2);
+                        map[i][j].addSoldier(archer);
+                    }
+            Building building = new Building(GameController.currentGame.getKingdoms().get(0), BuildingType.SQUARE_TOWER, 27, 20);
+            building.addToFireDamageEachTurn(2);
+            for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+
+            map[1][1].sick = true;
 
         } else {
             map = Data.loadMap("test");
@@ -163,7 +202,6 @@ public class GameMenu extends Application {
                         archer = new Soldier(j, i, null, UnitType.ARCHER);
                         map[i][j].addSoldier(archer);
                     }
-
 
             Building building = new Building(null, BuildingType.INN, 1, 20);
             for (int i = 19; i < 22; i++) for (int j = 0; j < 3; j++) map[i][j].setBuilding(building);
@@ -236,9 +274,9 @@ public class GameMenu extends Application {
         mainCanvas.setHeight(3000);
         mainCanvas.setWidth(8000);
 
-        draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
-        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
-        draggedBuildingImageView.setVisible(true);
+//        draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
+//        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
+//        draggedBuildingImageView.setVisible(true);
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
@@ -564,7 +602,7 @@ public class GameMenu extends Application {
         HBox hBox = new HBox();
         hBox.setSpacing(2);
         for (int i = 0; i < 6; i++) {
-            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i+1) + ").png").toExternalForm();
+            String address = GameMenu.class.getResource("/Images/Game/Buildings/BuildingGroupIcons/building (" + (i + 1) + ").png").toExternalForm();
             ImageView buildingIcon = new ImageView(address);
             buildingIcon.setFitHeight(20);
             buildingIcon.setPreserveRatio(true);
@@ -581,7 +619,7 @@ public class GameMenu extends Application {
         //todo correct this
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 16; j++) {
-                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
+                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j + 1) + ").png").toExternalForm();
                 buildingIcons.add(address);
             }
         }
@@ -599,7 +637,7 @@ public class GameMenu extends Application {
         Kingdom kingdom = GameController.currentPlayer;
         int food1 = kingdom.showPopularityFactorsFood();
         String sign = "";
-        if(food1 > 0) sign = "+";
+        if (food1 > 0) sign = "+";
         Text text1 = new Text(sign + food1);
         /*ImageView imageView = new ImageView(MainMenu.class.getResource("Images/Game/mask1.jpg").toString());
         imageView.setPreserveRatio(true);
@@ -615,7 +653,7 @@ public class GameMenu extends Application {
         HBox tax = new HBox();
         int tax1 = kingdom.showPopularityFactorsTax();
         String sign1 = "";
-        if(tax1 > 0) sign1 = "+";
+        if (tax1 > 0) sign1 = "+";
         Text text3 = new Text(sign1 + tax1);
         tax.setTranslateX(text1.getBoundsInLocal().getWidth() - text3.getBoundsInLocal().getWidth()
                 - text2.getBoundsInLocal().getWidth() - 10);
@@ -628,7 +666,7 @@ public class GameMenu extends Application {
         HBox fear = new HBox();
         int fear1 = kingdom.showPopularityFactorsFear();
         String sign2 = "";
-        if(fear1 > 0) sign2 = "+";
+        if (fear1 > 0) sign2 = "+";
         Text text5 = new Text(sign2 + fear1);
         fear.setTranslateX(-87);
         fear.setTranslateY(70);
@@ -640,7 +678,7 @@ public class GameMenu extends Application {
         HBox religion = new HBox();
         int religion1 = kingdom.showPopularityFactorsReligion();
         String sign3 = "";
-        if(religion1 > 0) sign3 = "+";
+        if (religion1 > 0) sign3 = "+";
         Text text7 = new Text(sign3 + religion1);
         religion.setTranslateX(-text7.getBoundsInLocal().getWidth());
         religion.setTranslateY(30);
@@ -652,7 +690,7 @@ public class GameMenu extends Application {
         HBox wine = new HBox();
         int wine1 = kingdom.showPopularityFactorsWine();
         String sign4 = "";
-        if(wine1 > 0) sign4 = "+";
+        if (wine1 > 0) sign4 = "+";
         Text text9 = new Text(sign4 + wine1);
         wine.setTranslateX(-83 - text9.getBoundsInLocal().getWidth());
         wine.setTranslateY(50);

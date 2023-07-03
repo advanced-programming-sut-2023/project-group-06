@@ -30,7 +30,7 @@ public enum SuperImage {
     LOOKOUT_TOWER("Building/lookout-tower.png", 46, 261),
     PERIMETER_TOWER("Building/perimeter-tower.png", 139, 409),
     DEFENSE_TURRET("Building/defense-turret.png", 139, 369),
-    SQUARE_TOWER("Building/square-tower.png", 139, 369),
+    SQUARE_TOWER("Building/square-tower.png", 139, 348),
     ROUND_TOWER("Building/round-tower.png", 139, 369),
     ARMORY("Building/armory.png", 46, 88),
     MERCENARY_POST("Building/mercenary-post.png", 139, 102),
@@ -93,6 +93,11 @@ public enum SuperImage {
     FIRE_THROWER("Unit/fire-thrower.png", 23, 44),
     COW("Unit/cow.png", 23, 44),
     DOG("Unit/dog.png", 23, 16),
+
+
+    /////////////////////////////////////////////////// effects
+    FIRE("Effect/fire.png", 9, 14),
+    SICK("Effect/sick.png", 46, 39),
     ;
     Image image;
     int Xo;

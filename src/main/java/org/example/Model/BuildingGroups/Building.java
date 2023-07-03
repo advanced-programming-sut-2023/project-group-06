@@ -31,6 +31,9 @@ public class Building {
     public SuperImage getImg() {
         return img;
     }
+    public int getFireDamageEachTurn() {
+        return fireDamageEachTurn;
+    }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;

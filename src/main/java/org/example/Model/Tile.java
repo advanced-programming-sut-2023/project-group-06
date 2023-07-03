@@ -20,6 +20,7 @@ public class Tile {
     private ArrayList<Unit> allUnits = new ArrayList<>();
     private boolean isDitch = false;
     private boolean isToFill = false;
+    public boolean sick = false;
     private int ditchDelay = 3;
     private Equipment equipment = null;
     private SuperImage img;
