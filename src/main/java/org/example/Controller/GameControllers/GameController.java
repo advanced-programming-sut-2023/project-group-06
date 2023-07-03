@@ -1079,6 +1079,7 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for (int j = k.getUnits().size() - 1; j >= 0; j--) {
                 Unit s = k.getUnits().get(j);
+                System.out.println(s);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 int mode = 0;

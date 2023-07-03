@@ -156,20 +156,25 @@ public class GameMenu extends Application {
             }
 
             Soldier archer;
-            for (int i = 19; i < 22; i++)
-                for (int j = 26; j < 29; j++)
-                    for (int k = 0; k < 4; k++) {
-                        archer = new Soldier(j, i, null, UnitType.ARCHER);
-                        archer.addToFireDamageEachTurn(2);
-                        map[i][j].addSoldier(archer);
-                    }
+//            for (int i = 19; i < 22; i++)
+//                for (int j = 26; j < 29; j++)
+//                    for (int k = 0; k < 4; k++) {
+//                        archer = new Soldier(j, i, null, UnitType.ARCHER);
+//                        archer.addToFireDamageEachTurn(2);
+//                        map[i][j].addSoldier(archer);
+//                    }
+            Kingdom kingdom = GameController.currentPlayer;
+            archer = new Soldier(0, 0, kingdom, UnitType.ARCHER);
+            map[0][0].addSoldier(archer);
+
+
             Building building = new Building(GameController.currentGame.getKingdoms().get(0), BuildingType.SQUARE_TOWER, 27, 20);
             building.addToFireDamageEachTurn(2);
             for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
 
             map[1][1].sick = true;
-
-        } else {
+        }
+        else {
             map = Data.loadMap("test");
 
 
@@ -203,6 +208,8 @@ public class GameMenu extends Application {
                         archer = new Soldier(j, i, null, UnitType.ARCHER);
                         map[i][j].addSoldier(archer);
                     }
+
+
 
             Building building = new Building(null, BuildingType.INN, 1, 20);
             for (int i = 19; i < 22; i++) for (int j = 0; j < 3; j++) map[i][j].setBuilding(building);
@@ -407,19 +414,23 @@ public class GameMenu extends Application {
         int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + x) / mainCanvas.getScaleX());
         int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
 
-        Unit unit = MapController.getUnitAt(xx, yy);
-        if (unit != null) {
-            MapController.selectedUnits.clear();
-            MapController.selectedUnits.add(unit);
-            return;
-        }
-        Building building = MapController.getBuildingAt(xx, yy);
-        if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
-        else MapController.selectedBuilding = building;
+        if (MapController.selectedUnits.isEmpty()) {
+            Unit unit = MapController.getUnitAt(xx, yy);
+            if (unit != null) {
+                MapController.selectedUnits.clear();
+                MapController.selectedUnits.add(unit);
+                return;
+            }
+            Building building = MapController.getBuildingAt(xx, yy);
+            if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
+            else MapController.selectedBuilding = building;
 
-        Tile tile = MapController.getTileAt(xx, yy);
-        if (tile != null) if (MapController.selectedTile == tile) MapController.selectedTile = null;
-        else MapController.selectedTile = tile;
+            Tile tile = MapController.getTileAt(xx, yy);
+            if (tile != null) if (MapController.selectedTile == tile) MapController.selectedTile = null;
+            else MapController.selectedTile = tile;
+        } else {
+            MapController.allGoTo(xx, yy);
+        }
     }
 
     private String getInfoOfPoint(double x, double y) {
@@ -788,6 +799,7 @@ public class GameMenu extends Application {
         System.out.println("salam");
         GameController.nextTurn();
         currentPlayer.setText("current player: " + GameController.currentPlayer.getOwner().getUsername());
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
     }
 
 //    public void initialize() {

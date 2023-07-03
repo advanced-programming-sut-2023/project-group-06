@@ -69,6 +69,18 @@ public class MapController {
         return map[j][i];
     }
 
+    public static void allGoTo(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        for(Unit unit : selectedUnits) {
+            unit.setWishPlace(map[j][i]);
+        }
+    }
+
     public static class ColliderBox {
         public int x, y, width, height;
         public Object object;
