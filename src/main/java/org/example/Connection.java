@@ -188,7 +188,18 @@ public class Connection extends Thread {
         if (commandType.equals("accept request")) acceptRequest(context);
         if (commandType.equals("reject request")) rejectRequest(context);
         if (commandType.equals("inactivate")) killConnection();
+        if (commandType.equals("create waiting game")) createWaitingGame(context);
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
+    }
+
+    private void createWaitingGame(JsonObject context) {
+        String adminUsername = context.get("admin").getAsString();
+        long startTime = context.get("start time").getAsLong();
+        int id = context.get("id").getAsInt();
+        int capacity = context.get("capacity").getAsInt();
+        boolean isPublic = context.get("is public").getAsBoolean();
+        Game game = new Game(isPublic, startTime, capacity, id, Data.getClientByName(adminUsername));
+        Data.addWaitingGame(game);
     }
 
     private void rejectRequest(JsonObject context) {
@@ -348,6 +359,12 @@ public class Connection extends Thread {
             allClients.add(jsonString);
         }
         root.add("all clients", allClients);
+        JsonArray allWaitingGames = new JsonArray();
+        for (Game allWaitingGame : Data.getAllWaitingGames()) {
+            JsonObject jsonObject = allWaitingGame.toJson();
+            allWaitingGames.add(jsonObject);
+        }
+        root.add("all waiting games", allWaitingGames);
         return root;
     }
 }
