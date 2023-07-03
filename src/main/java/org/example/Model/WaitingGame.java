@@ -13,15 +13,27 @@ public class WaitingGame {
     private User admin;
     private long startTime;
     private boolean isPublic = true;
+    private static int count = 0;
 
-    public WaitingGame(int capacity, User admin, int id, boolean isPublic) {
+    public WaitingGame(int capacity, User admin, boolean isPublic) {
         this.capacity = capacity;
         this.admin = admin;
-        this.id = id;
+        this.id = count;
+        count++;
         this.isPublic = isPublic;
         players = new ArrayList<>();
         players.add(admin);
         startTime = System.currentTimeMillis() / 1000L;
+    }
+
+    public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic) {
+        this.id = id;
+        this.players = players;
+        this.capacity = capacity;
+        this.admin = admin;
+        this.startTime = startTime;
+        this.isPublic = isPublic;
+        count = id + 1;
     }
 
     public int getId() {

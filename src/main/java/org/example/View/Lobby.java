@@ -14,14 +14,17 @@ import org.example.Model.Data;
 import org.example.Model.User;
 import org.example.Model.WaitingGame;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Lobby extends Application {
     private static Stage stage;
     private static Pane pane;
     private Scene scene;
-    private VBox leftVBox;
-    private VBox rightVBox;
+    private VBox leftVBox = new VBox();
+    private VBox middleVBox = new VBox();
+    private VBox rightVBox = new VBox();
     private boolean isPublic = true;
 
     @Override
@@ -43,15 +46,19 @@ public class Lobby extends Application {
         setTheLeftVBox();
         setTheRightVBox();
         pane.getChildren().add(leftVBox);
-        pane.getChildren().add(rightVBox);
+        pane.getChildren().add(middleVBox);
+        middleVBox.setLayoutX(600);
+        middleVBox.setLayoutY(100);
+        leftVBox.setLayoutX(100);
+        leftVBox.setLayoutY(100);
     }
 
     private void setTheRightVBox() {
-        rightVBox.setSpacing(15);
+        middleVBox.setSpacing(15);
         Label label = new Label("create a game");
-        TextField textFieldId = new TextField();
+        /*TextField textFieldId = new TextField();
         textFieldId.setPromptText("enter an id");
-        textFieldId.setStyle("-fx-min-width: 200; -fx-max-width: 200");
+        textFieldId.setStyle("-fx-min-width: 200; -fx-max-width: 200");*/
         Label label1 = new Label("choose the capacity");
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(2, 3, 4, 5, 6, 7, 8);
@@ -85,23 +92,20 @@ public class Lobby extends Application {
         create.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                create(textFieldId.getText(), choiceBox.getValue(), isPublic);
+                try {
+                    create(choiceBox.getValue(), isPublic);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
+        middleVBox.getChildren().addAll(label, hBox, hBox1, create);
     }
 
-    private void create(String text, Integer value, boolean isPublic) {
-        if (text == null || text.equals("") || !text.matches("//d+")) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Error");
-            alert.setContentText("Invalid username");
-            alert.setHeaderText("not found");
-            alert.showAndWait();
-        }
-        else {
-            System.out.println("create");
-            WaitingGame waitingGame = new WaitingGame(value, Data.getCurrentUser(), Integer.parseInt(text), isPublic);
-        }
+    private void create(Integer value, boolean isPublic) throws IOException {
+        System.out.println("create");
+        WaitingGame waitingGame = new WaitingGame(value, Data.getCurrentUser(), isPublic);
+        Data.getCurrentUser().createWaitingGameCommand(waitingGame);
     }
 
     private void setTheLeftVBox() {
@@ -132,18 +136,39 @@ public class Lobby extends Application {
             join.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    join(waitingGame);
+                    try {
+                        join(waitingGame);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             });
+            vBox.getChildren().add(join);
             leftVBox.getChildren().add(vBox);
         }
     }
 
-    private void join(WaitingGame waitingGame) {
-        //todo
+    private void join(WaitingGame waitingGame) throws IOException {
+        Data.getCurrentUser().joinCommand(waitingGame);
+        refresh();
     }
 
     public ArrayList<Integer> shuffle(int n){
-        return null;
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        for(int i = 0; i < n; i++){
+            arrayList.add(i);
+        }
+        Collections.shuffle(arrayList);
+        return arrayList;
+    }
+
+    private void refresh() throws IOException {
+        Data.getCurrentUser().sendToServer();
+        //todo render
+    }
+
+    private void search(int id) throws IOException {
+        Data.getCurrentUser().sendToServer();
+        //todo
     }
 }
