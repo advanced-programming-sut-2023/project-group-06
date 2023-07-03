@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.View.GameMenus.ShopMenu"
+            prefHeight="400.0" prefWidth="600.0"
+            stylesheets="@../CSS/mobin.css">
+    <top>
+        <VBox alignment="TOP_LEFT" spacing="5">
+            <ToggleButton fx:id="back" />
+            <Button fx:id="trade" text="enter trade menu"/>
+        </VBox>
+    </top>
+    <right>
+
+        <HBox fx:id="actionVBox" alignment="TOP_RIGHT" spacing="50">
+            <VBox alignment="CENTER" spacing="5">
+                <Text fx:id="remainingResource"/>
+                <ImageView fx:id="resourcePic" preserveRatio="true" fitHeight="75"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <TextField promptText="amount" fx:id="amount" styleClass="amount"/>
+                <Button fx:id="buy" text="buy" styleClass="Button" onMouseClicked="#buy"/>
+                <Button fx:id="sell" text="sell" onMouseClicked="#sell"/>
+            </VBox>
+            <VBox alignment="CENTER" spacing="5">
+                <Text fx:id="balance"/>
+                <ImageView fx:id="coin" preserveRatio="true" fitHeight="75"/>
+            </VBox>
+        </HBox>
+    </right>
+    <center>
+        <VBox fx:id="vBox">
+
+        </VBox>
+    </center>
+
+
+</BorderPane>
