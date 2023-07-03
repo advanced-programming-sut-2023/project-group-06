@@ -110,7 +110,7 @@ public class GameMenu extends Application {
 
 
     Tile[][] map;
-    private void starter() {
+    private void starter() throws IOException {
         setMouseActions();
         if (GameController.currentGame != null) {
             map = Data.loadMap("test");
