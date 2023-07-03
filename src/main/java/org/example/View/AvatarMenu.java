@@ -14,9 +14,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.example.Model.Data;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,12 +41,14 @@ public class AvatarMenu extends Application {
             Circle circle = new Circle(x, y - 50, 90);
             /*Image image = new Image(AvatarMenu.class.getResource("/Images/avatar" + i + ".jpg").toExternalForm());*/
             String image = "/Images/avatar" + i + ".jpg";
-            circle.setFill(new ImagePattern(new Image(AvatarMenu.class.getResource(image).toExternalForm())));
+            image = AvatarMenu.class.getResource(image).toExternalForm();
+            circle.setFill(new ImagePattern(new Image(image)));
+            String finalImage = image;
             circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
                     try {
-                        Data.getCurrentUser().setAvatar(image);
+                        Data.getCurrentUser().setAvatar(finalImage);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -53,7 +57,19 @@ public class AvatarMenu extends Application {
             circles.add(circle);
             borderPane.getChildren().add(circle);
         }
-        Button select = new Button("select file from system");;
+        Button select = new Button("select file from system");
+        select.setOnMouseClicked(mouseEvent -> {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Please choose profile picture");
+            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Image Files", "*.png", "*.jpg", "*.gif");
+            fileChooser.getExtensionFilters().add(extFilter);
+            File selectedFile = fileChooser.showOpenDialog(stage);
+            try {
+                Data.getCurrentUser().setAvatar(selectedFile.getPath());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
         select.setStyle("-fx-background-color: #0a74c7; -fx-min-width: 300;" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-size: 16px;\n" +

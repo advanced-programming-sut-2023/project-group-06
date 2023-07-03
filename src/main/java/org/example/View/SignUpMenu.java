@@ -297,7 +297,7 @@ public class SignUpMenu extends Application {
         answer.setPromptText("answer");
         TextField answerConfirmation = new TextField();
         answerConfirmation.setPromptText("answer confirmation");
-        Button confirm = createPickSecurityQuestion(question, answer, answerConfirmation);
+        Button confirm = createPickSecurityQuestion(question, answer, answerConfirmation, captcha, captchaTextField);
         HBox buttons = new HBox(confirm, back);
         buttons.setSpacing(30);
         buttons.setAlignment(Pos.CENTER);
@@ -305,11 +305,20 @@ public class SignUpMenu extends Application {
         borderPane.setCenter(questionPickMenu);
     }
 
-    private Button createPickSecurityQuestion(ChoiceBox question, TextField answer, TextField answerConfirmation) throws Exception {
+    private Button createPickSecurityQuestion(ChoiceBox question, TextField answer, TextField answerConfirmation, String captcha, TextField captchaTextField) throws Exception {
         Button confirm = new Button("confirm");
         confirm.setOnMouseClicked(mouseEvent -> {
             //        if (captcha not valid) ...
             // todo
+            if (!captchaTextField.getText().equals(captcha)) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setContentText("Invalid captcha");
+                alert.setHeaderText("Register Failed");
+                alert.showAndWait();
+                SignUpController.back(username.getText());
+                borderPane.setCenter(mainVbox);
+            }
             String questionString = (String) (question.getValue());
             String questionNumber = (questionString.equals("What is my father's name?")) ?
                     "1" : (questionString.equals("What is my first pet's name?")) ? "2" :

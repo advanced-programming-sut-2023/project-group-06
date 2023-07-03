@@ -213,7 +213,7 @@ public class FriendMenu extends Application {
                 "    -fx-padding: 6, 4, 4, 4;");
         Circle circle = new Circle(80);
         circle.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
+                new Image(Data.getCurrentUser().getAvatar())));
         circle.setVisible(false);
         Circle search = new Circle(20);
         search.setFill(new ImagePattern(
@@ -273,7 +273,7 @@ public class FriendMenu extends Application {
         else{
             searched = text;
             circle.setFill(new ImagePattern(
-                    new Image(ProfileMenu.class.getResource(Data.getUserByName(text).getAvatar()).toString())));
+                    new Image(Data.getCurrentUser().getAvatar())));
             circle.setVisible(true);
         }
     }

@@ -119,7 +119,7 @@ public class ProfileMenu extends Application {
         vBox.setLayoutY(100);
         Circle circle = new Circle(120);
         circle.setFill(new ImagePattern(
-                new Image(ProfileMenu.class.getResource(Data.getCurrentUser().getAvatar()).toString())));
+                new Image(Data.getCurrentUser().getAvatar())));
         circle.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {

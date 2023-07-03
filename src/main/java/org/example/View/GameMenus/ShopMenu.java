@@ -132,7 +132,16 @@ public class ShopMenu extends Application {
     }
 
     private String getResourceImageAddress(ResourcesType resourcesType) {
-        return ShopMenu.class.getResource("/Images/06.jpg").toExternalForm();
+        String address = "/Images/";
+        if (resourcesType == ResourcesType.STONE) address = address + "stone11.png";
+        if (resourcesType == ResourcesType.WOOD) address = address + "wood.png";
+        if (resourcesType == ResourcesType.HOPS) address = address + "hops.png";
+        if (resourcesType == ResourcesType.IRON) address = address + "iron2.png";
+        if (resourcesType == ResourcesType.WHEAT) address = address + "wheat3.png";
+        if (resourcesType == ResourcesType.PITCH) address = address + "pitch.png";
+        if (resourcesType == ResourcesType.FLOUR) address = address + "flour2.png";
+        if (resourcesType == ResourcesType.ALE) address = address + "ale.png";
+        return ShopMenu.class.getResource(address).toExternalForm();
         //todo get resource image address by resource type!
     }
 
