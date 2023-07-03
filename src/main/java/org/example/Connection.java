@@ -340,6 +340,13 @@ public class Connection extends Thread {
             friends.add(friend.toJson());
         }
         root.add("friends", friends);
+        JsonArray allClients = new JsonArray();
+        for (Client client1 : Data.getClients()) {
+            JsonObject jsonString = new JsonObject();
+            jsonString.addProperty("name", client1.getUsername());
+            allClients.add(jsonString);
+        }
+        root.add("all clients", allClients);
         return root;
     }
 }
