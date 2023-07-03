@@ -26,6 +26,7 @@ public class User implements Comparable<User>, Serializable {
     private ArrayList<FriendRequest> friendRequestsSentByMe = new ArrayList<>();
     private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<User> myFriends = new ArrayList<>();
+    private ArrayList<String> allClients = new ArrayList<>();
     private boolean isOnline = false;
     private long lastSeen = 0;
 
@@ -193,7 +194,7 @@ public class User implements Comparable<User>, Serializable {
         System.out.println("client:  " + client + "  " + " command:  " + commandType + "  user:  " + username + " context:  " + context);
         if (client == null) return;
         client.dataOutputStream.writeUTF(toGson(commandType, context));
-        System.out.println(commandType + " W " + context);
+        System.out.println(commandType + " (sendToServer) " + context);
     }
 
     public Client getClient() {
@@ -342,5 +343,17 @@ public class User implements Comparable<User>, Serializable {
 
     public void setMyFriends(ArrayList<User> myFriends) {
         this.myFriends = myFriends;
+    }
+
+    public void setFriendRequestsReceivedByMe(ArrayList<FriendRequest> friendRequests) {
+        this.friendRequestsReceivedByMe = friendRequests;
+    }
+
+    public ArrayList<String> getAllClients() {
+        return allClients;
+    }
+
+    public void setAllClients(ArrayList<String> allClients) {
+        this.allClients = allClients;
     }
 }
