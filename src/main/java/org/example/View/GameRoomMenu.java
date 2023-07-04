@@ -50,7 +50,7 @@ public class GameRoomMenu extends Application {
         pane.requestFocus();
         scene = new Scene(scrollPane);
         stage.setScene(scene);
-        startTheTimeLine();
+
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }

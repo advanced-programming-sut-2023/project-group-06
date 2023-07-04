@@ -91,7 +91,15 @@ public class GameMenu extends Application {
     private ImageView draggedBuildingImageView;
     private Canvas miniMapCanvas;
     private ArrayList<BuildingType> allBuildingTypes = new ArrayList<>();
+    private ArrayList<TileStructure> allTileTypes = new ArrayList<>();
 
+    private String mapName;
+    public GameMenu() {
+        mapName = "test";
+    }
+    public GameMenu(String mapName) {
+        this.mapName = mapName;
+    }
     @Override
     public void start(Stage stage) throws Exception {
         GameMenu.stage = stage;
@@ -152,7 +160,7 @@ public class GameMenu extends Application {
     private void starter() throws IOException {
         setMouseActions();
         if (GameController.currentGame != null) {
-            map = Data.loadMap("test");
+            map = Data.loadMap(mapName);
             GameController.currentGame.setMap(map, map[0].length, map.length);
             System.out.println(GameController.currentGame.getPlayers().size());
             for (int i = 0; i < GameController.currentGame.getPlayers().size(); i++) {
@@ -445,8 +453,14 @@ public class GameMenu extends Application {
             else MapController.selectedBuilding = building;
 
             Tile tile = MapController.getTileAt(xx, yy);
-            if (tile != null) if (MapController.selectedTile == tile) MapController.selectedTile = null;
-            else MapController.selectedTile = tile;
+            if (tile != null) if (MapController.selectedTile == tile) {
+                MapController.selectedTile = null;
+                reversePopularityBar(popularityHBox);
+            }
+            else {
+                MapController.selectedTile = tile;
+                makeTilesVisible();
+            }
         } else {
             MapController.allGoTo(xx, yy);
         }
@@ -573,16 +587,24 @@ public class GameMenu extends Application {
         TilesHBox.setSpacing(15);
         for(int i = 0; i < 4; i++){
             ImageView tileImage = new ImageView(tileIcons.get(tileIndex + i));
-            tileImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
-                @Override
-                public void handle(MouseEvent mouseEvent) {
-                    setTileTexture(tileImage);
-                }
+            int finalI = i;
+            tileImage.setOnMouseClicked(e -> {
+                handleTileClicked(tileIndex + finalI);
+                System.out.println("tile clicked");
             });
             tileImage.setFitWidth(100);
             tileImage.setFitHeight(50);
             TilesHBox.getChildren().add(tileImage);
         }
+    }
+
+    private void handleTileClicked(int index) {
+        if (index >= allTileTypes.size()) return;
+        if (MapController.selectedTile == null) return;
+        TileStructure tileStructure = allTileTypes.get(index);
+        MapController.selectedTile.setTileStructure(tileStructure);
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void setTileTexture(ImageView tileImage) {
@@ -731,14 +753,6 @@ public class GameMenu extends Application {
     }
 
     private void initBuildingsArray() {
-        //todo correct this
-//        for (int i = 0; i < 3; i++) {
-//            for (int j = 0; j < 16; j++) {
-//                String address = GameMenu.class.getResource("/Images/Game/Buildings/building (" + (j+1) + ").png").toExternalForm();
-//                buildingIcons.add(address);
-//            }
-//        }
-
         for (BuildingType value : BuildingType.values()) {
             buildingIcons.add(value.getSuperImage().getImage());
             allBuildingTypes.add(value);
@@ -765,6 +779,7 @@ public class GameMenu extends Application {
     private void initTileIcons(){
         for (TileStructure value : TileStructure.values()) {
             tileIcons.add(value.getSuperImage().getImage());
+            allTileTypes.add(value);
         }
     }
 

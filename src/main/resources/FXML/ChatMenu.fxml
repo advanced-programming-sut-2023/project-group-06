@@ -20,7 +20,7 @@
     </center>
     <VBox layoutX="100" layoutY="100" spacing="20" fx:id="leftVBox">
         <Button text="back" onMouseClicked="#back" fx:id="backButton"/>
-        <Button text="map menu" onMouseClicked="#map"/>
+        <Button text="map menu" onMouseClicked="#map" />
         <Button text="add private chat" onMouseClicked="#addPrivateChat" fx:id="addPrivateChat"/>
         <TextField promptText="enter username" fx:id="usernameTextField" visible="false"/>
         <Label text="invalid username" fx:id="error" visible="false"/>

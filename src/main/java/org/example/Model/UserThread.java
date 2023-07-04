@@ -46,11 +46,33 @@ public class UserThread extends Thread {
         JsonArray friends = json.get("friends").getAsJsonArray();
         JsonArray clients = json.get("all clients").getAsJsonArray();
         JsonArray allWaitingGames = json.get("all waiting games").getAsJsonArray();
+        JsonArray mapNames = json.get("map names").getAsJsonArray();
+        JsonArray mapNamesIHave = json.get("map names i have").getAsJsonArray();
         handleChatRoom(chatRooms);
         handleFriendRequests(notRespondedFriendRequestsReceivedByMe);
         handleFriends(friends);
         handleClients(clients);
         handleWaitingGames(allWaitingGames);
+        handleMaps(mapNames);
+        handleMapsIHave(mapNamesIHave);
+    }
+
+    private void handleMapsIHave(JsonArray mapNamesIHave) {
+        ArrayList<String> mapsIHave = new ArrayList<>();
+        for (JsonElement jsonElement : mapNamesIHave) {
+            String mapName = jsonElement.getAsString();
+            mapsIHave.add(mapName);
+        }
+        user.setMapNamesIHave(mapsIHave);
+    }
+
+    private void handleMaps(JsonArray mapNames) {
+        ArrayList<String> maps = new ArrayList<>();
+        for (JsonElement mapNameObj : mapNames) {
+            String mapName = mapNameObj.getAsString();
+            maps.add(mapName);
+        }
+        user.setAllMapNames(maps);
     }
 
     private void handleWaitingGames(JsonArray allWaitingGames) throws IOException {
