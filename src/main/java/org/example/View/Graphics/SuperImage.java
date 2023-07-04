@@ -66,8 +66,11 @@ public enum SuperImage {
     BREWER("Building/brewer.png", 139, 245),
     GRANARY("Building/granary.png", 46, 78),
     MAIN_CASTLE("Building/main-castle.png", 139, 265),
-    STAIR("bla bla", 0, 0),
-    WALL("bla bla", 0, 0),
+    STAIR0("Building/stair0.png", 46, 208),
+    STAIR1("Building/stair1.png", 46, 208),
+    STAIR2("Building/stair2.png", 46, 208),
+    STAIR3("Building/stair3.png", 46, 208),
+    WALL("Building/wall.png", 46, 185),
     BRIDGE("bla bla", 0, 0),
 
     /////////////////////////////////////////////////// units

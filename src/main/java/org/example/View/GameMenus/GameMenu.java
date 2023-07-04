@@ -168,9 +168,16 @@ public class GameMenu extends Application {
             map[0][0].addSoldier(archer);
 
 
-            Building building = new Building(GameController.currentGame.getKingdoms().get(0), BuildingType.SQUARE_TOWER, 27, 20);
+            Building building = new Building(kingdom, BuildingType.SQUARE_TOWER, 27, 20);
             building.addToFireDamageEachTurn(2);
             for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+
+            for(int i = 0; i < 20; i++) {
+                building = new Building(kingdom, BuildingType.WALL, 20, i);
+                map[i][20].setBuilding(building);
+            }
+            building = new Building(kingdom, BuildingType.STAIR, 19, 10);
+            map[10][19].setBuilding(building);
 
             map[1][1].sick = true;
         }
