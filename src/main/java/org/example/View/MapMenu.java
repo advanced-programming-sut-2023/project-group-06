@@ -12,12 +12,15 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import org.example.Controller.MainController;
 import org.example.Model.Data;
+import org.example.View.GameMenus.GameMenu;
 
 import java.io.IOException;
 
@@ -97,7 +100,14 @@ public class MapMenu extends Application {
         for (String s : Data.getCurrentUser().getMapNamesIHave()) {
             Button button = new Button(s);
             button.setOnMouseClicked(mouseEvent -> {
-                Data.startGame(s);
+                try {
+                    Response response = MainController.startGame(Translator.getMatcherByGroups(
+                            Translator.START_GAME,  "sina", null, null, null, null, null, null));
+                    System.out.println(response.message);
+                    new GameMenu(s).start(stage);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             });
             leftVBox.getChildren().add(button);
         }
