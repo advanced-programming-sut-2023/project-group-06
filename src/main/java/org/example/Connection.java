@@ -176,6 +176,7 @@ public class Connection extends Thread {
     }
 
     private void handleClientCommand(JsonObject json) throws IOException {
+        //
         String commandType = json.get("command type").getAsJsonObject().get("command type").getAsString();
         JsonObject context = json.get("command content").getAsJsonObject();
         if (commandType.equals("send message")) sendMessage(context);
@@ -206,10 +207,10 @@ public class Connection extends Thread {
         Game game = Data.getGameById(id);
         game.setStartTime(System.currentTimeMillis());
         game.addPlayer(client);
-        client.setGameRoom(game.getChatRoom());
+        /*client.setGameRoom(game.getChatRoom());*/
         if (game.getPlayers().size() == game.getCapacity()) {
             game.setGameStarted(true);
-            client.setGameRoom(null);
+            /*client.setGameRoom(null);*/
             game.setChatRoom(null);
         }
     }
@@ -219,7 +220,7 @@ public class Connection extends Thread {
         Game game = Data.getGameById(id);
         game.setStartTime(System.currentTimeMillis());
         if (client != game.getAdmin()) System.out.println("enter waiting game ERRRROROORROROROR");
-        client.setGameRoom(game.getChatRoom());
+        /*client.setGameRoom(game.getChatRoom());*/
         if (game.getPlayers().size() == game.getCapacity()) game.setGameStarted(true);
     }
 
@@ -228,7 +229,7 @@ public class Connection extends Thread {
         Client admin = Data.getClientByName(context.get("admin").getAsString());
         Game game = Data.getGameById(id);
         game.removePlayer(client);
-        client.setGameRoom(null);
+        /*client.setGameRoom(null);*/
         if (client == admin) {
             if (game.getPlayers().isEmpty()) Data.removeGame(game);
             else game.setAdmin(game.getPlayers().get(0));
@@ -390,7 +391,7 @@ public class Connection extends Thread {
         }
         root.add("chat rooms", chatRooms);
         JsonArray notRespondedFriendRequestsReceivedByMe = new JsonArray();
-        System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());
+        /*System.out.println("array:" + client + "  " + client.getNotRespondedFriendRequestsReceivedByMe());*/
         for (int i = 0; i < client.getNotRespondedFriendRequestsReceivedByMe().size(); i++) {
             String s = client.getNotRespondedFriendRequestsReceivedByMe().get(i);
             JsonObject jsonString = new JsonObject();
@@ -416,7 +417,7 @@ public class Connection extends Thread {
             allWaitingGames.add(jsonObject);
         }
         root.add("all waiting games", allWaitingGames);
-        root.add("game room", (client.getGameRoom() == null) ? null : client.getGameRoom().toJson());
+        /*root.add("game room", (client.getGameRoom() == null) ? null : client.getGameRoom().toJson());*/
         JsonArray mapNames = new JsonArray();
         for (String mapName : Data.getMapNames()) {
             System.out.println("+add+");
