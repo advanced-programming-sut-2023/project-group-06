@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class WaitingGame {
@@ -15,8 +16,9 @@ public class WaitingGame {
     private boolean isPublic = true;
     private boolean isGameStarted = false;
     private static int count = 0;
+    private ChatRoom chatRoom;
 
-    public WaitingGame(int capacity, User admin, boolean isPublic) {
+    public WaitingGame(int capacity, User admin, boolean isPublic) throws IOException {
         this.capacity = capacity;
         this.admin = admin;
         this.id = count;
@@ -24,10 +26,11 @@ public class WaitingGame {
         this.isPublic = isPublic;
         players = new ArrayList<>();
         players.add(admin);
+        chatRoom = new ChatRoom(id, new ArrayList<>(), ChatType.GAME, 0);
         startTime = System.currentTimeMillis() / 1000L;
     }
 
-    public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic, boolean isGameStarted) {
+    public WaitingGame(int id, ArrayList<User> players, int capacity, User admin, long startTime, boolean isPublic, boolean isGameStarted, ChatRoom chatRoom) {
         this.id = id;
         this.players = players;
         this.capacity = capacity;
@@ -87,5 +90,13 @@ public class WaitingGame {
 
     public void setGameStarted(boolean isGameStarted) {
         this.isGameStarted = isGameStarted;
+    }
+
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
     }
 }
