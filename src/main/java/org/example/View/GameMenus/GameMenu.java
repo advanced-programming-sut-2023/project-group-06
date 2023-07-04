@@ -762,6 +762,12 @@ public class GameMenu extends Application {
         System.err.println("++++++++++++   " + size + " " + buildingGroup);
     }
 
+    private void initTileIcons(){
+        for (TileStructure value : TileStructure.values()) {
+            tileIcons.add(value.getSuperImage().getImage());
+        }
+    }
+
     public void setPopularityHBox(HBox popularityHBox) {
         Text text = new Text("Popularity");
         text.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23");
