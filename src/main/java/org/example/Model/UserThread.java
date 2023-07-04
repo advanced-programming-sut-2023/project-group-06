@@ -63,7 +63,6 @@ public class UserThread extends Thread {
             String mapName = jsonElement.getAsString();
             mapsIHave.add(mapName);
         }
-        System.out.println("user thread: maps " + user.getUsername() + " have: " + mapsIHave);
         user.setMapNamesIHave(mapsIHave);
     }
 
@@ -73,7 +72,6 @@ public class UserThread extends Thread {
             String mapName = mapNameObj.getAsString();
             maps.add(mapName);
         }
-        System.out.println("user thread: all maps: " + maps);
         user.setAllMapNames(maps);
     }
 

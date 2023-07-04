@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GameRoomMenu extends Application {
-    private WaitingGame waitingGame;
+    public static WaitingGame waitingGame;
     private static Stage stage;
     private static Pane pane;
     private Scene scene;
@@ -55,10 +55,10 @@ public class GameRoomMenu extends Application {
         stage.show();
     }
 
-    public GameRoomMenu(WaitingGame waitingGame) {
-        this.waitingGame = waitingGame;
-        selectedChat = waitingGame.getChatRoom();
-    }
+//    public GameRoomMenu(WaitingGame waitingGame) {
+//        this.waitingGame = waitingGame;
+//        selectedChat = waitingGame.getChatRoom();
+//    }
 
     private void startTheTimeLine() throws IOException {
         Data.getCurrentUser().sendToServer();
