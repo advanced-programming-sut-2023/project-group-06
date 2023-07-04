@@ -7,9 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -35,6 +33,9 @@ public class Lobby extends Application {
     public void start(Stage stage) throws Exception {
         Lobby.stage = stage;
         pane = FXMLLoader.load(ChatMenu.class.getResource("/FXML/Lobby.fxml"));
+        pane.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(SignUpMenu.class.getResource
+                ("/Images/279547.jpg").toExternalForm()))
+                , null, null)));
         ScrollPane scrollPane = new ScrollPane(pane);
         scrollPane.setFitToHeight(true);
         scrollPane.setFitToWidth(true);
@@ -64,10 +65,9 @@ public class Lobby extends Application {
     private void setTheMiddleVBox() {
         middleVBox.setSpacing(15);
         Label label = new Label("create a game");
-        /*TextField textFieldId = new TextField();
-        textFieldId.setPromptText("enter an id");
-        textFieldId.setStyle("-fx-min-width: 200; -fx-max-width: 200");*/
+        label.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23; -fx-text-fill: #10ea1d");
         Label label1 = new Label("choose the capacity");
+        label1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 16; -fx-text-fill: #10ea1d");
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
         choiceBox.getItems().addAll(2, 3, 4, 5, 6, 7, 8);
         choiceBox.setValue(2);
@@ -75,6 +75,8 @@ public class Lobby extends Application {
         hBox.setSpacing(5);
         RadioButton radioButton = new RadioButton("public");
         RadioButton radioButton1 = new RadioButton("private");
+        radioButton.setStyle("-fx-text-fill: #10ea1d");
+        radioButton1.setStyle("-fx-text-fill: #10ea1d");
         radioButton.setSelected(true);
         radioButton1.setSelected(false);
         radioButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -94,8 +96,8 @@ public class Lobby extends Application {
         HBox hBox1 = new HBox(radioButton, radioButton1);
         hBox1.setSpacing(6);
         Button create = new Button("create the game");
-        create.setStyle("-fx-min-width: 80; -fx-max-width: 80; -fx-background-color: #bb0eb9;" +
-                " -fx-text-fill: #fdfdfc; -fx-min-height: 23; -fx-max-height: 23; -fx-font-size: 12;" +
+        create.setStyle("-fx-min-width: 170; -fx-max-width: 170; -fx-background-color: #bb0eb9;" +
+                " -fx-text-fill: #fdfdfc; -fx-min-height: 36; -fx-max-height: 36; -fx-font-size: 18;" +
                 " -fx-font-family: 'Book Antiqua'");
         create.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -107,14 +109,48 @@ public class Lobby extends Application {
                 }
             }
         });
+        WaitingGame waitingGame1 = null;
+        for(WaitingGame waitingGame : Data.getCurrentUser().getAllWaitingGames()){
+            if(waitingGame.getAdmin() == Data.getCurrentUser()) {
+                waitingGame1 = waitingGame;
+                break;
+            }
+        }
         middleVBox.getChildren().addAll(label, hBox, hBox1, create);
+        if(waitingGame1 != null) putTheEnterButton(waitingGame1);
+    }
+
+    private void putTheEnterButton(WaitingGame waitingGame){
+        VBox vBox = addWaitingRoom(waitingGame);
+        Button enter = new Button("enter");
+        enter.setStyle("-fx-min-width: 120; -fx-max-width: 120; -fx-background-color: #bb0eb9;" +
+                " -fx-text-fill: #fdfdfc; -fx-min-height: 33; -fx-max-height: 33; -fx-font-size: 18;" +
+                " -fx-font-family: 'Book Antiqua'");
+        enter.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                try {
+                    entering(waitingGame);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
+        vBox.getChildren().remove(vBox.getChildren().size() - 1);
+        vBox.getChildren().add(enter);
+        middleVBox.getChildren().add(vBox);
+    }
+
+    private void entering(WaitingGame waitingGame1) throws Exception {
+        Data.getCurrentUser().enterWaitingGameCommand(waitingGame1);
+        new GameRoomMenu(waitingGame1).start(stage);
     }
 
     private void setTheRightVBox(){
         rightVBox.setSpacing(15);
         Button back = new Button("back");
-        back.setStyle("-fx-min-width: 100; -fx-max-width: 100; -fx-background-color: #bb0eb9;" +
-                " -fx-text-fill: #fdfdfc; -fx-min-height: 30; -fx-max-height: 30; -fx-font-size: 17;" +
+        back.setStyle("-fx-min-width: 120; -fx-max-width: 120; -fx-background-color: #bb0eb9;" +
+                " -fx-text-fill: #fdfdfc; -fx-min-height: 33; -fx-max-height: 33; -fx-font-size: 18;" +
                 " -fx-font-family: 'Book Antiqua'");
         back.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -156,13 +192,14 @@ public class Lobby extends Application {
         System.out.println("create");
         WaitingGame waitingGame = new WaitingGame(value, Data.getCurrentUser(), isPublic);
         Data.getCurrentUser().createWaitingGameCommand(waitingGame);
+        putTheEnterButton(waitingGame);
     }
 
     private void setTheLeftVBox() {
         for (int i = leftVBox.getChildren().size() - 1; i >= 0; i--)
             leftVBox.getChildren().remove(i);
         Label label = new Label("waiting games");
-        label.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23");
+        label.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23; -fx-text-fill: #10ea1d");
         Circle refresh = new Circle(20);
         refresh.setFill(new ImagePattern(
                 new Image(ProfileMenu.class.getResource("/Images/Icons/refresh.png").toString())));
@@ -203,7 +240,7 @@ public class Lobby extends Application {
         vBox.setSpacing(5);
         Label label1 = new Label("Game id : " + waitingGame.getId());
         label1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20;" +
-                "-fx-border-color: blue");
+                "/*-fx-border-color: blue; -fx-border-radius: 20*/");
         vBox.getChildren().add(label1);
         Label label3 = new Label("Capacity : " + waitingGame.getCapacity());
         label3.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 17");
@@ -213,7 +250,8 @@ public class Lobby extends Application {
             label2.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 15");
             vBox.getChildren().add(label2);
         }
-        vBox.setStyle("-fx-background-color: #e0fd95; -fx-background-radius: 15");
+        vBox.setStyle("-fx-background-color: #e0fd95; -fx-background-radius: 15; -fx-padding: 10, 10, 10, 10;" +
+                " -fx-border-color: blue; -fx-border-radius: 15");
         Button join = new Button("join");
         join.setStyle("-fx-min-width: 80; -fx-max-width: 80; -fx-background-color: #bb0eb9;" +
                 " -fx-text-fill: #fdfdfc; -fx-min-height: 23; -fx-max-height: 23; -fx-font-size: 12;" +
@@ -223,7 +261,7 @@ public class Lobby extends Application {
             public void handle(MouseEvent mouseEvent) {
                 try {
                     join(waitingGame);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -232,11 +270,10 @@ public class Lobby extends Application {
         return vBox;
     }
 
-    private void join(WaitingGame waitingGame) throws IOException {
+    private void join(WaitingGame waitingGame) throws Exception {
         Data.getCurrentUser().sendToServer();
-        //todo
         Data.getCurrentUser().joinCommand(waitingGame);
-        refresh();
+        new GameRoomMenu(waitingGame).start(stage);
     }
 
     private void refresh() throws IOException {

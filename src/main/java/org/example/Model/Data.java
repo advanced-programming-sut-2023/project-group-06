@@ -3,6 +3,7 @@ package org.example.Model;
 import com.google.gson.*;
 import org.example.Model.BuildingGroups.Tree;
 import org.example.Model.BuildingGroups.TreeType;
+import org.example.View.Response;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -225,9 +226,5 @@ public class Data {
             e.printStackTrace();
             return null;
         }
-    }
-
-
-    public static void startGame(String s) {
     }
 }
