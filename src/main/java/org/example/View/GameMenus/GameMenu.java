@@ -94,10 +94,10 @@ public class GameMenu extends Application {
     private ArrayList<TileStructure> allTileTypes = new ArrayList<>();
 
     private String mapName;
-    GameMenu() {
+    public GameMenu() {
         mapName = "test";
     }
-    GameMenu(String mapName) {
+    public GameMenu(String mapName) {
         this.mapName = mapName;
     }
     @Override
