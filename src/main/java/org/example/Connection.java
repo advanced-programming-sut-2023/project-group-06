@@ -324,8 +324,11 @@ public class Connection extends Thread {
     }
 
     private void editMessage(JsonObject context) {
+        String chatRoomType = context.get("chat room type").getAsString();
         int chatRoomId = context.get("chat room id").getAsInt();
-        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        ChatRoom chatRoom;
+        if (chatRoomType.equals("game")) chatRoom = Data.getGameRoomById(chatRoomId);
+        else chatRoom = Data.getChatRoomById(chatRoomId);
         int id = context.get("id").getAsInt();
         Message message = chatRoom.getMessageById(id);
         String content = context.get("content").getAsString();
@@ -333,16 +336,22 @@ public class Connection extends Thread {
     }
 
     private void deleteMessage(JsonObject context) {
+        String chatRoomType = context.get("chat room type").getAsString();
         int chatRoomId = context.get("chat room id").getAsInt();
-        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        ChatRoom chatRoom;
+        if (chatRoomType.equals("game")) chatRoom = Data.getGameRoomById(chatRoomId);
+        else chatRoom = Data.getChatRoomById(chatRoomId);
         int id = context.get("id").getAsInt();
         Message message = chatRoom.getMessageById(id);
         chatRoom.getMessages().remove(message);
     }
 
     private void sendMessage(JsonObject context) {
+        String chatRoomType = context.get("chat room type").getAsString();
         int chatRoomId = context.get("chat room id").getAsInt();
-        ChatRoom chatRoom = Data.getChatRoomById(chatRoomId);
+        ChatRoom chatRoom;
+        if (chatRoomType.equals("game")) chatRoom = Data.getGameRoomById(chatRoomId);
+        else chatRoom = Data.getChatRoomById(chatRoomId);
         int id = context.get("id").getAsInt();
         String username = context.get("owner").getAsString();
         String time = context.get("time").getAsString();
@@ -420,7 +429,6 @@ public class Connection extends Thread {
         /*root.add("game room", (client.getGameRoom() == null) ? null : client.getGameRoom().toJson());*/
         JsonArray mapNames = new JsonArray();
         for (String mapName : Data.getMapNames()) {
-            System.out.println("+add+");
             mapNames.add(mapName);
         }
         root.add("map names", mapNames);
