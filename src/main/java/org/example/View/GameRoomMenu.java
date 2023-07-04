@@ -50,15 +50,21 @@ public class GameRoomMenu extends Application {
         pane.requestFocus();
         scene = new Scene(scrollPane);
         stage.setScene(scene);
-
+        startTheTimeLine();
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
 
-//    public GameRoomMenu(WaitingGame waitingGame) {
-//        this.waitingGame = waitingGame;
-//        selectedChat = waitingGame.getChatRoom();
-//    }
+    /*public GameRoomMenu(WaitingGame waitingGame) {
+        this.waitingGame = waitingGame;
+        selectedChat = waitingGame.getChatRoom();
+    }*/
+
+    public void initialize(){
+        System.out.println("kkk " + selectedChat);
+        selectedChat = waitingGame.getChatRoom();
+        System.out.println("lll " + selectedChat);
+    }
 
     private void startTheTimeLine() throws IOException {
         Data.getCurrentUser().sendToServer();
