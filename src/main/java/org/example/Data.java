@@ -13,6 +13,12 @@ public class Data {
     static boolean hasAnyOneLoggedInYet = false;
     private static ArrayList<Game> allWaitingGames = new ArrayList<>();
     private static ArrayList<String> mapNames = new ArrayList<>();
+    static {
+        for (int i = 0; i < 10; i++) {
+            mapNames.add("map test" + i);
+        }
+        System.out.println("_+_" + mapNames);
+    }
 
     public static Client getClientByName(String username) {
         for (int i = 0; i < clients.size(); i++) {

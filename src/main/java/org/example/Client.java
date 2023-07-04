@@ -24,7 +24,7 @@ public class Client implements Comparable<Client> {
     private ArrayList<String> notRespondedFriendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<Client> friends = new ArrayList<>();
     private ChatRoom gameRoom = null;
-
+    private ArrayList<String> mapNames = new ArrayList<>();
 
     public Client(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -245,6 +245,16 @@ public class Client implements Comparable<Client> {
         root.addProperty("last seen", lastSeen);
         root.addProperty("username", username);
         return root;
+    }
+
+    public ArrayList<String> getMapNames() {
+        return mapNames;
+    }
+
+    public synchronized void addMapName(String mapName) {
+        synchronized (mapNames) {
+            this.mapNames.add(mapName);
+        }
     }
 }
 

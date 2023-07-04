@@ -192,7 +192,13 @@ public class Connection extends Thread {
         if (commandType.equals("leave waiting game")) leaveWaitingGame(context);
         if (commandType.equals("delete waiting game")) deleteWaitingGame(context);
         if (commandType.equals("enter waiting game")) enterWaitingGame(context);
+        if (commandType.equals("save map")) saveMap(context);
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
+    }
+
+    private void saveMap(JsonObject context) {
+        String mapName = context.get("map name").getAsString();
+        client.addMapName(mapName);
     }
 
     private void joinWaitingGame(JsonObject context) {
@@ -413,9 +419,15 @@ public class Connection extends Thread {
         root.add("game room", (client.getGameRoom() == null) ? null : client.getGameRoom().toJson());
         JsonArray mapNames = new JsonArray();
         for (String mapName : Data.getMapNames()) {
+            System.out.println("+add+");
             mapNames.add(mapName);
         }
         root.add("map names", mapNames);
+        JsonArray mapNamesIHave = new JsonArray();
+        for (String mapName : client.getMapNames()) {
+            mapNamesIHave.add(mapName);
+        }
+        root.add("map names i have", mapNamesIHave);
         return root;
     }
 }
