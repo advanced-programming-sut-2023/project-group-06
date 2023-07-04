@@ -30,6 +30,8 @@ public class User implements Comparable<User>, Serializable {
     private ArrayList<WaitingGame> allWaitingGames = new ArrayList<>();
     private boolean isOnline = false;
     private long lastSeen = 0;
+    private ChatRoom gameChatRoom = null;
+    private ArrayList<String> mapNames = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -378,11 +380,32 @@ public class User implements Comparable<User>, Serializable {
         sendToServer("delete waiting room", waitingGame.toJson());
     }
 
+    public void enterWaitingGameCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("enter waiting game", waitingGame.toJson());
+    }
+
     public WaitingGame getWaitingRoomById(int id){
         for (WaitingGame waitingGame : allWaitingGames) {
             if(waitingGame.getId() == id)
                 return waitingGame;
         }
         return null;
+    }
+
+    public ChatRoom getGameChatRoom() {
+        return gameChatRoom;
+    }
+
+    public void setGameChatRoom(ChatRoom gameChatRoom) {
+        this.gameChatRoom = gameChatRoom;
+    }
+
+    public ChatRoom getGameRoomWithId(int id) {
+        WaitingGame waitingGame1 = null;
+        for (WaitingGame waitingGame : allWaitingGames) {
+            if (waitingGame.getId() == id) waitingGame1 = waitingGame;
+        }
+        if (waitingGame1 == null) return null;
+        return waitingGame1.getChatRoom();
     }
 }
