@@ -1,5 +1,9 @@
 package org.example;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -8,6 +12,7 @@ public class Data {
     private static ArrayList<ChatRoom> chatRooms = new ArrayList<>();
     static boolean hasAnyOneLoggedInYet = false;
     private static ArrayList<Game> allWaitingGames = new ArrayList<>();
+    private static ArrayList<String> mapNames = new ArrayList<>();
 
     public static Client getClientByName(String username) {
         for (int i = 0; i < clients.size(); i++) {
@@ -53,9 +58,14 @@ public class Data {
 
     public static ChatRoom getChatRoomById(int id) {
         for (ChatRoom chatRoom : chatRooms) {
-            if (chatRoom.getId() == id) return chatRoom;
+            if (chatRoom.getId() == id && chatRoom.getChatType() != ChatType.GAME) return chatRoom;
         }
         return null;
+    }
+
+    public static ChatRoom getGameRoomById(int id) {
+        if (getGameById(id) == null) return null;
+        return getGameById(id).getChatRoom();
     }
 
     public static void addWaitingGame(Game waitingGame) {
@@ -81,4 +91,19 @@ public class Data {
             allWaitingGames.remove(game);
         }
     }
+
+    public static ArrayList<String> getMapNames() {
+        return mapNames;
+    }
+
+    public synchronized static void addMapName(String mapName) {
+        synchronized (mapName) {
+            Data.mapNames.add(mapName);
+        }
+    }
+
+    /* saveMap
+    true: everything is ok
+    false: error
+    map will be saved in "src/main/java/org/example/Model/Maps/[fileName].bin" */
 }
