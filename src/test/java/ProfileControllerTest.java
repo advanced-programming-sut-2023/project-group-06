@@ -33,7 +33,7 @@ public class ProfileControllerTest {
         Assertions.assertEquals("Mohammad", Data.getCurrentUser().getUsername());
         changeUsernameDoer("profile change -u Mammad", Response.USERNAME_CHANGE);
     }
-    private static void changeUsernameDoer(String cmd, Response expectedResponse) {
+    private static void changeUsernameDoer(String cmd, Response expectedResponse) throws IOException {
         Commands regex = Commands.CHANGE_USERNAME;
         Assertions.assertEquals(expectedResponse, ProfileController.changeUsername(Commands.getMatcher(cmd, regex)));
     }
@@ -46,7 +46,7 @@ public class ProfileControllerTest {
         Assertions.assertEquals("Barghi", Data.getCurrentUser().getNickname());
         changeNicknameDoer("profile change -n Barqi", Response.NICKNAME_CHANGE);
     }
-    private static void changeNicknameDoer(String cmd, Response expectedResponse) {
+    private static void changeNicknameDoer(String cmd, Response expectedResponse) throws IOException {
         Commands regex = Commands.CHANGE_NICKNAME;
         Assertions.assertEquals(expectedResponse, ProfileController.changeNickname(Commands.getMatcher(cmd, regex)));
     }
@@ -90,7 +90,7 @@ public class ProfileControllerTest {
         Assertions.assertEquals("mohammad@yahoo.com", Data.getCurrentUser().getEmail());
         changeEmailDoer("profile change -e mmd@gmail.com", Response.EMAIL_CHANGE);
     }
-    private static void changeEmailDoer(String cmd, Response expectedResponse) {
+    private static void changeEmailDoer(String cmd, Response expectedResponse) throws IOException {
         Commands regex = Commands.CHANGE_EMAIL;
         Assertions.assertEquals(expectedResponse, ProfileController.changeEmail(Commands.getMatcher(cmd, regex)));
     }
@@ -103,7 +103,7 @@ public class ProfileControllerTest {
         Assertions.assertEquals("Jakarta Jakarta", Data.getCurrentUser().getSlogan());
         changeSloganDoer("profile change -s \"Goomba Goomba\"", Response.SLOGAN_CHANGE);
     }
-    private static void changeSloganDoer(String cmd, Response expectedResponse) {
+    private static void changeSloganDoer(String cmd, Response expectedResponse) throws IOException {
         Commands regex = Commands.CHANGE_SLOGAN;
         Assertions.assertEquals(expectedResponse, ProfileController.changeSlogan(Commands.getMatcher(cmd, regex)));
     }

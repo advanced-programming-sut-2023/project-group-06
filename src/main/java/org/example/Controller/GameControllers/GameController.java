@@ -280,6 +280,11 @@ public class GameController {
     }
 
     public static Response dropBuilding(Matcher matcher){
+        return dropBuilding(matcher, true);
+    }
+
+    public static Response dropBuilding(Matcher matcher, boolean care){
+        matcher.matches();
         String xString = matcher.group("x");
         String yString = matcher.group("y");
         String typeString = matcher.group("type");
@@ -311,13 +316,13 @@ public class GameController {
                     return Response.CANT_PUT_THIS_ON_TROOPS;
             }
         }
-        if(currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
+        if(care && currentPlayer.getMaxPopulation() - currentPlayer.getPopulation() - currentPlayer.getAvailableEngineers() < buildingtype.getWorkerPrice())
             return Response.NOT_ENOUGH_PEASANT;
-        if(currentPlayer.getAvailableEngineers() < buildingtype.getEngineerPrice())
+        if(care && currentPlayer.getAvailableEngineers() < buildingtype.getEngineerPrice())
             return Response.NOT_ENOUGH_ENGINEERS;
-        if(currentPlayer.getWealth() < buildingtype.getGoldPrice())
+        if(care && currentPlayer.getWealth() < buildingtype.getGoldPrice())
             return Response.NOT_ENOUGH_MONEY;
-        if(currentPlayer.getResourceAmountByType(buildingtype.getResourcesPrice().getType()) < buildingtype.getResourcesPrice().getAmount())
+        if(care && currentPlayer.getResourceAmountByType(buildingtype.getResourcesPrice().getType()) < buildingtype.getResourcesPrice().getAmount())
             return Response.NOT_ENOUGH_RESOURCES;
         Building building = null;
         if (Producers.class.equals(buildingtype.getBuildingClass())) {
@@ -1074,6 +1079,7 @@ public class GameController {
         for (Kingdom k : currentGame.getKingdoms()) {
             for (int j = k.getUnits().size() - 1; j >= 0; j--) {
                 Unit s = k.getUnits().get(j);
+                System.out.println(s);
                 Tile curTile = map[s.getYCoordinate()][s.getXCoordinate()];
                 Tile wishPlace = s.getWishPlace();
                 int mode = 0;

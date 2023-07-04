@@ -52,7 +52,7 @@ public enum BuildingType {
     GRANARY(SuperImage.GRANARY, 500,0,1,ResourcesType.WOOD,5,0,0,false,"granary", Storage.class), //anbar ghaza
     MAIN_CASTLE(SuperImage.MAIN_CASTLE, 1, 0, 3, null, 0, 0, 0, true, "main castle", Towers.class),
     // STAIR and WALL are temporary and need to be fixed !!! todo
-    STAIR(SuperImage.STAIR, 100, 0, 1, null, 0, 0, 0, true, "stair", Towers.class),
+    STAIR(SuperImage.STAIR0, 100, 0, 1, null, 0, 0, 0, true, "stair", Towers.class),
     WALL(SuperImage.WALL, 100, 0, 1, null, 0, 0, 0, true, "wall", Towers.class),
     BRIDGE(SuperImage.BRIDGE, 1, 0, 1, null, 0, 0, 0, true, "bridge", null),
     ;

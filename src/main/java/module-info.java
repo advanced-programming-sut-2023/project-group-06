@@ -4,6 +4,7 @@ module AP.Project {
     requires com.google.gson;
     requires javafx.controls;
     requires javafx.fxml;
+    requires java.desktop;
 
     exports GraphicTest;
     opens GraphicTest to javafx.fxml;

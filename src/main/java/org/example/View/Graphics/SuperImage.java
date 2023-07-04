@@ -30,7 +30,7 @@ public enum SuperImage {
     LOOKOUT_TOWER("Building/lookout-tower.png", 46, 261),
     PERIMETER_TOWER("Building/perimeter-tower.png", 139, 409),
     DEFENSE_TURRET("Building/defense-turret.png", 139, 369),
-    SQUARE_TOWER("Building/square-tower.png", 139, 369),
+    SQUARE_TOWER("Building/square-tower.png", 139, 348),
     ROUND_TOWER("Building/round-tower.png", 139, 369),
     ARMORY("Building/armory.png", 46, 88),
     MERCENARY_POST("Building/mercenary-post.png", 139, 102),
@@ -66,8 +66,11 @@ public enum SuperImage {
     BREWER("Building/brewer.png", 139, 245),
     GRANARY("Building/granary.png", 46, 78),
     MAIN_CASTLE("Building/main-castle.png", 139, 265),
-    STAIR("bla bla", 0, 0),
-    WALL("bla bla", 0, 0),
+    STAIR0("Building/stair0.png", 46, 208),
+    STAIR1("Building/stair1.png", 46, 208),
+    STAIR2("Building/stair2.png", 46, 208),
+    STAIR3("Building/stair3.png", 46, 208),
+    WALL("Building/wall.png", 46, 185),
     BRIDGE("bla bla", 0, 0),
 
     /////////////////////////////////////////////////// units
@@ -93,6 +96,11 @@ public enum SuperImage {
     FIRE_THROWER("Unit/fire-thrower.png", 23, 44),
     COW("Unit/cow.png", 23, 44),
     DOG("Unit/dog.png", 23, 16),
+
+
+    /////////////////////////////////////////////////// effects
+    FIRE("Effect/fire.png", 9, 14),
+    SICK("Effect/sick.png", 46, 39),
     ;
     Image image;
     int Xo;

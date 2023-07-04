@@ -23,7 +23,7 @@ public enum TileStructure {
 
     SuperImage superImage;
     private boolean isBlue;
-    private String name;
+    public String name;
     private String colorString;
     private boolean canBeCrossed;
     private String resource;

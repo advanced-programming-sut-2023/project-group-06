@@ -31,6 +31,9 @@ public class Building {
     public SuperImage getImg() {
         return img;
     }
+    public int getFireDamageEachTurn() {
+        return fireDamageEachTurn;
+    }
 
     public Building(Kingdom owner, BuildingType buildingType, int xCoordinate, int yCoordinate){
         this.xCoordinate = xCoordinate;
@@ -57,6 +60,11 @@ public class Building {
         if(buildingType == BuildingType.DEFENSE_TURRET) tunnelDelay = 6;
         if(buildingType == BuildingType.LOOKOUT_TOWER) tunnelDelay = 8;
         this.img = buildingType.getSuperImage();
+        if (buildingType == BuildingType.STAIR) {
+            if (direction == 1) this.img = SuperImage.STAIR1;
+            if (direction == 2) this.img = SuperImage.STAIR2;
+            if (direction == 3) this.img = SuperImage.STAIR3;
+        }
     }
 
     public ArrayList<Soldier> getLadderMen() {

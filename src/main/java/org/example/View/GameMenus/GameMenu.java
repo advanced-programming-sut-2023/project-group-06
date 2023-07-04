@@ -49,6 +49,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
 
 public class GameMenu extends Application {
     static Stage stage;
@@ -84,6 +89,8 @@ public class GameMenu extends Application {
     public Building draggedBuilding;
     // todo final drop position of dragged building on canvas
     private ImageView draggedBuildingImageView;
+    private Canvas miniMapCanvas;
+    private ArrayList<BuildingType> allBuildingTypes = new ArrayList<>();
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -93,6 +100,8 @@ public class GameMenu extends Application {
         scene.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.I) zoomIn();
             else if (e.getCode() == KeyCode.O) zoomOut();
+            else if (e.getCode() == KeyCode.C) copySelectedBuilding();
+            else if (e.getCode() == KeyCode.V) pasteToDraggingBuilding();
             else if (e.getCode() == KeyCode.F) {
                 try {
                     nextTurn();
@@ -114,6 +123,30 @@ public class GameMenu extends Application {
         zoomIn();*/
     }
 
+    private void pasteToDraggingBuilding() {
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        BuildingType bt = null;
+        try {
+            System.out.println(cb.getData(DataFlavor.stringFlavor));
+            bt = BuildingType.getBuildingTypeByString(cb.getData(DataFlavor.stringFlavor).toString());
+            System.out.println(bt);
+        } catch (UnsupportedFlavorException | IOException ignored) {
+        }
+        if (bt == null) return;
+        draggedBuilding = new Building(GameController.currentPlayer, bt, 0, 0);
+        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
+        draggedBuildingImageView.setVisible(true);
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
+    }
+
+    private void copySelectedBuilding() {
+        if (MapController.selectedBuilding == null) return;
+        Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection strSel = new StringSelection(MapController.selectedBuilding.getBuildingType().getName());
+        cb.setContents(strSel, null);
+    }
+
 
     Tile[][] map;
     private void starter() throws IOException {
@@ -130,11 +163,35 @@ public class GameMenu extends Application {
                 //  map[y][x].setBuilding(building);
                 String validColors[] = {"red", "blue", "green", "yellow"};
                 String cmd = "main castle -x " + x + " -y " + y + " -color " + validColors[i] + " -d n";
-                Response response = GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
-//                System.err.println(response.message);
+                GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
                 GameController.nextTurn();
             }
 
+            Soldier archer;
+//            for (int i = 19; i < 22; i++)
+//                for (int j = 26; j < 29; j++)
+//                    for (int k = 0; k < 4; k++) {
+//                        archer = new Soldier(j, i, null, UnitType.ARCHER);
+//                        archer.addToFireDamageEachTurn(2);
+//                        map[i][j].addSoldier(archer);
+//                    }
+            Kingdom kingdom = GameController.currentPlayer;
+            archer = new Soldier(0, 0, kingdom, UnitType.ARCHER);
+            map[0][0].addSoldier(archer);
+
+
+            Building building = new Building(kingdom, BuildingType.SQUARE_TOWER, 27, 20);
+            building.addToFireDamageEachTurn(2);
+            for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
+
+            for (int i = 0; i < 20; i++) {
+                building = new Building(kingdom, BuildingType.WALL, 20, i);
+                map[i][20].setBuilding(building);
+            }
+            building = new Building(kingdom, BuildingType.STAIR, 19, 10);
+            map[10][19].setBuilding(building);
+
+            map[1][1].sick = true;
         } else {
             map = Data.loadMap("test");
 
@@ -242,11 +299,12 @@ public class GameMenu extends Application {
         mainCanvas.setHeight(3000);
         mainCanvas.setWidth(8000);
 
-        draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
-        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
-        draggedBuildingImageView.setVisible(true);
+//        draggedBuilding = new Building(null, BuildingType.HOVEL, 0, 0);
+//        draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
+//        draggedBuildingImageView.setVisible(true);
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void setMouseActions() {
@@ -302,13 +360,31 @@ public class GameMenu extends Application {
             }
         } else {
             if (e.getButton() == MouseButton.PRIMARY) {
-                // todo drop building
+                dropBuildingFunction();
             } else if (e.getButton() == MouseButton.SECONDARY) {
-                draggedBuilding = null;
-                draggedBuildingImageView.setVisible(false);
-                MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
             }
+            draggedBuilding = null;
+            draggedBuildingImageView.setVisible(false);
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
         }
+    }
+
+    private void dropBuildingFunction() {
+        int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + mouseX) / mainCanvas.getScaleX());
+        int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + mouseY) / mainCanvas.getScaleY());
+
+        double X = xx - mapPointerX;
+        double Y = yy - mapPointerY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+
+        String cmd = "dropbuilding -x " + i + " -y " + j + " -type \"" + draggedBuilding.getBuildingType().getName() + "\" -d n";
+        Response response = GameController.dropBuilding(Commands.getMatcher(cmd, Commands.DROP_BUILDING));
+        System.out.println(response);
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void onMouseDraggedFunction(MouseEvent e) {
@@ -356,15 +432,24 @@ public class GameMenu extends Application {
     private void clickedAt(double x, double y) {
         int xx = (int) ((mainCanvas.getWidth() * mainCanvas.getScaleX() / 2 - canvasPane.getWidth() / 2 + x) / mainCanvas.getScaleX());
         int yy = (int) ((mainCanvas.getHeight() * mainCanvas.getScaleX() / 2 - canvasPane.getHeight() / 2 + y) / mainCanvas.getScaleY());
-        Unit unit = MapController.getUnitAt(xx, yy);
-        if (unit != null) {
-            MapController.selectedUnits.clear();
-            MapController.selectedUnits.add(unit);
-            return;
+
+        if (MapController.selectedUnits.isEmpty()) {
+            Unit unit = MapController.getUnitAt(xx, yy);
+            if (unit != null) {
+                MapController.selectedUnits.clear();
+                MapController.selectedUnits.add(unit);
+                return;
+            }
+            Building building = MapController.getBuildingAt(xx, yy);
+            if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
+            else MapController.selectedBuilding = building;
+
+            Tile tile = MapController.getTileAt(xx, yy);
+            if (tile != null) if (MapController.selectedTile == tile) MapController.selectedTile = null;
+            else MapController.selectedTile = tile;
+        } else {
+            MapController.allGoTo(xx, yy);
         }
-        Building building = MapController.getBuildingAt(xx, yy);
-        if (building != null) if (MapController.selectedBuilding == building) MapController.selectedBuilding = null;
-        else MapController.selectedBuilding = building;
     }
 
     private String getInfoOfPoint(double x, double y) {
@@ -374,6 +459,8 @@ public class GameMenu extends Application {
         if (unit != null) return unit.toString();
         Building building = MapController.getBuildingAt(xx, yy);
         if (building != null) return building.toString();
+        Tile tile = MapController.getTileAt(xx, yy);
+        if (tile != null) return tile.toZtring();
         return null;
     }
 
@@ -427,6 +514,21 @@ public class GameMenu extends Application {
         draggedBuildingImageView.setScaleY(0.3);
         draggedBuildingImageView.setVisible(false);
         UIPane.getChildren().add(draggedBuildingImageView);
+        miniMapCanvas = new Canvas(200, 200);  // mini map canvas
+        UIPane.getChildren().add(miniMapCanvas);
+        miniMapCanvas.setLayoutX(10);
+        miniMapCanvas.setLayoutY(10);
+        miniMapCanvas.setOnMouseClicked(e -> {
+            double x = e.getX();
+            double y = e.getY();
+            double w = miniMapCanvas.getWidth();
+            double h = miniMapCanvas.getHeight();
+            int X = (int) (x / w * map[0].length);
+            int Y = (int) (y / h * map.length);
+            mapPointerX = ((int) mainCanvas.getWidth()) / 2 + (X - Y) * 46; // mapPtrX  = mainCanvas.width/2 + (x-y) * 46
+            mapPointerY = ((int) mainCanvas.getHeight()) / 2 + (X + Y) * 23;
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        });
         return scene;
     }
 
@@ -447,9 +549,10 @@ public class GameMenu extends Application {
         buildingHBox.setSpacing(10);
         for (int i = 0; i < 4; i++) {
             ImageView buildingImage = new ImageView(buildingIcons.get(buildingIndex + i));
+            int finalI = i;
             buildingImage.setOnMouseClicked(mouseEvent -> {
                 //todo doctor
-                handleClicked(buildingImage);
+                handleClicked(buildingIndex + finalI);
             });
             buildingImage.setFitHeight(100);
             buildingImage.setFitWidth(100);
@@ -457,7 +560,12 @@ public class GameMenu extends Application {
         }
     }
 
-    private void handleClicked(ImageView buildingImage) {
+    private void handleClicked(int index) {
+        if (index >= allBuildingTypes.size()) return;
+        Building building = new Building(null, allBuildingTypes.get(index), 0, 0);
+        draggedBuilding = building;
+        draggedBuildingImageView.setVisible(true);
+        draggedBuildingImageView.setImage(building.getImg().getImage());
     }
 
     private void showTiles() {
@@ -633,6 +741,7 @@ public class GameMenu extends Application {
 
         for (BuildingType value : BuildingType.values()) {
             buildingIcons.add(value.getSuperImage().getImage());
+            allBuildingTypes.add(value);
         }
 
         int size = 0;
@@ -651,12 +760,6 @@ public class GameMenu extends Application {
             cnt++;
         }
         System.err.println("++++++++++++   " + size + " " + buildingGroup);
-    }
-
-    private void initTileIcons(){
-        for (TileStructure value : TileStructure.values()) {
-            tileIcons.add(value.getSuperImage().getImage());
-        }
     }
 
     public void setPopularityHBox(HBox popularityHBox) {
@@ -792,6 +895,8 @@ public class GameMenu extends Application {
         System.out.println("salam");
         GameController.nextTurn();
         currentPlayer.setText("current player: " + GameController.currentPlayer.getOwner().getUsername());
+        MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
 //    public void initialize() {

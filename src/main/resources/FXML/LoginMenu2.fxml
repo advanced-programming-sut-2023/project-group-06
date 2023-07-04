@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.View.GameMenus.LoginMenu2"
+            stylesheets="@../CSS/mobin.css">
+
+    <center>
+        <VBox fx:id="mainVBox" alignment="CENTER" spacing="10">
+            <TextField fx:id="username" promptText="username"/>
+            <HBox alignment="CENTER" spacing="5">
+                <StackPane fx:id="passwordStackPane">
+                    <TextField promptText="password" fx:id="passwordTextField" styleClass="password" visible="false"/>
+                    <PasswordField promptText="password" fx:id="passwordPasswordField" styleClass="password"/>
+                </StackPane>
+                <ToggleButton fx:id="passwordToggle" onAction="#passwordToggleAction" maxWidth="20" minWidth="20"/>
+            </HBox>
+            <Hyperlink text="forgot your password?" fx:id="forgotPassword" onAction="#forgotPassword"/>
+            <Label fx:id="answerTheQuestion" text="answer the question:" styleClass="invisible"/>
+            <Label fx:id="question" styleClass="invisible1"/>
+            <HBox spacing="5" alignment="CENTER">
+                <TextField fx:id="answer" promptText="your answer" styleClass="invisible2" visible="false"/>
+                <Button text="change" fx:id="changePassword" styleClass="button2" visible="false" onMouseClicked="#change"/>
+            </HBox>
+            <Label fx:id="incorrectAnswer" text="incorrect answer" styleClass="invisible"/>
+            <HBox spacing="10" alignment="CENTER">
+                <ImageView>
+                </ImageView>
+            </HBox>
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="login" text="login" styleClass="button3" onMouseClicked="#login"/>
+                <Button fx:id="back" text="back" styleClass="button3" onMouseClicked="#back"/>
+            </HBox>
+            <Label fx:id="loginResult" styleClass="invisible3"/>
+            <RadioButton fx:id="stayLoggedIn" text="stay logged in"/>
+        </VBox>
+    </center>
+</BorderPane>

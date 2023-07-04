@@ -8,6 +8,7 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.Model.BuildingGroups.Trap;
+import org.example.View.Graphics.SuperImage;
 import org.example.View.Response;
 
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class MapController {
     static Tile[][] map;
     public static Building selectedBuilding;
     public static HashSet<Unit> selectedUnits = new HashSet<>();
+    public static Tile selectedTile;
 
     public static Unit getUnitAt(int x, int y) {
         for (int i = unitsColliderBoxes.size() - 1; i >= 0; i--) {
@@ -49,9 +51,33 @@ public class MapController {
 
     public static void selectUnitsIn(int x, int y, int w, int h) {
         selectedUnits.clear();
-        for(ColliderBox colliderBox : unitsColliderBoxes) {
-            if(colliderBox.isIn(x, y, w, h))
+        for (ColliderBox colliderBox : unitsColliderBoxes) {
+            if (colliderBox.isIn(x, y, w, h))
                 selectedUnits.add((Unit) colliderBox.object);
+        }
+    }
+
+    public static Tile getTileAt(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        if (i < 0 || i >= map.length || j < 0 || j >= map[0].length)
+            return null;
+        return map[j][i];
+    }
+
+    public static void allGoTo(int x, int y) {
+        double X = x - mapX;
+        double Y = y - mapY;
+        double I = (X + 2 * Y) / 92;
+        double J = I - X / 46;
+        int i = -(int) Math.floor(I + 0.5);
+        int j = -(int) Math.floor(J + 0.5);
+        for(Unit unit : selectedUnits) {
+            unit.setWishPlace(map[j][i]);
         }
     }
 
@@ -218,8 +244,6 @@ public class MapController {
 
     public static Response saveMap(String name) {
         currentGame = GameController.currentGame;
-        System.out.println(name);
-        System.out.println(currentGame.getMap() == null);
         Data.saveMap(name, currentGame.getMap());
         return Response.SAVE_MAP_SUCCESSFUL;
     }
@@ -275,9 +299,15 @@ public class MapController {
                 for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
                     drawTileAt(gc, map[ii][jj], x + (ii - jj) * 46, y - (ii + jj) * 23);
             drawBuildingAt(gc, building, x + (i - j) * 46, y - (i + j) * 23);
-            for (int ii = i - (size / 2); ii <= i + size / 2; ii++)
-                for (int jj = j - (size / 2); jj <= j + size / 2; jj++)
+            int maxSum = i + j + size - 1, minSum = i + j - size + 1;
+            for (int sum = maxSum; sum >= minSum; sum--) {
+                int iiMin = Math.max(i - size / 2, sum - j - size + 1);
+                int iiMax = Math.min(i + size / 2, sum - j + size - 1);
+                for (int ii = iiMin; ii <= iiMax; ii++) {
+                    int jj = sum - ii;
                     drawUnitsOfTile(gc, map, ii, jj, x, y, graphicalHeight);
+                }
+            }
         }
     }
 
@@ -295,6 +325,8 @@ public class MapController {
     private static void drawUnitAt(GraphicsContext gc, Unit unit, int x, int y) {
         if (unit == null) return;
         gc.drawImage(unit.getImg().getImage(), x - unit.getImg().getXo(), y - unit.getImg().getYo());
+        if (unit.getFireDamageEachTurn() > 0)
+            gc.drawImage(SuperImage.FIRE.getImage(), x - SuperImage.FIRE.getXo(), y - SuperImage.FIRE.getYo() - 15);
         unitsColliderBoxes.add(new ColliderBox(x - 10, y - 30, 20, 40, unit));
         if (selectedUnits.contains(unit))
             drawingRectangles.add(new ColliderBox(x - unit.getImg().getXo(), y - unit.getImg().getYo(),
@@ -303,7 +335,6 @@ public class MapController {
 
     private static int graphicalHeightOf(Building building) {
         if (building == null) return 0;
-        System.err.println(">>>>>>>>>>" + building.getBuildingType() + " " + building.getImg());
         return building.getImg().getYo() - 23 * building.getBuildingType().getSize();
     }
 
@@ -313,10 +344,46 @@ public class MapController {
         if (building == selectedBuilding)
             drawingRectangles.add(new ColliderBox(x - building.getImg().getXo(), y - building.getImg().getYo(),
                     (int) building.getImg().getImage().getWidth(), (int) building.getImg().getImage().getHeight(), Color.GREENYELLOW));
+        int size = building.getBuildingType().getSize();
+        if (building.getFireDamageEachTurn() > 0)
+            for (int k = 0; k < 2 * size - 1; k++) {
+                int X = x + (k - size + 1) * 46;
+                int Y = y + (k < size ? k % size : size - 2 - k % size) * 23;
+                gc.drawImage(SuperImage.FIRE.getImage(), X - SuperImage.FIRE.getXo(), Y - SuperImage.FIRE.getYo());
+            }
+
     }
 
     private static void drawTileAt(GraphicsContext gc, Tile tile, int x, int y) {
         if (tile == null) return;
         gc.drawImage(tile.getImg().getImage(), x - tile.getImg().getXo(), y - tile.getImg().getYo());
+        if (tile == selectedTile)
+            drawingRectangles.add(new ColliderBox(x - tile.getImg().getXo(), y - tile.getImg().getYo(),
+                    (int) tile.getImg().getImage().getWidth(), (int) tile.getImg().getImage().getHeight(), Color.RED));
+        if(tile.sick)
+            gc.drawImage(SuperImage.SICK.getImage(), x - SuperImage.SICK.getXo(), y - SuperImage.SICK.getYo());
+    }
+
+
+    public static void minimapGraphicProcessor(Canvas canvas, Tile[][] map) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        for(int i = 0; i < canvas.getHeight(); i++) {
+            for (int j = 0; j < canvas.getWidth(); j++) {
+                int y = (int) (i * map.length / canvas.getHeight());
+                int x = (int) (j * map[0].length / canvas.getWidth());
+                SuperImage img = map[y][x].getImg();
+                Color color = img.getImage().getPixelReader().getColor(img.getXo(), img.getYo());
+                if (map[y][x].getBuilding() != null) {
+                    Kingdom kingdom = map[y][x].getBuilding().getOwner();
+                    if (kingdom == null) break;
+                    if (kingdom.getColor().equals("red")) color = Color.RED;
+                    else if (kingdom.getColor().equals("blue")) color = Color.BLUE;
+                    else if (kingdom.getColor().equals("green")) color = Color.GREEN;
+                    else if (kingdom.getColor().equals("yellow")) color = Color.YELLOW;
+                }
+                gc.setFill(color);
+                gc.fillRect(j, i, 1, 1);
+            }
+        }
     }
 }
