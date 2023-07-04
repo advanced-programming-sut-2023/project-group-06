@@ -301,7 +301,6 @@ public class GameRoomMenu extends Application {
 
     }
 
-
     private void delete(Message message) throws IOException {
         System.out.println("delete");
         Data.getCurrentUser().deleteMessageCommand(message);
