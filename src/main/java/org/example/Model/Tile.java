@@ -225,4 +225,12 @@ public class Tile {
         }
         return result;
     }
+
+    public void setTileStructure(TileStructure type) {
+        this.type = type;
+        if (!this.type.CanBeCrossed()) {
+            height = -2;
+        } else height = 0;
+        this.img = type.getSuperImage();
+    }
 }
