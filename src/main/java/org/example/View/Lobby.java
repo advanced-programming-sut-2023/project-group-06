@@ -129,7 +129,11 @@ public class Lobby extends Application {
         enter.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                entering(waitingGame);
+                try {
+                    entering(waitingGame);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         vBox.getChildren().remove(vBox.getChildren().size() - 1);
@@ -137,8 +141,9 @@ public class Lobby extends Application {
         middleVBox.getChildren().add(vBox);
     }
 
-    private void entering(WaitingGame waitingGame1) {
-        //todo
+    private void entering(WaitingGame waitingGame1) throws Exception {
+        Data.getCurrentUser().enterWaitingGameCommand(waitingGame1);
+        new GameRoomMenu(waitingGame1).start(stage);
     }
 
     private void setTheRightVBox(){
@@ -256,7 +261,7 @@ public class Lobby extends Application {
             public void handle(MouseEvent mouseEvent) {
                 try {
                     join(waitingGame);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -265,10 +270,10 @@ public class Lobby extends Application {
         return vBox;
     }
 
-    private void join(WaitingGame waitingGame) throws IOException {
+    private void join(WaitingGame waitingGame) throws Exception {
         Data.getCurrentUser().sendToServer();
         Data.getCurrentUser().joinCommand(waitingGame);
-        entering(waitingGame);
+        new GameRoomMenu(waitingGame).start(stage);
     }
 
     private void refresh() throws IOException {
