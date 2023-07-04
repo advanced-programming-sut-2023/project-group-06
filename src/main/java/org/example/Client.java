@@ -23,7 +23,7 @@ public class Client implements Comparable<Client> {
     private ArrayList<String> notDeliveredFriendRequestsSentByMe = new ArrayList<>();
     private ArrayList<String> notRespondedFriendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<Client> friends = new ArrayList<>();
-    private ChatRoom gameRoom = null;
+    /*private ChatRoom gameRoom = null;*/
 
 
     public Client(String username, String password, String nickname, String email, String slogan) throws IOException {
@@ -229,15 +229,15 @@ public class Client implements Comparable<Client> {
         this.friends.add(friend);
     }
 
-    public ChatRoom getGameRoom() {
-        return gameRoom;
-    }
+//    public ChatRoom getGameRoom() {
+//        return gameRoom;
+//    }
 
-    public void setGameRoom(ChatRoom gameRoom) {
+    /*public void setGameRoom(ChatRoom gameRoom) {
         this.gameRoom.getUsernames().remove(this.getUsername());
         if (gameRoom != null) gameRoom.getUsernames().add(this.getUsername());
         this.gameRoom = gameRoom;
-    }
+    }*/
 
     public JsonObject toJson() {
         JsonObject root = new JsonObject();
