@@ -143,7 +143,9 @@ public class Lobby extends Application {
 
     private void entering(WaitingGame waitingGame1) throws Exception {
         Data.getCurrentUser().enterWaitingGameCommand(waitingGame1);
-        new GameRoomMenu(waitingGame1).start(stage);
+        /*new GameRoomMenu(waitingGame1).start(stage);*/
+        GameRoomMenu.waitingGame = waitingGame1;
+        new GameRoomMenu().start(stage);
     }
 
     private void setTheRightVBox(){
@@ -273,7 +275,9 @@ public class Lobby extends Application {
     private void join(WaitingGame waitingGame) throws Exception {
         Data.getCurrentUser().sendToServer();
         Data.getCurrentUser().joinCommand(waitingGame);
-        new GameRoomMenu(waitingGame).start(stage);
+        /*new GameRoomMenu(waitingGame).start(stage);*/
+        GameRoomMenu.waitingGame = waitingGame;
+        new GameRoomMenu().start(stage);
     }
 
     private void refresh() throws IOException {
