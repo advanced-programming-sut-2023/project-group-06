@@ -50,7 +50,7 @@ public class GameRoomMenu extends Application {
         pane.requestFocus();
         scene = new Scene(scrollPane);
         stage.setScene(scene);
-
+        startTheTimeLine();
         if(!stage.isFullScreen()) stage.setFullScreen(true);
         stage.show();
     }
@@ -297,8 +297,9 @@ public class GameRoomMenu extends Application {
 
     }
 
-    private void Leave() {
-
+    private void Leave() throws Exception {
+        Data.getCurrentUser().leaveWaitingRoomCommand(waitingGame);
+        new Lobby().start(stage);
     }
 
     private void delete(Message message) throws IOException {

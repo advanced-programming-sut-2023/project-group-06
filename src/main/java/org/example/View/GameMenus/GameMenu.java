@@ -155,7 +155,6 @@ public class GameMenu extends Application {
         cb.setContents(strSel, null);
     }
 
-
     Tile[][] map;
     private void starter() throws IOException {
         setMouseActions();
@@ -607,10 +606,6 @@ public class GameMenu extends Application {
         MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
-    private void setTileTexture(ImageView tileImage) {
-
-    }
-
     public void kingdomTape() {
         bottomHBox.setMinHeight(200);
         initBuildingsArray();
@@ -635,6 +630,8 @@ public class GameMenu extends Application {
         buildingBorderPane.setMinHeight(y);
         stackPane.getChildren().add(TilesHBox);
         TilesHBox.setVisible(false);
+        TilesHBox.setTranslateY(50);
+        TilesHBox.setTranslateX(10);
         ////////////////
         bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
         bottomHBox.setFocusTraversable(true);

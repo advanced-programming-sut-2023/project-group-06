@@ -382,6 +382,10 @@ public class User implements Comparable<User>, Serializable {
         sendToServer("delete waiting room", waitingGame.toJson());
     }
 
+    public void leaveWaitingRoomCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("leave waiting game", waitingGame.toJson());
+    }
+
     public void enterWaitingGameCommand(WaitingGame waitingGame) throws IOException {
         sendToServer("enter waiting game", waitingGame.toJson());
     }
@@ -444,7 +448,6 @@ public class User implements Comparable<User>, Serializable {
         }
 
     }
-
 
     public void saveMapCommand(String mapName) throws IOException {
         JsonObject jsonObject = new JsonObject();
