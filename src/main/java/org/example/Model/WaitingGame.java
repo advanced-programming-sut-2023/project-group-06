@@ -100,4 +100,28 @@ public class WaitingGame {
     public void setChatRoom(ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
     }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setPlayers(ArrayList<User> players) {
+        this.players = players;
+    }
+
+    public void setCapacity(int capacity) {
+        this.capacity = capacity;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public static void setCount(int count) {
+        WaitingGame.count = count;
+    }
 }

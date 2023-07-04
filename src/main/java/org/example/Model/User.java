@@ -454,4 +454,10 @@ public class User implements Comparable<User>, Serializable {
     }
 
 
+    public WaitingGame getGameWithId(int id) {
+        for (WaitingGame allWaitingGame : allWaitingGames) {
+            if (allWaitingGame.getId() == id) return allWaitingGame;
+        }
+        return null;
+    }
 }

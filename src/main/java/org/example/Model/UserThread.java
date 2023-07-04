@@ -126,7 +126,17 @@ public class UserThread extends Thread {
             }
             id = gameObj.get("id").getAsInt();
             User admin = Data.getUserByName(gameObj.get("admin").getAsString());
-            waitingGames.add(new WaitingGame(id, players, capacity, admin, startTime, isPublic, isGameStarted, chatRoom));
+            WaitingGame waitingGame1;
+            if (user.getGameWithId(id) != null) {
+
+                waitingGame1 = user.getGameWithId(id);
+                waitingGame1.setAdmin(admin);
+                waitingGame1.setChatRoom(chatRoom);
+                waitingGame1.setGameStarted(isGameStarted);
+                waitingGame1.setCapacity(capacity);
+            }
+            waitingGame1 = new WaitingGame(id, players, capacity, admin, startTime, isPublic, isGameStarted, chatRoom);
+            waitingGames.add(waitingGame1);
         }
         user.setAllWaitingGames(waitingGames);
     }

@@ -79,6 +79,7 @@ public class GameRoomMenu extends Application {
                 throw new RuntimeException(e);
             }
             boolean areEqual = true;
+            selectedChat = Data.getCurrentUser().getGameRoomWithId(selectedChat.getId());
             if(selectedChat.lastSix().size() != lastSixMessages.size()) areEqual = false;
             if(areEqual) {
                 for (int i = 0; i < lastSixMessages.size(); i++) {
