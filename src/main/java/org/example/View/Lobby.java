@@ -66,9 +66,6 @@ public class Lobby extends Application {
         middleVBox.setSpacing(15);
         Label label = new Label("create a game");
         label.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23; -fx-text-fill: #10ea1d");
-        /*TextField textFieldId = new TextField();
-        textFieldId.setPromptText("enter an id");
-        textFieldId.setStyle("-fx-min-width: 200; -fx-max-width: 200");*/
         Label label1 = new Label("choose the capacity");
         label1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 16; -fx-text-fill: #10ea1d");
         ChoiceBox<Integer> choiceBox = new ChoiceBox<>();
