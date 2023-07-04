@@ -90,7 +90,7 @@ public class Game {
         root.addProperty("start time", startTime);
         root.addProperty("capacity", capacity);
         root.addProperty("admin", admin.getUsername());
-        root.addProperty("is public", isGameStarted);
+        root.addProperty("is game started", isGameStarted);
         return root;
     }
 
