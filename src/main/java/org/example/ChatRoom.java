@@ -22,6 +22,14 @@ public class ChatRoom {
         System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000000");
     }
 
+    public ChatRoom(ArrayList<String> usernames, ChatType chatType, String name, int id, int o) {
+        this.usernames = usernames;
+        this.chatType = chatType;
+        this.name = name;
+        this.id = id;
+        System.out.println("00000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+    }
+
     public void addMessage(Message message) {
         messages.add(message);
     }

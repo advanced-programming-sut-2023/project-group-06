@@ -192,6 +192,7 @@ public class Connection extends Thread {
         if (commandType.equals("join waiting game")) joinWaitingGame(context);
         if (commandType.equals("leave waiting game")) leaveWaitingGame(context);
         if (commandType.equals("delete waiting game")) deleteWaitingGame(context);
+        if (commandType.equals("enter waiting game")) enterWaitingGame(context);
         dataOutputStream.writeUTF(new Gson().toJson(sendData()));
     }
 
@@ -200,6 +201,20 @@ public class Connection extends Thread {
         Game game = Data.getGameById(id);
         game.setStartTime(System.currentTimeMillis());
         game.addPlayer(client);
+        client.setGameRoom(game.getChatRoom());
+        if (game.getPlayers().size() == game.getCapacity()) {
+            game.setGameStarted(true);
+            client.setGameRoom(null);
+            game.setChatRoom(null);
+        }
+    }
+
+    private void enterWaitingGame(JsonObject context) {
+        int id = context.get("id").getAsInt();
+        Game game = Data.getGameById(id);
+        game.setStartTime(System.currentTimeMillis());
+        if (client != game.getAdmin()) System.out.println("enter waiting game ERRRROROORROROROR");
+        client.setGameRoom(game.getChatRoom());
         if (game.getPlayers().size() == game.getCapacity()) game.setGameStarted(true);
     }
 
@@ -208,6 +223,7 @@ public class Connection extends Thread {
         Client admin = Data.getClientByName(context.get("admin").getAsString());
         Game game = Data.getGameById(id);
         game.removePlayer(client);
+        client.setGameRoom(null);
         if (client == admin) {
             if (game.getPlayers().isEmpty()) Data.removeGame(game);
             else game.setAdmin(game.getPlayers().get(0));
@@ -227,6 +243,8 @@ public class Connection extends Thread {
         int capacity = context.get("capacity").getAsInt();
         boolean isPublic = context.get("is public").getAsBoolean();
         Game game = new Game(isPublic, startTime, capacity, id, Data.getClientByName(adminUsername));
+//        ArrayList<String> usernames = new ArrayList<>(); usernames.add(client.getUsername());
+//        ChatRoom chatRoom = new ChatRoom(usernames, ChatType.GAME, null);
         Data.addWaitingGame(game);
     }
 
@@ -289,12 +307,12 @@ public class Connection extends Thread {
         System.out.println("create Room : " + context);
         int id = context.get("id").getAsInt();
         JsonArray members = context.get("users").getAsJsonArray();
+        ChatType chatType = ChatType.getChatTypeByString(context.get("chat type").getAsString());
         ArrayList<String> usernames = new ArrayList<>();
         for (JsonElement member : members) {
             JsonObject user = member.getAsJsonObject();
             usernames.add(user.get("username").getAsString());
         }
-        ChatType chatType = ChatType.getChatTypeByString(context.get("chat type").getAsString());
         String name = context.get("name").getAsString();
         ChatRoom chatRoom = new ChatRoom(usernames, chatType, name, id);
     }
@@ -393,6 +411,12 @@ public class Connection extends Thread {
             allWaitingGames.add(jsonObject);
         }
         root.add("all waiting games", allWaitingGames);
+        root.add("game room", (client.getGameRoom() == null) ? null : client.getGameRoom().toJson());
+        JsonArray mapNames = new JsonArray();
+        for (String mapName : Data.getMapNames()) {
+            mapNames.add(mapName);
+        }
+        root.add("map names", mapNames);
         return root;
     }
 }

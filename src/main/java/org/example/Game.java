@@ -13,6 +13,8 @@ public class Game {
     int id;
     Client admin;
     boolean isGameStarted = false;
+    ChatRoom chatRoom;
+    private static int count = 0;
 
     public Game(boolean isPublic, long startTime, int capacity, int id, Client admin) {
         this.isPublic = isPublic;
@@ -20,6 +22,8 @@ public class Game {
         this.capacity = capacity;
         this.id = id;
         this.admin = admin;
+        ArrayList<String> usernames = new ArrayList<>(); usernames.add(admin.getUsername());
+        chatRoom = new ChatRoom(usernames, ChatType.GAME, "null", id, 0);
         players.add(admin);
     }
     public long getStartTime() {
@@ -78,6 +82,14 @@ public class Game {
         this.isPublic = isPublic;
     }
 
+    public ChatRoom getChatRoom() {
+        return chatRoom;
+    }
+
+    public void setChatRoom(ChatRoom chatRoom) {
+        this.chatRoom = chatRoom;
+    }
+
     public JsonObject toJson() {
         JsonObject root = new JsonObject();
         JsonArray playersObj = new JsonArray();
@@ -91,6 +103,9 @@ public class Game {
         root.addProperty("capacity", capacity);
         root.addProperty("admin", admin.getUsername());
         root.addProperty("is game started", isGameStarted);
+        JsonArray container = new JsonArray();
+        container.add(chatRoom.toJson());
+        root.add("game room", container);
         return root;
     }
 
