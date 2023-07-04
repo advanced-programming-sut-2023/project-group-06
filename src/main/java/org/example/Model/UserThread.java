@@ -118,6 +118,7 @@ public class UserThread extends Thread {
                 message.setId(messageId);
             }
             chatRoom.setMessages(messages);
+            System.out.println("+)+" + messages);
             //end
             for (JsonElement jsonElement : playersObj) {
                 String username = jsonElement.getAsString();

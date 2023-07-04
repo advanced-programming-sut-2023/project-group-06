@@ -293,7 +293,7 @@ public class User implements Comparable<User>, Serializable {
 
     public ChatRoom getChatWithId(int id) {
         for (ChatRoom chat : chats) {
-            if (chat.getId() == id) return chat;
+            if (chat.getId() == id && chat.getChatType() != ChatType.GAME) return chat;
         }
         return null;
     }
@@ -427,7 +427,7 @@ public class User implements Comparable<User>, Serializable {
         this.mapNamesIHave = mapNamesIHave;
     }
 
-    public void downloadMap(String name) throws IOException {
+    public boolean downloadMap(String name) throws IOException {
         boolean contains = false;
         boolean alreadyContain = false;
         System.out.println("all map name:" + allMapNames);
@@ -438,11 +438,12 @@ public class User implements Comparable<User>, Serializable {
         for (String s : mapNamesIHave) {
             if (s.equals(name)) alreadyContain = true;
         }
+        if (alreadyContain) return false;
         if (!alreadyContain && contains) {
             System.out.println("entered if");
             saveMapCommand(name);
         }
-
+        return true;
     }
 
 

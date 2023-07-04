@@ -39,6 +39,7 @@ public class WaitingGame {
         this.isPublic = isPublic;
         count = id + 1;
         this.isGameStarted = isGameStarted;
+        this.chatRoom = chatRoom;
     }
 
     public int getId() {

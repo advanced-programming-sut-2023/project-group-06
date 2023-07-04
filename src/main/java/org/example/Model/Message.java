@@ -48,6 +48,7 @@ public class Message{
         jsonObject.addProperty("time", time);
         jsonObject.addProperty("id", id);
         jsonObject.addProperty("chat room id", chatRoom.getId());
+        jsonObject.addProperty("chat room type", chatRoom.getChatType().toString().toLowerCase());
         return jsonObject;
     }
 

@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
@@ -68,7 +69,8 @@ public class MapMenu extends Application {
 
     private void setTheMiddleVBox() {
         HBox searchHBox = new HBox();
-        TextField textField = new TextField("search");
+        TextField textField = new TextField();
+        textField.setPromptText("search");
         textField.setStyle("-fx-min-width: 200; -fx-max-width: 200");
         Circle circle = new Circle(20);
         circle.setFill(new ImagePattern(
@@ -89,7 +91,11 @@ public class MapMenu extends Application {
 
     private void search(String text) throws IOException {
         System.out.println("map search working");
-        Data.getCurrentUser().downloadMap(text);
+        if (!Data.getCurrentUser().downloadMap(text)) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("ALREADY HAVE THIS MAP");
+            alert.showAndWait();
+        }
         setTheLeftVBox();
     }
 
