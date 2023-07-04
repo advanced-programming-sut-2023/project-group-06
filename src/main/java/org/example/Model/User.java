@@ -31,7 +31,9 @@ public class User implements Comparable<User>, Serializable {
     private boolean isOnline = false;
     private long lastSeen = 0;
     private ChatRoom gameChatRoom = null;
-    private ArrayList<String> mapNames = new ArrayList<>();
+    private ArrayList<String> allMapNames = new ArrayList<>();
+    private ArrayList<String> mapNamesIHave = new ArrayList<>();
+
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -408,4 +410,47 @@ public class User implements Comparable<User>, Serializable {
         if (waitingGame1 == null) return null;
         return waitingGame1.getChatRoom();
     }
+
+    public ArrayList<String> getAllMapNames() {
+        return allMapNames;
+    }
+
+    public void setAllMapNames(ArrayList<String> allMapNames) {
+        this.allMapNames = allMapNames;
+    }
+
+    public ArrayList<String> getMapNamesIHave() {
+        return mapNamesIHave;
+    }
+
+    public void setMapNamesIHave(ArrayList<String> mapNamesIHave) {
+        this.mapNamesIHave = mapNamesIHave;
+    }
+
+    public void downloadMap(String name) throws IOException {
+        boolean contains = false;
+        boolean alreadyContain = false;
+        System.out.println("all map name:" + allMapNames);
+        System.out.println("map names i have:" + mapNamesIHave);
+        for (String allMapName : allMapNames) {
+            if (allMapName.equals(name)) contains = true;
+        }
+        for (String s : mapNamesIHave) {
+            if (s.equals(name)) alreadyContain = true;
+        }
+        if (!alreadyContain && contains) {
+            System.out.println("entered if");
+            saveMapCommand(name);
+        }
+
+    }
+
+
+    public void saveMapCommand(String mapName) throws IOException {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("map name", mapName);
+        sendToServer("save map", jsonObject);
+    }
+
+
 }

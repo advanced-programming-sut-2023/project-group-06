@@ -228,4 +228,6 @@ public class Data {
     }
 
 
+    public static void startGame(String s) {
+    }
 }
