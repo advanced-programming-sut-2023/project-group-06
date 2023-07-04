@@ -570,4 +570,8 @@ public class ChatMenu extends Application {
     public void enterLobby(MouseEvent mouseEvent) throws Exception {
         new Lobby().start(stage);
     }
+
+    public void map(MouseEvent mouseEvent) {
+
+    }
 }
