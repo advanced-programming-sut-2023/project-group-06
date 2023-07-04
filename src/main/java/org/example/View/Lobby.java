@@ -267,9 +267,8 @@ public class Lobby extends Application {
 
     private void join(WaitingGame waitingGame) throws IOException {
         Data.getCurrentUser().sendToServer();
-        //todo
         Data.getCurrentUser().joinCommand(waitingGame);
-        refresh();
+        entering(waitingGame);
     }
 
     private void refresh() throws IOException {
