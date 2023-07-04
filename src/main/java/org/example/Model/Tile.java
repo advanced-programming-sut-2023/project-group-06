@@ -33,10 +33,9 @@ public class Tile {
         this.type = type;
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
-        if (!this.type.CanBeCrossed()){
+        if (!this.type.CanBeCrossed()) {
             height = -2;
-        }
-        else height = 0;
+        } else height = 0;
         this.img = type.getSuperImage();
     }
 
@@ -48,11 +47,11 @@ public class Tile {
         this.ditchDelay = ditchDelay;
     }
 
-    public void subDitchDelay(){
+    public void subDitchDelay() {
         this.ditchDelay -= 1;
     }
 
-    public void addDitchDelay(){
+    public void addDitchDelay() {
         this.ditchDelay++;
     }
 
@@ -112,9 +111,10 @@ public class Tile {
 
     public void setBuilding(Building building) {
         this.building = building;
-        if(building == null) return;
-        if(building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType() == BuildingType.KILLING_PIT) height = 0;
-        if(building.getBuildingType() == BuildingType.OX_TETHER && building.getOwner() != null){
+        if (building == null) return;
+        if (building.getBuildingType() == BuildingType.BRIDGE || building.getBuildingType() == BuildingType.KILLING_PIT)
+            height = 0;
+        if (building.getBuildingType() == BuildingType.OX_TETHER && building.getOwner() != null) {
             Unit cow = new Unit(building.getXCoordinate(), building.getYCoordinate(), building.getOwner(), UnitType.COW);
             GameController.currentGame.getTileByCoordinates(building.getYCoordinate(), building.getXCoordinate()).getAllUnits().add(cow);
             GameController.currentPlayer.getCows().add(cow);
@@ -123,7 +123,7 @@ public class Tile {
         if (building.getBuildingType() == BuildingType.STAIR) height = 1;
         else if (building.getBuildingType() == BuildingType.WALL) height = 2;
         else if (building instanceof Towers || building instanceof Gate) height = 3;
-        else if(building.getBuildingType().isCanYouEnterIt()) height = 0;
+        else if (building.getBuildingType().isCanYouEnterIt()) height = 0;
         else height = -2;
     }
 
@@ -132,11 +132,11 @@ public class Tile {
         allUnits.add(soldier);
     }
 
-    public void addUnit(Unit unit){
+    public void addUnit(Unit unit) {
         allUnits.add(unit);
         unit.setXCoordinate(this.getXCoordinate());
         unit.setYCoordinate(this.getYCoordinate());
-        if(unit instanceof Soldier)
+        if (unit instanceof Soldier)
             soldiers.add((Soldier) unit);
     }
 
@@ -154,9 +154,9 @@ public class Tile {
         this.allUnits.remove(soldier);
     }
 
-    public void removeUnit(Unit unit){
+    public void removeUnit(Unit unit) {
         this.allUnits.remove(unit);
-        if(unit instanceof Soldier)
+        if (unit instanceof Soldier)
             this.soldiers.remove((Soldier) unit);
     }
 
@@ -167,15 +167,14 @@ public class Tile {
         return false;
     }
 
-    public boolean checkForVisibleSoldiers(Kingdom kingdom){
+    public boolean checkForVisibleSoldiers(Kingdom kingdom) {
         boolean result = false;
-        for(Soldier soldier : soldiers){
-            if(!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != kingdom)) {
+        for (Soldier soldier : soldiers) {
+            if (!(soldier.getUnitType() == UnitType.ASSASSIN && soldier.getOwner() != kingdom)) {
                 result = true;
                 break;
-            }
-            else{
-                if(GameController.findNearestEnemyTo(soldier, 4) != null) {
+            } else {
+                if (GameController.findNearestEnemyTo(soldier, 4) != null) {
                     result = true;
                     break;
                 }
@@ -184,17 +183,17 @@ public class Tile {
         return result;
     }
 
-    public boolean checkForCows(){
-        for(Unit unit : this.allUnits){
-            if(unit.getUnitType() == UnitType.COW)
+    public boolean checkForCows() {
+        for (Unit unit : this.allUnits) {
+            if (unit.getUnitType() == UnitType.COW)
                 return true;
         }
         return false;
     }
 
-    public boolean checkForEngineers(){
-        for(Unit unit : this.allUnits){
-            if(unit.getUnitType() == UnitType.ENGINEER)
+    public boolean checkForEngineers() {
+        for (Unit unit : this.allUnits) {
+            if (unit.getUnitType() == UnitType.ENGINEER)
                 return true;
         }
         return false;
@@ -216,6 +215,14 @@ public class Tile {
     }
 
     public String toString() {
-        return "(" + this.getX() + this.getY() + this.getType() + this.getHeight() + ")";
+        return "(" + getX() + ", " + getY() + ") : " + type.name;
+    }
+
+    public String toZtring() {
+        String result = "(" + getX() + ", " + getY() + ")\nstructure: " + type.name + (soldiers.isEmpty() ? "" : "\nsoldiers:");
+        for (Soldier soldier : soldiers) {
+            result += "\n" + soldier.getUnitType().name + " - " + soldier.getOwner().getOwner().getUsername();
+        }
+        return result;
     }
 }

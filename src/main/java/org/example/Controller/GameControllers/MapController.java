@@ -363,4 +363,27 @@ public class MapController {
         if(tile.sick)
             gc.drawImage(SuperImage.SICK.getImage(), x - SuperImage.SICK.getXo(), y - SuperImage.SICK.getYo());
     }
+
+
+    public static void minimapGraphicProcessor(Canvas canvas, Tile[][] map) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        for(int i = 0; i < canvas.getHeight(); i++) {
+            for (int j = 0; j < canvas.getWidth(); j++) {
+                int y = (int) (i * map.length / canvas.getHeight());
+                int x = (int) (j * map[0].length / canvas.getWidth());
+                SuperImage img = map[y][x].getImg();
+                Color color = img.getImage().getPixelReader().getColor(img.getXo(), img.getYo());
+                if (map[y][x].getBuilding() != null) {
+                    Kingdom kingdom = map[y][x].getBuilding().getOwner();
+                    if (kingdom == null) break;
+                    if (kingdom.getColor().equals("red")) color = Color.RED;
+                    else if (kingdom.getColor().equals("blue")) color = Color.BLUE;
+                    else if (kingdom.getColor().equals("green")) color = Color.GREEN;
+                    else if (kingdom.getColor().equals("yellow")) color = Color.YELLOW;
+                }
+                gc.setFill(color);
+                gc.fillRect(j, i, 1, 1);
+            }
+        }
+    }
 }

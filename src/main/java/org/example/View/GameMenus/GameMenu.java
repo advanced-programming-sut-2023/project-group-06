@@ -85,6 +85,7 @@ public class GameMenu extends Application {
     public Building draggedBuilding;
     // todo final drop position of dragged building on canvas
     private ImageView draggedBuildingImageView;
+    private Canvas miniMapCanvas;
     private ArrayList<BuildingType> allBuildingTypes = new ArrayList<>();
 
     @Override
@@ -129,6 +130,7 @@ public class GameMenu extends Application {
         draggedBuildingImageView.setImage(draggedBuilding.getImg().getImage());
         draggedBuildingImageView.setVisible(true);
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void copySelectedBuilding() {
@@ -172,7 +174,7 @@ public class GameMenu extends Application {
             building.addToFireDamageEachTurn(2);
             for (int i = 19; i < 22; i++) for (int j = 26; j < 29; j++) map[i][j].setBuilding(building);
 
-            for(int i = 0; i < 20; i++) {
+            for (int i = 0; i < 20; i++) {
                 building = new Building(kingdom, BuildingType.WALL, 20, i);
                 map[i][20].setBuilding(building);
             }
@@ -180,8 +182,7 @@ public class GameMenu extends Application {
             map[10][19].setBuilding(building);
 
             map[1][1].sick = true;
-        }
-        else {
+        } else {
             map = Data.loadMap("test");
 
 
@@ -215,7 +216,6 @@ public class GameMenu extends Application {
                         archer = new Soldier(j, i, null, UnitType.ARCHER);
                         map[i][j].addSoldier(archer);
                     }
-
 
 
             Building building = new Building(null, BuildingType.INN, 1, 20);
@@ -294,6 +294,7 @@ public class GameMenu extends Application {
 //        draggedBuildingImageView.setVisible(true);
 
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void setMouseActions() {
@@ -373,6 +374,7 @@ public class GameMenu extends Application {
         Response response = GameController.dropBuilding(Commands.getMatcher(cmd, Commands.DROP_BUILDING));
         System.out.println(response);
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
     private void onMouseDraggedFunction(MouseEvent e) {
@@ -447,6 +449,8 @@ public class GameMenu extends Application {
         if (unit != null) return unit.toString();
         Building building = MapController.getBuildingAt(xx, yy);
         if (building != null) return building.toString();
+        Tile tile = MapController.getTileAt(xx, yy);
+        if (tile != null) return tile.toZtring();
         return null;
     }
 
@@ -500,6 +504,21 @@ public class GameMenu extends Application {
         draggedBuildingImageView.setScaleY(0.3);
         draggedBuildingImageView.setVisible(false);
         UIPane.getChildren().add(draggedBuildingImageView);
+        miniMapCanvas = new Canvas(200, 200);  // mini map canvas
+        UIPane.getChildren().add(miniMapCanvas);
+        miniMapCanvas.setLayoutX(10);
+        miniMapCanvas.setLayoutY(10);
+        miniMapCanvas.setOnMouseClicked(e -> {
+            double x = e.getX();
+            double y = e.getY();
+            double w = miniMapCanvas.getWidth();
+            double h = miniMapCanvas.getHeight();
+            int X = (int) (x / w * map[0].length);
+            int Y = (int) (y / h * map.length);
+            mapPointerX = ((int) mainCanvas.getWidth()) / 2 + (X - Y) * 46; // mapPtrX  = mainCanvas.width/2 + (x-y) * 46
+            mapPointerY = ((int) mainCanvas.getHeight()) / 2 + (X + Y) * 23;
+            MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        });
         return scene;
     }
 
@@ -807,6 +826,7 @@ public class GameMenu extends Application {
         GameController.nextTurn();
         currentPlayer.setText("current player: " + GameController.currentPlayer.getOwner().getUsername());
         MapController.mapGraphicProcessor(mainCanvas, map, mapPointerX, mapPointerY);
+        MapController.minimapGraphicProcessor(miniMapCanvas, map);
     }
 
 //    public void initialize() {
