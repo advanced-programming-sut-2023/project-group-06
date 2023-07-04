@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -38,6 +39,7 @@ import org.example.Model.*;
 import org.example.Model.BuildingGroups.Building;
 import org.example.Model.BuildingGroups.BuildingType;
 import org.example.View.Commands;
+import org.example.View.ProfileMenu;
 import org.example.View.Response;
 import org.example.View.Graphics.SuperImage;
 import org.example.View.MainMenu;
@@ -70,9 +72,11 @@ public class GameMenu extends Application {
     double mouseX;
     double mouseY;
     private ArrayList<Image> buildingIcons = new ArrayList<>();
+    private ArrayList<Image> tileIcons = new ArrayList<>();
     private int[] buildingGroup = new int[6];
     private int buildingIndex = 0;
-    private HBox buildingHBox, popularityHBox, buildingGroupHBox;
+    private int tileIndex = 0;
+    private HBox buildingHBox, popularityHBox, buildingGroupHBox, TilesHBox;
     private BorderPane buildingBorderPane;
     private VBox actionVBox;
     Text currentPlayer;
@@ -104,12 +108,15 @@ public class GameMenu extends Application {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
-            } else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
+            }
+            else if (e.getCode() == KeyCode.RIGHT) setBuildingIndex(buildingIndex + 1);
             else if (e.getCode() == KeyCode.LEFT) setBuildingIndex(buildingIndex - 1);
+            else if(e.getCode() == KeyCode.D) setTileIndex(tileIndex + 1);
+            else if(e.getCode() == KeyCode.A) setTileIndex(tileIndex - 1);
         });
         starter();
         stage.show();
-        if (!stage.isFullScreen()) stage.setFullScreen(true);
+        if(!stage.isFullScreen()) stage.setFullScreen(true);
         ChatRoom chatRoom = new ChatRoom(GameController.currentGame.getPlayers(),
                 GameController.currentGame.getPlayers().get(0).getUsername());
         /*zoomOut();
@@ -142,7 +149,6 @@ public class GameMenu extends Application {
 
 
     Tile[][] map;
-
     private void starter() throws IOException {
         setMouseActions();
         if (GameController.currentGame != null) {
@@ -150,7 +156,11 @@ public class GameMenu extends Application {
             GameController.currentGame.setMap(map, map[0].length, map.length);
             System.out.println(GameController.currentGame.getPlayers().size());
             for (int i = 0; i < GameController.currentGame.getPlayers().size(); i++) {
+                //  Kingdom kingdom = GameController.currentGame.getKingdoms().get(i);
                 int x = i % 2 == 0 ? 10 : map[0].length - 11, y = i / 2 == 0 ? 10 : map.length - 11;
+
+                //Building building = new Building(kingdom, BuildingType.MAIN_CASTLE, x, y);
+                //  map[y][x].setBuilding(building);
                 String validColors[] = {"red", "blue", "green", "yellow"};
                 String cmd = "main castle -x " + x + " -y " + y + " -color " + validColors[i] + " -d n";
                 GameController.putMainCastle(Commands.getMatcher(cmd, Commands.PUT_MAIN_CASTLE));
@@ -528,6 +538,12 @@ public class GameMenu extends Application {
         showBuildings();
     }
 
+    private void setTileIndex(int i){
+        if(i >= tileIcons.size() - 4 || i < 0) return;
+        tileIndex = i;
+        showTiles();
+    }
+
     private void showBuildings() {
         buildingHBox.getChildren().clear();
         buildingHBox.setSpacing(10);
@@ -552,14 +568,37 @@ public class GameMenu extends Application {
         draggedBuildingImageView.setImage(building.getImg().getImage());
     }
 
+    private void showTiles() {
+        TilesHBox.getChildren().clear();
+        TilesHBox.setSpacing(15);
+        for(int i = 0; i < 4; i++){
+            ImageView tileImage = new ImageView(tileIcons.get(tileIndex + i));
+            tileImage.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent mouseEvent) {
+                    setTileTexture(tileImage);
+                }
+            });
+            tileImage.setFitWidth(100);
+            tileImage.setFitHeight(50);
+            TilesHBox.getChildren().add(tileImage);
+        }
+    }
+
+    private void setTileTexture(ImageView tileImage) {
+
+    }
+
     public void kingdomTape() {
         bottomHBox.setMinHeight(200);
         initBuildingsArray();
+        initTileIcons();
         popularityHBox = new HBox();
         buildingBorderPane = new BorderPane();
         StackPane stackPane = new StackPane();
         stackPane.getChildren().addAll(buildingBorderPane, popularityHBox);
         buildingHBox = new HBox();
+        TilesHBox = new HBox();///////
         buildingBorderPane.setCenter(buildingHBox);
         buildingGroupHBox = makeGroupHBox();
         buildingBorderPane.setBottom(buildingGroupHBox);
@@ -572,6 +611,8 @@ public class GameMenu extends Application {
         buildingBorderPane.setMinWidth(x);
         buildingBorderPane.setMaxHeight(y);
         buildingBorderPane.setMinHeight(y);
+        stackPane.getChildren().add(TilesHBox);
+        TilesHBox.setVisible(false);
         ////////////////
         bottomHBox.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(GameMenu.class.getResource("/Images/Game/menu.png").toExternalForm())), null, null)));
         bottomHBox.setFocusTraversable(true);
@@ -582,6 +623,7 @@ public class GameMenu extends Application {
         stackPane.setMinWidth(520);
         stackPane.setMaxWidth(520);
         setBuildingIndex(0);
+        setTileIndex(0);///////////
         popularityHBox.setVisible(false);
         bottomHBox.setAlignment(Pos.BOTTOM_CENTER);
         Text happiness = new Text(Integer.toString(GameController.currentPlayer.getHappiness()));
@@ -720,6 +762,12 @@ public class GameMenu extends Application {
         System.err.println("++++++++++++   " + size + " " + buildingGroup);
     }
 
+    private void initTileIcons(){
+        for (TileStructure value : TileStructure.values()) {
+            tileIcons.add(value.getSuperImage().getImage());
+        }
+    }
+
     public void setPopularityHBox(HBox popularityHBox) {
         Text text = new Text("Popularity");
         text.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 23");
@@ -729,7 +777,7 @@ public class GameMenu extends Application {
         Kingdom kingdom = GameController.currentPlayer;
         int food1 = kingdom.showPopularityFactorsFood();
         String sign = "";
-        if (food1 > 0) sign = "+";
+        if(food1 > 0) sign = "+";
         Text text1 = new Text(sign + food1);
         /*ImageView imageView = new ImageView(MainMenu.class.getResource("Images/Game/mask1.jpg").toString());
         imageView.setPreserveRatio(true);
@@ -740,12 +788,16 @@ public class GameMenu extends Application {
         Text text2 = new Text("Food");
         text1.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text2.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        food.getChildren().addAll(text1, text2);
+        String maskImage5 = food1 > 0 ? "8" : food1 < 0 ? "9" : "10";
+        Circle mask5 = new Circle(10);
+        mask5.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage5 + ".png").toString())));
+        food.getChildren().addAll(text1, mask5, text2);
         food.setSpacing(5);
         HBox tax = new HBox();
         int tax1 = kingdom.showPopularityFactorsTax();
         String sign1 = "";
-        if (tax1 > 0) sign1 = "+";
+        if(tax1 > 0) sign1 = "+";
         Text text3 = new Text(sign1 + tax1);
         tax.setTranslateX(text1.getBoundsInLocal().getWidth() - text3.getBoundsInLocal().getWidth()
                 - text2.getBoundsInLocal().getWidth() - 10);
@@ -753,43 +805,59 @@ public class GameMenu extends Application {
         Text text4 = new Text("Tax");
         text3.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text4.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        tax.getChildren().addAll(text3, text4);
+        String maskImage = tax1 > 0 ? "8" : tax1 < 0 ? "9" : "10";
+        Circle mask = new Circle(10);
+        mask.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage + ".png").toString())));
+        tax.getChildren().addAll(text3, mask, text4);
         tax.setSpacing(5);
         HBox fear = new HBox();
         int fear1 = kingdom.showPopularityFactorsFear();
         String sign2 = "";
-        if (fear1 > 0) sign2 = "+";
+        if(fear1 > 0) sign2 = "+";
         Text text5 = new Text(sign2 + fear1);
         fear.setTranslateX(-87);
         fear.setTranslateY(70);
         Text text6 = new Text("Fear");
         text5.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text6.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        fear.getChildren().addAll(text5, text6);
+        String maskImage1 = fear1 > 0 ? "8" : fear1 < 0 ? "9" : "10";
+        Circle mask1 = new Circle(10);
+        mask1.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage1 + ".png").toString())));
+        fear.getChildren().addAll(text5, mask1, text6);
         fear.setSpacing(5);
         HBox religion = new HBox();
         int religion1 = kingdom.showPopularityFactorsReligion();
         String sign3 = "";
-        if (religion1 > 0) sign3 = "+";
+        if(religion1 > 0) sign3 = "+";
         Text text7 = new Text(sign3 + religion1);
         religion.setTranslateX(-text7.getBoundsInLocal().getWidth());
         religion.setTranslateY(30);
         Text text8 = new Text("Religion");
         text7.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text8.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        religion.getChildren().addAll(text7, text8);
+        String maskImage2 = religion1 > 0 ? "8" : religion1 < 0 ? "9" : "10";
+        Circle mask2 = new Circle(10);
+        mask2.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage2 + ".png").toString())));
+        religion.getChildren().addAll(text7, mask2, text8);
         religion.setSpacing(5);
         HBox wine = new HBox();
         int wine1 = kingdom.showPopularityFactorsWine();
         String sign4 = "";
-        if (wine1 > 0) sign4 = "+";
+        if(wine1 > 0) sign4 = "+";
         Text text9 = new Text(sign4 + wine1);
         wine.setTranslateX(-83 - text9.getBoundsInLocal().getWidth());
         wine.setTranslateY(50);
         Text text10 = new Text("Wine Usage");
         text9.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
         text10.setStyle("-fx-font-family: 'Times New Roman'; -fx-font-size: 20");
-        wine.getChildren().addAll(text9, text10);
+        String maskImage3 = wine1 > 0 ? "8" : wine1 < 0 ? "9" : "10";
+        Circle mask3 = new Circle(10);
+        mask3.setFill(new ImagePattern(
+                new Image(ProfileMenu.class.getResource("/Images/Game/mask" + maskImage3 + ".png").toString())));
+        wine.getChildren().addAll(text9, mask3, text10);
         wine.setSpacing(5);
         Button back = new Button("Back");
         Button rate = new Button("Rate");
@@ -798,8 +866,8 @@ public class GameMenu extends Application {
                 "-fx-font-family: 'Book Antiqua'";
         back.setStyle(style3);
         rate.setStyle(style3);
-        back.setTranslateX(-440);
-        back.setTranslateY(70);
+        back.setTranslateX(-540);
+        back.setTranslateY(80);
         back.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
@@ -811,12 +879,20 @@ public class GameMenu extends Application {
         popularityHBox.getChildren().addAll(text, food, tax, fear, religion, wine, back/*, rate*/);
     }
 
+    private void makeTilesVisible(){
+        TilesHBox.setVisible(true);
+        buildingBorderPane.setVisible(false);
+        popularityHBox.setVisible(false);
+    }
+
     private void reversePopularityBar(HBox popularityHBox) {
+        TilesHBox.setVisible(false);
         popularityHBox.setVisible(false);
         buildingBorderPane.setVisible(true);
     }
 
     private void popularityBar(HBox popularityHBox, HBox buildingHBox) {
+        TilesHBox.setVisible(false);
         popularityHBox.setVisible(true);
         buildingBorderPane.setVisible(false);
     }

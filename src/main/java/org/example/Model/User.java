@@ -27,8 +27,11 @@ public class User implements Comparable<User>, Serializable {
     private ArrayList<FriendRequest> friendRequestsReceivedByMe = new ArrayList<>();
     private ArrayList<User> myFriends = new ArrayList<>();
     private ArrayList<String> allClients = new ArrayList<>();
+    private ArrayList<WaitingGame> allWaitingGames = new ArrayList<>();
     private boolean isOnline = false;
     private long lastSeen = 0;
+    private ChatRoom gameChatRoom = null;
+    private ArrayList<String> mapNames = new ArrayList<>();
 
     public User(String username, String password, String nickname, String email, String slogan) throws IOException {
         this.username = username;
@@ -355,5 +358,54 @@ public class User implements Comparable<User>, Serializable {
 
     public void setAllClients(ArrayList<String> allClients) {
         this.allClients = allClients;
+    }
+
+    public ArrayList<WaitingGame> getAllWaitingGames() {
+        return allWaitingGames;
+    }
+
+    public void setAllWaitingGames(ArrayList<WaitingGame> allWaitingGames) {
+        this.allWaitingGames = allWaitingGames;
+    }
+
+    public void createWaitingGameCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("create waiting game", waitingGame.toJson());
+    }
+
+    public void joinCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("join waiting room", waitingGame.toJson());
+    }
+
+    public void deleteWaitingRoomCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("delete waiting room", waitingGame.toJson());
+    }
+
+    public void enterWaitingGameCommand(WaitingGame waitingGame) throws IOException {
+        sendToServer("enter waiting game", waitingGame.toJson());
+    }
+
+    public WaitingGame getWaitingRoomById(int id){
+        for (WaitingGame waitingGame : allWaitingGames) {
+            if(waitingGame.getId() == id)
+                return waitingGame;
+        }
+        return null;
+    }
+
+    public ChatRoom getGameChatRoom() {
+        return gameChatRoom;
+    }
+
+    public void setGameChatRoom(ChatRoom gameChatRoom) {
+        this.gameChatRoom = gameChatRoom;
+    }
+
+    public ChatRoom getGameRoomWithId(int id) {
+        WaitingGame waitingGame1 = null;
+        for (WaitingGame waitingGame : allWaitingGames) {
+            if (waitingGame.getId() == id) waitingGame1 = waitingGame;
+        }
+        if (waitingGame1 == null) return null;
+        return waitingGame1.getChatRoom();
     }
 }

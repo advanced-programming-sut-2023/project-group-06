@@ -45,10 +45,67 @@ public class UserThread extends Thread {
         JsonArray notRespondedFriendRequestsReceivedByMe = json.get("friend requests received by me").getAsJsonArray();
         JsonArray friends = json.get("friends").getAsJsonArray();
         JsonArray clients = json.get("all clients").getAsJsonArray();
+        JsonArray allWaitingGames = json.get("all waiting games").getAsJsonArray();
         handleChatRoom(chatRooms);
         handleFriendRequests(notRespondedFriendRequestsReceivedByMe);
         handleFriends(friends);
         handleClients(clients);
+        handleWaitingGames(allWaitingGames);
+    }
+
+    private void handleWaitingGames(JsonArray allWaitingGames) throws IOException {
+        ArrayList<WaitingGame> waitingGames = new ArrayList<>();
+        for (JsonElement waitingGame : allWaitingGames) {
+            JsonObject gameObj = waitingGame.getAsJsonObject();
+//            long startTime;
+//            int capacity;
+//            ArrayList<Client> players = new ArrayList<>();
+//            int id;
+//            Client admin;
+            boolean isPublic = gameObj.get("is public").getAsBoolean();
+            boolean isGameStarted = gameObj.get("is game started").getAsBoolean();
+            long startTime = gameObj.get("start time").getAsLong();
+            int capacity = gameObj.get("capacity").getAsInt();
+            ArrayList<User> players = new ArrayList<>();
+            JsonArray playersObj = gameObj.get("players").getAsJsonArray();
+            JsonArray container = gameObj.get("game room").getAsJsonArray();
+            JsonObject gameRoomObj = null;
+            for (JsonElement jsonElement : container) {
+                gameRoomObj = jsonElement.getAsJsonObject();
+            }
+            //start
+            JsonArray users = gameRoomObj.get("users").getAsJsonArray();
+            ArrayList<User> users1 = new ArrayList<>();
+            ChatRoom chatRoom = null;
+            int id = gameRoomObj.get("id").getAsInt();
+            String name = gameRoomObj.get("name").getAsString();
+            ChatType chatType = ChatType.getChatTypeByString(gameRoomObj.get("chat type").getAsString());
+            chatRoom = new ChatRoom(id, users1, chatType, 0);
+            chatRoom.setId(id);
+            chatRoom.setName(name);
+            ArrayList<Message> messages = new ArrayList<>();
+            JsonArray messagesJson = gameRoomObj.get("messages").getAsJsonArray();
+            for (JsonElement jsonElement : messagesJson) {
+                JsonObject messageObject = jsonElement.getAsJsonObject();
+                User owner = Data.getUserByName(messageObject.get("owner").getAsString());
+                String content = messageObject.get("content").getAsString();
+                String time = messageObject.get("time").getAsString();
+                int messageId = messageObject.get("id").getAsInt();
+                Message message = new Message(owner, content, time, chatRoom);
+                messages.add(message);
+                message.setId(messageId);
+            }
+            chatRoom.setMessages(messages);
+            //end
+            for (JsonElement jsonElement : playersObj) {
+                String username = jsonElement.getAsString();
+                players.add(Data.getUserByName(username));
+            }
+            id = gameObj.get("id").getAsInt();
+            User admin = Data.getUserByName(gameObj.get("admin").getAsString());
+            waitingGames.add(new WaitingGame(id, players, capacity, admin, startTime, isPublic, isGameStarted, chatRoom));
+        }
+        user.setAllWaitingGames(waitingGames);
     }
 
     private void handleClients(JsonArray clients) {
@@ -104,7 +161,7 @@ public class UserThread extends Thread {
                 ChatType chatType = ChatType.getChatTypeByString(roomObject.get("chat type").getAsString());
                 ChatRoom chatRoom = user.getChatWithId(id);
                 if (chatRoom == null) {
-                    if (chatType != ChatType.PUBLIC) chatRoom = new ChatRoom(users1, chatType, 0);
+                    if (chatType != ChatType.PUBLIC) chatRoom = new ChatRoom(id, users1, chatType, 0);
                     else chatRoom = Data.getPublicRoom();
                     for (User user1 : users1) {
                         user1.getChats().add(chatRoom);

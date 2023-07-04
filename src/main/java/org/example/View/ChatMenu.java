@@ -566,4 +566,8 @@ public class ChatMenu extends Application {
     public boolean isValid(int i){
         return borderPane.getChildren().get(i).getClass() == VBox.class;
     }
+
+    public void enterLobby(MouseEvent mouseEvent) throws Exception {
+        new Lobby().start(stage);
+    }
 }

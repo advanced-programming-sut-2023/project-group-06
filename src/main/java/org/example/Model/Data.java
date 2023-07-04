@@ -151,7 +151,7 @@ public class Data {
                 user.setQuestionIndex(questionIndex);
                 user.setHighScore(highScore);
                 user.setAnswerToQuestion(answerToQuestion);
-            //    user.setAvatar(image);
+//                user.setAvatar(image);
             }
             if (stayLoggedIn) {
                 String currentUsername = rootObject.get("currentUsername").getAsString();
